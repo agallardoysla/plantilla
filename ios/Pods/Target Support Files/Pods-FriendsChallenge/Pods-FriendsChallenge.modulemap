@@ -1,0 +1,6 @@
+module Pods_FriendsChallenge {
+  umbrella header "Pods-FriendsChallenge-umbrella.h"
+
+  export *
+  module * { export * }
+}
