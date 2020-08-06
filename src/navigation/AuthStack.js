@@ -1,19 +1,35 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import SignupScreen from '../screens/SignupScreen';
-import LoginScreen from '../screens/LoginScreen';
+import LandingScreen from '../screens/auth/LandingScreen';
+import SignupScreen from '../screens/auth/SignupScreen';
+import LoginScreen from '../screens/auth/LoginScreen';
+import TermsAndConditions from '../screens/TermsAndConditions';
 
 const Stack = createStackNavigator();
 
 export default function AuthStack() {
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="Landing">
+      <Stack.Screen
+        name="Landing"
+        component={LandingScreen}
+        options={{header: () => null}}
+      />
       <Stack.Screen
         name="Login"
         component={LoginScreen}
         options={{header: () => null}}
       />
-      <Stack.Screen name="Signup" component={SignupScreen} />
+      <Stack.Screen
+        name="Signup"
+        component={SignupScreen}
+        options={{header: () => null}}
+      />
+      <Stack.Screen
+        name="TermsAndConditions"
+        component={TermsAndConditions}
+        options={{header: () => null}}
+      />
     </Stack.Navigator>
   );
 }
