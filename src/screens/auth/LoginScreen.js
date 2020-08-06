@@ -1,16 +1,16 @@
 import React, {useState, useContext} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import FormButton from '../components/FormButton';
-import FormInput from '../components/FormInput';
-import {AuthContext} from '../navigation/AuthProvider';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import FormButton from '../../components/FormButton';
+import FormInput from '../../components/FormInput';
+import {AuthContext} from '../../navigation/AuthProvider';
 
-export default function SignupScreen({navigation}) {
+export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {register} = useContext(AuthContext);
+  const {login} = useContext(AuthContext);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Crear una cuenta con correo</Text>
+      <Text style={styles.text}>Firends Challenge Login</Text>
       <FormInput
         value={email}
         placeholderText="Email"
@@ -25,10 +25,14 @@ export default function SignupScreen({navigation}) {
         onChangeText={(userPassword) => setPassword(userPassword)}
         secureTextEntry={true}
       />
-      <FormButton
-        buttonTitle="Signup"
-        onPress={() => register(email, password)}
-      />
+      <FormButton buttonTitle="Login" onPress={() => login(email, password)} />
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={() => navigation.navigate('Signup')}>
+        <Text style={styles.navButtonText}>
+          Aún no tienes una cuenta? Registrate
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -44,5 +48,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 10,
     color: 'yellow',
+  },
+  navButton: {
+    marginTop: 15,
+  },
+  navButtonText: {
+    fontSize: 20,
+    color: '#6646ee',
   },
 });
