@@ -11,12 +11,14 @@ export default function Routes() {
   const [loading, setLoading] = useState(true);
   const [initializing, setInitializing] = useState(true);
 
-  /* Funcion para manejar cambios de estado del usuario. Acá verifico si el 
+  /* Funcion para manejar cambios de estado del usuario. Acá verifico si el
    ususario está autenticado o no luego ejecutar el useEffect*/
 
-  function onAuthStateChanged(user) {
-    setUser(user);
-    if (initializing) setInitializing(false);
+  function onAuthStateChanged(loggedUser) {
+    setUser(loggedUser);
+    if (initializing) {
+      setInitializing(false);
+    }
     setLoading(false);
   }
   /**
@@ -26,7 +28,7 @@ export default function Routes() {
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
-  }, []);
+  });
 
   if (loading) {
     return <Loading />;
