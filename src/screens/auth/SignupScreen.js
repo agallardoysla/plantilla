@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Button} from 'react-native';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import {AuthContext} from '../../navigation/AuthProvider';
@@ -7,7 +7,7 @@ import {AuthContext} from '../../navigation/AuthProvider';
 export default function SignupScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {register} = useContext(AuthContext);
+  const {register, loginFacebook, loginGoogle} = useContext(AuthContext);
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Crear una cuenta con correo</Text>
@@ -29,6 +29,8 @@ export default function SignupScreen({navigation}) {
         buttonTitle="Signup"
         onPress={() => register(email, password)}
       />
+      <Button title="Facebook Sign-In" onPress={loginFacebook} />
+      <Button title="Google Sign-In" onPress={loginGoogle} />
     </View>
   );
 }
