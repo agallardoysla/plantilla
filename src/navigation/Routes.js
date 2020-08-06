@@ -11,13 +11,18 @@ export default function Routes() {
   const [loading, setLoading] = useState(true);
   const [initializing, setInitializing] = useState(true);
 
-  // Handle user state changes
+  /* Funcion para manejar cambios de estado del usuario. Acá verifico si el 
+   ususario está autenticado o no luego ejecutar el useEffect*/
+
   function onAuthStateChanged(user) {
     setUser(user);
     if (initializing) setInitializing(false);
     setLoading(false);
   }
-
+  /**
+   * Se ejecuta al abrir la app y el método onAuthStateChanged nos permite subscribirnos
+   * al estado actual de autenticación del usuario
+   */
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
@@ -27,6 +32,10 @@ export default function Routes() {
     return <Loading />;
   }
 
+  /**
+   * Lógica de ruteo. Si el usuario está autenticado voy a las rutas de HomeStack, sino
+   * a las rutas de AuthStack
+   */
   return (
     <NavigationContainer>
       {user ? <HomeStack /> : <AuthStack />}

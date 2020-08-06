@@ -3,6 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import FormButton from '../components/FormButton';
 import {AuthContext} from '../navigation/AuthProvider';
 
+//Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function HomeScreen() {
   const {user, logout} = useContext(AuthContext);
   return (

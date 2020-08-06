@@ -2,8 +2,8 @@ import React, {createContext, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 
 /**
- * This provider is created
- * to access user in whole app
+ * Proveedor creado para acceder
+ * al usuario en toda la app
  */
 
 export const AuthContext = createContext({});
