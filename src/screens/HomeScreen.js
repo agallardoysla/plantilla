@@ -9,7 +9,8 @@ export default function HomeScreen() {
   console.log(user);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Welcome user {user.uid}</Text>
+      <Text style={styles.text}>Welcome user {user.displayName}</Text>
+      <Text style={styles.text}> User Id: {user.uid}</Text>
       <FormButton buttonTitle="Logout" onPress={() => logout()} />
     </View>
   );
