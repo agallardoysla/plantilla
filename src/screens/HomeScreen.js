@@ -6,6 +6,7 @@ import {AuthContext} from '../navigation/AuthProvider';
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function HomeScreen() {
   const {user, logout} = useContext(AuthContext);
+  console.log(user);
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome user {user.uid}</Text>

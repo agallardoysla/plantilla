@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     width: windowWidth / 1.5,
     height: windowHeight / 15,
     fontSize: 16,
-    borderRadius: 8,
+    borderRadius: 10,
     borderWidth: 1,
-    backgroundColor: 'yellow',
+    backgroundColor: '#E9FC64',
   },
 });

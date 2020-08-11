@@ -11,7 +11,8 @@ import {GoogleSignin} from '@react-native-community/google-signin';
 export const AuthContext = createContext({});
 
 GoogleSignin.configure({
-  webClientId: '667632482166-5s9u02g8dtsci93k1cbeve7vqsv8rdo3.apps.googleusercontent.com',
+  webClientId:
+    '667632482166-5s9u02g8dtsci93k1cbeve7vqsv8rdo3.apps.googleusercontent.com',
 });
 
 export const AuthProvider = ({children}) => {
@@ -63,7 +64,9 @@ export const AuthProvider = ({children}) => {
             }
 
             // Create a Firebase credential with the AccessToken
-            const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+            const facebookCredential = auth.FacebookAuthProvider.credential(
+              data.accessToken,
+            );
 
             // Sign-in the user with the credential
             return auth().signInWithCredential(facebookCredential);
@@ -77,7 +80,9 @@ export const AuthProvider = ({children}) => {
             const {idToken} = await GoogleSignin.signIn();
 
             // Create a Google credential with the token
-            const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+            const googleCredential = auth.GoogleAuthProvider.credential(
+              idToken,
+            );
 
             // Sign-in the user with the credential
             return auth().signInWithCredential(googleCredential);

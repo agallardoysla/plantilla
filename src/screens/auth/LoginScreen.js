@@ -2,30 +2,40 @@ import React, {useState, useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
+import SocialButton from '../../components/SocialButton';
 import {AuthContext} from '../../navigation/AuthProvider';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {login} = useContext(AuthContext);
+  const {login, loginFacebook, loginGoogle} = useContext(AuthContext);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Firends Challenge Login</Text>
-      <FormInput
-        value={email}
-        placeholderText="Email"
-        onChangeText={(userEmail) => setEmail(userEmail)}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        autoCorrect={false}
-      />
-      <FormInput
-        value={password}
-        placeholderText="Password"
-        onChangeText={(userPassword) => setPassword(userPassword)}
-        secureTextEntry={true}
-      />
-      <FormButton buttonTitle="Login" onPress={() => login(email, password)} />
+      <Text style={styles.title}>Inicia sesión con:</Text>
+      <View>
+        <SocialButton buttonTitle="Facebook" onPress={loginFacebook} />
+        <SocialButton buttonTitle="Google" onPress={loginGoogle} />
+      </View>
+      <View>
+        <FormInput
+          value={email}
+          placeholderText="Email"
+          onChangeText={(userEmail) => setEmail(userEmail)}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          autoCorrect={false}
+        />
+        <FormInput
+          value={password}
+          placeholderText="Contraseña"
+          onChangeText={(userPassword) => setPassword(userPassword)}
+          secureTextEntry={true}
+        />
+        <FormButton
+          buttonTitle="Ingresar"
+          onPress={() => login(email, password)}
+        />
+      </View>
       <TouchableOpacity
         style={styles.navButton}
         onPress={() => navigation.navigate('Signup')}>
@@ -41,16 +51,25 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'black',
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  text: {
+  title: {
+    fontFamily: 'Gotham Black',
+    fontWeight: '900',
     fontSize: 24,
     marginBottom: 10,
     color: 'yellow',
+    textDecorationLine: 'underline',
+    textTransform: 'uppercase',
   },
   navButton: {
     marginTop: 15,
+    paddingLeft: 30,
+  },
+  logo: {
+    width: 200,
+    height: 200,
   },
   navButtonText: {
     fontSize: 20,
