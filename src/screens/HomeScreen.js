@@ -100,7 +100,7 @@ export default function HomeScreen() {
         <Text>Select File</Text>
       </TouchableOpacity>*/}
 
-      <Video
+      {/*<Video
         source={videoSource} // Can be a URL or a local file.
         //ref={(ref) => {
         //  this.player = ref;
@@ -111,7 +111,7 @@ export default function HomeScreen() {
         controls={true}
         fullscreen={true}
         //style={styles.uploadImage}
-      />
+      />*/}
 
       <Button title="Select video" onPress={selectVideo} />
     </View>
