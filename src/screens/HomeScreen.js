@@ -19,6 +19,8 @@ export default function HomeScreen() {
   const selectFile = () => {
     var options = {
       title: 'Seleccione una imagen',
+      //mediaType: 'video',
+      //durationLimit: '15',
       customButtons: [
         {
           name: 'customOptionKey',
