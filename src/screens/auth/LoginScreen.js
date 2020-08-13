@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'Gotham Black',
+    fontFamily: 'GothamBlack-Regular',
     fontWeight: '900',
     fontSize: 24,
     marginBottom: 10,
