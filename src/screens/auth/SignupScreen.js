@@ -1,41 +1,71 @@
 import React, {useState, useContext} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import SocialButton from '../../components/SocialButton';
+import {View, Text, StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
+import {GoogleButton, FacebookButton} from '../../components/SocialButton';
 import FormButton from '../../components/FormButton';
-import FormInput from '../../components/FormInput';
 import {AuthContext} from '../../navigation/AuthProvider';
+import MatInput from '../../components/MatInput';
+import StylesConfiguration from '../../utils/StylesConfiguration';
 
 export default function SignupScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
   const {register, loginFacebook, loginGoogle} = useContext(AuthContext);
+
+  const checkPasswords = () => {
+    if (password !== passwordCheck) {
+      Alert.alert('Las contraseñas no coinciden');
+    } else {
+      register(email, password);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Registrate con:</Text>
-      <View>
-        <SocialButton buttonTitle="Facebook" onPress={loginFacebook} />
-        <SocialButton buttonTitle="Google" onPress={loginGoogle} />
+      <Image
+        style={styles.logo}
+        source={require('../../assets/logo-home.png')}
+      />
+      <MatInput
+        value={email}
+        label="Email"
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        textContentType="emailAddress"
+        keyboardType="email-address"
+        autoCorrect={false}
+        containerStyle={styles.input}
+      />
+      <MatInput
+        value={password}
+        label="Contraseña"
+        onChangeText={setPassword}
+        secureTextEntry={true}
+        textContentType="password"
+        containerStyle={styles.input}
+      />
+      <MatInput
+        value={passwordCheck}
+        label="Confirmar contraseña"
+        onChangeText={setPasswordCheck}
+        secureTextEntry={true}
+        textContentType="password"
+        containerStyle={styles.input}
+        onSubmitEditing={checkPasswords}
+      />
+      <FormButton buttonTitle="Siguiente" onPress={checkPasswords} />
+      <Text style={styles.text}>O</Text>
+      <Text style={styles.text}>registrate con:</Text>
+      <View style={styles.socialLoginContainer}>
+        <GoogleButton onPress={loginGoogle} />
+        <FacebookButton onPress={loginFacebook} />
       </View>
-      <View style={styles.signupContainer}>
-        <FormInput
-          value={email}
-          placeholderText="Email"
-          onChangeText={(userEmail) => setEmail(userEmail)}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          autoCorrect={false}
-        />
-        <FormInput
-          value={password}
-          placeholderText="Contraseña"
-          onChangeText={(userPassword) => setPassword(userPassword)}
-          secureTextEntry={true}
-        />
-        <FormButton
-          buttonTitle="Crear cuenta"
-          onPress={() => register(email, password)}
-        />
-      </View>
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.navButtonText}>¿Ya tenes cuenta? </Text>
+        <Text style={styles.navButtonText2}>Ingresa</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -44,19 +74,41 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'black',
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 15,
+    paddingBottom: 15,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+  },
+  input: {
+    width: 250,
+  },
+  text: {
+    color: 'white',
+    fontSize: 13,
+  },
+  socialLoginContainer: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  title: {
-    fontFamily: 'Gotham Black',
-    fontWeight: '900',
-    fontSize: 24,
-    marginBottom: 10,
-    color: 'yellow',
-    textDecorationLine: 'underline',
-    textTransform: 'uppercase',
+  navButton: {
+    marginTop: 15,
+    paddingLeft: 30,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  signupContainer: {
-    marginBottom: 40,
+  navButtonText: {
+    fontSize: 15,
+    color: 'white',
+  },
+  navButtonText2: {
+    fontSize: 15,
+    color: StylesConfiguration.color,
   },
 });

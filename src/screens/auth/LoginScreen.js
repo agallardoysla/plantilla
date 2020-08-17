@@ -40,7 +40,7 @@ export default function LoginScreen({navigation}) {
         onPress={() => login(email, password)}
       />
       <Text style={styles.text}>O</Text>
-      <Text style={styles.text}>inicia con</Text>
+      <Text style={styles.text}>inicia con:</Text>
       <View style={styles.socialLoginContainer}>
         <GoogleButton onPress={loginGoogle} />
         <FacebookButton onPress={loginFacebook} />
@@ -48,7 +48,7 @@ export default function LoginScreen({navigation}) {
       <TouchableOpacity
         style={styles.navButton}
         onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.navButtonText}>¿No tienes una cuenta? </Text>
+        <Text style={styles.navButtonText}>¿No tenes cuenta? </Text>
         <Text style={styles.navButtonText2}>Registrate</Text>
       </TouchableOpacity>
     </View>
