@@ -72,10 +72,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'rgb(255,255,255)',
-  },
-  input: {
-    width: 50,
-    height: 20,
+    fontFamily: StylesConfiguration.fontFamily,
   },
 });
 

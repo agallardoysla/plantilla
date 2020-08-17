@@ -24,7 +24,7 @@ export default function LoginScreen({navigation}) {
         textContentType="emailAddress"
         keyboardType="email-address"
         autoCorrect={false}
-        containerStyle={styles.input}
+        containerStyle={styles.inputEmail}
       />
       <MatInput
         value={password}
@@ -32,7 +32,7 @@ export default function LoginScreen({navigation}) {
         onChangeText={setPassword}
         secureTextEntry={true}
         textContentType="password"
-        containerStyle={styles.input}
+        containerStyle={styles.inputPassword}
         onSubmitEditing={() => login(email, password)}
       />
       <FormButton
@@ -65,8 +65,11 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 15,
   },
-  input: {
+  inputEmail: {
     width: 250,
+  },
+  inputPassword: {
+    width: 230, // 20 menos que inputEmail por el toggle visibility
   },
   logo: {
     width: 150,
