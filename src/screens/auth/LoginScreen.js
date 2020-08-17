@@ -1,9 +1,10 @@
 import React, {useState, useContext} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import FormButton from '../../components/FormButton';
-import FormInput from '../../components/FormInput';
-import SocialButton from '../../components/SocialButton';
+import {FacebookButton, GoogleButton} from '../../components/SocialButton';
 import {AuthContext} from '../../navigation/AuthProvider';
+import MatInput from '../../components/MatInput';
+import StylesConfiguration from '../../utils/StylesConfiguration';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
@@ -11,37 +12,44 @@ export default function LoginScreen({navigation}) {
   const {login, loginFacebook, loginGoogle} = useContext(AuthContext);
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Inicia sesión con:</Text>
-      <View>
-        <SocialButton buttonTitle="Facebook" onPress={loginFacebook} />
-        <SocialButton buttonTitle="Google" onPress={loginGoogle} />
-      </View>
-      <View>
-        <FormInput
-          value={email}
-          placeholderText="Email"
-          onChangeText={(userEmail) => setEmail(userEmail)}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          autoCorrect={false}
-        />
-        <FormInput
-          value={password}
-          placeholderText="Contraseña"
-          onChangeText={(userPassword) => setPassword(userPassword)}
-          secureTextEntry={true}
-        />
-        <FormButton
-          buttonTitle="Ingresar"
-          onPress={() => login(email, password)}
-        />
+      <Image
+        style={styles.logo}
+        source={require('../../assets/logo-home.png')}
+      />
+      <MatInput
+        value={email}
+        label="Email"
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        textContentType="emailAddress"
+        keyboardType="email-address"
+        autoCorrect={false}
+        containerStyle={styles.input}
+      />
+      <MatInput
+        value={password}
+        label="Contraseña"
+        onChangeText={setPassword}
+        secureTextEntry={true}
+        textContentType="password"
+        containerStyle={styles.input}
+        onSubmitEditing={() => login(email, password)}
+      />
+      <FormButton
+        buttonTitle="INGRESAR"
+        onPress={() => login(email, password)}
+      />
+      <Text style={styles.text}>O</Text>
+      <Text style={styles.text}>inicia con</Text>
+      <View style={styles.socialLoginContainer}>
+        <GoogleButton onPress={loginGoogle} />
+        <FacebookButton onPress={loginFacebook} />
       </View>
       <TouchableOpacity
         style={styles.navButton}
         onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.navButtonText}>
-          Aún no tienes una cuenta? Registrate
-        </Text>
+        <Text style={styles.navButtonText}>¿No tienes una cuenta? </Text>
+        <Text style={styles.navButtonText2}>Registrate</Text>
       </TouchableOpacity>
     </View>
   );
@@ -51,28 +59,41 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'black',
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 15,
+    paddingBottom: 15,
+  },
+  input: {
+    width: 250,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+  },
+  socialLoginContainer: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  title: {
-    fontFamily: 'Gotham Black',
-    fontWeight: '900',
-    fontSize: 24,
-    marginBottom: 10,
-    color: 'yellow',
-    textDecorationLine: 'underline',
-    textTransform: 'uppercase',
+  text: {
+    color: 'white',
+    fontSize: 13,
   },
   navButton: {
     marginTop: 15,
     paddingLeft: 30,
-  },
-  logo: {
-    width: 200,
-    height: 200,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   navButtonText: {
-    fontSize: 20,
-    color: '#6646ee',
+    fontSize: 15,
+    color: 'white',
+  },
+  navButtonText2: {
+    fontSize: 15,
+    color: StylesConfiguration.color,
   },
 });
