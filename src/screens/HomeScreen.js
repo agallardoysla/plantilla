@@ -7,7 +7,7 @@ import {
   Image,
   alert,
 } from 'react-native';
-import FormButton from '../components/FormButton';
+import FilledButton from '../components/FilledButton';
 import {AuthContext} from '../navigation/AuthProvider';
 import ImagePicker from 'react-native-image-picker';
 
@@ -54,7 +54,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={styles.text}>Welcome user {user.displayName}</Text>
       <Text style={styles.text}> User Id: {user.uid}</Text>
-      <FormButton buttonTitle="Logout" onPress={() => logout()} />
+      <FilledButton buttonTitle="Logout" onPress={() => logout()} />
 
       <Image
         source={{
