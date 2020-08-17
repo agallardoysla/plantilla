@@ -1,19 +1,12 @@
 import React, {useContext, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  alert,
-} from 'react-native';
+import {View, Text, StyleSheet, Image, alert, Button} from 'react-native';
 import FormButton from '../components/FormButton';
 import {AuthContext} from '../navigation/AuthProvider';
 import ImagePicker from 'react-native-image-picker';
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function HomeScreen() {
-  const {user, logout} = useContext(AuthContext);
+  const {logout} = useContext(AuthContext);
   const [resourcePath, setResourcePath] = useState({});
 
   const selectFile = () => {
@@ -52,7 +45,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Welcome user {user.uid}</Text>
+      <Text style={styles.text}>React Native Image Picker Imagen</Text>
       <FormButton buttonTitle="Logout" onPress={() => logout()} />
 
       <Image
@@ -67,9 +60,7 @@ export default function HomeScreen() {
       />
       <Text style={{alignItems: 'center'}}>{resourcePath.uri}</Text>
 
-      <TouchableOpacity onPress={selectFile} style={styles.button}>
-        <Text>Select File</Text>
-      </TouchableOpacity>
+      <Button title="Seleccionar Imagen" onPress={selectFile} />
     </View>
   );
 }
