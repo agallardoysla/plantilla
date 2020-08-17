@@ -2,6 +2,7 @@ import React, {createContext, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import {LoginManager, AccessToken} from 'react-native-fbsdk';
 import {GoogleSignin} from '@react-native-community/google-signin';
+import { Alert } from 'react-native';
 
 /**
  * Proveedor creado para acceder
@@ -28,6 +29,7 @@ export const AuthProvider = ({children}) => {
             await auth().signInWithEmailAndPassword(email, password);
           } catch (e) {
             console.log(e);
+            Alert.alert(e.message);
           }
         },
         register: async (email, password) => {
@@ -35,6 +37,7 @@ export const AuthProvider = ({children}) => {
             await auth().createUserWithEmailAndPassword(email, password);
           } catch (e) {
             console.log(e);
+            Alert.alert(e.message);
           }
         },
         logout: async () => {
@@ -42,6 +45,7 @@ export const AuthProvider = ({children}) => {
             await auth().signOut();
           } catch (e) {
             console.error(e);
+            Alert.alert(e.message);
           }
         },
         loginFacebook: async () => {
@@ -72,6 +76,7 @@ export const AuthProvider = ({children}) => {
             return auth().signInWithCredential(facebookCredential);
           } catch (e) {
             console.error(e);
+            Alert.alert(e.message);
           }
         },
         loginGoogle: async () => {
@@ -88,6 +93,7 @@ export const AuthProvider = ({children}) => {
             return auth().signInWithCredential(googleCredential);
           } catch (e) {
             console.error(e);
+            Alert.alert(e.message);
           }
         },
       }}>
