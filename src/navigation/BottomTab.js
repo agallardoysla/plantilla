@@ -8,7 +8,7 @@ export default function BottomTab() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Inicio" component={HomeScreen} />
-      <Tab.Screen name="Publicación" component={() => null} />
+      <Tab.Screen name="Publicación" component={HomeScreen} />
     </Tab.Navigator>
   );
 }

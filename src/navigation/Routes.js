@@ -6,22 +6,32 @@ import AuthStack from './AuthStack';
 import BottomTab from './BottomTab';
 import {AuthContext} from './AuthProvider';
 import Loading from '../components/Loading';
+import api from '../utils/api';
 
 export default function Routes() {
   const {user, setUser} = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
-  const [initializing, setInitializing] = useState(true);
+  const [existProfile, setExistProfile] = useState(false);
 
   /* Funcion para manejar cambios de estado del usuario. Acá verifico si el
    ususario está autenticado o no luego ejecutar el useEffect*/
 
   function onAuthStateChanged(loggedUser) {
     setUser(loggedUser);
-    if (initializing) {
-      setInitializing(false);
+    if (loggedUser) {
+      api.get(`users/profiles/${loggedUser.uid}/exist/`).then(
+        (res) => {
+          console.log(res.data.exist === true, loggedUser);
+          setExistProfile(res.data.exist);
+        },
+        (error) => {
+          console.log(error.message);
+        },
+      );
     }
     setLoading(false);
   }
+
   /**
    * Se ejecuta al abrir la app y el método onAuthStateChanged nos permite subscribirnos
    * al estado actual de autenticación del usuario
@@ -41,7 +51,7 @@ export default function Routes() {
    */
   return (
     <NavigationContainer>
-      {user ? <BottomTab /> : <AuthStack />}
+      {existProfile ? <BottomTab /> : <AuthStack />}
     </NavigationContainer>
   );
 }
