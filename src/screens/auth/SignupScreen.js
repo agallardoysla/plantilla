@@ -34,7 +34,7 @@ export default function SignupScreen({navigation}) {
         textContentType="emailAddress"
         keyboardType="email-address"
         autoCorrect={false}
-        containerStyle={styles.inputEmail}
+        containerStyle={styles.input}
       />
       <MatInput
         value={password}
@@ -42,7 +42,7 @@ export default function SignupScreen({navigation}) {
         onChangeText={setPassword}
         secureTextEntry={true}
         textContentType="password"
-        containerStyle={styles.inputPassword}
+        containerStyle={styles.input}
       />
       <MatInput
         value={passwordCheck}
@@ -50,7 +50,7 @@ export default function SignupScreen({navigation}) {
         onChangeText={setPasswordCheck}
         secureTextEntry={true}
         textContentType="password"
-        containerStyle={styles.inputPassword}
+        containerStyle={styles.input}
         onSubmitEditing={checkPasswords}
       />
       <FormButton buttonTitle="Siguiente" onPress={checkPasswords} />
@@ -84,11 +84,8 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
   },
-  inputEmail: {
+  input: {
     width: 250,
-  },
-  inputPassword: {
-    width: 230, // 20 menos que inputEmail por el toggle visibility
   },
   text: {
     color: 'white',
