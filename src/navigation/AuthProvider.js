@@ -2,7 +2,7 @@ import React, {createContext, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import {LoginManager, AccessToken} from 'react-native-fbsdk';
 import {GoogleSignin} from '@react-native-community/google-signin';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 
 /**
  * Proveedor creado para acceder
@@ -18,12 +18,15 @@ GoogleSignin.configure({
 
 export const AuthProvider = ({children}) => {
   const [user, setUser] = useState(null);
+  const [existProfile, setExistProfile] = useState(false);
 
   return (
     <AuthContext.Provider
       value={{
         user,
         setUser,
+        existProfile,
+        setExistProfile,
         login: async (email, password) => {
           try {
             await auth().signInWithEmailAndPassword(email, password);
