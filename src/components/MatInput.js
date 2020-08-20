@@ -26,12 +26,14 @@ class MatInput extends Component {
     if (this.state.showIcon) {
       return (
         <TextField
-          {...this.props}
           textColor={'rgb(255,255,255)'}
           tintColor={StylesConfiguration.color}
           baseColor={StylesConfiguration.color}
-          labelTextStyle={styles.title}
+          titleTextStyle={styles.title}
+          labelTextStyle={styles.label}
           secureTextEntry={this.state.showIcon && !this.state.showPassword}
+          fontSize={15}
+          labelFontSize={15}
           renderRightAccessory={() =>
             this.state.showPassword ? (
               <Icon
@@ -47,16 +49,20 @@ class MatInput extends Component {
               />
             )
           }
+          {...this.props}
         />
       );
     } else {
       return (
         <TextField
-          {...this.props}
           textColor={'rgb(255,255,255)'}
           tintColor={StylesConfiguration.color}
           baseColor={StylesConfiguration.color}
-          labelTextStyle={styles.title}
+          titleTextStyle={styles.title}
+          labelTextStyle={styles.label}
+          fontSize={15}
+          labelFontSize={15}
+          {...this.props}
         />
       );
     }
@@ -67,6 +73,12 @@ const styles = StyleSheet.create({
   title: {
     color: 'rgb(255,255,255)',
     fontFamily: StylesConfiguration.fontFamily,
+    fontWeight: StylesConfiguration.fontWeight,
+  },
+  label: {
+    color: 'rgb(255,255,255)',
+    fontFamily: StylesConfiguration.fontFamily,
+    fontWeight: StylesConfiguration.fontWeight,
   },
 });
 
