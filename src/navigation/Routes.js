@@ -9,9 +9,8 @@ import Loading from '../components/Loading';
 import api from '../utils/api';
 
 export default function Routes() {
-  const {user, setUser} = useContext(AuthContext);
+  const {user, setUser, existProfile, setExistProfile} = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
-  const [existProfile, setExistProfile] = useState(false);
 
   /* Funcion para manejar cambios de estado del usuario. Acá verifico si el
    ususario está autenticado o no luego ejecutar el useEffect*/
@@ -51,7 +50,7 @@ export default function Routes() {
    */
   return (
     <NavigationContainer>
-      {existProfile ? <BottomTab /> : <AuthStack />}
+      {existProfile && user ? <BottomTab /> : <AuthStack />}
     </NavigationContainer>
   );
 }
