@@ -16,9 +16,12 @@ export default function SignupScreen({navigation}) {
     if (password !== passwordCheck) {
       Alert.alert('Las contraseñas no coinciden');
     } else {
-      register(email, password);
+      login(() => register(email, password));
     }
   };
+  const login = (doLogin) => {
+    doLogin().then(() => navigation.navigate('CreateProfile'));
+  }
 
   return (
     <View style={styles.container}>
@@ -57,8 +60,8 @@ export default function SignupScreen({navigation}) {
       <Text style={styles.text}>O</Text>
       <Text style={styles.text}>registrate con:</Text>
       <View style={styles.socialLoginContainer}>
-        <GoogleButton onPress={loginGoogle} />
-        <FacebookButton onPress={loginFacebook} />
+        <GoogleButton onPress={() => login(loginGoogle)} />
+        <FacebookButton onPress={() => login(loginFacebook)} />
       </View>
       <TouchableOpacity
         style={styles.navButton}
