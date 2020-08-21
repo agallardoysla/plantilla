@@ -4,8 +4,10 @@ import FormButton from '../../components/FormButton';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import MatInput from '../../components/MatInput';
 import DatePicker from '@react-native-community/datetimepicker';
-import {Icon, withTheme} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 import api from '../../utils/api';
+import CheckBox from '@react-native-community/checkbox';
+import moment from 'moment';
 
 export default function CreateProfile() {
   const today = new Date();
@@ -13,12 +15,8 @@ export default function CreateProfile() {
   const [birthday, setBirthday] = useState(today);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [sex, setSex] = useState('');
+  const [customSex, setCustomSex] = useState('');
   const [userPosibleLikes, setUserPosibleLikes] = useState([]);
-
-  const sameDayAsToday = (newBirthday) =>
-    birthday.getDate() === today.getDate() &&
-    birthday.getMonth() === today.getMonth() &&
-    birthday.getFullYear() === today.getFullYear();
 
   useEffect(() => {
     if (userPosibleLikes.length === 0) {
@@ -34,6 +32,22 @@ export default function CreateProfile() {
     }
   });
 
+  const sameDayAsToday = (newBirthday) =>
+    birthday.getDate() === today.getDate() &&
+    birthday.getMonth() === today.getMonth() &&
+    birthday.getFullYear() === today.getFullYear();
+
+  const getMaximumDate = () => {
+    const maxDate = moment(today).subtract(13, 'years');
+    const maxDateObj = new Date(
+      maxDate.year(),
+      maxDate.month(),
+      maxDate.date(),
+    );
+    console.log(maxDateObj);
+    return maxDateObj;
+  }
+
   const selectLike = (like) =>
     setUserPosibleLikes(
       userPosibleLikes.map((l) => {
@@ -41,6 +55,20 @@ export default function CreateProfile() {
         return l;
       }),
     );
+
+  const SexSelectionCheckbox = (props) => (
+    <CheckBox
+      // Conf para Android
+      tintColors={checkboxConfAndroid}
+      // Conf para iOS
+      boxType="square"
+      tintColor="white"
+      onCheckColor="black"
+      onFillColor={StylesConfiguration.color}
+      onTintColor={StylesConfiguration.color}
+      {...props}
+    />
+  );
 
   return (
     <View style={styles.container}>
@@ -101,26 +129,67 @@ export default function CreateProfile() {
             display="spinner"
             placeholder="Dia-Mes-Año"
             format="DD-MM-YYYY"
+            maximumDate={getMaximumDate()}
           />
         )}
       </View>
-      <View style={styles.formRow}>
+      <View style={[styles.formRow, styles.formRowStart]}>
         <Text style={styles.text}>Sexo:</Text>
         <View style={styles.selectSex}>
-          <View style={styles.formRow}>
+          <View style={[styles.formRow, styles.sexCheckbox]}>
             <Text style={styles.text}>Hombre</Text>
+            <SexSelectionCheckbox
+              value={sex === 'M'}
+              onValueChange={(newValue) => {
+                setCustomSex('');
+                setSex(newValue ? 'M' : '');
+              }}
+            />
           </View>
-          <View style={styles.formRow}>
+          <View style={[styles.formRow, styles.sexCheckbox]}>
             <Text style={styles.text}>Mujer</Text>
+            <SexSelectionCheckbox
+              value={sex === 'F'}
+              onValueChange={(newValue) => {
+                setCustomSex('');
+                setSex(newValue ? 'F' : '');
+              }}
+            />
           </View>
-          <View style={styles.formRow}>
+          <View style={[styles.formRow, styles.sexCheckbox]}>
             <Text style={styles.text}>Neutro</Text>
+            <SexSelectionCheckbox
+              value={sex === 'N'}
+              onValueChange={(newValue) => {
+                setCustomSex('');
+                setSex(newValue ? 'N' : '');
+              }}
+            />
           </View>
-          <View style={styles.formRow}>
+          <View style={[styles.formRow, styles.sexCheckbox]}>
             <Text style={styles.text}>Prefiero no indicarlo</Text>
+            <SexSelectionCheckbox
+              value={sex === 'NI'}
+              onValueChange={(newValue) => {
+                setCustomSex('');
+                console.log(customSex);
+                setSex(newValue ? 'NI' : '');
+              }}
+            />
           </View>
-          <View style={styles.formRow}>
+          <View style={[styles.formRow, styles.sexCheckbox]}>
             <Text style={styles.text}>Otro:</Text>
+            <MatInput
+              value={customSex}
+              label="Comentanos aquí..."
+              onChangeText={(newSex) => {
+                setCustomSex(newSex);
+                setSex('');
+              }}
+              containerStyle={styles.input}
+              fontSize={14}
+              labelFontSize={14}
+            />
           </View>
         </View>
       </View>
@@ -185,6 +254,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  formRowStart: {
+    alignItems: 'flex-start',
+  },
   datePicker: {
     borderColor: StylesConfiguration.color,
     borderRadius: 5,
@@ -245,6 +317,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     marginLeft: 30,
+    marginTop: -3,
+  },
+  sexCheckbox: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: -5,
   },
   sexInput: {
     width: 150,
@@ -272,8 +351,13 @@ const styles = StyleSheet.create({
   },
   posibleLikesname: {
     color: 'white',
-    fontWeight: '500',
+    fontWeight: "500",
     fontFamily: StylesConfiguration.fontFamily,
     fontSize: 14,
   },
 });
+
+const checkboxConfAndroid = {
+  true: StylesConfiguration.color,
+  false: 'white',
+};

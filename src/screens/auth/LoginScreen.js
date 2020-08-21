@@ -9,7 +9,16 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {login, loginFacebook, loginGoogle} = useContext(AuthContext);
+  const {existProfile, login, loginFacebook, loginGoogle} = useContext(AuthContext);
+
+  const loginOrCreateProfile = () => {
+    if (existProfile) {
+      login(email, password);
+    } else {
+      navigation.navigate('Signup');
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Image
@@ -33,12 +42,9 @@ export default function LoginScreen({navigation}) {
         secureTextEntry={true}
         textContentType="password"
         containerStyle={styles.input}
-        onSubmitEditing={() => login(email, password)}
+        onSubmitEditing={loginOrCreateProfile()}
       />
-      <FormButton
-        buttonTitle="INGRESAR"
-        onPress={() => login(email, password)}
-      />
+      <FormButton buttonTitle="INGRESAR" onPress={loginOrCreateProfile()} />
       <Text style={styles.text}>O</Text>
       <Text style={styles.text}>inicia con:</Text>
       <View style={styles.socialLoginContainer}>
