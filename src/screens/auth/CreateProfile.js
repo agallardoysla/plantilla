@@ -18,6 +18,7 @@ export default function CreateProfile() {
   const [sex, setSex] = useState('');
   const [customSex, setCustomSex] = useState('');
   const [userPosibleLikes, setUserPosibleLikes] = useState([]);
+  const [canSubmit, setCanSubmit] = useState([]);
 
   useEffect(() => {
     if (userPosibleLikes.length === 0) {
@@ -31,6 +32,7 @@ export default function CreateProfile() {
         );
       });
     }
+    updateCanSubmit();
   });
 
   const sameDayAsToday = () =>
@@ -52,7 +54,7 @@ export default function CreateProfile() {
     api.get(`users/profiles/${nickname}/existNickname/`).then((res) => {
       setExistNickname(res.data.exist);
     });
-  }
+  };
 
   const selectLike = (like) =>
     setUserPosibleLikes(
@@ -61,6 +63,11 @@ export default function CreateProfile() {
         return l;
       }),
     );
+
+  const updateCanSubmit = () => {
+    console.log('update', canSubmit);
+    setCanSubmit(!existNickname && !sameDayAsToday() && sex !== '');
+  }
 
   const SexSelectionCheckbox = (props) => (
     <CheckBox
@@ -187,7 +194,7 @@ export default function CreateProfile() {
               }}
             />
           </View>
-          <View style={[styles.formRow, styles.sexCheckbox]}>
+          {/* <View style={[styles.formRow, styles.sexCheckbox]}>
             <Text style={styles.text}>Otro:</Text>
             <MatInput
               value={customSex}
@@ -200,7 +207,7 @@ export default function CreateProfile() {
               fontSize={14}
               labelFontSize={14}
             />
-          </View>
+          </View> */}
         </View>
       </View>
       <View style={styles.formRowCenter}>
@@ -230,7 +237,12 @@ export default function CreateProfile() {
         ))}
       </View>
       <View style={styles.formRowCenter}>
-        <FormButton buttonTitle="Continuar" onPress={() => {}} />
+        <FormButton
+          buttonTitle="Continuar"
+          onPress={() => {}}
+          style={canSubmit? styles.canSubmit : styles.notCanSubmit}
+          disabled={canSubmit}
+        />
       </View>
     </View>
   );
@@ -364,6 +376,10 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontFamily: StylesConfiguration.fontFamily,
     fontSize: 14,
+  },
+  canSubmit: {},
+  notCanSubmit: {
+    borderColor: 'black',
   },
 });
 

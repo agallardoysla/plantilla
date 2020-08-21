@@ -2,9 +2,9 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, Text} from 'react-native';
 import StylesConfiguration from '../utils/StylesConfiguration';
 
-export default function FormButton({buttonTitle, ...rest}) {
+export default function FormButton({buttonTitle, style, ...rest}) {
   return (
-    <TouchableOpacity style={styles.buttonContainer} {...rest}>
+    <TouchableOpacity style={[styles.buttonContainer, style]} {...rest}>
       <Text style={styles.buttonText}>{buttonTitle}</Text>
     </TouchableOpacity>
   );
