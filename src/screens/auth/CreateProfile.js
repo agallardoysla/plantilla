@@ -1,10 +1,11 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import FormButton from '../../components/FormButton';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import MatInput from '../../components/MatInput';
 import DatePicker from '@react-native-community/datetimepicker';
-import {Icon} from 'react-native-elements';
+import {Icon, withTheme} from 'react-native-elements';
+import api from '../../utils/api';
 
 export default function CreateProfile() {
   const today = new Date();
@@ -12,16 +13,39 @@ export default function CreateProfile() {
   const [birthday, setBirthday] = useState(today);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [sex, setSex] = useState('');
+  const [userPosibleLikes, setUserPosibleLikes] = useState([]);
 
   const sameDayAsToday = (newBirthday) =>
     birthday.getDate() === today.getDate() &&
     birthday.getMonth() === today.getMonth() &&
     birthday.getFullYear() === today.getFullYear();
 
+  useEffect(() => {
+    if (userPosibleLikes.length === 0) {
+      api.get('users/profilesLikes/').then((res) => {
+        console.log(res.data);
+        setUserPosibleLikes(
+          res.data.map((l) => {
+            l.elected = false; // se agrega a cada posible gusto si fue elegido o no por el usuario
+            return l;
+          })
+        );
+      });
+    }
+  });
+
+  const selectLike = (like) =>
+    setUserPosibleLikes(
+      userPosibleLikes.map((l) => {
+        l.elected = l.id === like.id ? !l.elected : l.elected;
+        return l;
+      }),
+    );
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>REGISTRATE</Text>
-      <View style={styles.nicknameRow}>
+      <View style={styles.formRowCenter}>
         <MatInput
           value={nickname}
           label="Nombre de usuario"
@@ -100,7 +124,35 @@ export default function CreateProfile() {
           </View>
         </View>
       </View>
-      <FormButton buttonTitle="Logout" onPress={() => {}} />
+      <View style={styles.formRowCenter}>
+        <Text style={styles.text}>
+          Queremos conocerte un poco para ofrecerte perfiles similares a tus gustos
+        </Text>
+      </View>
+      <View style={styles.posibleLikesContainer}>
+        {userPosibleLikes.map((l, i) => (
+          <TouchableOpacity
+            key={i}
+            style={
+              l.elected
+                ? [styles.posibleLikes, styles.posibleLikeElected]
+                : [styles.posibleLikes]
+            }
+            onPress={() => selectLike(l)}>
+            <Text
+              style={
+                l.elected
+                  ? [styles.posibleLikesname, styles.posibleLikeElected]
+                  : [styles.posibleLikesname]
+              }>
+              {l.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <View style={styles.formRowCenter}>
+        <FormButton buttonTitle="Continuar" onPress={() => {}} />
+      </View>
     </View>
   );
 }
@@ -109,7 +161,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'stretch',
     padding: 20,
   },
@@ -128,11 +180,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
   },
-  nicknameRow: {
+  formRowCenter: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 30,
   },
   datePicker: {
     borderColor: StylesConfiguration.color,
@@ -169,6 +220,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
+    lineHeight: 15,
     color: 'white',
     fontWeight: StylesConfiguration.fontWeight,
     fontFamily: StylesConfiguration.fontFamily,
@@ -196,5 +248,32 @@ const styles = StyleSheet.create({
   },
   sexInput: {
     width: 150,
+  },
+  posibleLikesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+    marginTop: 10,
+  },
+  posibleLikes: {
+    padding: 7,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: StylesConfiguration.color,
+    marginTop: 8,
+    marginLeft: 6,
+  },
+  posibleLikeElected: {
+    backgroundColor: StylesConfiguration.color,
+    color: '#000000',
+  },
+  posibleLikesname: {
+    color: 'white',
+    fontWeight: '500',
+    fontFamily: StylesConfiguration.fontFamily,
+    fontSize: 14,
   },
 });
