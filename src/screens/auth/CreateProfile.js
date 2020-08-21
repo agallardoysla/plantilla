@@ -8,6 +8,7 @@ import {Icon} from 'react-native-elements';
 import api from '../../utils/api';
 import CheckBox from '@react-native-community/checkbox';
 import moment from 'moment';
+import {AuthContext} from '../../navigation/AuthProvider';
 
 export default function CreateProfile() {
   const today = new Date();
@@ -15,10 +16,11 @@ export default function CreateProfile() {
   const [existNickname, setExistNickname] = useState(false);
   const [birthday, setBirthday] = useState(today);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [sex, setSex] = useState('');
-  const [customSex, setCustomSex] = useState('');
+  const [gender, setGender] = useState('');
+  const [customGender, setCustomGender] = useState('');
   const [userPosibleLikes, setUserPosibleLikes] = useState([]);
   const [canSubmit, setCanSubmit] = useState([]);
+  const {user, setExistProfile} = useContext(AuthContext);
 
   useEffect(() => {
     if (userPosibleLikes.length === 0) {
@@ -66,10 +68,28 @@ export default function CreateProfile() {
 
   const updateCanSubmit = () => {
     console.log('update', canSubmit);
-    setCanSubmit(!existNickname && !sameDayAsToday() && sex !== '');
+    setCanSubmit(!existNickname && !sameDayAsToday() && gender !== '');
+  };
+
+  const submitProfile = () => {
+    console.log(user.providerData);
+    const profile = {
+      firebase_id: user.uid,
+      email: user.email,
+      nickname: nickname,
+      birthday: [
+        birthday.getFullYear(),
+        birthday.getMonth() + 1,
+        birthday.getDate(),
+      ],
+      gender: gender,
+      profileLikes: userPosibleLikes.filter((l) => l.elected).map((l) => l.id),
+      isGoogle: user.providerData[0].providerId === 'google.com',
+    };
+    api.post('users/profiles/', profile).then((res) => setExistProfile(true));
   }
 
-  const SexSelectionCheckbox = (props) => (
+  const GenderSelectionCheckbox = (props) => (
     <CheckBox
       // Conf para Android
       tintColors={checkboxConfAndroid}
@@ -151,57 +171,57 @@ export default function CreateProfile() {
         )}
       </View>
       <View style={[styles.formRow, styles.formRowStart]}>
-        <Text style={styles.text}>Sexo:</Text>
-        <View style={styles.selectSex}>
-          <View style={[styles.formRow, styles.sexCheckbox]}>
+        <Text style={styles.text}>Gendero:</Text>
+        <View style={styles.selectGender}>
+          <View style={[styles.formRow, styles.genderCheckbox]}>
             <Text style={styles.text}>Hombre</Text>
-            <SexSelectionCheckbox
-              value={sex === 'M'}
+            <GenderSelectionCheckbox
+              value={gender === 'M'}
               onValueChange={(newValue) => {
-                setCustomSex('');
-                setSex(newValue ? 'M' : '');
+                setCustomGender('');
+                setGender(newValue ? 'M' : '');
               }}
             />
           </View>
-          <View style={[styles.formRow, styles.sexCheckbox]}>
+          <View style={[styles.formRow, styles.genderCheckbox]}>
             <Text style={styles.text}>Mujer</Text>
-            <SexSelectionCheckbox
-              value={sex === 'F'}
+            <GenderSelectionCheckbox
+              value={gender === 'F'}
               onValueChange={(newValue) => {
-                setCustomSex('');
-                setSex(newValue ? 'F' : '');
+                setCustomGender('');
+                setGender(newValue ? 'F' : '');
               }}
             />
           </View>
-          <View style={[styles.formRow, styles.sexCheckbox]}>
+          <View style={[styles.formRow, styles.genderCheckbox]}>
             <Text style={styles.text}>Neutro</Text>
-            <SexSelectionCheckbox
-              value={sex === 'N'}
+            <GenderSelectionCheckbox
+              value={gender === 'N'}
               onValueChange={(newValue) => {
-                setCustomSex('');
-                setSex(newValue ? 'N' : '');
+                setCustomGender('');
+                setGender(newValue ? 'N' : '');
               }}
             />
           </View>
-          <View style={[styles.formRow, styles.sexCheckbox]}>
+          <View style={[styles.formRow, styles.genderCheckbox]}>
             <Text style={styles.text}>Prefiero no indicarlo</Text>
-            <SexSelectionCheckbox
-              value={sex === 'NI'}
+            <GenderSelectionCheckbox
+              value={gender === 'NI'}
               onValueChange={(newValue) => {
-                setCustomSex('');
-                console.log(customSex);
-                setSex(newValue ? 'NI' : '');
+                setCustomGender('');
+                console.log(customGender);
+                setGender(newValue ? 'NI' : '');
               }}
             />
           </View>
-          {/* <View style={[styles.formRow, styles.sexCheckbox]}>
+          {/* <View style={[styles.formRow, styles.genderCheckbox]}>
             <Text style={styles.text}>Otro:</Text>
             <MatInput
-              value={customSex}
+              value={customGender}
               label="Comentanos aquí..."
-              onChangeText={(newSex) => {
-                setCustomSex(newSex);
-                setSex('');
+              onChangeText={(newGender) => {
+                setCustomGender(newGender);
+                setGender('');
               }}
               containerStyle={styles.input}
               fontSize={14}
@@ -239,9 +259,9 @@ export default function CreateProfile() {
       <View style={styles.formRowCenter}>
         <FormButton
           buttonTitle="Continuar"
-          onPress={() => {}}
-          style={canSubmit? styles.canSubmit : styles.notCanSubmit}
-          disabled={canSubmit}
+          onPress={submitProfile}
+          style={canSubmit ? styles.canSubmit : styles.notCanSubmit}
+          disabled={!canSubmit}
         />
       </View>
     </View>
@@ -334,20 +354,20 @@ const styles = StyleSheet.create({
     fontWeight: StylesConfiguration.fontWeight,
     fontFamily: StylesConfiguration.fontFamily,
   },
-  selectSex: {
+  selectGender: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     marginLeft: 30,
     marginTop: -3,
   },
-  sexCheckbox: {
+  genderCheckbox: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginTop: -5,
   },
-  sexInput: {
+  genderInput: {
     width: 150,
   },
   posibleLikesContainer: {
