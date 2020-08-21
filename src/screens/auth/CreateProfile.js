@@ -12,6 +12,7 @@ import moment from 'moment';
 export default function CreateProfile() {
   const today = new Date();
   const [nickname, setNickname] = useState('');
+  const [existNickname, setExistNickname] = useState(false);
   const [birthday, setBirthday] = useState(today);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [sex, setSex] = useState('');
@@ -32,7 +33,7 @@ export default function CreateProfile() {
     }
   });
 
-  const sameDayAsToday = (newBirthday) =>
+  const sameDayAsToday = () =>
     birthday.getDate() === today.getDate() &&
     birthday.getMonth() === today.getMonth() &&
     birthday.getFullYear() === today.getFullYear();
@@ -44,8 +45,13 @@ export default function CreateProfile() {
       maxDate.month(),
       maxDate.date(),
     );
-    console.log(maxDateObj);
     return maxDateObj;
+  };
+
+  const checkNicknameExist = () => {
+    api.get(`users/profiles/${nickname}/existNickname/`).then((res) => {
+      setExistNickname(res.data.exist);
+    });
   }
 
   const selectLike = (like) =>
@@ -78,8 +84,12 @@ export default function CreateProfile() {
           value={nickname}
           label="Nombre de usuario"
           onChangeText={setNickname}
+          onSubmitEditing={checkNicknameExist}
           containerStyle={styles.input}
           renderLeftAccessory={() => <Text style={styles.at}>@</Text>}
+          renderRightAccessory={() =>
+            existNickname ? <Icon name="clear" color="#ff0000" /> : <></>
+          }
           fontSize={18}
           labelFontSize={18}
         />
@@ -87,7 +97,7 @@ export default function CreateProfile() {
       <View style={styles.formRow}>
         <Text style={styles.text}>Fecha de nacimiento: </Text>
         <Text style={[styles.text, styles.textImportant]}>+13</Text>
-        {sameDayAsToday(birthday) ? (
+        {sameDayAsToday() ? (
           <TouchableOpacity
             style={styles.datePicker}
             onPress={() => setShowDatePicker(true)}>
