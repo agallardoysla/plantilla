@@ -42,9 +42,9 @@ export default function LoginScreen({navigation}) {
         secureTextEntry={true}
         textContentType="password"
         containerStyle={styles.input}
-        onSubmitEditing={loginOrCreateProfile()}
+        onSubmitEditing={loginOrCreateProfile}
       />
-      <FormButton buttonTitle="INGRESAR" onPress={loginOrCreateProfile()} />
+      <FormButton buttonTitle="INGRESAR" onPress={loginOrCreateProfile} />
       <Text style={styles.text}>O</Text>
       <Text style={styles.text}>inicia con:</Text>
       <View style={styles.socialLoginContainer}>
