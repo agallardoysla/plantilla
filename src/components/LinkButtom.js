@@ -16,7 +16,7 @@ export default function LinkButton({buttonTitle, ...props}) {
 const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 22,
-    width: 200,
+    width: 300,
     height: 43,
     padding: 10,
     alignItems: 'center',
