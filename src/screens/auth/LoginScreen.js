@@ -9,15 +9,60 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+  });
   const {existProfile, login, loginFacebook, loginGoogle} = useContext(AuthContext);
+  const errorLabels = {
+    email: 'Se debe elegir un email válido',
+    noExistEmail: 'No existe una cuenta con este email',
+    password: 'Se debe ingresar una contraseña válida',
+  };
+  const [canSubmit, setCanSubmit] = useState(false);
 
-  const loginOrCreateProfile = () => {
-    if (existProfile) {
-      login(email, password);
+  const doSetEmail = (newEmail) => {
+    setEmail(newEmail);
+    const newErrors = {...errors};
+    if (newEmail.length === 0) {
+      newErrors.email = errorLabels.email;
+      setErrors(newErrors);
+    } else if (!existProfile) {
+      newErrors.email = errorLabels.noExistEmail;
+      setErrors(newErrors);
     } else {
-      navigation.navigate('Signup');
+      newErrors.email = '';
+      setErrors(newErrors);
     }
-  }
+    updateCanSubmit();
+  };
+
+  const doSetPassword = (newPassword) => {
+    setPassword(newPassword);
+    const newErrors = {...errors};
+    if (newPassword.length === 0) {
+      newErrors.password = errorLabels.password;
+      setErrors(newErrors);
+    } else {
+      newErrors.password = '';
+      setErrors(newErrors);
+    }
+    updateCanSubmit();
+  };
+
+  const updateCanSubmit = () => {
+    setCanSubmit(existProfile && errors.email !== '' && errors.password !== '');
+  };
+
+  /* Deprecado */
+  const loginOrCreateProfile = () => {
+    if (canSubmit) {
+      login(email, password);
+    }
+    // } else {
+    //   navigation.navigate('Signup');
+    // }
+  };
 
   return (
     <View style={styles.container}>
@@ -28,23 +73,30 @@ export default function LoginScreen({navigation}) {
       <MatInput
         value={email}
         label="Email"
-        onChangeText={setEmail}
+        onChangeText={doSetEmail}
         autoCapitalize="none"
         textContentType="emailAddress"
         keyboardType="email-address"
         autoCorrect={false}
         containerStyle={styles.input}
+        error={errors.email}
       />
       <MatInput
         value={password}
         label="Contraseña"
-        onChangeText={setPassword}
+        onChangeText={doSetPassword}
         secureTextEntry={true}
         textContentType="password"
         containerStyle={styles.input}
-        onSubmitEditing={loginOrCreateProfile}
+        // onSubmitEditing={loginOrCreateProfile}
+        error={errors.password}
       />
-      <FormButton buttonTitle="INGRESAR" onPress={loginOrCreateProfile} />
+      <FormButton
+        buttonTitle="INGRESAR"
+        onPress={loginOrCreateProfile}
+        style={canSubmit ? styles.canSubmit : styles.notCanSubmit}
+        disabled={!canSubmit}
+      />
       <Text style={styles.text}>O</Text>
       <Text style={styles.text}>inicia con:</Text>
       <View style={styles.socialLoginContainer}>
@@ -101,5 +153,9 @@ const styles = StyleSheet.create({
   navButtonText2: {
     fontSize: 15,
     color: StylesConfiguration.color,
+  },
+  canSubmit: {},
+  notCanSubmit: {
+    borderColor: 'black',
   },
 });
