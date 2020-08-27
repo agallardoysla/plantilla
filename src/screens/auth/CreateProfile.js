@@ -87,7 +87,7 @@ export default function CreateProfile() {
       isGoogle: user.providerData[0].providerId === 'google.com',
     };
     api.post('users/profiles/', profile).then((res) => setExistProfile(true));
-  }
+  };
 
   const GenderSelectionCheckbox = (props) => (
     <CheckBox

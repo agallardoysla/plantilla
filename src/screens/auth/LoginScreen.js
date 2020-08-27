@@ -21,17 +21,20 @@ export default function LoginScreen({navigation}) {
   };
   const [canSubmit, setCanSubmit] = useState(false);
 
+  const emailIsOk = (newEmail) => newEmail.length > 0;
+  const passwordIsOk = (newPassword) => newPassword.length > 0;
+
   const doSetEmail = (newEmail) => {
     setEmail(newEmail);
     const newErrors = {...errors};
-    if (newEmail.length === 0) {
-      newErrors.email = errorLabels.email;
-      setErrors(newErrors);
-    } else if (!existProfile) {
-      newErrors.email = errorLabels.noExistEmail;
-      setErrors(newErrors);
-    } else {
+    if (emailIsOk(newEmail)) {
       newErrors.email = '';
+      setErrors(newErrors);
+    // } else if (!existProfile) {
+    //   newErrors.email = errorLabels.noExistEmail;
+    //   setErrors(newErrors);
+    } else {
+      newErrors.email = errorLabels.email;
       setErrors(newErrors);
     }
     updateCanSubmit();
@@ -40,18 +43,19 @@ export default function LoginScreen({navigation}) {
   const doSetPassword = (newPassword) => {
     setPassword(newPassword);
     const newErrors = {...errors};
-    if (newPassword.length === 0) {
-      newErrors.password = errorLabels.password;
+    if (passwordIsOk(newPassword)) {
+      newErrors.password = '';
       setErrors(newErrors);
     } else {
-      newErrors.password = '';
+      newErrors.password = errorLabels.password;
       setErrors(newErrors);
     }
     updateCanSubmit();
   };
 
   const updateCanSubmit = () => {
-    setCanSubmit(existProfile && errors.email !== '' && errors.password !== '');
+    console.log(emailIsOk(email) && passwordIsOk(password));
+    setCanSubmit(emailIsOk(email) && passwordIsOk(password));
   };
 
   /* Deprecado */
