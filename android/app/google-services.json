@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "667632482166-stg8pchvbategr70624650f62vq78vrj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.friendschallenge",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "667632482166-nan8b1v0u22r4rttkvo3s89jqc33uq72.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.friendschallenge",
+            "certificate_hash": "b7d110bacde4e1a4d3cbe5b226294b1d19e44b1b"
+          }
+        },
+        {
           "client_id": "667632482166-5s9u02g8dtsci93k1cbeve7vqsv8rdo3.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +46,13 @@
             {
               "client_id": "667632482166-5s9u02g8dtsci93k1cbeve7vqsv8rdo3.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "667632482166-odort1dacpqt57l9ttosdg8hb3raq66a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "prueba"
+              }
             }
           ]
         }
