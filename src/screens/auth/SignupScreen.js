@@ -7,10 +7,45 @@ import MatInput from '../../components/MatInput';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 
 export default function SignupScreen({navigation}) {
+  const {register, loginFacebook, loginGoogle} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
-  const {register, loginFacebook, loginGoogle} = useContext(AuthContext);
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+    passwordCheck: '',
+  });
+  const errorLabels = {
+    email: 'Se debe elegir un email válido',
+    noExistEmail: 'No existe una cuenta con este email',
+    password: 'Se debe ingresar una contraseña válida',
+    passwordCheck: 'Las contraseñas no coinciden',
+  };
+  const [canSubmit, setCanSubmit] = useState(false);
+
+  const emailIsOk = (newEmail) => newEmail.length > 0;
+  const passwordIsOk = (newPassword) => newPassword.length > 0;
+  const passwordCheckIsOk = (newPassword) => newPassword.length > 0 && password === passwordCheck;
+
+
+  const doSetField = (setter, validator, errorId, errorLabel) => (newValue) => {
+    setter(newValue);
+    if (validator(newValue)) {
+      errors[errorId] = '';
+    } else {
+      errors[errorId] = errorLabel;
+    }
+    updateCanSubmit();
+  };
+
+  const updateCanSubmit = () => {
+    setCanSubmit(
+      emailIsOk(email) &&
+        passwordIsOk(password) &&
+        passwordCheckIsOk(passwordCheck),
+    );
+  };
 
   const checkPasswords = () => {
     if (password !== passwordCheck) {
@@ -32,29 +67,47 @@ export default function SignupScreen({navigation}) {
       <MatInput
         value={email}
         label="Email"
-        onChangeText={setEmail}
+        onChangeText={doSetField(
+          setEmail,
+          emailIsOk,
+          'email',
+          errorLabels.email,
+        )}
         autoCapitalize="none"
         textContentType="emailAddress"
         keyboardType="email-address"
         autoCorrect={false}
         containerStyle={styles.input}
+        error={errors.email}
       />
       <MatInput
         value={password}
         label="Contraseña"
-        onChangeText={setPassword}
-        secureTextEntry={true}
+        onChangeText={doSetField(
+          setPassword,
+          passwordIsOk,
+          'password',
+          errorLabels.password,
+        )}
+        secureEntry={true}
         textContentType="password"
         containerStyle={styles.input}
+        error={errors.password}
       />
       <MatInput
         value={passwordCheck}
         label="Confirmar contraseña"
-        onChangeText={setPasswordCheck}
-        secureTextEntry={true}
+        onChangeText={doSetField(
+          setPasswordCheck,
+          passwordCheckIsOk,
+          'passwordCheck',
+          errorLabels.passwordCheck,
+        )}
+        secureEntry={true}
         textContentType="password"
         containerStyle={styles.input}
-        onSubmitEditing={checkPasswords}
+        // onSubmitEditing={checkPasswords}
+        error={errors.passwordCheck}
       />
       <FormButton buttonTitle="Siguiente" onPress={checkPasswords} />
       <Text style={styles.text}>O</Text>

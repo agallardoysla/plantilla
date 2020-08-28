@@ -12,7 +12,7 @@ class MatInput extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showIcon: this.props.secureTextEntry,
+      showIcon: this.props.secureEntry,
       showPassword: false,
     };
   }

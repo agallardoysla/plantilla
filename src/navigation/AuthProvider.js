@@ -27,20 +27,20 @@ export const AuthProvider = ({children}) => {
         setUser,
         existProfile,
         setExistProfile,
-        login: async (email, password) => {
+        login: async (email, password, callback) => {
           try {
             await auth().signInWithEmailAndPassword(email, password);
           } catch (e) {
             console.log(e);
-            Alert.alert(e.message);
+            callback(e.message);
           }
         },
-        register: async (email, password) => {
+        register: async (email, password, callback) => {
           try {
             await auth().createUserWithEmailAndPassword(email, password);
           } catch (e) {
             console.log(e);
-            Alert.alert(e.message);
+            callback(e.message);
           }
         },
         logout: async () => {
@@ -51,7 +51,7 @@ export const AuthProvider = ({children}) => {
             Alert.alert(e.message);
           }
         },
-        loginFacebook: async () => {
+        loginFacebook: async (callback) => {
           try {
             // Attempt login with permissions
             const result = await LoginManager.logInWithPermissions([
@@ -79,10 +79,10 @@ export const AuthProvider = ({children}) => {
             return auth().signInWithCredential(facebookCredential);
           } catch (e) {
             console.error(e);
-            Alert.alert(e.message);
+            callback(e.message);
           }
         },
-        loginGoogle: async () => {
+        loginGoogle: async (callback) => {
           try {
             // Get the users ID token
             const {idToken} = await GoogleSignin.signIn();
@@ -96,7 +96,7 @@ export const AuthProvider = ({children}) => {
             return auth().signInWithCredential(googleCredential);
           } catch (e) {
             console.error(e);
-            Alert.alert(e.message);
+            callback(e.message);
           }
         },
       }}>

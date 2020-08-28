@@ -7,13 +7,13 @@ import MatInput from '../../components/MatInput';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 
 export default function LoginScreen({navigation}) {
+  const {existProfile, login, loginFacebook, loginGoogle} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({
     email: '',
     password: '',
   });
-  const {existProfile, login, loginFacebook, loginGoogle} = useContext(AuthContext);
   const errorLabels = {
     email: 'Se debe elegir un email válido',
     noExistEmail: 'No existe una cuenta con este email',
@@ -24,31 +24,12 @@ export default function LoginScreen({navigation}) {
   const emailIsOk = (newEmail) => newEmail.length > 0;
   const passwordIsOk = (newPassword) => newPassword.length > 0;
 
-  const doSetEmail = (newEmail) => {
-    setEmail(newEmail);
-    const newErrors = {...errors};
-    if (emailIsOk(newEmail)) {
-      newErrors.email = '';
-      setErrors(newErrors);
-    // } else if (!existProfile) {
-    //   newErrors.email = errorLabels.noExistEmail;
-    //   setErrors(newErrors);
+  const doSetField = (setter, validator, errorId, errorLabel) => (newValue) => {
+    setter(newValue);
+    if (validator(newValue)) {
+      errors[errorId] = '';
     } else {
-      newErrors.email = errorLabels.email;
-      setErrors(newErrors);
-    }
-    updateCanSubmit();
-  };
-
-  const doSetPassword = (newPassword) => {
-    setPassword(newPassword);
-    const newErrors = {...errors};
-    if (passwordIsOk(newPassword)) {
-      newErrors.password = '';
-      setErrors(newErrors);
-    } else {
-      newErrors.password = errorLabels.password;
-      setErrors(newErrors);
+      errors[errorId] = errorLabel;
     }
     updateCanSubmit();
   };
@@ -77,7 +58,12 @@ export default function LoginScreen({navigation}) {
       <MatInput
         value={email}
         label="Email"
-        onChangeText={doSetEmail}
+        onChangeText={doSetField(
+          setEmail,
+          emailIsOk,
+          'email',
+          errorLabels.email,
+        )}
         autoCapitalize="none"
         textContentType="emailAddress"
         keyboardType="email-address"
@@ -88,8 +74,13 @@ export default function LoginScreen({navigation}) {
       <MatInput
         value={password}
         label="Contraseña"
-        onChangeText={doSetPassword}
-        secureTextEntry={true}
+        onChangeText={doSetField(
+          setPassword,
+          passwordIsOk,
+          'password',
+          errorLabels.password,
+        )}
+        secureEntry={true}
         textContentType="password"
         containerStyle={styles.input}
         // onSubmitEditing={loginOrCreateProfile}
