@@ -12,7 +12,7 @@ export default function Profile() {
 
       {/* <Text style={styles.text}>Holaa {user.uid}</Text> */}
       <Text style={styles.text}>Profile</Text>
-      {/* <FormButton buttonTitle="Logout" onPress={() => logout()} /> */}
+      <FormButton buttonTitle="Logout" onPress={() => logout()} />
      
     </View>
   );
