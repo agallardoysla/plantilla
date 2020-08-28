@@ -42,7 +42,23 @@ export default function LoginScreen({navigation}) {
   /* Deprecado */
   const loginOrCreateProfile = () => {
     if (canSubmit) {
-      login(email, password);
+      login(email, password).then(
+        () => navigation.navigate('CreateProfile'),
+        (error) => {
+          console.log(error.message);
+          const newErrors = {...errors};
+          if (error.message.includes('wrong-password')) {
+            newErrors.password = 'Contraseña incorrecta';
+          }
+          if (error.message.includes('invalid-email')) {
+            newErrors.email = 'Email mal formado';
+          }
+          if (error.message.includes('user-not-found')) {
+            newErrors.email = 'No existe una cuenta con este email';
+          }
+          setErrors(newErrors);
+        },
+      );
     }
     // } else {
     //   navigation.navigate('Signup');
