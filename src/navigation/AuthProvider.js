@@ -29,7 +29,7 @@ export const AuthProvider = ({children}) => {
         setExistProfile,
         login: async (email, password, callback) => {
           try {
-            await auth().signInWithEmailAndPassword(email, password);
+            return auth().signInWithEmailAndPassword(email, password);
           } catch (e) {
             console.log(e);
             callback(e.message);
@@ -37,7 +37,7 @@ export const AuthProvider = ({children}) => {
         },
         register: async (email, password, callback) => {
           try {
-            await auth().createUserWithEmailAndPassword(email, password);
+            return auth().createUserWithEmailAndPassword(email, password);
           } catch (e) {
             console.log(e);
             callback(e.message);

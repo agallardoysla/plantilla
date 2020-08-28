@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
 import {GoogleButton, FacebookButton} from '../../components/SocialButton';
 import FormButton from '../../components/FormButton';
@@ -18,25 +18,23 @@ export default function SignupScreen({navigation}) {
   });
   const errorLabels = {
     email: 'Se debe elegir un email válido',
-    noExistEmail: 'No existe una cuenta con este email',
     password: 'Se debe ingresar una contraseña válida',
     passwordCheck: 'Las contraseñas no coinciden',
   };
   const [canSubmit, setCanSubmit] = useState(false);
 
   const emailIsOk = (newEmail) => newEmail.length > 0;
-  const passwordIsOk = (newPassword) => newPassword.length > 0;
-  const passwordCheckIsOk = (newPassword) => newPassword.length > 0 && password === passwordCheck;
+  const passwordIsOk = (newPassword) => newPassword.length >= 6;
+  const passwordCheckIsOk = (newPassword) => newPassword.length >= 6 && password === newPassword;
 
 
-  const doSetField = (setter, validator, errorId, errorLabel) => (newValue) => {
-    setter(newValue);
+  const doSetField = (setter, validator, errorId, errorLabel) => async (newValue) => {
+    await setter(newValue);
     if (validator(newValue)) {
       errors[errorId] = '';
     } else {
       errors[errorId] = errorLabel;
     }
-    updateCanSubmit();
   };
 
   const updateCanSubmit = () => {
@@ -47,16 +45,28 @@ export default function SignupScreen({navigation}) {
     );
   };
 
-  const checkPasswords = () => {
-    if (password !== passwordCheck) {
-      Alert.alert('Las contraseñas no coinciden');
-    } else {
-      login(() => register(email, password));
-    }
+  const createUser = () => {
+    login(() => register(email, password));
   };
+
   const login = (doLogin) => {
-    doLogin().then(() => navigation.navigate('CreateProfile'));
-  }
+    doLogin().then(
+      () => navigation.navigate('CreateProfile'),
+      (error) => {
+        console.log(error.message);
+        const newErrors = {...errors};
+        if (error.message.includes('email-already-in-use')) {
+          newErrors.email = 'Ya existe una cuenta con este email';
+        }
+        if (error.message.includes('invalid-email')) {
+          newErrors.email = 'Email mal formado';
+        }
+        setErrors(newErrors);
+      },
+    );
+  };
+
+  useEffect(updateCanSubmit);
 
   return (
     <View style={styles.container}>
@@ -109,7 +119,12 @@ export default function SignupScreen({navigation}) {
         // onSubmitEditing={checkPasswords}
         error={errors.passwordCheck}
       />
-      <FormButton buttonTitle="Siguiente" onPress={checkPasswords} />
+      <FormButton
+        buttonTitle="Siguiente"
+        onPress={createUser}
+        style={canSubmit ? styles.canSubmit : styles.notCanSubmit}
+        disabled={!canSubmit}
+      />
       <Text style={styles.text}>O</Text>
       <Text style={styles.text}>registrate con:</Text>
       <View style={styles.socialLoginContainer}>
@@ -166,5 +181,9 @@ const styles = StyleSheet.create({
   navButtonText2: {
     fontSize: 15,
     color: StylesConfiguration.color,
+  },
+  canSubmit: {},
+  notCanSubmit: {
+    borderColor: 'black',
   },
 });
