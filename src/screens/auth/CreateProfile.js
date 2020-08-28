@@ -119,6 +119,7 @@ export default function CreateProfile() {
           }
           fontSize={18}
           labelFontSize={18}
+          error={existNickname? 'Ya existe otro usuario con este nombre' : ''}
         />
       </View>
       <View style={styles.formRow}>
