@@ -34,8 +34,9 @@ const ProfileGroup = ({navigation}) => {
       screenOptions={{
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
+
       }}>
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} options={{headerShown:false}} />
     </Stack.Navigator>
   );
 };
@@ -74,7 +75,7 @@ const NewPublicationGroup = ({navigation}) => {
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
       }}>
-      <Stack.Screen name="NewPublication" component={NewPublicationScreen} />
+      <Stack.Screen name="NewPublication" component={NewPublicationScreen} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
