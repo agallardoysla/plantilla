@@ -1,66 +1,107 @@
-import React, {useContext, useState} from 'react';
-import {View, Text, StyleSheet, Image, alert, Button} from 'react-native';
-import FilledButton from '../components/FilledButton';
+import React, {useContext} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
+import FormButton from '../components/FormButton';
 import {AuthContext} from '../navigation/AuthProvider';
 import ImagePicker from 'react-native-image-picker';
 
+const window = Dimensions.get('window');
+
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function HomeScreen() {
-  const {logout} = useContext(AuthContext);
-  const [resourcePath, setResourcePath] = useState({});
-
-  const selectFile = () => {
-    var options = {
-      title: 'Seleccione una imagen',
-      //mediaType: 'video',
-      //durationLimit: '15',
-      customButtons: [
-        {
-          name: 'customOptionKey',
-          title: 'Choose file from Custom Option',
-        },
-      ],
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-
-    ImagePicker.showImagePicker(options, (res) => {
-      console.log('Response = ', res);
-
-      if (res.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (res.error) {
-        console.log('ImagePicker Error: ', res.error);
-      } else if (res.customButton) {
-        console.log('User tapped custom button: ', res.customButton);
-        alert(res.customButton);
-      } else {
-        let source = res;
-        setResourcePath(source);
-      }
-    });
-  };
+  const {user, logout} = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>React Native Image Picker Imagen</Text>
-      <FilledButton buttonTitle="Logout" onPress={() => logout()} />
+      <ScrollView>
+        <Text style={styles.encabezado_text}>@User</Text>
+        <Image
+          source={require('../assets/foto_publicacion.png')}
+          resizeMode="cover"
+          style={styles.image_publication}
+        />
 
-      <Image
-        source={{
-          uri: 'data:image/jpeg;base64,' + resourcePath.data,
-        }}
-        style={{width: 100, height: 100}}
-      />
-      <Image
-        source={{uri: resourcePath.uri}}
-        style={{width: 200, height: 200}}
-      />
-      <Text style={{alignItems: 'center'}}>{resourcePath.uri}</Text>
+        <View style={styles.icon_container}>
+          <Image
+            source={require('../assets/ojo_vista.png')}
+            style={styles.icon_publication}
+          />
+          <Text style={{color: 'white', left: -15}}>5645</Text>
 
-      <Button title="Seleccionar Imagen" onPress={selectFile} />
+          <Image
+            source={require('../assets/corazon_like.png')}
+            style={styles.icon_publication}
+          />
+          <Text style={{color: 'white', left: -15}}>5645</Text>
+
+          <Image
+            source={require('../assets/comentario.png')}
+            style={styles.icon_publication}
+          />
+
+          <Image
+            source={require('../assets/compartir.png')}
+            style={styles.icon_publication}
+          />
+        </View>
+
+        <View
+          style={{
+            width: window.width,
+            height: 70,
+            backgroundColor: 'yellow',
+          }}>
+          <Image
+            style={{
+              alignContent: 'center',
+              marginHorizontal: 10,
+              marginVertical: 10,
+            }}
+            source={require('../assets/franja_amarilla_imagen.png')}
+            resizeMode='center'
+          />
+        </View>
+        <Text style={styles.encabezado_text}>@User</Text>
+
+        <Image
+          source={require('../assets/foto_publicacion.png')}
+          resizeMode="cover"
+          style={styles.image_publication}
+        />
+
+        <View style={styles.icon_container}>
+          <Image
+            source={require('../assets/ojo_vista.png')}
+            style={styles.icon_publication}
+          />
+          <Text style={{color: 'white', left: -15}}>5645</Text>
+
+          <Image
+            source={require('../assets/corazon_like.png')}
+            style={styles.icon_publication}
+          />
+          <Text style={{color: 'white', left: -15}}>5645</Text>
+
+          <Image
+            source={require('../assets/comentario.png')}
+            style={styles.icon_publication}
+          />
+
+          <Image
+            source={require('../assets/compartir.png')}
+            style={styles.icon_publication}
+          />
+        </View>
+
+        {/* <Text style={styles.text}>Holaa {user.uid}</Text> */}
+        {/* <FormButton buttonTitle="Logout" onPress={() => logout()} /> */}
+      </ScrollView>
     </View>
   );
 }
@@ -70,10 +111,31 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f1',
+    backgroundColor: 'black',
   },
   text: {
     fontSize: 20,
-    color: '#333333',
+    color: 'white',
+  },
+  encabezado_text: {
+    textAlign: 'right',
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  icon_container: {
+    flexDirection: 'row',
+    marginVertical: 10,
+    justifyContent: 'space-between', //espacio o separacion entre elementos
+  },
+  icon_publication: {
+    width: 20,
+    height: 20,
+    marginHorizontal: 10,
+  },
+  image_publication: {
+    width: window.width,
+    height: 300,
+    alignContent: 'center',
+    marginBottom: 5,
   },
 });
