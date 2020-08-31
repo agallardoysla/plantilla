@@ -3,20 +3,33 @@ import api from './api';
 
 /* Todo este modulo se usa solo cuando el usuario ya esta logueado con Firebase */
 
-const getConfig = () => {
-  const token = auth().currentUser.getIdToken(true);
+const getConfig = async () => {
+  const token = await auth().currentUser.getIdToken(true);
   return {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': token,
+      'Authorization': `JWT ${token}`,
     },
   };
 };
 
 export default {
-  doGet: (url, data) => api.get(url, data, getConfig()),
-  doPost: () => {},
-  doPut: () => {},
-  doDelete: () => {},
+  doGet: async (url) => {
+    const config = await getConfig();
+    console.log(url, config);
+    return api.get(url, config);
+  },
+  doPost: async (url, data) => {
+    const config = await getConfig();
+    return api.post(url, config);
+  },
+  doPut: async (url, data) => {
+    const config = await getConfig();
+    return api.put(url, config);
+  },
+  doDelete: async (url, data) => {
+    const config = await getConfig();
+    return api.delete(url, config);
+  },
 }

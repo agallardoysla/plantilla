@@ -1,8 +1,8 @@
 import generic_service from './generic_service';
-import api from './api';
 
-const ble = 'users/';
+const url = 'users/';
 
 export default {
-  list: () => generic_service.doGet(api.baseURL + ble, {}),
+  list: () => generic_service.doGet(url),
+  me: () => generic_service.doGet(url + 'me/'),
 };
