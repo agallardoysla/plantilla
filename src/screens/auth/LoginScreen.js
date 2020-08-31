@@ -39,30 +39,30 @@ export default function LoginScreen({navigation}) {
     setCanSubmit(emailIsOk(email) && passwordIsOk(password));
   };
 
-  /* Deprecado */
-  const loginOrCreateProfile = () => {
+  const doLogin = (loginFunction) => () => {
+    loginFunction().then(
+      () => navigation.navigate('CreateProfile'),
+      (error) => {
+        console.log(error.message);
+        const newErrors = {...errors};
+        if (error.message.includes('wrong-password')) {
+          newErrors.password = 'Contraseña incorrecta';
+        }
+        if (error.message.includes('invalid-email')) {
+          newErrors.email = 'Email mal formado';
+        }
+        if (error.message.includes('user-not-found')) {
+          newErrors.email = 'No existe una cuenta con este email';
+        }
+        setErrors(newErrors);
+      },
+    );
+  };
+
+  const loginMail = () => {
     if (canSubmit) {
-      login(email, password).then(
-        () => navigation.navigate('CreateProfile'),
-        (error) => {
-          console.log(error.message);
-          const newErrors = {...errors};
-          if (error.message.includes('wrong-password')) {
-            newErrors.password = 'Contraseña incorrecta';
-          }
-          if (error.message.includes('invalid-email')) {
-            newErrors.email = 'Email mal formado';
-          }
-          if (error.message.includes('user-not-found')) {
-            newErrors.email = 'No existe una cuenta con este email';
-          }
-          setErrors(newErrors);
-        },
-      );
+      doLogin(() => login(email, password))();
     }
-    // } else {
-    //   navigation.navigate('Signup');
-    // }
   };
 
   return (
@@ -104,15 +104,15 @@ export default function LoginScreen({navigation}) {
       />
       <FormButton
         buttonTitle="INGRESAR"
-        onPress={loginOrCreateProfile}
+        onPress={loginMail}
         style={canSubmit ? styles.canSubmit : styles.notCanSubmit}
         disabled={!canSubmit}
       />
       <Text style={styles.text}>O</Text>
       <Text style={styles.text}>inicia con:</Text>
       <View style={styles.socialLoginContainer}>
-        <GoogleButton onPress={loginGoogle} />
-        <FacebookButton onPress={loginFacebook} />
+        <GoogleButton onPress={doLogin(loginGoogle)} />
+        <FacebookButton onPress={doLogin(loginFacebook)} />
       </View>
       <TouchableOpacity
         style={styles.navButton}
