@@ -153,7 +153,7 @@ export default function CreateProfile() {
           }
           fontSize={18}
           labelFontSize={18}
-          error={existNickname? 'Ya existe otro usuario con este nombre' : ''}
+          error={existNickname ? 'Ya existe otro usuario con este nombre' : ''}
         />
       </View>
       <View style={styles.formRow}>
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   },
   posibleLikesname: {
     color: 'white',
-    fontWeight: "500",
+    fontWeight: '500',
     fontFamily: StylesConfiguration.fontFamily,
     fontSize: 14,
   },
