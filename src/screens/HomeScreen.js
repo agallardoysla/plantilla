@@ -20,20 +20,23 @@ export default function HomeScreen() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    console.log("posts ya cargados", posts);
     if (posts.length === 0) {
-      posts_services.list().then((res) => {
-        console.log("nuevos posts", res.data);
-        setPosts(res.data);
-      });
+      loadPost();
     }
   });
+
+  const loadPost = () => {
+    posts_services.list().then((res) => {
+      console.log("nuevos posts", res.data);
+      setPosts(res.data);
+    });
+  };
 
   const Post = ({item}) => {
     console.log(item);
     return (
       <View>
-        <Text style={styles.encabezado_text}>@{item.user}</Text>
+        <Text style={styles.encabezado_text}>@{item.user_owner.username}</Text>
         <Image
           source={require('../assets/foto_publicacion.png')}
           resizeMode="cover"
@@ -45,7 +48,7 @@ export default function HomeScreen() {
             source={require('../assets/ojo_vista.png')}
             style={styles.icon_publication}
           />
-          <Text style={{color: 'white', left: -15}}>5645</Text>
+          <Text style={{color: 'white', left: -15}}>{item.reactionscount.TIPO_REACCION_PRUEBA}</Text>
 
           <Image
             source={require('../assets/corazon_like.png')}
@@ -69,7 +72,13 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <FlatList data={posts} renderItem={Post} />
+      <FlatList
+        data={posts}
+        renderItem={Post}
+        onEndReachedThreshold={0.5}
+        onEndReached={(info) => loadPost()}
+        bouncesZoom={true}
+      />
       {/* <View
         style={{
           width: window.width,
