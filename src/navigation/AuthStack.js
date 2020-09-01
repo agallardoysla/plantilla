@@ -4,7 +4,8 @@ import LandingScreen from '../screens/auth/LandingScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import TermsAndConditions from '../screens/TermsAndConditions';
-import CreateProfile from '../screens/auth/CreateProfile';
+import CreateProfile from '../screens/auth/CreateProfileScreen';
+import Wellcoming from '../screens/auth/WellcomingScreen';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,11 @@ export default function AuthStack() {
       <Stack.Screen
         name="CreateProfile"
         component={CreateProfile}
+        options={{header: () => null}}
+      />
+      <Stack.Screen
+        name="Wellcoming"
+        component={Wellcoming}
         options={{header: () => null}}
       />
       <Stack.Screen

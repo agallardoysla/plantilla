@@ -7,7 +7,7 @@ import MatInput from '../../components/MatInput';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 
 export default function LoginScreen({navigation}) {
-  const {existProfile, login, loginFacebook, loginGoogle} = useContext(AuthContext);
+  const {login, loginFacebook, loginGoogle} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({

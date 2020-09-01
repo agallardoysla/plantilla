@@ -11,7 +11,7 @@ import moment from 'moment';
 import {AuthContext} from '../../navigation/AuthProvider';
 import profiles_services from '../../services/profiles_services';
 
-export default function CreateProfile() {
+export default function CreateProfile({navigation}) {
   const today = new Date();
   const [nickname, setNickname] = useState('');
   const [existNickname, setExistNickname] = useState(false);
@@ -21,7 +21,8 @@ export default function CreateProfile() {
   const [customGender, setCustomGender] = useState('');
   const [userPosibleLikes, setUserPosibleLikes] = useState([]);
   const [canSubmit, setCanSubmit] = useState(false);
-  const {user, setExistProfile} = useContext(AuthContext);
+  const {user, existProfile} = useContext(AuthContext);
+  const [verifyExistProfile, setVerifyExistProfile] = useState(false);
 
   useEffect(() => {
     if (userPosibleLikes.length === 0) {
@@ -75,7 +76,8 @@ export default function CreateProfile() {
       );
     }
     updateCanSubmit();
-  });
+    setVerifyExistProfile(user && !existProfile);
+  }, [userPosibleLikes.length, nickname, gender, birthday, user, existProfile]);
 
   const sameDayAsToday = () =>
     birthday.getDate() === today.getDate() &&
@@ -120,7 +122,7 @@ export default function CreateProfile() {
     
     profiles_services
       .edit(user.profile.id, profile)
-      .then((res) => setExistProfile(true));
+      .then((res) => navigation.navigate('Wellcoming'));
   };
 
   const GenderSelectionCheckbox = (props) => (
@@ -137,7 +139,8 @@ export default function CreateProfile() {
     />
   );
 
-  return (
+  return verifyExistProfile ? 
+  (
     <View style={styles.container}>
       <Text style={styles.title}>REGISTRATE</Text>
       <View style={styles.formRowCenter}>
@@ -300,6 +303,10 @@ export default function CreateProfile() {
         />
       </View>
     </View>
+  ) : (
+    <View style={styles.verificationContainer}>
+      <Text style={styles.verificationText}>Verificando perfil...</Text>
+    </View>
   );
 }
 
@@ -435,6 +442,17 @@ const styles = StyleSheet.create({
   canSubmit: {},
   notCanSubmit: {
     borderColor: 'black',
+  },
+  verificationContainer: {
+    flex: 1,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  verificationText: {
+    fontSize: 28,
+    marginBottom: 10,
+    color: StylesConfiguration.color,
   },
 });
 
