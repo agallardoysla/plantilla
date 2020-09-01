@@ -34,8 +34,9 @@ const ProfileGroup = ({navigation}) => {
       screenOptions={{
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
+
       }}>
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} options={{headerShown:false}} />
     </Stack.Navigator>
   );
 };
@@ -47,6 +48,7 @@ const NotificationGroup = ({navigation}) => {
       screenOptions={{
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
+        headerShown:false,
       }}>
       <Stack.Screen name="Notification" component={NotificationScreen} />
     </Stack.Navigator>
@@ -74,7 +76,7 @@ const NewPublicationGroup = ({navigation}) => {
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
       }}>
-      <Stack.Screen name="NewPublication" component={NewPublicationScreen} />
+      <Stack.Screen name="NewPublication" component={NewPublicationScreen} options={{headerShown: false}} />
     </Stack.Navigator>
   );
 };
