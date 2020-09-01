@@ -16,24 +16,40 @@ export default function NewPublicationScreen() {
 
         <Text style={styles.text_title}>SUBIR RETO</Text>
 
-        <Text style={styles.container_publication} onPress={() => console.log('nueva publicacion..')}>
+        <Text
+          style={styles.container_publication}
+          onPress={() => console.log('nueva publicacion..')}>
           <Text style={styles.text_container_publication}>+</Text>
         </Text>
 
-        <Text style={styles.container_button_grabar} onPress={() => console.log('grabando..')}>
+        <Text
+          style={styles.container_button_grabar}
+          onPress={() => console.log('grabando..')}>
           <Text style={styles.text_button}>Grabar</Text>
         </Text>
 
-        <Text style={styles.container_button_cargar} onPress={() => console.log('cargando..')}>
+        <Text
+          style={styles.container_button_cargar}
+          onPress={() => console.log('cargando..')}>
           <Text style={styles.text_button}>Cargar</Text>
         </Text>
 
         {/* --> NOTA: revisarlo porque al posicionarlo como el tercer no ejecuta el onPress */}
-        <Text style={styles.container_button_filtro} onPress={() => console.log('filtro..')}>
+        <Text
+          style={styles.container_button_filtro}
+          onPress={() => console.log('filtro..')}>
           <Text style={styles.text_button}>Filtro</Text>
         </Text>
 
-        <Text style={styles.text_description}>Descripciòn del reto</Text>
+        <Text style={styles.text_description}>DESCRIPCION DEL RETO</Text>
+        <Text style={styles.container_description}>
+          Toques con Pelotas de Ping Pong
+          <Text style={{fontWeight: 'bold'}}> #challenge </Text>
+          <Text style={{fontWeight: 'bold'}}> #Divertido </Text>
+          <Text style={{fontWeight: 'bold'}}> #Argentina </Text>
+          <Text style={{fontWeight: 'bold'}}> @Salchicha </Text>
+          <Text style={{fontWeight: 'bold'}}> @Mordiscos </Text>
+        </Text>
 
         {/* <Text style={styles.text}>New Publication</Text> */}
         {/* <FormButton buttonTitle="Logout" onPress={() => logout()} /> */}
@@ -50,7 +66,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: 'black',
-    height: window.height
+    height: window.height,
   },
 
   //titulo
@@ -67,8 +83,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     borderWidth: 2,
     borderColor: 'white',
-    width: window.width - 100,
-    height: window.height - 400,
+    width: 200,
+    height: 200,
     top: 18,
     paddingTop: 25,
 
@@ -76,6 +92,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingRight: 50,
     paddingLeft: 50,
+  },
+
+  //descripcion
+  container_description: {
+    backgroundColor: 'black',
+    borderWidth: 2,
+    borderColor: 'white',
+    width: window.width - 20,
+    height: 100,
+    textAlign: 'center',
+    top: 20,
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
+    paddingTop: 10
   },
 
   //contendido dentro del contenedor nueva publicacion (signo de +)
@@ -140,5 +173,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#E9FC64',
     paddingTop: 60,
+    top: 10,
   },
 });

@@ -48,6 +48,7 @@ const NotificationGroup = ({navigation}) => {
       screenOptions={{
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
+        headerShown:false,
       }}>
       <Stack.Screen name="Notification" component={NotificationScreen} />
     </Stack.Navigator>

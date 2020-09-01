@@ -152,14 +152,11 @@ export default function Profile() {
                   <Image source={require('../assets/foto_publicacion.png')} style={{width: 90, height: 90, top: 20,}}/>
                 </View>
 
-                <View
-                  style={{flex: 1 , flexDirection: 'row', top: 25, alignContent:'space-between'}}>
-
+                <View style={{flexDirection: 'row',top: 25, width:90, left:6}}>
                   <Image source={require('../assets/ojo_vista.png')} style={{width: 15, height: 15}}/>
-                  <Image source={require('../assets/corazon_like.png')} style={{width: 15, height: 15}}/>
-                  <Image source={require('../assets/comentario.png')} style={{width: 15, height: 15}}/>
-                  <Image source={require('../assets/compartir.png')} style={{width: 15, height: 15}}/>
-
+                  <Image source={require('../assets/corazon_like.png')} style={{width: 15, height: 15, right:6, left:6}}/>
+                  <Image source={require('../assets/comentario.png')} style={{width: 15, height: 15, left:12}}/>
+                  <Image source={require('../assets/compartir.png')} style={{width: 15, height: 15, left:18}}/>
                 </View>
 
               </View>
