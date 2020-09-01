@@ -15,10 +15,11 @@ export default function Routes() {
    ususario está autenticado o no luego ejecutar el useEffect*/
 
   async function onAuthStateChanged(loggedUser) {
-    setUser(loggedUser);
-    if (loggedUser) {
+    // setUser(loggedUser);
+    if (loggedUser && !user) {
       const backendUser = await users_services.me();
-      console.log(backendUser.data.profile.is_ready, loggedUser);
+      setUser(backendUser.data);
+      console.log(backendUser.data.profile.is_ready, user);
       setExistProfile(backendUser.data.profile.is_ready);
     }
     setLoading(false);
