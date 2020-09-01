@@ -5,16 +5,11 @@ import {
   StyleSheet,
   Image,
   FlatList,
-  Dimensions,
 } from 'react-native';
-import FormButton from '../components/FormButton';
 import {AuthContext} from '../navigation/AuthProvider';
-import ImagePicker from 'react-native-image-picker';
 import posts_services from '../services/posts_services';
+import View_Publication from './view_publication';
 
-const window = Dimensions.get('window');
-
-//Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function HomeScreen() {
   const {user, logout} = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
@@ -74,28 +69,11 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <FlatList
         data={posts}
-        renderItem={Post}
+        renderItem={View_Publication}
         onEndReachedThreshold={0.5}
         onEndReached={(info) => loadPost()}
         bouncesZoom={true}
       />
-      {/* <View
-        style={{
-          width: window.width,
-          height: 70,
-          backgroundColor: 'yellow',
-        }}>
-        <Image
-          style={{
-            alignContent: 'center',
-            marginHorizontal: 10,
-            marginVertical: 10,
-          }}
-          source={require('../assets/franja_amarilla_imagen.png')}
-          resizeMode='center'
-        />
-      </View>
-        */}
     </View>
   );
 }
@@ -106,30 +84,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'black',
-  },
-  text: {
-    fontSize: 20,
-    color: 'white',
-  },
-  encabezado_text: {
-    textAlign: 'right',
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  icon_container: {
-    flexDirection: 'row',
-    marginVertical: 10,
-    justifyContent: 'space-between', //espacio o separacion entre elementos
-  },
-  icon_publication: {
-    width: 20,
-    height: 20,
-    marginHorizontal: 10,
-  },
-  image_publication: {
-    width: window.width,
-    height: 300,
-    alignContent: 'center',
-    marginBottom: 5,
   },
 });
