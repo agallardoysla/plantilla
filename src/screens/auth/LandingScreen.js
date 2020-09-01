@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
-import FilledButton from '../../components/FilledButtom';
+import FilledButton from '../../components/FilledButton';
 import LinkButton from '../../components/LinkButtom';
 
 export default function LandingScreen({navigation}) {

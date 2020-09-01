@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, TextInput} from 'react-native';
 import {windowHeight, windowWidth} from '../utils/Dimensions';
+import StylesConfiguration from '../utils/StylesConfiguration';
 
 export default function FormInput({labelValue, placeholderText, ...rest}) {
   return (
@@ -23,8 +24,9 @@ const styles = StyleSheet.create({
     width: windowWidth / 1.5,
     height: windowHeight / 15,
     fontSize: 16,
-    borderRadius: 8,
+    borderRadius: 10,
     borderWidth: 1,
-    backgroundColor: 'yellow',
+    backgroundColor: '#E9FC64',
+    fontFamily: StylesConfiguration.fontFamily,
   },
 });

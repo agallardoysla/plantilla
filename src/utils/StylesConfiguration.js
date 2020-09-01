@@ -1,6 +1,6 @@
 export default {
-  fontFamily: 'Gotham Black',
+  fontFamily: 'GothamBlack-Regular',
   fontWeight: '900',
   fontSize: 15,
-  color: '#E9FC64',
+  color: 'rgb(233, 252, 100)',
 };

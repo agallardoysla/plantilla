@@ -12,15 +12,17 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1C40D45B5C466A67D7115A8C /* libPods-FriendsChallenge-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 79A4F5E2A50D2D39542E338A /* libPods-FriendsChallenge-tvOS.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* FriendsChallengeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FriendsChallengeTests.m */; };
-		5C5D8E7CC5E382D48721092C /* libPods-FriendsChallenge-FriendsChallengeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F97D4FC7F9A52F87447D7DB7 /* libPods-FriendsChallenge-FriendsChallengeTests.a */; };
-		6C872FD107D955A7229696F1 /* libPods-FriendsChallenge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9E04F418E02801631C66AC /* libPods-FriendsChallenge.a */; };
+		3A0678DE8B6E5EEB920E0685 /* libPods-FriendsChallenge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6724C731BA7EC78EDBBB42BB /* libPods-FriendsChallenge.a */; };
+		3FC17224B645470C88E17103 /* GothamBlack-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7C833E24D614B4381DF6EE5 /* GothamBlack-Regular.ttf */; };
+		49B7F831975422234128351D /* libPods-FriendsChallenge-FriendsChallengeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D35A9CDEC4155813B522E3 /* libPods-FriendsChallenge-FriendsChallengeTests.a */; };
+		57656968605D7FEA401D7E64 /* libPods-FriendsChallenge-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1F4E4FE209D3383D1413B91 /* libPods-FriendsChallenge-tvOSTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		F8B4A17B4DF171FA541A9943 /* libPods-FriendsChallenge-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ECB20479D86E351239E5413B /* libPods-FriendsChallenge-tvOSTests.a */; };
+		B3F31DE5AAEF4BB6999BB605 /* GothamBlack-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0BF4D86013C240838F82F445 /* GothamBlack-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +47,7 @@
 		00E356EE1AD99517003FC87E /* FriendsChallengeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FriendsChallengeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* FriendsChallengeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FriendsChallengeTests.m; sourceTree = "<group>"; };
+		05D35A9CDEC4155813B522E3 /* libPods-FriendsChallenge-FriendsChallengeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FriendsChallenge-FriendsChallengeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		08A1ACCC24DB1A9100B88F75 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* FriendsChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendsChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = FriendsChallenge/AppDelegate.h; sourceTree = "<group>"; };
@@ -54,21 +57,25 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FriendsChallenge/main.m; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* FriendsChallenge-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FriendsChallenge-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* FriendsChallenge-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FriendsChallenge-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		57A375C82F83F47797B406CF /* Pods-FriendsChallenge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge.release.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge/Pods-FriendsChallenge.release.xcconfig"; sourceTree = "<group>"; };
-		5CFC4B1B3CE7A4E91C238461 /* Pods-FriendsChallenge.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge.debug.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge/Pods-FriendsChallenge.debug.xcconfig"; sourceTree = "<group>"; };
-		68F0AC19EE4C52379B07ADC4 /* Pods-FriendsChallenge-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-tvOSTests/Pods-FriendsChallenge-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		79A4F5E2A50D2D39542E338A /* libPods-FriendsChallenge-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FriendsChallenge-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7F9E04F418E02801631C66AC /* libPods-FriendsChallenge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FriendsChallenge.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		33727E6773D66C23DA8737AC /* Pods-FriendsChallenge-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-tvOS/Pods-FriendsChallenge-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		42D2E1CB1FD73FB8F164353E /* Pods-FriendsChallenge-FriendsChallengeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-FriendsChallengeTests.debug.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-FriendsChallengeTests/Pods-FriendsChallenge-FriendsChallengeTests.debug.xcconfig"; sourceTree = "<group>"; };
+		49F4D5F7259556697372049E /* Pods-FriendsChallenge-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-tvOSTests/Pods-FriendsChallenge-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		61D42E1F317AFAECF3EBC153 /* libPods-FriendsChallenge-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FriendsChallenge-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		62002DD690847DFE9B4F5E6E /* Pods-FriendsChallenge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge.release.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge/Pods-FriendsChallenge.release.xcconfig"; sourceTree = "<group>"; };
+		6724C731BA7EC78EDBBB42BB /* libPods-FriendsChallenge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FriendsChallenge.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FriendsChallenge/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		AB05B496DA7AC4C4CBD4E751 /* Pods-FriendsChallenge-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-tvOS/Pods-FriendsChallenge-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		DC5525F6554E0085DB4CCEFD /* Pods-FriendsChallenge-FriendsChallengeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-FriendsChallengeTests.debug.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-FriendsChallengeTests/Pods-FriendsChallenge-FriendsChallengeTests.debug.xcconfig"; sourceTree = "<group>"; };
-		E86415309700AB652E197910 /* Pods-FriendsChallenge-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-tvOS.release.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-tvOS/Pods-FriendsChallenge-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		ECB20479D86E351239E5413B /* libPods-FriendsChallenge-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FriendsChallenge-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		86E7983500118F60CD452BDC /* Pods-FriendsChallenge.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge.debug.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge/Pods-FriendsChallenge.debug.xcconfig"; sourceTree = "<group>"; };
+		9888E898D92D447947A6C0E7 /* Pods-FriendsChallenge-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-tvOSTests/Pods-FriendsChallenge-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		A1F4E4FE209D3383D1413B91 /* libPods-FriendsChallenge-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FriendsChallenge-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4446D493379FC5146EBA342 /* Pods-FriendsChallenge-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-tvOS.release.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-tvOS/Pods-FriendsChallenge-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		C2F72BEB36090E083920D961 /* Pods-FriendsChallenge-FriendsChallengeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-FriendsChallengeTests.release.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-FriendsChallengeTests/Pods-FriendsChallenge-FriendsChallengeTests.release.xcconfig"; sourceTree = "<group>"; };
+		D7C833E24D614B4381DF6EE5 /* GothamBlack-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "GothamBlack-Regular.ttf"; path = "../assets/fonts/GothamBlack-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F241EAFF6DB39B2FCB6FE5F8 /* Pods-FriendsChallenge-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-tvOSTests/Pods-FriendsChallenge-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		F7C5CD917956294257D1116F /* Pods-FriendsChallenge-FriendsChallengeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-FriendsChallengeTests.release.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-FriendsChallengeTests/Pods-FriendsChallenge-FriendsChallengeTests.release.xcconfig"; sourceTree = "<group>"; };
 		F97D4FC7F9A52F87447D7DB7 /* libPods-FriendsChallenge-FriendsChallengeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FriendsChallenge-FriendsChallengeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BF4D86013C240838F82F445 /* GothamBlack-Regular.ttf */ = {isa = PBXFileReference; name = "GothamBlack-Regular.ttf"; path = "../assets/fonts/GothamBlack-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C5D8E7CC5E382D48721092C /* libPods-FriendsChallenge-FriendsChallengeTests.a in Frameworks */,
+				49B7F831975422234128351D /* libPods-FriendsChallenge-FriendsChallengeTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,7 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6C872FD107D955A7229696F1 /* libPods-FriendsChallenge.a in Frameworks */,
+				3A0678DE8B6E5EEB920E0685 /* libPods-FriendsChallenge.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,7 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C40D45B5C466A67D7115A8C /* libPods-FriendsChallenge-tvOS.a in Frameworks */,
+				E4EC7DF2C33E70AC0B054170 /* libPods-FriendsChallenge-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,7 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8B4A17B4DF171FA541A9943 /* libPods-FriendsChallenge-tvOSTests.a in Frameworks */,
+				57656968605D7FEA401D7E64 /* libPods-FriendsChallenge-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,10 +150,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				7F9E04F418E02801631C66AC /* libPods-FriendsChallenge.a */,
-				F97D4FC7F9A52F87447D7DB7 /* libPods-FriendsChallenge-FriendsChallengeTests.a */,
-				79A4F5E2A50D2D39542E338A /* libPods-FriendsChallenge-tvOS.a */,
-				ECB20479D86E351239E5413B /* libPods-FriendsChallenge-tvOSTests.a */,
+				6724C731BA7EC78EDBBB42BB /* libPods-FriendsChallenge.a */,
+				05D35A9CDEC4155813B522E3 /* libPods-FriendsChallenge-FriendsChallengeTests.a */,
+				61D42E1F317AFAECF3EBC153 /* libPods-FriendsChallenge-tvOS.a */,
+				A1F4E4FE209D3383D1413B91 /* libPods-FriendsChallenge-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -168,6 +175,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				FD38635EDB2F784FE46BAEB8 /* Pods */,
+				BD3A693C752B49C1B40F5F98 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -185,20 +193,37 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		CFDAF03FA1094995B696C10F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D7C833E24D614B4381DF6EE5 /* GothamBlack-Regular.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		FD38635EDB2F784FE46BAEB8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				5CFC4B1B3CE7A4E91C238461 /* Pods-FriendsChallenge.debug.xcconfig */,
-				57A375C82F83F47797B406CF /* Pods-FriendsChallenge.release.xcconfig */,
-				DC5525F6554E0085DB4CCEFD /* Pods-FriendsChallenge-FriendsChallengeTests.debug.xcconfig */,
-				F7C5CD917956294257D1116F /* Pods-FriendsChallenge-FriendsChallengeTests.release.xcconfig */,
-				AB05B496DA7AC4C4CBD4E751 /* Pods-FriendsChallenge-tvOS.debug.xcconfig */,
-				E86415309700AB652E197910 /* Pods-FriendsChallenge-tvOS.release.xcconfig */,
-				68F0AC19EE4C52379B07ADC4 /* Pods-FriendsChallenge-tvOSTests.debug.xcconfig */,
-				F241EAFF6DB39B2FCB6FE5F8 /* Pods-FriendsChallenge-tvOSTests.release.xcconfig */,
+				86E7983500118F60CD452BDC /* Pods-FriendsChallenge.debug.xcconfig */,
+				62002DD690847DFE9B4F5E6E /* Pods-FriendsChallenge.release.xcconfig */,
+				42D2E1CB1FD73FB8F164353E /* Pods-FriendsChallenge-FriendsChallengeTests.debug.xcconfig */,
+				C2F72BEB36090E083920D961 /* Pods-FriendsChallenge-FriendsChallengeTests.release.xcconfig */,
+				33727E6773D66C23DA8737AC /* Pods-FriendsChallenge-tvOS.debug.xcconfig */,
+				A4446D493379FC5146EBA342 /* Pods-FriendsChallenge-tvOS.release.xcconfig */,
+				49F4D5F7259556697372049E /* Pods-FriendsChallenge-tvOSTests.debug.xcconfig */,
+				9888E898D92D447947A6C0E7 /* Pods-FriendsChallenge-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		BD3A693C752B49C1B40F5F98 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				0BF4D86013C240838F82F445 /* GothamBlack-Regular.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -207,11 +232,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "FriendsChallengeTests" */;
 			buildPhases = (
-				0D8E4C387FF7DDC663DA4FCB /* [CP] Check Pods Manifest.lock */,
+				B88E4196B4BC841289717B68 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				5DCCF7FEC76B4501A0F96828 /* [CP] Copy Pods Resources */,
+				6F3A10F51D43C541A69F4D97 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -227,14 +252,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "FriendsChallenge" */;
 			buildPhases = (
-				524971DAF37B8C1FBC8990B3 /* [CP] Check Pods Manifest.lock */,
+				A5DE32C8B43BEB577F56534D /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				D3BEA4E3DBCCB29C21BBE64B /* [CP] Copy Pods Resources */,
-				6D8B75F9325B0897ED07FADF /* [CP-User] [RNFB] Core Configuration */,
+				33C3185193245159B7CA65FA /* [CP] Copy Pods Resources */,
+				32A0E2B1237C96D75164B773 /* [CP-User] [RNFB] Core Configuration */,
 			);
 			buildRules = (
 			);
@@ -249,7 +274,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "FriendsChallenge-tvOS" */;
 			buildPhases = (
-				7AEF7F525A84A525DBB25F6D /* [CP] Check Pods Manifest.lock */,
+				ACA3887682D593DDF0B6FC54 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -269,7 +294,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "FriendsChallenge-tvOSTests" */;
 			buildPhases = (
-				C0A6F3BE49D9B07821F5E59F /* [CP] Check Pods Manifest.lock */,
+				4717A08FF260298C032AE02B /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -347,6 +372,7 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				08A1ACCD24DB1A9100B88F75 /* GoogleService-Info.plist in Resources */,
+				B3F31DE5AAEF4BB6999BB605 /* GothamBlack-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,28 +408,6 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		0D8E4C387FF7DDC663DA4FCB /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FriendsChallenge-FriendsChallengeTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -418,47 +422,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		524971DAF37B8C1FBC8990B3 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FriendsChallenge-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5DCCF7FEC76B4501A0F96828 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FriendsChallenge-FriendsChallengeTests/Pods-FriendsChallenge-FriendsChallengeTests-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FriendsChallenge-FriendsChallengeTests/Pods-FriendsChallenge-FriendsChallengeTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6D8B75F9325B0897ED07FADF /* [CP-User] [RNFB] Core Configuration */ = {
+		32A0E2B1237C96D75164B773 /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -468,29 +432,29 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\nset -e\n\n_MAX_LOOKUPS=2;\n_SEARCH_RESULT=''\n_RN_ROOT_EXISTS=''\n_CURRENT_LOOKUPS=1\n_JSON_ROOT=\"'react-native'\"\n_JSON_FILE_NAME='firebase.json'\n_JSON_OUTPUT_BASE64='e30=' # { }\n_CURRENT_SEARCH_DIR=${PROJECT_DIR}\n_PLIST_BUDDY=/usr/libexec/PlistBuddy\n_TARGET_PLIST=\"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n_DSYM_PLIST=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\n\n# plist arrays\n_PLIST_ENTRY_KEYS=()\n_PLIST_ENTRY_TYPES=()\n_PLIST_ENTRY_VALUES=()\n\nfunction setPlistValue {\n  echo \"info:      setting plist entry '$1' of type '$2' in file '$4'\"\n  ${_PLIST_BUDDY} -c \"Add :$1 $2 '$3'\" $4 || echo \"info:      '$1' already exists\"\n}\n\nfunction getFirebaseJsonKeyValue () {\n  if [[ ${_RN_ROOT_EXISTS} ]]; then\n    ruby -e \"require 'rubygems';require 'json'; output=JSON.parse('$1'); puts output[$_JSON_ROOT]['$2']\"\n  else\n    echo \"\"\n  fi;\n}\n\nfunction jsonBoolToYesNo () {\n  if [[ $1 == \"false\" ]]; then\n    echo \"NO\"\n  elif [[ $1 == \"true\" ]]; then\n    echo \"YES\"\n  else echo \"NO\"\n  fi\n}\n\necho \"info: -> RNFB build script started\"\necho \"info: 1) Locating ${_JSON_FILE_NAME} file:\"\n\nif [[ -z ${_CURRENT_SEARCH_DIR} ]]; then\n  _CURRENT_SEARCH_DIR=$(pwd)\nfi;\n\nwhile true; do\n  _CURRENT_SEARCH_DIR=$(dirname \"$_CURRENT_SEARCH_DIR\")\n  if [[ \"$_CURRENT_SEARCH_DIR\" == \"/\" ]] || [[ ${_CURRENT_LOOKUPS} -gt ${_MAX_LOOKUPS} ]]; then break; fi;\n  echo \"info:      ($_CURRENT_LOOKUPS of $_MAX_LOOKUPS) Searching in '$_CURRENT_SEARCH_DIR' for a ${_JSON_FILE_NAME} file.\"\n  _SEARCH_RESULT=$(find \"$_CURRENT_SEARCH_DIR\" -maxdepth 2 -name ${_JSON_FILE_NAME} -print | head -n 1)\n  if [[ ${_SEARCH_RESULT} ]]; then\n    echo \"info:      ${_JSON_FILE_NAME} found at $_SEARCH_RESULT\"\n    break;\n  fi;\n  _CURRENT_LOOKUPS=$((_CURRENT_LOOKUPS+1))\ndone\n\nif [[ ${_SEARCH_RESULT} ]]; then\n  _JSON_OUTPUT_RAW=$(cat \"${_SEARCH_RESULT}\")\n  _RN_ROOT_EXISTS=$(ruby -e \"require 'rubygems';require 'json'; output=JSON.parse('$_JSON_OUTPUT_RAW'); puts output[$_JSON_ROOT]\" || echo '')\n\n  if [[ ${_RN_ROOT_EXISTS} ]]; then\n    _JSON_OUTPUT_BASE64=$(python -c 'import json,sys,base64;print(base64.b64encode(json.dumps(json.loads(open('\"'${_SEARCH_RESULT}'\"').read())['${_JSON_ROOT}'])))' || echo \"e30=\")\n  fi\n\n  _PLIST_ENTRY_KEYS+=(\"firebase_json_raw\")\n  _PLIST_ENTRY_TYPES+=(\"string\")\n  _PLIST_ENTRY_VALUES+=(\"$_JSON_OUTPUT_BASE64\")\n\n  # config.messaging_auto_init_enabled\n  _MESSAGING_AUTO_INIT=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"messaging_auto_init_enabled\")\n  if [[ $_MESSAGING_AUTO_INIT ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseMessagingAutoInitEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_MESSAGING_AUTO_INIT\")\")\n  fi\n\n  # config.crashlytics_disable_auto_disabler - undocumented for now - mainly for debugging, document if becomes usful\n  _CRASHLYTICS_AUTO_DISABLE_ENABLED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"crashlytics_disable_auto_disabler\")\n  if [[ $_CRASHLYTICS_AUTO_DISABLE_ENABLED == \"true\" ]]; then\n    echo \"Disabled Crashlytics auto disabler.\" # do nothing\n  else\n    _PLIST_ENTRY_KEYS+=(\"FirebaseCrashlyticsCollectionEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"NO\")\n  fi\n\n  # config.admob_delay_app_measurement_init\n  _ADMOB_DELAY_APP_MEASUREMENT=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"admob_delay_app_measurement_init\")\n  if [[ $_ADMOB_DELAY_APP_MEASUREMENT == \"true\" ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GADDelayAppMeasurementInit\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"YES\")\n  fi\n\n  # config.admob_ios_app_id\n  _ADMOB_IOS_APP_ID=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"admob_ios_app_id\")\n  if [[ $_ADMOB_IOS_APP_ID ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GADApplicationIdentifier\")\n    _PLIST_ENTRY_TYPES+=(\"string\")\n    _PLIST_ENTRY_VALUES+=(\"$_ADMOB_IOS_APP_ID\")\n  fi\nelse\n  _PLIST_ENTRY_KEYS+=(\"firebase_json_raw\")\n  _PLIST_ENTRY_TYPES+=(\"string\")\n  _PLIST_ENTRY_VALUES+=(\"$_JSON_OUTPUT_BASE64\")\n  echo \"warning:   A firebase.json file was not found, whilst this file is optional it is recommended to include it to configure firebase services in React Native Firebase.\"\nfi;\n\necho \"info: 2) Injecting Info.plist entries: \"\n\n# Log out the keys we're adding\nfor i in \"${!_PLIST_ENTRY_KEYS[@]}\"; do\n  echo \"    ->  $i) ${_PLIST_ENTRY_KEYS[$i]}\" \"${_PLIST_ENTRY_TYPES[$i]}\" \"${_PLIST_ENTRY_VALUES[$i]}\"\ndone\n\nfor plist in \"${_TARGET_PLIST}\" \"${_DSYM_PLIST}\" ; do\n  if [[ -f \"${plist}\" ]]; then\n\n    # paths with spaces break the call to setPlistValue. temporarily modify\n    # the shell internal field separator variable (IFS), which normally \n    # includes spaces, to consist only of line breaks\n    oldifs=$IFS\n    IFS=\"\n\"\n\n    for i in \"${!_PLIST_ENTRY_KEYS[@]}\"; do\n      setPlistValue \"${_PLIST_ENTRY_KEYS[$i]}\" \"${_PLIST_ENTRY_TYPES[$i]}\" \"${_PLIST_ENTRY_VALUES[$i]}\" \"${plist}\"\n    done\n\n    # restore the original internal field separator value\n    IFS=$oldifs\n  else\n    echo \"warning:   A Info.plist build output file was not found (${plist})\"\n  fi\ndone\n\necho \"info: <- RNFB build script finished\"\n\n";
 		};
-		7AEF7F525A84A525DBB25F6D /* [CP] Check Pods Manifest.lock */ = {
+		33C3185193245159B7CA65FA /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
+				"${PODS_ROOT}/Target Support Files/Pods-FriendsChallenge/Pods-FriendsChallenge-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/QBImagePickerController/QBImagePicker.bundle",
+				"${PODS_ROOT}/RSKImageCropper/RSKImageCropper/RSKImageCropperStrings.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FriendsChallenge-tvOS-checkManifestLockResult.txt",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RSKImageCropperStrings.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FriendsChallenge/Pods-FriendsChallenge-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C0A6F3BE49D9B07821F5E59F /* [CP] Check Pods Manifest.lock */ = {
+		4717A08FF260298C032AE02B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -512,22 +476,92 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D3BEA4E3DBCCB29C21BBE64B /* [CP] Copy Pods Resources */ = {
+		6F3A10F51D43C541A69F4D97 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FriendsChallenge/Pods-FriendsChallenge-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-FriendsChallenge-FriendsChallengeTests/Pods-FriendsChallenge-FriendsChallengeTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/QBImagePickerController/QBImagePicker.bundle",
+				"${PODS_ROOT}/RSKImageCropper/RSKImageCropper/RSKImageCropperStrings.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QBImagePicker.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RSKImageCropperStrings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FriendsChallenge/Pods-FriendsChallenge-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FriendsChallenge-FriendsChallengeTests/Pods-FriendsChallenge-FriendsChallengeTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A5DE32C8B43BEB577F56534D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FriendsChallenge-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ACA3887682D593DDF0B6FC54 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FriendsChallenge-tvOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B88E4196B4BC841289717B68 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FriendsChallenge-FriendsChallengeTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -623,7 +657,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DC5525F6554E0085DB4CCEFD /* Pods-FriendsChallenge-FriendsChallengeTests.debug.xcconfig */;
+			baseConfigurationReference = 42D2E1CB1FD73FB8F164353E /* Pods-FriendsChallenge-FriendsChallengeTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -646,7 +680,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F7C5CD917956294257D1116F /* Pods-FriendsChallenge-FriendsChallengeTests.release.xcconfig */;
+			baseConfigurationReference = C2F72BEB36090E083920D961 /* Pods-FriendsChallenge-FriendsChallengeTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -666,7 +700,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5CFC4B1B3CE7A4E91C238461 /* Pods-FriendsChallenge.debug.xcconfig */;
+			baseConfigurationReference = 86E7983500118F60CD452BDC /* Pods-FriendsChallenge.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -675,6 +709,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = FriendsChallenge/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -690,7 +725,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 57A375C82F83F47797B406CF /* Pods-FriendsChallenge.release.xcconfig */;
+			baseConfigurationReference = 62002DD690847DFE9B4F5E6E /* Pods-FriendsChallenge.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -698,6 +733,7 @@
 				DEVELOPMENT_TEAM = LS583FFCVH;
 				INFOPLIST_FILE = FriendsChallenge/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -712,7 +748,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB05B496DA7AC4C4CBD4E751 /* Pods-FriendsChallenge-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 33727E6773D66C23DA8737AC /* Pods-FriendsChallenge-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -740,7 +776,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E86415309700AB652E197910 /* Pods-FriendsChallenge-tvOS.release.xcconfig */;
+			baseConfigurationReference = A4446D493379FC5146EBA342 /* Pods-FriendsChallenge-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -768,7 +804,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 68F0AC19EE4C52379B07ADC4 /* Pods-FriendsChallenge-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = 49F4D5F7259556697372049E /* Pods-FriendsChallenge-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -795,7 +831,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F241EAFF6DB39B2FCB6FE5F8 /* Pods-FriendsChallenge-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 9888E898D92D447947A6C0E7 /* Pods-FriendsChallenge-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;

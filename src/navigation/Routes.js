@@ -5,22 +5,31 @@ import AuthStack from './AuthStack';
 import HomeStack from './HomeStack';
 import {AuthContext} from './AuthProvider';
 import Loading from '../components/Loading';
+import users_services from '../services/users_services';
 
 export default function Routes() {
-  const {user, setUser} = useContext(AuthContext);
+  const {user, setUser, existProfile, setExistProfile} = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
-  const [initializing, setInitializing] = useState(true);
 
   /* Funcion para manejar cambios de estado del usuario. Acá verifico si el
    ususario está autenticado o no luego ejecutar el useEffect*/
 
-  function onAuthStateChanged(loggedUser) {
-    setUser(loggedUser);
-    if (initializing) {
-      setInitializing(false);
+  async function onAuthStateChanged(loggedUser) {
+    // setUser(loggedUser);
+    if (loggedUser) {
+      if (!user) {
+        const backendUser = await users_services.me();
+        setUser(backendUser.data);
+        console.log(backendUser.data.profile.is_ready, user);
+        setExistProfile(backendUser.data.profile.is_ready);
+      }
+    } else {
+      setUser(null);
+      setExistProfile(false);
     }
     setLoading(false);
   }
+
   /**
    * Se ejecuta al abrir la app y el método onAuthStateChanged nos permite subscribirnos
    * al estado actual de autenticación del usuario
@@ -40,7 +49,7 @@ export default function Routes() {
    */
   return (
     <NavigationContainer>
-      {user ? <HomeStack /> : <AuthStack />}
+      {existProfile && user ? <HomeStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }
