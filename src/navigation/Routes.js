@@ -16,11 +16,16 @@ export default function Routes() {
 
   async function onAuthStateChanged(loggedUser) {
     // setUser(loggedUser);
-    if (loggedUser && !user) {
-      const backendUser = await users_services.me();
-      setUser(backendUser.data);
-      console.log(backendUser.data.profile.is_ready, user);
-      setExistProfile(backendUser.data.profile.is_ready);
+    if (loggedUser) {
+      if (!user) {
+        const backendUser = await users_services.me();
+        setUser(backendUser.data);
+        console.log(backendUser.data.profile.is_ready, user);
+        setExistProfile(backendUser.data.profile.is_ready);
+      }
+    } else {
+      setUser(null);
+      setExistProfile(false);
     }
     setLoading(false);
   }
