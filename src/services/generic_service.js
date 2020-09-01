@@ -22,14 +22,17 @@ export default {
   },
   doPost: async (url, data) => {
     const config = await getConfig();
+    console.log(url, data, config);
     return api.post(url, config);
   },
   doPut: async (url, data) => {
     const config = await getConfig();
-    return api.put(url, config);
+    console.log(url, data, config);
+    return api.put(url, data, config);
   },
-  doDelete: async (url, data) => {
+  doDelete: async (url) => {
     const config = await getConfig();
+    console.log(url, config);
     return api.delete(url, config);
   },
 }
