@@ -5,10 +5,11 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import MatInput from '../../components/MatInput';
 import DatePicker from '@react-native-community/datetimepicker';
 import {Icon} from 'react-native-elements';
-import api from '../../utils/api';
+import api from '../../services/api';
 import CheckBox from '@react-native-community/checkbox';
 import moment from 'moment';
 import {AuthContext} from '../../navigation/AuthProvider';
+import profiles_services from '../../services/profiles_services';
 
 export default function CreateProfile() {
   const today = new Date();
@@ -19,20 +20,59 @@ export default function CreateProfile() {
   const [gender, setGender] = useState('');
   const [customGender, setCustomGender] = useState('');
   const [userPosibleLikes, setUserPosibleLikes] = useState([]);
-  const [canSubmit, setCanSubmit] = useState([]);
+  const [canSubmit, setCanSubmit] = useState(false);
   const {user, setExistProfile} = useContext(AuthContext);
 
   useEffect(() => {
     if (userPosibleLikes.length === 0) {
-      api.get('users/profilesLikes/').then((res) => {
-        console.log(res.data);
-        setUserPosibleLikes(
-          res.data.map((l) => {
-            l.elected = false; // se agrega a cada posible gusto si fue elegido o no por el usuario
-            return l;
-          })
-        );
-      });
+      // api.get('users/profilesLikes/').then((res) => {
+      //   console.log(res.data);
+      //   setUserPosibleLikes(
+      //     res.data.map((l) => {
+      //       l.elected = false; // se agrega a cada posible gusto si fue elegido o no por el usuario
+      //       return l;
+      //     })
+      //   );
+      // });
+      setUserPosibleLikes(
+        [
+          {
+            name: 'Deporte',
+            id: 0,
+          },
+          {
+            name: 'Arte',
+            id: 1,
+          },
+          {
+            name: 'Música',
+            id: 2,
+          },
+          {
+            name: 'Comida',
+            id: 3,
+          },
+          {
+            name: 'Moda',
+            id: 4,
+          },
+          {
+            name: 'Ciencia',
+            id: 5,
+          },
+          {
+            name: 'Naturaleza',
+            id: 6,
+          },
+          {
+            name: 'Política',
+            id: 7,
+          },
+        ].map((l) => {
+          l.elected = false; // se agrega a cada posible gusto si fue elegido o no por el usuario
+          return l;
+        }),
+      );
     }
     updateCanSubmit();
   });
@@ -67,26 +107,20 @@ export default function CreateProfile() {
     );
 
   const updateCanSubmit = () => {
-    console.log('update', canSubmit);
-    setCanSubmit(!existNickname && !sameDayAsToday() && gender !== '');
+    setCanSubmit(nickname !== '' && !existNickname && !sameDayAsToday() && gender !== '');
   };
 
   const submitProfile = () => {
-    console.log(user.providerData);
-    const profile = {
-      firebase_id: user.uid,
-      email: user.email,
-      nickname: nickname,
-      birthday: [
-        birthday.getFullYear(),
-        birthday.getMonth() + 1,
-        birthday.getDate(),
-      ],
-      gender: gender,
-      profileLikes: userPosibleLikes.filter((l) => l.elected).map((l) => l.id),
-      isGoogle: user.providerData[0].providerId === 'google.com',
-    };
-    api.post('users/profiles/', profile).then((res) => setExistProfile(true));
+    const profile = {...user.profile};
+
+    const twoDigits = (n) => (n < 10 ? '0' + n : n);
+    profile.birth_date = `${birthday.getFullYear()}-${twoDigits(birthday.getMonth() + 1)}-${twoDigits(birthday.getDate())}`;
+    profile.gender = gender === 'UNDEFINED2' ? 'UNDEFINED' : gender;
+    profile.is_ready = true;
+    
+    profiles_services
+      .edit(user.profile.id, profile)
+      .then((res) => setExistProfile(true));
   };
 
   const GenderSelectionCheckbox = (props) => (
@@ -177,41 +211,41 @@ export default function CreateProfile() {
           <View style={[styles.formRow, styles.genderCheckbox]}>
             <Text style={styles.text}>Hombre</Text>
             <GenderSelectionCheckbox
-              value={gender === 'M'}
+              value={gender === 'MALE'}
               onValueChange={(newValue) => {
                 setCustomGender('');
-                setGender(newValue ? 'M' : '');
+                setGender(newValue ? 'MALE' : '');
               }}
             />
           </View>
           <View style={[styles.formRow, styles.genderCheckbox]}>
             <Text style={styles.text}>Mujer</Text>
             <GenderSelectionCheckbox
-              value={gender === 'F'}
+              value={gender === 'FEMALE'}
               onValueChange={(newValue) => {
                 setCustomGender('');
-                setGender(newValue ? 'F' : '');
+                setGender(newValue ? 'FEMALE' : '');
               }}
             />
           </View>
           <View style={[styles.formRow, styles.genderCheckbox]}>
             <Text style={styles.text}>Neutro</Text>
             <GenderSelectionCheckbox
-              value={gender === 'N'}
+              value={gender === 'UNDEFINED'}
               onValueChange={(newValue) => {
                 setCustomGender('');
-                setGender(newValue ? 'N' : '');
+                setGender(newValue ? 'UNDEFINED' : '');
               }}
             />
           </View>
           <View style={[styles.formRow, styles.genderCheckbox]}>
             <Text style={styles.text}>Prefiero no indicarlo</Text>
             <GenderSelectionCheckbox
-              value={gender === 'NI'}
+              value={gender === 'UNDEFINED2'}
               onValueChange={(newValue) => {
                 setCustomGender('');
                 console.log(customGender);
-                setGender(newValue ? 'NI' : '');
+                setGender(newValue ? 'UNDEFINED2' : '');
               }}
             />
           </View>
