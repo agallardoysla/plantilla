@@ -1,107 +1,92 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Image,
-  ScrollView,
+  FlatList,
   Dimensions,
 } from 'react-native';
 import FormButton from '../components/FormButton';
 import {AuthContext} from '../navigation/AuthProvider';
 import ImagePicker from 'react-native-image-picker';
+import posts_services from '../services/posts_services';
 
 const window = Dimensions.get('window');
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function HomeScreen() {
   const {user, logout} = useContext(AuthContext);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    console.log("posts ya cargados", posts);
+    if (posts.length === 0) {
+      posts_services.list().then((res) => {
+        console.log("nuevos posts", res.data);
+        setPosts(res.data);
+      });
+    }
+  });
+
+  const Post = ({item}) => {
+    console.log(item);
+    return (
+      <View>
+        <Text style={styles.encabezado_text}>@{item.user}</Text>
+        <Image
+          source={require('../assets/foto_publicacion.png')}
+          resizeMode="cover"
+          style={styles.image_publication}
+        />
+
+        <View style={styles.icon_container}>
+          <Image
+            source={require('../assets/ojo_vista.png')}
+            style={styles.icon_publication}
+          />
+          <Text style={{color: 'white', left: -15}}>5645</Text>
+
+          <Image
+            source={require('../assets/corazon_like.png')}
+            style={styles.icon_publication}
+          />
+          <Text style={{color: 'white', left: -15}}>{item.commentscount}</Text>
+
+          <Image
+            source={require('../assets/comentario.png')}
+            style={styles.icon_publication}
+          />
+
+          <Image
+            source={require('../assets/compartir.png')}
+            style={styles.icon_publication}
+          />
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <Text style={styles.encabezado_text}>@User</Text>
+      <FlatList data={posts} renderItem={Post} />
+      {/* <View
+        style={{
+          width: window.width,
+          height: 70,
+          backgroundColor: 'yellow',
+        }}>
         <Image
-          source={require('../assets/foto_publicacion.png')}
-          resizeMode="cover"
-          style={styles.image_publication}
-        />
-
-        <View style={styles.icon_container}>
-          <Image
-            source={require('../assets/ojo_vista.png')}
-            style={styles.icon_publication}
-          />
-          <Text style={{color: 'white', left: -15}}>5645</Text>
-
-          <Image
-            source={require('../assets/corazon_like.png')}
-            style={styles.icon_publication}
-          />
-          <Text style={{color: 'white', left: -15}}>5645</Text>
-
-          <Image
-            source={require('../assets/comentario.png')}
-            style={styles.icon_publication}
-          />
-
-          <Image
-            source={require('../assets/compartir.png')}
-            style={styles.icon_publication}
-          />
-        </View>
-
-        <View
           style={{
-            width: window.width,
-            height: 70,
-            backgroundColor: 'yellow',
-          }}>
-          <Image
-            style={{
-              alignContent: 'center',
-              marginHorizontal: 10,
-              marginVertical: 10,
-            }}
-            source={require('../assets/franja_amarilla_imagen.png')}
-            resizeMode='center'
-          />
-        </View>
-        <Text style={styles.encabezado_text}>@User</Text>
-
-        <Image
-          source={require('../assets/foto_publicacion.png')}
-          resizeMode="cover"
-          style={styles.image_publication}
+            alignContent: 'center',
+            marginHorizontal: 10,
+            marginVertical: 10,
+          }}
+          source={require('../assets/franja_amarilla_imagen.png')}
+          resizeMode='center'
         />
-
-        <View style={styles.icon_container}>
-          <Image
-            source={require('../assets/ojo_vista.png')}
-            style={styles.icon_publication}
-          />
-          <Text style={{color: 'white', left: -15}}>5645</Text>
-
-          <Image
-            source={require('../assets/corazon_like.png')}
-            style={styles.icon_publication}
-          />
-          <Text style={{color: 'white', left: -15}}>5645</Text>
-
-          <Image
-            source={require('../assets/comentario.png')}
-            style={styles.icon_publication}
-          />
-
-          <Image
-            source={require('../assets/compartir.png')}
-            style={styles.icon_publication}
-          />
-        </View>
-
-        {/* <Text style={styles.text}>Holaa {user.uid}</Text> */}
-        {/* <FormButton buttonTitle="Logout" onPress={() => logout()} /> */}
-      </ScrollView>
+      </View>
+        */}
     </View>
   );
 }
