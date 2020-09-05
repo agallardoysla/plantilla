@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image} from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
 import Video from 'react-native-video';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import ImagePicker from 'react-native-image-picker';
@@ -9,6 +9,8 @@ import MatInput from '../components/MatInput';
 import posts_services from '../services/posts_services';
 import files_services from '../services/files_services';
 import RNFS from 'react-native-fs';
+import RNFetchBlob from 'react-native-fetch-blob'
+import auth from '@react-native-firebase/auth';
 
 let window = Dimensions.get('window');
 
@@ -90,58 +92,43 @@ export default function NewPublicationScreen() {
   };
 
   const doPubliish = async () => {
-    const paths =
-      images.length > 0 ? images.map((image) => image.path) : [videoSource];
+    const paths = images.length > 0 ? images.map((image) => image.path) : [videoSource];
     let filesIds = [];
-    filesIds = await Promise.all(
-      paths
-        .map(async (path) => {
-          let formData = new FormData();
-          const file = await RNFS.readFile(path, 'base64');
-          formData.append("file_type", 1);
-          formData.append('file', file);
-          return formData;
-          // return {
-          //   file_type: 1,
-          //   file: {
-          //     value: file,
-          //     options: {
-          //       filename: 'photo_2020-08-24_07-23-16.jpg',
-          //       contentType: null,
-          //     },
-          //   },
-          // };
-        })
-        .map((fd) =>
-          files_services.create(fd).then(
-            (res) => {
-              console.log("exito", res.data);
-              return res.data.id;
-            },
-            (error) => {
-              console.log("fracaso", error);
-            },
-          ),
-        ),
-    );
-    console.log(filesIds);
-    const newPost = {
-      post_type: 1,
-      text: challengeText,
-      latitude: "latitude",
-      longitude: "longitude",
-      // files: [6],
-      files: filesIds[0] ? filesIds : [3],
-    };
+    const token = await auth().currentUser.getIdToken(true);
 
-    posts_services.create(newPost).then(
-      (res) => {
-        console.log("exito", res);
-      },
-      (error) => {
-        console.log("fracaso", error);
-      },
-    );
+    for (path of paths) {
+      let result = await RNFetchBlob.fetch('POST', 'https://friendschallenge.webredirect.org/api/v1/files/', {
+        Authorization: "JWT " + token,
+        'Content-Type': 'multipart/mixed',
+      }, [
+        { name: 'file', filename: 'foto.jpeg', data: RNFetchBlob.wrap(path) },
+        { name: 'file_type', data: '1' },
+      ])
+
+      filesIds.push(await result.json().id)
+    }
+
+    console.log(filesIds);
+
+    if (filesIds.length > 0) {
+
+      const newPost = {
+        post_type: 1,
+        text: challengeText,
+        latitude: "latitude",
+        longitude: "longitude",
+        files: filesIds,
+      };
+
+      posts_services.create(newPost).then(
+        (res) => {
+          console.log("exito", res);
+        },
+        (error) => {
+          console.log("fracaso", error);
+        },
+      );
+    }
   };
 
   return (
@@ -160,7 +147,7 @@ export default function NewPublicationScreen() {
               }>
               <ScrollView horizontal={true} indicatorStyle="white">
                 {images.map((image, i) => (
-                  <Image source={{uri: image.path}} style={styles.image} key={i} />
+                  <Image source={{ uri: image.path }} style={styles.image} key={i} />
                 ))}
                 {images.length < 5 ? (
                   <TouchableOpacity
