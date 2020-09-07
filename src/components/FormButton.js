@@ -13,7 +13,7 @@ export default function FormButton({buttonTitle, style, ...rest}) {
 const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 22,
-    width: 150,
+    width: 120,
     height: 43,
     backgroundColor: 'rgb(0,0,0)',
     padding: 10,
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     borderColor: StylesConfiguration.color,
   },
   buttonText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: StylesConfiguration.fontWeight,
     fontFamily: StylesConfiguration.fontFamily,
     color: 'white',
