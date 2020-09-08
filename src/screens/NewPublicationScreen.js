@@ -8,13 +8,10 @@ import FormButton from '../components/FormButton';
 import MatInput from '../components/MatInput';
 import posts_services from '../services/posts_services';
 import files_services from '../services/files_services';
-import RNFS from 'react-native-fs';
-import RNFetchBlob from 'react-native-fetch-blob'
-import auth from '@react-native-firebase/auth';
 
 let window = Dimensions.get('window');
 
-export default function NewPublicationScreen() {
+export default function NewPublicationScreen({navigation}) {
   const [images, setImages] = useState([]);
   const [videoSource, setVideoSource] = useState('');
   const [challengeText, setChallengeText] = useState('Primer post');
@@ -104,23 +101,16 @@ export default function NewPublicationScreen() {
     console.log(filesIds);
 
     if (filesIds.length > 0) {
-
       const newPost = {
         post_type: 1,
         text: challengeText,
-        latitude: "latitude",
-        longitude: "longitude",
+        latitude: 'latitude',
+        longitude: 'longitude',
         files: filesIds,
       };
 
-      posts_services.create(newPost).then(
-        (res) => {
-          console.log("exito", res);
-        },
-        (error) => {
-          console.log("fracaso", error);
-        },
-      );
+      await posts_services.create(newPost);
+      navigation.navigate('HomeGroup');
     }
   };
 
