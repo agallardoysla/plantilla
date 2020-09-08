@@ -5,7 +5,6 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import MatInput from '../../components/MatInput';
 import DatePicker from '@react-native-community/datetimepicker';
 import {Icon} from 'react-native-elements';
-import api from '../../services/api';
 import CheckBox from '@react-native-community/checkbox';
 import moment from 'moment';
 import {AuthContext} from '../../navigation/AuthProvider';
@@ -95,9 +94,9 @@ export default function CreateProfile({navigation}) {
   };
 
   const checkNicknameExist = () => {
-    api.get(`users/profiles/${nickname}/existNickname/`).then((res) => {
-      setExistNickname(res.data.exist);
-    });
+    // api.get(`users/profiles/${nickname}/existNickname/`).then((res) => {
+    //   setExistNickname(res.data.exist);
+    // });
   };
 
   const selectLike = (like) =>
