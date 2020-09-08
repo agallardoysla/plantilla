@@ -6,5 +6,5 @@ import GenericProfile from './GenericProfile';
 export default function Profile() {
   const {user} = useContext(AuthContext);
 
-  return <GenericProfile user={user} isLoggeduser={true} />;
+  return <GenericProfile user={user} isLoggedUser={true} />;
 };

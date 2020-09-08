@@ -7,12 +7,14 @@ import {
   ScrollView,
   Image,
   FlatList,
+  Alert,
 } from 'react-native';
 
 import FormButton from '../components/FormButton';
 import {AuthContext} from '../navigation/AuthProvider';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import {Icon} from 'react-native-elements';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 //para el flatList
 const data = [
@@ -83,40 +85,76 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
 
   return (
     <ScrollView>
-      <View>
-        <View style={styles.container_row_1}>
-          <View style={styles.column_row_1}>
+      <View style={styles.container}>
+        <View style={styles.profileData}>
+          <View style={[styles.profileDataColumn, styles.columnLeft]}>
             <Text style={styles.text_profile}>Publicaciones</Text>
-            <FormButton buttonTitle="2020" />
-            <Text style={styles.text_profile}>Patrocinado por:</Text>
-            <FormButton buttonTitle="@Doggi"/>
-            <FormButton buttonTitle="@Dogchow" />
-            <FormButton buttonTitle="@Pedigree" />
-          </View>
-          <View style={styles.column_row_1}>
-            <Image
-              source={require('../assets/foto_perfil_superior.png')}
-              style={styles.circle_image}
+            <FormButton
+              buttonTitle={user.posts_count.POST_TYPE_PRUEBA}
+              style={styles.counter}
             />
-            <Text style={styles.name_user}>@Brownie</Text>
-            <Icon name="email" color={StylesConfiguration.color} size={48} />
+            <Text style={styles.text_profile}>Patrocinado por:</Text>
+            <FormButton buttonTitle="@Doggi" style={styles.patreon} />
+            <FormButton buttonTitle="@Dogchow" style={styles.patreon} />
+            <FormButton buttonTitle="@Pedigree" style={styles.patreon} />
           </View>
-          <View style={styles.column_row_1}>
-            <Text style={styles.text_profile} >Amigos</Text>
-            <FormButton buttonTitle="500" onPress={go_to_followers} />
+          <View style={[styles.profileDataColumn, styles.columnCenter]}>
+            <View style={styles.profleFoto}>
+              {isLoggedUser ? (
+                <TouchableOpacity
+                  style={styles.tuerca_blanca_container}
+                  onPress={() => Alert.alert("configuraciones")}
+                >
+                  <Image
+                    source={require('../assets/tuerca_blanca.png')}
+                    style={styles.tuerca_blanca}
+                  />
+                </TouchableOpacity>
+              ) : null}
+              <Image
+                source={require('../assets/foto_perfil_superior.png')}
+                style={styles.circle_image}
+              />
+            </View>
+            <Text style={styles.name_user}>@{user.display_name}</Text>
+            {!isLoggedUser ? (
+              <Image
+                source={require('../assets/sobre_amarillo.png')}
+                style={styles.sobre_amarillo}
+              />
+            ) : null}
+          </View>
+          <View style={[styles.profileDataColumn, styles.columnRight]}>
+            <Text style={styles.text_profile}>Amigos</Text>
+            <FormButton
+              buttonTitle={user.following_with_details.length}
+              style={styles.counter}
+              onPress={go_to_followers}
+            />
             <Text style={styles.text_profile}>Te siguen</Text>
-            <FormButton buttonTitle="8350"  />
-            <FormButton buttonTitle="CHALLENGE" />
-            <FormButton buttonTitle="Seguir" />
+            <FormButton
+              buttonTitle={user.followers_with_details.length}
+              style={styles.counter}
+            />
+            <FormButton buttonTitle="CHALLENGE" style={styles.profileButton} />
+            {isLoggedUser ? (
+              <Image
+                source={require('../assets/sobre_amarillo.png')}
+                style={styles.sobre_amarillo_chico}
+              />
+            ) : (
+              <FormButton buttonTitle="Seguir" style={styles.profileButton} />
+            )}
           </View>
         </View>
 
-        <View style={styles.container_row_2}>
+        <View style={styles.profileDescription}>
           <Text style={styles.container_description}>
             BullDog frances que vive en burzaco me gusta dormir y comer
           </Text>
         </View>
-        <View style={styles.container_row_3}>
+
+        <View style={styles.profilePublications}>
           <FlatList
             data={data}
             renderItem={({item}) => (
@@ -137,54 +175,109 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+    paddingHorizontal: 5,
+  },
   //filas division de cada secciòn
-  container_row_1: {
-    flex: 2.5,
-    backgroundColor: 'black',
+  profileData: {
     flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
   },
 
-  container_row_2: {
-    flex: 1,
-    backgroundColor: 'black',
+  profileDescription: {
+    // flex: 1,
   },
 
-  container_row_3: {
-    flex: 1,
-    backgroundColor: 'black',
-    alignContent: 'center',
-    alignItems: 'center',
-  },
-
-  //columnas dentro de las filas
-  column_row_1: {
+  profilePublications: {
     flex: 1,
     alignContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
-    marginTop: 10,
   },
 
+  //columnas dentro de profileData
+
+  profileDataColumn: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
+  columnLeft: {
+    alignItems: 'flex-start',
+  },
+  columnCenter: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 15,
+  },
+  columnRight: {
+    alignItems: 'flex-end',
+  },
   text_profile: {
-    fontFamily: 'GothamBlack-normal',
-    fontWeight: '900',
-    fontSize: 14,
+    fontFamily: StylesConfiguration.fontFamily,
+    fontWeight: '400',
+    fontSize: 12,
     color: 'white',
-    top: 10,
+    marginTop: 5,
+    marginBottom: 2,
+  },
+  counter: {
+    marginTop: 0,
+    marginBottom: 7,
+    width: 'auto',
+    minWidth: 75,
+  },
+  patreon: {
+    marginTop: 0,
+    marginBottom: 7,
+    width: 105,
+  },
+  profleFoto: {
+    marginTop: 15,
+  },
+  circle_image: {
+    top: -30,
+  },
+  tuerca_blanca_container: {
+    left: 100,
+    top: -10,
+    width: 31,
+    height: 31,
+  },
+  tuerca_blanca: {
+    width: 31,
+    height: 31,
+    borderRadius: 15,
   },
   name_user: {
     fontFamily: StylesConfiguration.fontFamily,
     fontWeight: '900',
     fontSize: 14,
     color: StylesConfiguration.color,
-    paddingBottom: 10,
-    top: 10,
+    marginTop: 10,
+    marginBottom: 20,
   },
-
+  sobre_amarillo: {
+    width: 55,
+    height: 55,
+    marginVertical: 10,
+  },
+  sobre_amarillo_chico: {
+    width: 35,
+    height: 35,
+  },
+  profileButton: {
+    marginTop: 3,
+    marginBottom: 5,
+    width: 115,
+  },
   container_description: {
     flex: 1,
-    backgroundColor: 'black',
     borderWidth: 2,
     borderColor: '#E9FC64',
     borderRadius: 10,
