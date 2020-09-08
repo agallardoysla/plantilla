@@ -1,6 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import { Icon } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
+
+let window = Dimensions.get('window');
 
 const View_Publication = ({item}) => {
   return (
@@ -10,11 +13,18 @@ const View_Publication = ({item}) => {
       {/*Finaliza Nombre de usuario como encabezado*/}
 
       {/*Inicia Foto de la publicaciòn */}
-      <Image
-        source={require('../assets/foto_publicacion.png')}
-        resizeMode="cover"
-        style={styles.image_publication}
-      />
+      <View style={styles.postImagesContainer}>
+        <ScrollView horizontal={true} indicatorStyle="white">
+          {item.files_with_urls.map((image, i) => (
+            <Image
+              source={{uri: image.url}}
+              style={styles.image_publication}
+              key={i}
+              resizeMode="cover"
+            />
+          ))}
+        </ScrollView>
+      </View>
       {/*Finaliza Foto de la publicaciòn*/}
 
       {/*Inicio de iconos de la publicaciòn*/}
@@ -222,6 +232,19 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  postImagesContainer: {
+    width: window.width,
+    height: 300,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    marginBottom: 5,
+  },
+  image_publication: {
+    width: window.width - 20,
+    height: 300,
+  },
   icon_container: {
     flexDirection: 'row',
     marginVertical: 10,
@@ -231,12 +254,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginHorizontal: 10,
-  },
-  image_publication: {
-    width: window.width,
-    height: 300,
-    alignContent: 'center',
-    marginBottom: 5,
   },
   icon_menu_desbordamiento: {
     top: 5,
