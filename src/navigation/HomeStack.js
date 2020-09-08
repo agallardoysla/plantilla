@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {Image} from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import MyProfileScreen from '../screens/MyProfileScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import SearchScreen from '../screens/SearchScreen';
 import NewPublicationScreen from '../screens/NewPublicationScreen';
@@ -38,7 +38,7 @@ const ProfileGroup = ({navigation}) => {
       }}>
       <Stack.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={MyProfileScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
