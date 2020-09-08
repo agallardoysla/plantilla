@@ -79,67 +79,64 @@ const size = Dimensions.get('window').width / numColumns; //para el flatList
 let window = Dimensions.get('window');
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
-export default function Profile() {
+export default function Profile({navigation}) {
   const {user, logout} = useContext(AuthContext);
-
+  
+  const go_to_followers = () => {
+    navigation.navigate("Followed")
+  }
   return (
-   
     <ScrollView>
       <View>
-      <View style={styles.container_row_1}>
-        <View style={styles.column_row_1}>
-          <Text style={styles.text_profile}>Publicaciones</Text>
-          <FormButton buttonTitle="2020" />
-          <Text style={styles.text_profile}>Patrocinado por:</Text>
-          <FormButton buttonTitle="@Doggi" />
-          <FormButton buttonTitle="@Dogchow" />
-          <FormButton buttonTitle="@Pedigree" />
+        <View style={styles.container_row_1}>
+          <View style={styles.column_row_1}>
+            <Text style={styles.text_profile}>Publicaciones</Text>
+            <FormButton buttonTitle="2020" />
+            <Text style={styles.text_profile}>Patrocinado por:</Text>
+            <FormButton buttonTitle="@Doggi" />
+            <FormButton buttonTitle="@Dogchow" />
+            <FormButton buttonTitle="@Pedigree" />
+          </View>
+          <View style={styles.column_row_1}>
+            <Image
+              source={require('../assets/foto_perfil_superior.png')}
+              style={styles.circle_image}
+            />
+            <Text style={styles.name_user}>@Brownie</Text>
+            <Icon name="email" color={StylesConfiguration.color} size={48} />
+          </View>
+          <View style={styles.column_row_1}>
+            <Text style={styles.text_profile} >Amigos</Text>
+            <FormButton buttonTitle="500" onPress={go_to_followers} />
+            <Text style={styles.text_profile}>Te siguen</Text>
+            <FormButton buttonTitle="8350"  />
+            <FormButton buttonTitle="CHALLENGE" />
+            <FormButton buttonTitle="Seguir" />
+          </View>
         </View>
 
-        <View style={styles.column_row_1}>
-          <Image
-            source={require('../assets/foto_perfil_superior.png')}
-            style={styles.circle_image}
-          />
-          <Text style={styles.name_user}>@Brownie</Text>
-          <Icon name="email" color={StylesConfiguration.color} size={48} />
+        <View style={styles.container_row_2}>
+          <Text style={styles.container_description}>
+            BullDog frances que vive en burzaco me gusta dormir y comer
+          </Text>
         </View>
-        <View style={styles.column_row_1}>
-          <Text style={styles.text_profile}>Amigos</Text>
-          <FormButton buttonTitle="500" />
-          <Text style={styles.text_profile}>Te siguen</Text>
-          <FormButton buttonTitle="8350" />
-          <FormButton buttonTitle="CHALLENGE" />
-          <FormButton buttonTitle="Seguir" />
-        </View>
-      </View>
-
-      <View style={styles.container_row_2}>
-        <Text style={styles.container_description}>
-          BullDog frances que vive en burzaco me gusta dormir y comer
-        </Text>
-      </View>
-      <View style={styles.container_row_3}>
-         
+        <View style={styles.container_row_3}>
           <FlatList
             data={data}
             renderItem={({item}) => (
               <View style={styles.itemContainer}>
-                  <Image
-                    source={require('../assets/foto_publicacion.png')}
-                    style={{width: 120, height: 120, top: 20}}
-                  />
-             
+                <Image
+                  source={require('../assets/foto_publicacion.png')}
+                  style={{width: 120, height: 120, top: 20}}
+                />
               </View>
             )}
             keyExtractor={(item) => item.id}
             numColumns={numColumns}
           />
-
-
+        </View>
       </View>
-      </View>
-      </ScrollView>
+    </ScrollView>
   );
 }
 
@@ -160,9 +157,8 @@ const styles = StyleSheet.create({
   container_row_3: {
     flex: 1,
     backgroundColor: 'black',
-    alignContent:'center',
-    alignItems:'center'
-
+    alignContent: 'center',
+    alignItems: 'center',
   },
 
   //columnas dentro de las filas
@@ -205,12 +201,11 @@ const styles = StyleSheet.create({
   },
 
   itemContainer: {
-    
     top: 2,
     alignItems: 'center',
     alignContent: 'center',
-   
-    flexDirection: 'row', 
-    flexWrap: 'wrap'
-  }
+    justifyContent:'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
 });

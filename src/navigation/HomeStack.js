@@ -6,6 +6,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import SearchScreen from '../screens/SearchScreen';
 import NewPublicationScreen from '../screens/NewPublicationScreen';
+import Followed from '../screens/Followed';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -34,9 +35,17 @@ const ProfileGroup = ({navigation}) => {
       screenOptions={{
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
-
       }}>
-      <Stack.Screen name="Profile" component={ProfileScreen} options={{headerShown:false}} />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Followed"
+        component={Followed}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -48,7 +57,7 @@ const NotificationGroup = ({navigation}) => {
       screenOptions={{
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
-        headerShown:false,
+        headerShown: false,
       }}>
       <Stack.Screen name="Notification" component={NotificationScreen} />
     </Stack.Navigator>
@@ -76,7 +85,11 @@ const NewPublicationGroup = ({navigation}) => {
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
       }}>
-      <Stack.Screen name="NewPublication" component={NewPublicationScreen} options={{headerShown: false}} />
+      <Stack.Screen
+        name="NewPublication"
+        component={NewPublicationScreen}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -109,34 +122,41 @@ const HomeStack = () => {
       screenOptions={({route}) => ({
         tabBarIcon: ({focused}) => {
           let iconName;
+          let size;
           switch (route.name) {
             case 'HomeGroup':
               iconName = focused ? icons.icon_home_active : icons.icon_home;
+              size=33;
               break;
             case 'ProfileGroup':
               iconName = icons.icon_profile;
+              size=25;
               break;
             case 'NotificationGroup':
               iconName = focused
                 ? icons.icon_notification_active
                 : icons.icon_notification;
+                size=25;
               break;
             case 'SearchGroup':
               iconName = focused ? icons.icon_search_active : icons.icon_search;
+              size=25;
               break;
             case 'NewPublicationGroup':
               iconName = focused
                 ? icons.icon_new_publication_active
                 : icons.icon_new_publication;
+                size=25;
               break;
             default:
+              size=25;
               iconName = '';
           }
 
           return (
             <Image
               source={iconName}
-              style={{width: 25, height: 24, marginTop: 20}}
+              style={{width: size, height: size, marginTop: 18}}
             />
           );
         },
