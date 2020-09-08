@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
 import Video from 'react-native-video';
 import ImageCropPicker from 'react-native-image-crop-picker';
@@ -8,10 +8,12 @@ import FormButton from '../components/FormButton';
 import MatInput from '../components/MatInput';
 import posts_services from '../services/posts_services';
 import files_services from '../services/files_services';
+import {FeedContext} from '../navigation/FeedContext';
 
 let window = Dimensions.get('window');
 
 export default function NewPublicationScreen({navigation}) {
+  const {setPosts} = useContext(FeedContext);
   const [images, setImages] = useState([]);
   const [videoSource, setVideoSource] = useState('');
   const [challengeText, setChallengeText] = useState('');
@@ -110,7 +112,10 @@ export default function NewPublicationScreen({navigation}) {
       };
 
       await posts_services.create(newPost);
-      navigation.navigate('HomeGroup');
+      posts_services.list().then((res) => {
+        setPosts(res.data);
+        navigation.navigate('HomeGroup');
+      });
     }
   };
 
