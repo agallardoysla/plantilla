@@ -1,6 +1,4 @@
-import axios from 'react-native-axios';
-
-export default axios.create({
+export default {
   // Produccion
   https: true,
   baseURL: 'https://friendschallenge.webredirect.org/api/v1/',
@@ -12,10 +10,4 @@ export default axios.create({
   // Test
   // https: false,
   // baseURL: 'http://2e4e7fb99086.ngrok.io/api/v1/',
-
-  // Configuraciones generales
-  crossdomain: true,
-  mode: 'no-cors',
-  withCredentials: true,
-  credentials: 'same-origin',
-});
+};
