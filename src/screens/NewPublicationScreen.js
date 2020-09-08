@@ -14,7 +14,7 @@ let window = Dimensions.get('window');
 export default function NewPublicationScreen({navigation}) {
   const [images, setImages] = useState([]);
   const [videoSource, setVideoSource] = useState('');
-  const [challengeText, setChallengeText] = useState('Primer post');
+  const [challengeText, setChallengeText] = useState('');
 
   useEffect(() => {
     console.log("Cargado:", images, videoSource);
