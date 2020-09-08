@@ -10,6 +10,10 @@ target 'FriendsChallenge' do
 
   pod 'react-native-video', :path => '../node_modules/react-native-video'
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
+  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+
   target 'FriendsChallengeTests' do
     inherit! :complete
     # Pods for testing

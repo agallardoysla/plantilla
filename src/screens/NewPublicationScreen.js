@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image} from 'react-native';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
 import Video from 'react-native-video';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import ImagePicker from 'react-native-image-picker';
@@ -7,14 +7,16 @@ import StylesConfiguration from '../utils/StylesConfiguration';
 import FormButton from '../components/FormButton';
 import MatInput from '../components/MatInput';
 import posts_services from '../services/posts_services';
+import files_services from '../services/files_services';
+import {FeedContext} from '../navigation/FeedContext';
 
 let window = Dimensions.get('window');
 
-export default function NewPublicationScreen() {
+export default function NewPublicationScreen({navigation}) {
+  const {setPosts} = useContext(FeedContext);
   const [images, setImages] = useState([]);
   const [videoSource, setVideoSource] = useState('');
   const [challengeText, setChallengeText] = useState('');
-  const scroll = useRef(null);
 
   useEffect(() => {
     console.log("Cargado:", images, videoSource);
@@ -28,7 +30,6 @@ export default function NewPublicationScreen() {
       console.log(images);
       setImages(newImages.slice(0, 5));
       setVideoSource('');
-      scroll.scrollTo({x: 0, y: 0});
     });
   };
 
@@ -41,7 +42,6 @@ export default function NewPublicationScreen() {
       newImages.push(newImage);
       setImages(newImages);
       setVideoSource('');
-      scroll.scrollTo({x: 0, y: 0});
     });
   };
 
@@ -54,7 +54,6 @@ export default function NewPublicationScreen() {
       newImages.push(newImage);
       setImages(newImages);
       setVideoSource('');
-      scroll.scrollTo({x: 0, y: 0});
     });
   };
 
@@ -74,7 +73,6 @@ export default function NewPublicationScreen() {
       } else {
         setVideoSource(response);
         setImages([]);
-        scroll.scrollTo({x: 0, y: 0});
       }
     });
   }
@@ -88,26 +86,42 @@ export default function NewPublicationScreen() {
       } else {
         setVideoSource(response);
         setImages([]);
-        scroll.scrollTo({x: 0, y: 0});
       }
     });
   };
 
-  const doPubliish = () => {
-    // const newPost = {
-    //   post_type: ,
-    //   text,
-    //   media,
-    //   latitude,
-    //   longitude,
-    // };
+  const doPubliish = async () => {
+    const paths = images.length > 0 ? images.map((image) => image.path) : [videoSource];
 
-    // posts_services.create(newPost);
-  }
+    const filesIds = await Promise.all(
+      paths.map(async (path) => {
+        const result = await files_services.create(path);
+        return await result.json().id;
+      }),
+    );
+
+    console.log(filesIds);
+
+    if (filesIds.length > 0) {
+      const newPost = {
+        post_type: 1,
+        text: challengeText,
+        latitude: 'latitude',
+        longitude: 'longitude',
+        files: filesIds,
+      };
+
+      await posts_services.create(newPost);
+      posts_services.list().then((res) => {
+        setPosts(res.data);
+        navigation.navigate('HomeGroup');
+      });
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView ref={scroll}>
+      <ScrollView>
         <View style={styles.container}>
           <View style={styles.fullRow}>
             <Text style={styles.text_title}>SUBIR</Text>
@@ -121,7 +135,7 @@ export default function NewPublicationScreen() {
               }>
               <ScrollView horizontal={true} indicatorStyle="white">
                 {images.map((image, i) => (
-                  <Image source={{uri: image.path}} style={styles.image} key={i} />
+                  <Image source={{ uri: image.path }} style={styles.image} key={i} />
                 ))}
                 {images.length < 5 ? (
                   <TouchableOpacity
@@ -189,7 +203,7 @@ export default function NewPublicationScreen() {
           {(images.length > 0 || videoSource !== '') && challengeText.length > 0 ? (
             <View style={styles.fullRow}>
               <FormButton
-                style={styles.button}
+                style={styles.publishButton}
                 buttonTitle="PUBLICAR"
                 onPress={doPubliish}
               />
@@ -249,7 +263,9 @@ const styles = StyleSheet.create({
     width: 100,
     marginHorizontal: 5,
   },
-
+  publishButton: {
+    marginBottom: 20,
+  },
   //texto de descripcion
   text_description: {
     fontSize: 18,
@@ -262,7 +278,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: 10,
     paddingTop: -10,
-    marginBottom: 20,
     borderWidth: 2,
     borderStyle: 'solid',
     borderColor: 'white',

@@ -1,50 +1,66 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
-import { Icon } from 'react-native-elements';
+import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 
-const View_Publication = ({item}) => {
+let window = Dimensions.get('window');
+
+export default function View_Publication({item}) {
+
+  const showComments = () => {
+    
+  }
+
   return (
-    <View>
+    <View style={styles.container}>
       {/*Inicia Nombre de usuario como encabezado*/}
       <Text style={styles.encabezado_text}>@{item.user_owner.username}</Text>
       {/*Finaliza Nombre de usuario como encabezado*/}
 
       {/*Inicia Foto de la publicaciòn */}
-      <Image
-        source={require('../assets/foto_publicacion.png')}
-        resizeMode="cover"
-        style={styles.image_publication}
-      />
+      <View style={styles.postImagesContainer}>
+        <ScrollView horizontal={true} indicatorStyle="white">
+          {item.files_with_urls.map((image, i) => (
+            <Image
+              source={{uri: image.url}}
+              style={styles.image_publication}
+              key={i}
+              resizeMode="cover"
+            />
+          ))}
+        </ScrollView>
+      </View>
       {/*Finaliza Foto de la publicaciòn*/}
 
       {/*Inicio de iconos de la publicaciòn*/}
       <View style={styles.icon_container}>
         <Image
           source={require('../assets/ojo_vista.png')}
-          style={styles.icon_publication}
+          style={[styles.icon_publication, styles.icon_ojo]}
         />
-        <Text style={{color: 'white', left: -15}}>5645</Text>
+        <Text style={styles.icon_numbers}>{item.views_count}</Text>
 
-        <Icon
-          name="favorite"
-          color="#FFFFFF"
-          style={styles.icon_publication}
+        <Image
+          source={require('../assets/corazon_gris.png')}
+          style={[styles.icon_publication, styles.icon_corazon]}
         />
-        <Text style={{color: 'white', left: -15}}>{item.reactionscount.TIPO_REACCION_PRUEBA}</Text>
+        <Text style={styles.icon_numbers}>
+          {item.reactionscount.REACTION_TYPE_PRUEBA}
+        </Text>
 
         <Image
           source={require('../assets/comentario.png')}
-          style={styles.icon_publication}
+          style={[styles.icon_publication, styles.icon_comentario]}
+          onPress={showComments}
         />
 
         <Image
           source={require('../assets/compartir.png')}
-          style={styles.icon_publication}
+          style={[styles.icon_publication, styles.icon_compartir]}
         />
 
         <Image
           source={require('../assets/menu_desbordamiento.png')}
-          style={styles.icon_menu_desbordamiento}
+          style={[styles.icon_publication, styles.icon_mostrarMas]}
         />
       </View>
       {/*Fin de iconos de una publicaciòn*/}
@@ -187,7 +203,7 @@ const View_Publication = ({item}) => {
       {/*Inicia franja amarilla */}
       <View
         style={{
-          width: window.width,
+          flex: 1,
           height: 70,
           backgroundColor: 'yellow',
         }}>
@@ -210,7 +226,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     backgroundColor: 'black',
   },
   text: {
@@ -222,21 +238,55 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  icon_container: {
+  postImagesContainer: {
+    flex: 1,
+    height: 300,
     flexDirection: 'row',
-    marginVertical: 10,
-    justifyContent: 'space-between', //espacio o separacion entre elementos
-  },
-  icon_publication: {
-    width: 20,
-    height: 20,
-    marginHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    marginBottom: 5,
   },
   image_publication: {
-    width: window.width,
+    width: window.width - 20,
     height: 300,
-    alignContent: 'center',
-    marginBottom: 5,
+  },
+  icon_container: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+    paddingHorizontal: 10,
+  },
+  icon_publication: {
+    marginRight: 10,
+  },
+  icon_ojo: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+  },
+  icon_corazon: {
+    width: 20,
+    height: 18,
+    marginRight: 5,
+  },
+  icon_comentario: {
+    width: 30,
+    height: 30,
+  },
+  icon_compartir: {
+    width: 23,
+    height: 23,
+  },
+  icon_mostrarMas: {
+    width: 33,
+    height: 10,
+  },
+  icon_numbers: {
+    color: 'white',
+    marginRight: 15,
   },
   icon_menu_desbordamiento: {
     top: 5,
@@ -250,5 +300,3 @@ const styles = StyleSheet.create({
     borderRadius: 400 / 2,
   },
 });
-
-export default View_Publication;
