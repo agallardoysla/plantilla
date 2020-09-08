@@ -6,13 +6,12 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import {AuthContext} from '../navigation/AuthProvider';
 import posts_services from '../services/posts_services';
 import View_Publication from './view_publication';
+import {FeedContext} from '../navigation/FeedContext';
 
 export default function HomeScreen() {
-  const {user, logout} = useContext(AuthContext);
-  const [posts, setPosts] = useState([]);
+  const {posts, setPosts} = useContext(FeedContext);
 
   useEffect(() => {
     if (posts.length === 0) {
