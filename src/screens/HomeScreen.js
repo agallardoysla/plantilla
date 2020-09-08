@@ -23,46 +23,8 @@ export default function HomeScreen() {
   const loadPost = () => {
     posts_services.list().then((res) => {
       console.log("nuevos posts", res.data);
-      setPosts(res.data);
+      setPosts(posts.concat(res.data));
     });
-  };
-
-  const Post = ({item}) => {
-    console.log(item);
-    return (
-      <View>
-        <Text style={styles.encabezado_text}>@{item.user_owner.username}</Text>
-        <Image
-          source={require('../assets/foto_publicacion.png')}
-          resizeMode="cover"
-          style={styles.image_publication}
-        />
-
-        <View style={styles.icon_container}>
-          <Image
-            source={require('../assets/ojo_vista.png')}
-            style={styles.icon_publication}
-          />
-          <Text style={{color: 'white', left: -15}}>{item.reactionscount.TIPO_REACCION_PRUEBA}</Text>
-
-          <Image
-            source={require('../assets/corazon_like.png')}
-            style={styles.icon_publication}
-          />
-          <Text style={{color: 'white', left: -15}}>{item.commentscount}</Text>
-
-          <Image
-            source={require('../assets/comentario.png')}
-            style={styles.icon_publication}
-          />
-
-          <Image
-            source={require('../assets/compartir.png')}
-            style={styles.icon_publication}
-          />
-        </View>
-      </View>
-    );
   };
 
   return (
@@ -82,7 +44,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     backgroundColor: 'black',
   },
 });
