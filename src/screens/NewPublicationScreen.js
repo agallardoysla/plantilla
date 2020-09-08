@@ -93,20 +93,13 @@ export default function NewPublicationScreen() {
 
   const doPubliish = async () => {
     const paths = images.length > 0 ? images.map((image) => image.path) : [videoSource];
-    let filesIds = [];
-    const token = await auth().currentUser.getIdToken(true);
 
-    for (path of paths) {
-      let result = await RNFetchBlob.fetch('POST', 'https://friendschallenge.webredirect.org/api/v1/files/', {
-        Authorization: "JWT " + token,
-        'Content-Type': 'multipart/mixed',
-      }, [
-        { name: 'file', filename: 'foto.jpeg', data: RNFetchBlob.wrap(path) },
-        { name: 'file_type', data: '1' },
-      ])
-
-      filesIds.push(await result.json().id)
-    }
+    const filesIds = await Promise.all(
+      paths.map(async (path) => {
+        const result = await files_services.create(path);
+        return await result.json().id;
+      }),
+    );
 
     console.log(filesIds);
 
