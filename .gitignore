@@ -62,3 +62,6 @@ buck-out/
 # Visual studio
 .vscode
 .vs
+
+# Android compilations
+android/app/src/main/
