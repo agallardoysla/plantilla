@@ -20,21 +20,45 @@ export default {
   doGet: async (url) => {
     const config = await getConfig();
     console.log(api_config.baseURL, 'GET', url, config);
-    return axios.get(url, config);
+    let res;
+    try {
+      res = await axios.get(url, config);
+    } catch (e) {
+      console.log('Error GET' + e);
+    }
+    return res;
   },
   doPost: async (url, data) => {
     const config = await getConfig();
     console.log('POST', url, data, config);
-    return axios.post(url, data, config);
+    let res;
+    try {
+      res = await axios.post(url, data, config);
+    } catch (e) {
+      console.log('Error POST' + e);
+    }
+    return res;
   },
   doPut: async (url, data) => {
     const config = await getConfig();
     console.log('PUT', url, data, config);
-    return axios.put(url, data, config);
+    let res;
+    try {
+      res = await axios.put(url, data, config);
+    } catch (e) {
+      console.log('Error PUT' + e);
+    }
+    return res;
   },
   doDelete: async (url) => {
     const config = await getConfig();
     console.log('DELETE', url, config);
-    return axios.delete(url, config);
+    let res;
+    try {
+      res = await axios.delete(url, config);
+    } catch (e) {
+      console.log('Error DELETE' + e);
+    }
+    return res;
   },
 }
