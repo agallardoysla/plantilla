@@ -7,7 +7,7 @@ import {
   FlatList,
 } from 'react-native';
 import posts_services from '../services/posts_services';
-import View_Publication from './view_publication';
+import Publication from './Publication';
 import {FeedContext} from '../navigation/FeedContext';
 
 export default function HomeScreen() {
@@ -21,7 +21,7 @@ export default function HomeScreen() {
 
   const loadPost = () => {
     posts_services.list().then((res) => {
-      console.log("nuevos posts", res.data);
+      console.log("nuevos posts", res.data.length);
       setPosts(posts.concat(res.data));
     });
   };
@@ -30,10 +30,11 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <FlatList
         data={posts}
-        renderItem={View_Publication}
+        renderItem={Publication}
         onEndReachedThreshold={0.5}
         onEndReached={(info) => loadPost()}
         bouncesZoom={true}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );

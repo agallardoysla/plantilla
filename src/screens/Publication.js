@@ -1,14 +1,38 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import Video from 'react-native-video';
 
 let window = Dimensions.get('window');
 
-export default function View_Publication({item}) {
+export default function Publication({item}) {
 
   const showComments = () => {
     
   }
+
+  const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
+  const isImage = (uri) => availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
+
+  const toView = (file, i) => {
+    // console.log(file, i);
+    return isImage(file.url) ? (
+      <Image
+        source={{uri: file.url}}
+        style={styles.image_publication}
+        key={i}
+        resizeMode="cover"
+      />
+    ) : (
+      <Video
+        source={file.url}
+        style={styles.image_publication}
+        key={i}
+        controls={true}
+        fullscreen={false}
+      />
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -17,18 +41,13 @@ export default function View_Publication({item}) {
       {/*Finaliza Nombre de usuario como encabezado*/}
 
       {/*Inicia Foto de la publicaciòn */}
-      <View style={styles.postImagesContainer}>
-        <ScrollView horizontal={true} indicatorStyle="white">
-          {item.files_with_urls.map((image, i) => (
-            <Image
-              source={{uri: image.url}}
-              style={styles.image_publication}
-              key={i}
-              resizeMode="cover"
-            />
-          ))}
-        </ScrollView>
-      </View>
+      {item.files_with_urls.length > 0 ? (
+        <View style={styles.postImagesContainer}>
+          <ScrollView horizontal={true} indicatorStyle="white">
+            {item.files_with_urls.map(toView)}
+          </ScrollView>
+        </View>
+      ) : null}
       {/*Finaliza Foto de la publicaciòn*/}
 
       {/*Inicio de iconos de la publicaciòn*/}
