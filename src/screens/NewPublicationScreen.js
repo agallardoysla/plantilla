@@ -116,7 +116,7 @@ export default function NewPublicationScreen({navigation}) {
       }
 
       await posts_services.create(newPost);
-      posts_services.list().then((res) => {
+      posts_services.list(0).then((res) => {
         setImages([]);
         setVideoSource('');
         setChallengeText('');
