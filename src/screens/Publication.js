@@ -36,7 +36,7 @@ const PublicationRepresentation = ({post}) => {
       />
     ) : (
       <Video
-        source={file.url}
+        source={{uri: file.url}}
         style={styles.image_post}
         key={i}
         controls={true}
