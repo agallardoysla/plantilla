@@ -8,13 +8,14 @@ import {
   Image,
   FlatList,
   Alert,
+  Fragment,
 } from 'react-native';
 
 import FormButton from '../components/FormButton';
 import {AuthContext} from '../navigation/AuthProvider';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import {Icon} from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 //para el flatList
 const data = [
@@ -77,12 +78,52 @@ const data = [
 ];
 const numColumns = 3; //para el flatList
 
-
 export default function GenericProfile({navigation, user, isLoggedUser}) {
-  const go_to_followers = () => {
+  const go_to_followed = () => {
     navigation.navigate('Followed');
   };
 
+  const go_to_followers = () => {
+    navigation.navigate('Followers')
+  }
+
+  const MyProfileView = () => {
+    return (
+      <View View style={[styles.profileDataColumn, styles.columnRight]}>
+        <Text style={styles.text_profile}>Amigos</Text>
+        <FormButton
+          buttonTitle={user.following_with_details.length}
+          style={styles.counter}
+          onPress={go_to_followed}
+        />
+        <Text style={styles.text_profile}>Te siguen</Text>
+        <FormButton
+          buttonTitle={user.followers_with_details.length}
+          style={styles.counter}
+          onPress={go_to_followers}
+        />
+        <FormButton buttonTitle="CHALLENGE" style={styles.profileButton} />
+        <Image
+          source={require('../assets/sobre_amarillo.png')}
+          style={styles.sobre_amarillo_chico}
+        />
+      </View>
+    );
+  };
+
+  const OtherProfileView = () => {
+    return (
+      <View View style={[styles.profileDataColumn, styles.columnRight]}>
+        <FormButton buttonTitle="CHALLENGE" style={styles.profileButton} />
+        <Image
+          source={require('../assets/sobre_amarillo.png')}
+          style={styles.sobre_amarillo_chico}
+        />
+        <FormButton buttonTitle="Seguir" style={styles.profileButton} />
+      </View>
+    );
+  };
+  
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -103,8 +144,7 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
               {isLoggedUser ? (
                 <TouchableOpacity
                   style={styles.tuerca_blanca_container}
-                  onPress={() => Alert.alert("configuraciones")}
-                >
+                  onPress={() => Alert.alert('configuraciones')}>
                   <Image
                     source={require('../assets/tuerca_blanca.png')}
                     style={styles.tuerca_blanca}
@@ -124,28 +164,13 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
               />
             ) : null}
           </View>
-          <View style={[styles.profileDataColumn, styles.columnRight]}>
-            <Text style={styles.text_profile}>Amigos</Text>
-            <FormButton
-              buttonTitle={user.following_with_details.length}
-              style={styles.counter}
-              onPress={go_to_followers}
-            />
-            <Text style={styles.text_profile}>Te siguen</Text>
-            <FormButton
-              buttonTitle={user.followers_with_details.length}
-              style={styles.counter}
-            />
-            <FormButton buttonTitle="CHALLENGE" style={styles.profileButton} />
-            {isLoggedUser ? (
-              <Image
-                source={require('../assets/sobre_amarillo.png')}
-                style={styles.sobre_amarillo_chico}
-              />
-            ) : (
-              <FormButton buttonTitle="Seguir" style={styles.profileButton} />
-            )}
-          </View>
+         
+            {
+              //si isLoggedUser es verdadero mostrar columna con boton amigos, te siguen, CHALLENGE, y icono de sobre amarillo
+              //si isLoggedUser es falso mostrar boton CHALLENGE, icono de sobre amarillo, boton seguido
+              isLoggedUser ? <MyProfileView /> : <OtherProfileView />
+            }
+       
         </View>
 
         <View style={styles.profileDescription}>
@@ -293,7 +318,7 @@ const styles = StyleSheet.create({
     top: 2,
     alignItems: 'center',
     alignContent: 'center',
-    justifyContent:'center',
+    justifyContent: 'center',
     flexDirection: 'row',
     flexWrap: 'wrap',
   },

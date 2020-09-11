@@ -5,11 +5,11 @@ import Video from 'react-native-video';
 
 let window = Dimensions.get('window');
 
-export default function Publication({item}) {
+export default function Publication({item, navigation}) {
 
   const showComments = () => {
-    
-  }
+    navigation.navigate('PostComments');
+  };
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) => availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
@@ -202,7 +202,8 @@ export default function Publication({item}) {
           marginBottom: 10,
           left: 10,
           textAlign: 'left',
-        }}>
+        }}
+        onPress={showComments}>
         20 comentarios mas...
       </Text>
       {/*Fin de vista de total de comentarios */}
@@ -239,7 +240,7 @@ export default function Publication({item}) {
       {/*Finaliza franja amarilla */}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
