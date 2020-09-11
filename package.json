@@ -32,11 +32,13 @@
     "react-native-image-crop-picker": "^0.26.2",
     "react-native-image-picker": "^2.3.3",
     "react-native-material-textfield": "github:n4kz/react-native-material-textfield#729008b847eb38129d0b886e98253d4c11f6d4d3",
+    "react-native-parsed-text": "0.0.22",
     "react-native-reanimated": "^1.10.1",
     "react-native-safe-area-context": "^3.1.1",
     "react-native-screens": "^2.10.1",
     "react-native-vector-icons": "^7.0.0",
-    "react-native-video": "^5.1.0-alpha7"
+    "react-native-video": "^5.1.0-alpha7",
+    "react-native-video-player": "^0.10.1"
   },
   "devDependencies": {
     "@babel/core": "7.11.0",
