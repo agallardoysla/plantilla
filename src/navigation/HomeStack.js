@@ -7,6 +7,10 @@ import NotificationScreen from '../screens/NotificationScreen';
 import SearchScreen from '../screens/SearchScreen';
 import NewPublicationScreen from '../screens/NewPublicationScreen';
 import Followed from '../screens/Followed';
+import Followers from '../screens/Followers';
+import PostComments from '../screens/PostComments';
+
+import ViewPublication from '../screens/view_publication';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -24,6 +28,8 @@ const HomeGroup = ({navigation}) => {
         headerShown: false,
       }}>
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="ViewPublication" component={ViewPublication}/>
+      <Stack.Screen name="PostComments" component={PostComments}/>
     </Stack.Navigator>
   );
 };
@@ -44,6 +50,12 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen
         name="Followed"
         component={Followed}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="Followers"
+        component={Followers}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
@@ -126,30 +138,30 @@ const HomeStack = () => {
           switch (route.name) {
             case 'HomeGroup':
               iconName = focused ? icons.icon_home_active : icons.icon_home;
-              size=33;
+              size = 33;
               break;
             case 'ProfileGroup':
               iconName = icons.icon_profile;
-              size=25;
+              size = 25;
               break;
             case 'NotificationGroup':
               iconName = focused
                 ? icons.icon_notification_active
                 : icons.icon_notification;
-                size=25;
+              size = 25;
               break;
             case 'SearchGroup':
               iconName = focused ? icons.icon_search_active : icons.icon_search;
-              size=25;
+              size = 25;
               break;
             case 'NewPublicationGroup':
               iconName = focused
                 ? icons.icon_new_publication_active
                 : icons.icon_new_publication;
-                size=25;
+              size = 25;
               break;
             default:
-              size=25;
+              size = 25;
               iconName = '';
           }
 

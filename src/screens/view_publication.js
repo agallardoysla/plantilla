@@ -1,14 +1,14 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import PostComments from './PostComments';
 
 let window = Dimensions.get('window');
 
-export default function View_Publication({item}) {
-
+export default function View_Publication({item, navigation}) {
   const showComments = () => {
-    
-  }
+    navigation.navigate('PostComments');
+  };
 
   return (
     <View style={styles.container}>
@@ -183,7 +183,8 @@ export default function View_Publication({item}) {
           marginBottom: 10,
           left: 10,
           textAlign: 'left',
-        }}>
+        }}
+        onPress={showComments}>
         20 comentarios mas...
       </Text>
       {/*Fin de vista de total de comentarios */}
@@ -220,7 +221,7 @@ export default function View_Publication({item}) {
       {/*Finaliza franja amarilla */}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
