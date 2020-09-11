@@ -172,38 +172,41 @@ const PublicationRepresentation = ({post}) => {
                     fontWeight: 'bold',
                     paddingRight: 10,
                   }}>
-                  @Gruñon
+                  @{comment.user_owner.display_name}
                 </Text>
                 <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
                   {comment.text}
                 </Text>
-              </View>        
-              <View style={{flexDirection: 'row', paddingLeft: 20}}>
-                <Image
-                  source={require('../assets/foto.png')}
-                  style={styles.icon_profile}
-                />
-
-                <Text
-                  style={{
-                    color: '#E8FC64',
-                    marginBottom: 10,
-                    fontWeight: 'bold',
-                    paddingRight: 10,
-                  }}>
-                  @User A @Gruñon
-                </Text>
               </View>
-              <Text
-                style={{
-                  color: 'white',
-                  alignItems: 'stretch',
-                  marginBottom: 10,
-                  left: 70,
-                  top: -10,
-                }}>
-                Igual no ibas a venir
-              </Text>
+              {comment.comments && comment.comments.length > 0 ? (
+                comment.comments.map((answer, j) => (
+                  <View style={{flexDirection: 'row', paddingLeft: 20}} key={j}>
+                    <Image
+                      source={require('../assets/foto.png')}
+                      style={styles.icon_profile}
+                    />
+                    <Text
+                      style={{
+                        color: '#E8FC64',
+                        marginBottom: 10,
+                        fontWeight: 'bold',
+                        paddingRight: 10,
+                      }}>
+                      @{answer.user_owner.display_name} A @{comment.user_owner.display_name}
+                    </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        alignItems: 'stretch',
+                        marginBottom: 10,
+                        left: 70,
+                        top: -10,
+                      }}>
+                      {answer.text}
+                    </Text>
+                  </View>
+                  )))
+                : null}
             </View>
           )
         )
