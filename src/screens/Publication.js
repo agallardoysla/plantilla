@@ -1,15 +1,17 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import React, { useState } from 'react';
+import {View, Text, StyleSheet, Image, Dimensions, TextInput} from 'react-native';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
 
 let window = Dimensions.get('window');
 
 export default function Publication({item}) {
+  return <PublicationRepresentation publication={item}/>;
+};
 
-  const showComments = () => {
-    
-  }
+const PublicationRepresentation = ({publication}) => {
+  const [newComment, setNewComment] = useState('');
+  const [showComments, setShowComments] = useState(false);
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) => availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
@@ -37,14 +39,14 @@ export default function Publication({item}) {
   return (
     <View style={styles.container}>
       {/*Inicia Nombre de usuario como encabezado*/}
-      <Text style={styles.encabezado_text}>@{item.user_owner.username}</Text>
+      <Text style={styles.encabezado_text}>@{publication.user_owner.username}</Text>
       {/*Finaliza Nombre de usuario como encabezado*/}
 
       {/*Inicia Foto de la publicaciòn */}
-      {item.files_with_urls.length > 0 ? (
+      {publication.files_with_urls.length > 0 ? (
         <View style={styles.postImagesContainer}>
           <ScrollView horizontal={true} indicatorStyle="white">
-            {item.files_with_urls.map(toView)}
+            {publication.files_with_urls.map(toView)}
           </ScrollView>
         </View>
       ) : null}
@@ -56,21 +58,22 @@ export default function Publication({item}) {
           source={require('../assets/ojo_vista.png')}
           style={[styles.icon_publication, styles.icon_ojo]}
         />
-        <Text style={styles.icon_numbers}>{item.views_count}</Text>
+        <Text style={styles.icon_numbers}>{publication.views_count}</Text>
 
         <Image
           source={require('../assets/corazon_gris.png')}
           style={[styles.icon_publication, styles.icon_corazon]}
         />
         <Text style={styles.icon_numbers}>
-          {item.reactionscount.REACTION_TYPE_PRUEBA}
+          {publication.reactionscount.REACTION_TYPE_PRUEBA}
         </Text>
 
-        <Image
-          source={require('../assets/comentario.png')}
-          style={[styles.icon_publication, styles.icon_comentario]}
-          onPress={showComments}
-        />
+        <TouchableOpacity onPress={() => setShowComments(!showComments)}>
+          <Image
+            source={require('../assets/comentario.png')}
+            style={[styles.icon_publication, styles.icon_comentario]}
+          />
+        </TouchableOpacity>
 
         <Image
           source={require('../assets/compartir.png')}
@@ -93,10 +96,10 @@ export default function Publication({item}) {
             marginBottom: 10,
             fontWeight: 'bold',
           }}>
-          {item.user_owner.username}
+          {publication.user_owner.username}
         </Text>
         <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
-          {item.text}
+          {publication.text === '__post_text__'? '' : publication.text}
         </Text>
       </View>
       {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
@@ -115,97 +118,100 @@ export default function Publication({item}) {
       </View>
       {/*Fin de Categorias dentro de una publicaciòn */}
 
-      {/*Inicia comentario hacia la publicaciòn */}
-      <View style={{flexDirection: 'row'}}>
-        <Image
-          source={require('../assets/foto.png')}
-          style={styles.icon_profile}
-        />
+      {/*Inicia nuevo comentario hacia la publicaciòn */}
+      <TextInput
+        style={styles.newComment}
+        onChangeText={setNewComment}
+        value={newComment}
+      />
+      {/*Fin de nuevo comentario hacia la publicaciòn */}
 
-        <Text
-          style={{
-            color: '#E8FC64',
-            marginBottom: 10,
-            fontWeight: 'bold',
-            paddingRight: 10,
-          }}>
-          @Gruñon
-        </Text>
-        <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
-          No me invitaron
-        </Text>
-      </View>
-      {/*Fin del comentario hacia la publicaciòn*/}
+      {/*Inicia comentarios hacia la publicaciòn */}
+      { showComments ? (
+        <View>
+          <View style={{flexDirection: 'row'}}>
+            <Image
+              source={require('../assets/foto.png')}
+              style={styles.icon_profile}
+            />
 
-      {/*Inicia respuesta  hacia un comentario de la publicaciòn */}
-      <View style={{flexDirection: 'row', paddingLeft: 20}}>
-        <Image
-          source={require('../assets/foto.png')}
-          style={styles.icon_profile}
-        />
+            <Text
+              style={{
+                color: '#E8FC64',
+                marginBottom: 10,
+                fontWeight: 'bold',
+                paddingRight: 10,
+              }}>
+              @Gruñon
+            </Text>
+            <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
+              No me invitaron
+            </Text>
+          </View>        
+            <View style={{flexDirection: 'row', paddingLeft: 20}}>
+            <Image
+              source={require('../assets/foto.png')}
+              style={styles.icon_profile}
+            />
 
-        <Text
-          style={{
-            color: '#E8FC64',
-            marginBottom: 10,
-            fontWeight: 'bold',
-            paddingRight: 10,
-          }}>
-          @User A @Gruñon
-        </Text>
-      </View>
-      <Text
-        style={{
-          color: 'white',
-          alignItems: 'stretch',
-          marginBottom: 10,
-          left: 70,
-          top: -10,
-        }}>
-        Igual no ibas a venir
-      </Text>
-      {/*Fin de respuesta hacia un comentario de la publicaciòn*/}
+            <Text
+              style={{
+                color: '#E8FC64',
+                marginBottom: 10,
+                fontWeight: 'bold',
+                paddingRight: 10,
+              }}>
+              @User A @Gruñon
+            </Text>
+          </View>
+          <Text
+            style={{
+              color: 'white',
+              alignItems: 'stretch',
+              marginBottom: 10,
+              left: 70,
+              top: -10,
+            }}>
+            Igual no ibas a venir
+          </Text>
+          <View style={{flexDirection: 'row', paddingLeft: 20}}>
+            <Image
+              source={require('../assets/foto.png')}
+              style={styles.icon_profile}
+            />
 
-      {/*Inicia contrarespuesta  del comentario */}
-      <View style={{flexDirection: 'row', paddingLeft: 20}}>
-        <Image
-          source={require('../assets/foto.png')}
-          style={styles.icon_profile}
-        />
+            <Text
+              style={{
+                color: '#E8FC64',
+                marginBottom: 10,
+                fontWeight: 'bold',
+                paddingRight: 10,
+              }}>
+              @Gruñon A @User
+            </Text>
+          </View>
+          <Text
+            style={{
+              color: 'white',
+              alignItems: 'stretch',
+              marginBottom: 10,
+              left: 70,
+              top: -10,
+            }}>
+            Tenes razon @User
+          </Text>
 
-        <Text
-          style={{
-            color: '#E8FC64',
-            marginBottom: 10,
-            fontWeight: 'bold',
-            paddingRight: 10,
-          }}>
-          @Gruñon A @User
-        </Text>
-      </View>
-      <Text
-        style={{
-          color: 'white',
-          alignItems: 'stretch',
-          marginBottom: 10,
-          left: 70,
-          top: -10,
-        }}>
-        Tenes razon @User
-      </Text>
-      {/*Fin de contrarespuesta del comentario*/}
-
-      {/*Inicia vista de total de comentarios */}
-      <Text
-        style={{
-          color: 'gray',
-          marginBottom: 10,
-          left: 10,
-          textAlign: 'left',
-        }}>
-        20 comentarios mas...
-      </Text>
-      {/*Fin de vista de total de comentarios */}
+          <Text
+            style={{
+              color: 'gray',
+              marginBottom: 10,
+              left: 10,
+              textAlign: 'left',
+            }}>
+            20 comentarios mas...
+          </Text>
+        </View>
+      ) : null}
 
       {/*Inicia fecha*/}
       <Text
