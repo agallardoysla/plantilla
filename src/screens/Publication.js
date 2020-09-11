@@ -19,6 +19,7 @@ const PublicationRepresentation = ({post}) => {
   const [showComments, setShowComments] = useState(false);
   const [loadingComments, setLoadingComments] = useState(true);
   const [comments, setComments] = useState([]);
+  const [savingComment, setSavingComment] = useState(false);
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) => availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
@@ -51,12 +52,16 @@ const PublicationRepresentation = ({post}) => {
   }
 
   const saveComment = async () => {
+    setSavingComment(true);
     const comment = {
       post: post.id,
       text: newComment,
     };
+    setNewComment('');
     await comments_services.create(comment);
-    setComments([comment]);
+    setComments([...comments, comment]);
+    setSavingComment(false);
+    getAndSetShowComments();
   };
 
   const getAndSetShowComments = () => {
@@ -236,14 +241,18 @@ const PublicationRepresentation = ({post}) => {
       )) : null}
 
       {/*Inicia nuevo comentario hacia la publicaciòn */}
-      <TextInput
-        style={styles.newComment}
-        onChangeText={setNewComment}
-        onSubmitEditing={saveComment}
-        placeholder={'Escribir un nuevo comentario...'}
-        placeholderTextColor={'white'}>
-        {newComment}
-      </TextInput>
+      {savingComment ? (
+        <ActivityIndicator color={StylesConfiguration.color} />
+      ) : (
+        <TextInput
+          style={styles.newComment}
+          onChangeText={setNewComment}
+          onSubmitEditing={saveComment}
+          placeholder={'Escribir un nuevo comentario...'}
+          placeholderTextColor={'white'}>
+          {newComment}
+        </TextInput>
+      )}
       {/*Fin de nuevo comentario hacia la publicaciòn */}
 
       {/*Inicia fecha*/}
