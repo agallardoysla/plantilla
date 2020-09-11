@@ -107,11 +107,13 @@ export default function NewPublicationScreen({navigation}) {
     if (filesIds.length > 0) {
       const newPost = {
         post_type: 1,
-        text: challengeText,
         latitude: 'latitude',
         longitude: 'longitude',
         files: filesIds,
       };
+      if (challengeText.length > 0) {
+        newPost.text = challengeText;
+      }
 
       await posts_services.create(newPost);
       posts_services.list().then((res) => {
