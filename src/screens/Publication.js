@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, Image, Dimensions, TextInput} from 'react-native';
+import {View, Text, StyleSheet, Image, Dimensions, TextInput, Alert, ActivityIndicator} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
+import { HashtagFormatter } from '../utils/HashtagFormatter';
+import StylesConfiguration from '../utils/StylesConfiguration';
+import ParsedText from 'react-native-parsed-text';
+import comments_services from '../services/comments_services';
+import posts_services from '../services/posts_services';
 
 let window = Dimensions.get('window');
 
 export default function Publication({item}) {
-  return <PublicationRepresentation publication={item}/>;
+  return <PublicationRepresentation post={item}/>;
 };
 
-const PublicationRepresentation = ({publication}) => {
+const PublicationRepresentation = ({post}) => {
   const [newComment, setNewComment] = useState('');
   const [showComments, setShowComments] = useState(false);
+  const [loadingComments, setLoadingComments] = useState(true);
+  const [comments, setComments] = useState([]);
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) => availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
@@ -21,14 +28,14 @@ const PublicationRepresentation = ({publication}) => {
     return isImage(file.url) ? (
       <Image
         source={{uri: file.url}}
-        style={styles.image_publication}
+        style={styles.image_post}
         key={i}
         resizeMode="cover"
       />
     ) : (
       <Video
         source={file.url}
-        style={styles.image_publication}
+        style={styles.image_post}
         key={i}
         controls={true}
         fullscreen={false}
@@ -36,17 +43,48 @@ const PublicationRepresentation = ({publication}) => {
     );
   };
 
+  const renderText = (matchingString, matches) => {
+    // matches => ["[@michel:5455345]", "@michel", "5455345"]
+    let pattern = /\[(@[^:]+):([^\]]+)\]/i;
+    let match = matchingString.match(pattern);
+    return `^^${match[1]}^^`;
+  }
+
+  const saveComment = async () => {
+    const comment = {
+      post: post.id,
+      text: newComment,
+    };
+    await comments_services.create(comment);
+    setComments([comment]);
+  };
+
+  const getAndSetShowComments = () => {
+    setShowComments(!showComments);
+    setLoadingComments(true);
+    console.log("get comments", showComments, loadingComments);
+    if (!showComments) {
+      posts_services.getComments(post.id).then((res) => {
+        setComments(res.data);
+        setLoadingComments(false);
+      });
+    } else {
+      setLoadingComments(false);
+      setShowComments(!showComments);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/*Inicia Nombre de usuario como encabezado*/}
-      <Text style={styles.encabezado_text}>@{publication.user_owner.username}</Text>
+      <Text style={styles.encabezado_text}>@{post.user_owner.display_name}</Text>
       {/*Finaliza Nombre de usuario como encabezado*/}
 
       {/*Inicia Foto de la publicaciòn */}
-      {publication.files_with_urls.length > 0 ? (
+      {post.files_with_urls.length > 0 ? (
         <View style={styles.postImagesContainer}>
           <ScrollView horizontal={true} indicatorStyle="white">
-            {publication.files_with_urls.map(toView)}
+            {post.files_with_urls.map(toView)}
           </ScrollView>
         </View>
       ) : null}
@@ -56,33 +94,33 @@ const PublicationRepresentation = ({publication}) => {
       <View style={styles.icon_container}>
         <Image
           source={require('../assets/ojo_vista.png')}
-          style={[styles.icon_publication, styles.icon_ojo]}
+          style={[styles.icon_post, styles.icon_ojo]}
         />
-        <Text style={styles.icon_numbers}>{publication.views_count}</Text>
+        <Text style={styles.icon_numbers}>{post.views_count}</Text>
 
         <Image
           source={require('../assets/corazon_gris.png')}
-          style={[styles.icon_publication, styles.icon_corazon]}
+          style={[styles.icon_post, styles.icon_corazon]}
         />
         <Text style={styles.icon_numbers}>
-          {publication.reactionscount.REACTION_TYPE_PRUEBA}
+          {post.reactionscount.REACTION_TYPE_PRUEBA}
         </Text>
 
-        <TouchableOpacity onPress={() => setShowComments(!showComments)}>
+        <TouchableOpacity onPress={getAndSetShowComments}>
           <Image
             source={require('../assets/comentario.png')}
-            style={[styles.icon_publication, styles.icon_comentario]}
+            style={[styles.icon_post, styles.icon_comentario]}
           />
         </TouchableOpacity>
 
         <Image
           source={require('../assets/compartir.png')}
-          style={[styles.icon_publication, styles.icon_compartir]}
+          style={[styles.icon_post, styles.icon_compartir]}
         />
 
         <Image
           source={require('../assets/menu_desbordamiento.png')}
-          style={[styles.icon_publication, styles.icon_mostrarMas]}
+          style={[styles.icon_post, styles.icon_mostrarMas]}
         />
       </View>
       {/*Fin de iconos de una publicaciòn*/}
@@ -96,122 +134,117 @@ const PublicationRepresentation = ({publication}) => {
             marginBottom: 10,
             fontWeight: 'bold',
           }}>
-          {publication.user_owner.username}
+          {post.user_owner.display_name}
         </Text>
         <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
-          {publication.text === '__post_text__'? '' : publication.text}
+          {post.text === '__post_text__'? '' : post.text}
         </Text>
       </View>
       {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
-      {/*Inicio de Categorias dentro de una publicaciòn*/}
-      <View style={{flexDirection: 'row'}}>
-        <Text
-          style={{
-            color: '#624CEE',
-            marginHorizontal: 10,
-            marginBottom: 10,
-            fontWeight: 'bold',
-          }}>
-          #Fiesta #cumpleañito #PapitaATodo
-        </Text>
-      </View>
-      {/*Fin de Categorias dentro de una publicaciòn */}
+      {/*Inicia comentarios hacia la publicaciòn */}
+      {showComments ? (
+        loadingComments ? (
+          <ActivityIndicator color={StylesConfiguration.color} />
+        ) : (
+          comments.map((comment, i) => (
+            <View key={i}>
+              <View style={{flexDirection: 'row'}}>
+                <Image
+                  source={require('../assets/foto.png')}
+                  style={styles.icon_profile}
+                />
+
+                <Text
+                  style={{
+                    color: '#E8FC64',
+                    marginBottom: 10,
+                    fontWeight: 'bold',
+                    paddingRight: 10,
+                  }}>
+                  @Gruñon
+                </Text>
+                <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
+                  {comment.text}
+                </Text>
+              </View>        
+              <View style={{flexDirection: 'row', paddingLeft: 20}}>
+                <Image
+                  source={require('../assets/foto.png')}
+                  style={styles.icon_profile}
+                />
+
+                <Text
+                  style={{
+                    color: '#E8FC64',
+                    marginBottom: 10,
+                    fontWeight: 'bold',
+                    paddingRight: 10,
+                  }}>
+                  @User A @Gruñon
+                </Text>
+              </View>
+              <Text
+                style={{
+                  color: 'white',
+                  alignItems: 'stretch',
+                  marginBottom: 10,
+                  left: 70,
+                  top: -10,
+                }}>
+                Igual no ibas a venir
+              </Text>
+              <View style={{flexDirection: 'row', paddingLeft: 20}}>
+                <Image
+                  source={require('../assets/foto.png')}
+                  style={styles.icon_profile}
+                />
+
+                <Text
+                  style={{
+                    color: '#E8FC64',
+                    marginBottom: 10,
+                    fontWeight: 'bold',
+                    paddingRight: 10,
+                  }}>
+                  @Gruñon A @User
+                </Text>
+              </View>
+              <Text
+                style={{
+                  color: 'white',
+                  alignItems: 'stretch',
+                  marginBottom: 10,
+                  left: 70,
+                  top: -10,
+                }}>
+                Tenes razon @User
+              </Text>
+
+              <Text
+                style={{
+                  color: 'gray',
+                  marginBottom: 10,
+                  left: 10,
+                  textAlign: 'left',
+                }}>
+                20 comentarios mas...
+              </Text>
+            </View>
+          )
+        )
+      )) : null}
 
       {/*Inicia nuevo comentario hacia la publicaciòn */}
       <TextInput
         style={styles.newComment}
         onChangeText={setNewComment}
-        value={newComment}
-      />
+        onSubmitEditing={saveComment}
+        placeholder={'Escribir un nuevo comentario...'}
+        placeholderTextColor={'white'}>
+        {newComment}
+      </TextInput>
       {/*Fin de nuevo comentario hacia la publicaciòn */}
-
-      {/*Inicia comentarios hacia la publicaciòn */}
-      { showComments ? (
-        <View>
-          <View style={{flexDirection: 'row'}}>
-            <Image
-              source={require('../assets/foto.png')}
-              style={styles.icon_profile}
-            />
-
-            <Text
-              style={{
-                color: '#E8FC64',
-                marginBottom: 10,
-                fontWeight: 'bold',
-                paddingRight: 10,
-              }}>
-              @Gruñon
-            </Text>
-            <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
-              No me invitaron
-            </Text>
-          </View>        
-            <View style={{flexDirection: 'row', paddingLeft: 20}}>
-            <Image
-              source={require('../assets/foto.png')}
-              style={styles.icon_profile}
-            />
-
-            <Text
-              style={{
-                color: '#E8FC64',
-                marginBottom: 10,
-                fontWeight: 'bold',
-                paddingRight: 10,
-              }}>
-              @User A @Gruñon
-            </Text>
-          </View>
-          <Text
-            style={{
-              color: 'white',
-              alignItems: 'stretch',
-              marginBottom: 10,
-              left: 70,
-              top: -10,
-            }}>
-            Igual no ibas a venir
-          </Text>
-          <View style={{flexDirection: 'row', paddingLeft: 20}}>
-            <Image
-              source={require('../assets/foto.png')}
-              style={styles.icon_profile}
-            />
-
-            <Text
-              style={{
-                color: '#E8FC64',
-                marginBottom: 10,
-                fontWeight: 'bold',
-                paddingRight: 10,
-              }}>
-              @Gruñon A @User
-            </Text>
-          </View>
-          <Text
-            style={{
-              color: 'white',
-              alignItems: 'stretch',
-              marginBottom: 10,
-              left: 70,
-              top: -10,
-            }}>
-            Tenes razon @User
-          </Text>
-
-          <Text
-            style={{
-              color: 'gray',
-              marginBottom: 10,
-              left: 10,
-              textAlign: 'left',
-            }}>
-            20 comentarios mas...
-          </Text>
-        </View>
-      ) : null}
 
       {/*Inicia fecha*/}
       <Text
@@ -226,7 +259,7 @@ const PublicationRepresentation = ({publication}) => {
       {/*Finaliza fecha */}
 
       {/*Inicia franja amarilla */}
-      <View
+      {/* <View
         style={{
           flex: 1,
           height: 70,
@@ -241,7 +274,7 @@ const PublicationRepresentation = ({publication}) => {
           source={require('../assets/franja_amarilla_imagen.png')}
           resizeMode="center"
         />
-      </View>
+      </View> */}
       {/*Finaliza franja amarilla */}
     </View>
   );
@@ -253,6 +286,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'stretch',
     backgroundColor: 'black',
+    marginBottom: 30,
   },
   text: {
     fontSize: 20,
@@ -272,7 +306,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 5,
   },
-  image_publication: {
+  image_post: {
     width: window.width - 20,
     height: 300,
   },
@@ -284,7 +318,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
   },
-  icon_publication: {
+  icon_post: {
     marginRight: 10,
   },
   icon_ojo: {
@@ -323,5 +357,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginBottom: 10,
     borderRadius: 400 / 2,
+  },
+  newComment: {
+    color: 'white',
+    // fontFamily: StylesConfiguration.fontFamily,
+    fontSize: 13,
+    fontWeight: '200',
+    backgroundColor: '#50555C',
+    borderRadius: 10,
+    height: 45,
+    marginHorizontal: 10,
+    paddingHorizontal: 15,
   },
 });
