@@ -12,6 +12,7 @@ import {FeedContext} from '../navigation/FeedContext';
 
 export default function HomeScreen() {
   const {posts, setPosts} = useContext(FeedContext);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     if (posts.length === 0) {
@@ -20,9 +21,10 @@ export default function HomeScreen() {
   });
 
   const loadPost = () => {
-    posts_services.list().then((res) => {
+    posts_services.list(page).then((res) => {
       console.log("nuevos posts", res.data.length);
       setPosts(posts.concat(res.data));
+      setPage(page + 1);
     });
   };
 
@@ -31,7 +33,7 @@ export default function HomeScreen() {
       <FlatList
         data={posts}
         renderItem={Publication}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.6}
         onEndReached={(info) => loadPost()}
         bouncesZoom={true}
         keyExtractor={(item) => item.id.toString()}
