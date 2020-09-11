@@ -16,9 +16,10 @@ export default function Publication({item}) {
 
 const PublicationRepresentation = ({post}) => {
   const [newComment, setNewComment] = useState('');
-  const [showComments, setShowComments] = useState(false);
-  const [loadingComments, setLoadingComments] = useState(true);
-  const [comments, setComments] = useState([]);
+  const [showComments, setShowComments] = useState(true);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(true);
+  const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
@@ -65,10 +66,14 @@ const PublicationRepresentation = ({post}) => {
   };
 
   const getAndSetShowComments = () => {
-    setShowComments(!showComments);
+    if (!firstTimeLoadingComments) {
+      setShowComments(!showComments);
+      console.log("get comments", showComments, loadingComments);
+    } else {
+      setFirstTimeLoadingComments(false);
+    }
     setLoadingComments(true);
-    console.log("get comments", showComments, loadingComments);
-    if (!showComments) {
+    if (showComments) {
       posts_services.getComments(post.id).then((res) => {
         setComments(res.data);
         setLoadingComments(false);
@@ -199,46 +204,24 @@ const PublicationRepresentation = ({post}) => {
                 }}>
                 Igual no ibas a venir
               </Text>
-              <View style={{flexDirection: 'row', paddingLeft: 20}}>
-                <Image
-                  source={require('../assets/foto.png')}
-                  style={styles.icon_profile}
-                />
-
-                <Text
-                  style={{
-                    color: '#E8FC64',
-                    marginBottom: 10,
-                    fontWeight: 'bold',
-                    paddingRight: 10,
-                  }}>
-                  @Gruñon A @User
-                </Text>
-              </View>
-              <Text
-                style={{
-                  color: 'white',
-                  alignItems: 'stretch',
-                  marginBottom: 10,
-                  left: 70,
-                  top: -10,
-                }}>
-                Tenes razon @User
-              </Text>
-
-              <Text
-                style={{
-                  color: 'gray',
-                  marginBottom: 10,
-                  left: 10,
-                  textAlign: 'left',
-                }}>
-                20 comentarios mas...
-              </Text>
             </View>
           )
         )
       )) : null}
+
+      {firstTimeLoadingComments ? (
+        <TouchableOpacity onPress={getAndSetShowComments}>
+          <Text
+            style={{
+              color: 'gray',
+              marginBottom: 10,
+              left: 10,
+              textAlign: 'left',
+            }}>
+            20 comentarios mas...
+          </Text>
+        </TouchableOpacity>
+      ) : null}
 
       {/*Inicia nuevo comentario hacia la publicaciòn */}
       {savingComment ? (
