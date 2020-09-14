@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import {View, Text, StyleSheet, Image, Dimensions, TextInput, Alert, ActivityIndicator} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
-import { HashtagFormatter } from '../utils/HashtagFormatter';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import ParsedText from 'react-native-parsed-text';
 import comments_services from '../services/comments_services';
