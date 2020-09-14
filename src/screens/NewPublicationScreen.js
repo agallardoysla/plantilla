@@ -93,11 +93,18 @@ export default function NewPublicationScreen({navigation}) {
 
   const doPubliish = async () => {
     setPublishing(true);
-    const paths = images.length > 0 ? images.map((image) => image.path) : [videoSource];
+    var re = /(?:\.([^.]+))?$/;
+    let paths = images.length > 0 ? images.map((image) => image.path) : [videoSource];
+    paths = paths.map((p) => {
+      return {
+        url: p,
+        ext: re.exec(p)[1],
+      };
+    });
 
     const filesIds = await Promise.all(
-      paths.map(async (path) => {
-        const result = await files_services.create(path);
+      paths.map(async (file) => {
+        const result = await files_services.create(file.url, file.ext);
         return await result.json().id;
       }),
     );
@@ -107,14 +114,16 @@ export default function NewPublicationScreen({navigation}) {
     if (filesIds.length > 0) {
       const newPost = {
         post_type: 1,
-        text: challengeText,
         latitude: 'latitude',
         longitude: 'longitude',
         files: filesIds,
       };
+      if (challengeText.length > 0) {
+        newPost.text = challengeText;
+      }
 
       await posts_services.create(newPost);
-      posts_services.list().then((res) => {
+      posts_services.list(0).then((res) => {
         setImages([]);
         setVideoSource('');
         setChallengeText('');
@@ -142,7 +151,11 @@ export default function NewPublicationScreen({navigation}) {
                 }>
                 <ScrollView horizontal={true} indicatorStyle="white">
                   {images.map((image, i) => (
-                    <Image source={{ uri: image.path }} style={styles.image} key={i} />
+                    <Image
+                      source={{uri: image.path}}
+                      style={styles.image}
+                      key={i}
+                    />
                   ))}
                   {images.length < 5 ? (
                     <TouchableOpacity

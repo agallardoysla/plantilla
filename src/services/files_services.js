@@ -16,13 +16,17 @@ const getConfig = async () => {
 export default {
   list: () => generic_service.doGet(url, true),
   get: (id) => generic_service.doGet(`${url}${id}/`, true),
-  create: async (filePath) =>
+  create: async (fileUrl, fileExt) =>
     RNFetchBlob.fetch(
       'POST',
       `${api_config.baseURL}${url}`,
       await getConfig(),
       [
-        {name: 'file', filename: 'foto.jpeg', data: RNFetchBlob.wrap(filePath)},
+        {
+          name: 'file',
+          filename: 'foto.' + fileExt,
+          data: RNFetchBlob.wrap(fileUrl),
+        },
         {name: 'file_type', data: '1'},
       ],
     ),
