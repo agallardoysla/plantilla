@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {View, Text, StyleSheet, Image, Dimensions, TextInput, Alert, ActivityIndicator} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
@@ -7,11 +7,13 @@ import StylesConfiguration from '../utils/StylesConfiguration';
 import ParsedText from 'react-native-parsed-text';
 import comments_services from '../services/comments_services';
 import posts_services from '../services/posts_services';
+import PublicationsComments from './PublicationsComments';
+import {AuthContext} from '../navigation/AuthProvider';
 
 let window = Dimensions.get('window');
 
 export default function Publication({item}) {
-  return <PublicationRepresentation post={item}/>;
+  return <PublicationRepresentation post={item} />;
 };
 
 const PublicationRepresentation = ({post}) => {
@@ -21,6 +23,7 @@ const PublicationRepresentation = ({post}) => {
   const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(true);
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
+  const {user} = useContext(AuthContext);
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) => availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
@@ -57,6 +60,7 @@ const PublicationRepresentation = ({post}) => {
     const comment = {
       post: post.id,
       text: newComment,
+      user_owner: user,
     };
     setNewComment('');
     await comments_services.create(comment);
@@ -158,56 +162,12 @@ const PublicationRepresentation = ({post}) => {
           <ActivityIndicator color={StylesConfiguration.color} />
         ) : (
           comments.map((comment, i) => (
-            <View key={i}>
-              <View style={{flexDirection: 'row'}}>
-                <Image
-                  source={require('../assets/foto.png')}
-                  style={styles.icon_profile}
-                />
-
-                <Text
-                  style={{
-                    color: '#E8FC64',
-                    marginBottom: 10,
-                    fontWeight: 'bold',
-                    paddingRight: 10,
-                  }}>
-                  @{comment.user_owner.display_name}
-                </Text>
-                <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
-                  {comment.text}
-                </Text>
-              </View>
-              {comment.comments && comment.comments.length > 0 ? (
-                comment.comments.map((answer, j) => (
-                  <View style={{flexDirection: 'row', paddingLeft: 20}} key={j}>
-                    <Image
-                      source={require('../assets/foto.png')}
-                      style={styles.icon_profile}
-                    />
-                    <Text
-                      style={{
-                        color: '#E8FC64',
-                        marginBottom: 10,
-                        fontWeight: 'bold',
-                        paddingRight: 10,
-                      }}>
-                      @{answer.user_owner.display_name} A @{comment.user_owner.display_name}
-                    </Text>
-                    <Text
-                      style={{
-                        color: 'white',
-                        alignItems: 'stretch',
-                        marginBottom: 10,
-                        left: 70,
-                        top: -10,
-                      }}>
-                      {answer.text}
-                    </Text>
-                  </View>
-                  )))
-                : null}
-            </View>
+            <PublicationsComments
+              style={styles.publicationComments}
+              postId={post.id}
+              comment={comment}
+              key={i}
+            />
           )
         )
       )) : null}
@@ -346,12 +306,8 @@ const styles = StyleSheet.create({
     top: 5,
     left: -5,
   },
-  icon_profile: {
-    width: 25,
-    height: 25,
-    marginHorizontal: 10,
-    marginBottom: 10,
-    borderRadius: 400 / 2,
+  publicationComments: {
+    flex: 1,
   },
   newComment: {
     color: 'white',
@@ -360,8 +316,9 @@ const styles = StyleSheet.create({
     fontWeight: '200',
     backgroundColor: '#50555C',
     borderRadius: 10,
-    height: 45,
+    height: 40,
     marginHorizontal: 10,
     paddingHorizontal: 15,
+    marginTop: 10,
   },
 });
