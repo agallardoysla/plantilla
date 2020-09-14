@@ -9,9 +9,6 @@ import NewPublicationScreen from '../screens/NewPublicationScreen';
 import Followed from '../screens/Followed';
 import Followers from '../screens/Followers';
 import PostComments from '../screens/PostComments';
-
-import ViewPublication from '../screens/view_publication';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -28,7 +25,6 @@ const HomeGroup = ({navigation}) => {
         headerShown: false,
       }}>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="ViewPublication" component={ViewPublication}/>
       <Stack.Screen name="PostComments" component={PostComments}/>
     </Stack.Navigator>
   );
