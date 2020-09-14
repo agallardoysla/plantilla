@@ -3,6 +3,7 @@ import { ActivityIndicator, Alert, Image, StyleSheet, Text, View } from 'react-n
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { AuthContext } from '../navigation/AuthProvider';
 import comments_services from '../services/comments_services';
+import CommentFormatter from '../utils/CommentFormatter';
 import StylesConfiguration from '../utils/StylesConfiguration';
 
 export default function PublicationsComments({postId, comment}) {
@@ -39,8 +40,8 @@ export default function PublicationsComments({postId, comment}) {
             style={styles.icon_profile}
           />
           <Text style={styles.sender}>@{comment.user_owner.display_name}</Text>
-          <Text style={styles.content}>{comment.text}</Text>
         </TouchableOpacity>
+        <CommentFormatter style={styles.content} comment={comment.text} />
       </View>
       {comment.comments && comment.comments.length > 0
         ? comment.comments.map((answer, i) => (
@@ -51,9 +52,12 @@ export default function PublicationsComments({postId, comment}) {
               />
               <Text style={styles.contentContainer}>
                 <Text style={styles.sender}>
-                  @{answer.user_owner.display_name} A @{comment.user_owner.display_name} 
+                  @{answer.user_owner.display_name} A @{comment.user_owner.display_name}
                 </Text>
-                <Text style={styles.content}>{answer.text}</Text>
+                <CommentFormatter
+                  style={styles.content}
+                  comment={answer.text}
+                />
               </Text>
             </View>
           ))

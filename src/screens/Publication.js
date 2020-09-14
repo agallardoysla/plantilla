@@ -83,7 +83,7 @@ const PublicationRepresentation = ({post}) => {
       });
     } else {
       setLoadingComments(false);
-      setShowComments(!showComments);
+      setShowComments(true);
     }
   };
 
