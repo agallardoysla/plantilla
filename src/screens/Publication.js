@@ -25,7 +25,7 @@ export default function Publication({item, navigation}) {
       />
     ) : (
       <Video
-        source={file.url}
+        source={{uri: file.url}}
         style={styles.image_publication}
         key={i}
         controls={true}
@@ -37,7 +37,7 @@ export default function Publication({item, navigation}) {
   return (
     <View style={styles.container}>
       {/*Inicia Nombre de usuario como encabezado*/}
-      <Text style={styles.encabezado_text}>@{item.user_owner.username}</Text>
+      <Text style={styles.encabezado_text}>@{item.user_owner.display_name}</Text>
       {/*Finaliza Nombre de usuario como encabezado*/}
 
       {/*Inicia Foto de la publicaciòn */}
@@ -93,7 +93,7 @@ export default function Publication({item, navigation}) {
             marginBottom: 10,
             fontWeight: 'bold',
           }}>
-          {item.user_owner.username}
+          {item.user_owner.display_name}
         </Text>
         <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
           {item.text}
@@ -102,7 +102,7 @@ export default function Publication({item, navigation}) {
       {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
       {/*Inicio de Categorias dentro de una publicaciòn*/}
-      <View style={{flexDirection: 'row'}}>
+      {/* <View style={{flexDirection: 'row'}}>
         <Text
           style={{
             color: '#624CEE',
@@ -112,7 +112,7 @@ export default function Publication({item, navigation}) {
           }}>
           #Fiesta #cumpleañito #PapitaATodo
         </Text>
-      </View>
+      </View> */}
       {/*Fin de Categorias dentro de una publicaciòn */}
 
       {/*Inicia comentario hacia la publicaciòn */}
