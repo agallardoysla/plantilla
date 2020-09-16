@@ -11,34 +11,19 @@ import {
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
-// import { HashtagFormatter } from '../utils/HashtagFormatter';
 import StylesConfiguration from '../utils/StylesConfiguration';
-import ParsedText from 'react-native-parsed-text';
-import comments_services from '../services/comments_services';
 import posts_services from '../services/posts_services';
 import PublicationsComments from './PublicationsComments';
-import {AuthContext} from '../navigation/AuthProvider';
+import CommentInput from '../utils/CommentInput';
 
 let window = Dimensions.get('window');
 
-export default function Publication({item, navigation}) {
-  
-  return <PublicationRepresentation post={item} navigation={navigation}/>;
-}
-
-const PublicationRepresentation = ({post, navigation}) => {
-  
-  const [newComment, setNewComment] = useState('');
+export default function Publication({post, navigation}) {
   const [showComments, setShowComments] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
-  const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
-    true,
-  );
+  const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(true);
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
-  const {user} = useContext(AuthContext);
-
-  const [postLikesInfo, setPostLikesInfo] = useState(post)
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
@@ -64,44 +49,29 @@ const PublicationRepresentation = ({post, navigation}) => {
     );
   };
 
-  const renderText = (matchingString, matches) => {
-    // matches => ["[@michel:5455345]", "@michel", "5455345"]
-    let pattern = /\[(@[^:]+):([^\]]+)\]/i;
-    let match = matchingString.match(pattern);
-    return `^^${match[1]}^^`;
+  const getAndSetShowComments = () => {
+    // if (!firstTimeLoadingComments) {
+    //   setShowComments(!showComments);
+    //   console.log('get comments', showComments, loadingComments);
+    // } else {
+    //   setFirstTimeLoadingComments(false);
+    // }
+    // setLoadingComments(true);
+    // if (showComments) {
+    //   posts_services.getComments(post.id).then((res) => {
+    //     setComments(res.data);
+    //     setLoadingComments(false);
+    //   });
+    // } else {
+    //   setLoadingComments(false);
+    //   setShowComments(true);
+    // }
   };
 
-  const saveComment = async () => {
-    setSavingComment(true);
-    const comment = {
-      post: post.id,
-      text: newComment,
-      user_owner: user,
-    };
-    setNewComment('');
-    await comments_services.create(comment);
+  const newCommentCallback = (comment) => {
     setComments([...comments, comment]);
     setSavingComment(false);
-    getAndSetShowComments();
-  };
-
-  const getAndSetShowComments = () => {
-    if (!firstTimeLoadingComments) {
-      setShowComments(!showComments);
-      console.log('get comments', showComments, loadingComments);
-    } else {
-      setFirstTimeLoadingComments(false);
-    }
-    setLoadingComments(true);
-    if (showComments) {
-      posts_services.getComments(post.id).then((res) => {
-        setComments(res.data);
-        setLoadingComments(false);
-      });
-    } else {
-      setLoadingComments(false);
-      setShowComments(!showComments);
-    }
+    // getAndSetShowComments();
   };
 
   return (
@@ -185,7 +155,7 @@ const PublicationRepresentation = ({post, navigation}) => {
           comments.map((comment, i) => (
             <PublicationsComments
               style={styles.publicationComments}
-              postId={post.id}
+              post={post}
               comment={comment}
               key={i}
             />
@@ -212,14 +182,15 @@ const PublicationRepresentation = ({post, navigation}) => {
       {savingComment ? (
         <ActivityIndicator color={StylesConfiguration.color} />
       ) : (
-        <TextInput
-          style={styles.newComment}
-          onChangeText={setNewComment}
-          onSubmitEditing={saveComment}
+        <CommentInput
           placeholder={'Escribir un nuevo comentario...'}
-          placeholderTextColor={'white'}>
-          {newComment}
-        </TextInput>
+          callback={newCommentCallback}
+          post={post}
+          comments={comments}
+          setSavingComment={setSavingComment}
+          style={styles.newComment}
+          initialText={''}
+        />
       )}
       {/*Fin de nuevo comentario hacia la publicaciòn */}
 
@@ -332,15 +303,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   newComment: {
-    color: 'white',
-    // fontFamily: StylesConfiguration.fontFamily,
-    fontSize: 13,
-    fontWeight: '200',
-    backgroundColor: '#50555C',
-    borderRadius: 10,
-    height: 40,
     marginHorizontal: 10,
-    paddingHorizontal: 15,
     marginTop: 10,
   },
 });

@@ -1,14 +1,13 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
+import {View, StyleSheet, FlatList} from 'react-native';
 import posts_services from '../services/posts_services';
-import Publication from './Publication';
 import {FeedContext} from '../navigation/FeedContext';
+import Publication from './Publication';
 
 export default function HomeScreen({navigation}) {
 
   const {posts, setPosts} = useContext(FeedContext);
   const [page, setPage] = useState(0);
-
 
   useEffect(() => {
     if (posts.length === 0) {
@@ -29,7 +28,7 @@ export default function HomeScreen({navigation}) {
       <FlatList
         data={posts}
         renderItem={({item}) => {
-          return <Publication item={item} navigation={navigation}/>
+          return <Publication post={item} navigation={navigation} />;
         }}
         onEndReachedThreshold={0.6}
         onEndReached={(info) => loadPost()}

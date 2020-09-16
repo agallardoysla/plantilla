@@ -1,26 +1,15 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { ActivityIndicator, Alert, Image, StyleSheet, Text, View } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import { AuthContext } from '../navigation/AuthProvider';
-import comments_services from '../services/comments_services';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import CommentFormatter from '../utils/CommentFormatter';
+import CommentInput from '../utils/CommentInput';
 import StylesConfiguration from '../utils/StylesConfiguration';
 
-export default function PublicationsComments({postId, comment}) {
-  const [newComment, setNewComment] = useState('');
+export default function PublicationsComments({post, comment}) {
   const [showAnswerToComments, setShowAnswerToComments] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
-  const {user} = useContext(AuthContext);
 
-  const saveComment = async () => {
-    setSavingComment(true);
-    const _comment = {
-      post: postId,
-      user_owner: user,
-      text: newComment,
-      original_comment: comment.id,
-    };
-    setNewComment('');
-    await comments_services.create(_comment);
+  const newCommentCallback = (_comment) => {
     comment.comments.push(_comment);
     setSavingComment(false);
     setShowAnswerToComments(false);
@@ -39,8 +28,8 @@ export default function PublicationsComments({postId, comment}) {
             style={styles.icon_profile}
           />
           <Text style={styles.sender}>@{comment.user_owner.display_name}</Text>
-          <Text style={styles.content}>{comment.text}</Text>
         </TouchableOpacity>
+        <CommentFormatter style={styles.content} comment={comment.text} />
       </View>
       {comment.comments && comment.comments.length > 0
         ? comment.comments.map((answer, i) => (
@@ -49,35 +38,41 @@ export default function PublicationsComments({postId, comment}) {
                 source={require('../assets/foto.png')}
                 style={styles.icon_profile}
               />
+              <Text style={styles.sender}>
+                @{answer.user_owner.display_name}
+              </Text>
               <Text style={styles.contentContainer}>
-                <Text style={styles.sender}>
-                  @{answer.user_owner.display_name} A @{comment.user_owner.display_name} 
-                </Text>
-                <Text style={styles.content}>{answer.text}</Text>
+                <CommentFormatter
+                  style={styles.content}
+                  comment={answer.text}
+                />
               </Text>
             </View>
           ))
         : null}
-      <View style={styles.actions}>
-        <TouchableOpacity
-          onPress={() => setShowAnswerToComments(!showAnswerToComments)}>
-          <Text style={styles.answerButton}>Responder</Text>
-        </TouchableOpacity>
-      </View>
-      {showAnswerToComments ? 
+      {showAnswerToComments ? (
         savingComment ? (
           <ActivityIndicator color={StylesConfiguration.color} />
         ) : (
-          <TextInput
-            style={styles.newComment}
-            onChangeText={setNewComment}
-            onSubmitEditing={saveComment}
+          <CommentInput
             placeholder={'Responder a @' + comment.user_owner.display_name}
-            placeholderTextColor={'white'}>
-            {newComment}
-          </TextInput>
+            callback={newCommentCallback}
+            post={post}
+            comment={comment}
+            comments={comment.comments}
+            setSavingComment={setSavingComment}
+            style={styles.newComment}
+            initialText={`@${comment.user_owner.display_name} `}
+          />
         )
-      : null}
+      ) : (
+        <View style={styles.actions}>
+          <TouchableOpacity
+            onPress={() => setShowAnswerToComments(!showAnswerToComments)}>
+            <Text style={styles.answerButton}>Responder</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   )
 }
@@ -130,21 +125,11 @@ const styles = StyleSheet.create({
   },
   answerButton: {
     color: StylesConfiguration.color,
-    fontSize: 13,
+    fontSize: 11,
     fontFamily: StylesConfiguration.fontFamily,
-    fontStyle: 'normal',
-    fontWeight: '500',
   },
   newComment: {
-    color: 'white',
-    // fontFamily: StylesConfiguration.fontFamily,
-    fontSize: 13,
-    fontWeight: '200',
-    backgroundColor: '#50555C',
-    borderRadius: 10,
-    height: 40,
     marginHorizontal: 10,
-    paddingHorizontal: 15,
     marginVertical: 10,
     marginLeft: 40,
   },
