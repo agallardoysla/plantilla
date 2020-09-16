@@ -8,6 +8,8 @@ import comments_services from '../services/comments_services';
 import posts_services from '../services/posts_services';
 import PublicationsComments from './PublicationsComments';
 import {AuthContext} from '../navigation/AuthProvider';
+import CommentFormatter from '../utils/CommentFormatter';
+import CommentInput from '../utils/CommentInput';
 
 let window = Dimensions.get('window');
 
@@ -16,13 +18,11 @@ export default function Publication({item}) {
 };
 
 const PublicationRepresentation = ({post}) => {
-  const [newComment, setNewComment] = useState('');
   const [showComments, setShowComments] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
   const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(true);
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
-  const {user} = useContext(AuthContext);
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) => availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
@@ -47,27 +47,6 @@ const PublicationRepresentation = ({post}) => {
     );
   };
 
-  const renderText = (matchingString, matches) => {
-    // matches => ["[@michel:5455345]", "@michel", "5455345"]
-    let pattern = /\[(@[^:]+):([^\]]+)\]/i;
-    let match = matchingString.match(pattern);
-    return `^^${match[1]}^^`;
-  }
-
-  const saveComment = async () => {
-    setSavingComment(true);
-    const comment = {
-      post: post.id,
-      text: newComment,
-      user_owner: user,
-    };
-    setNewComment('');
-    await comments_services.create(comment);
-    setComments([...comments, comment]);
-    setSavingComment(false);
-    getAndSetShowComments();
-  };
-
   const getAndSetShowComments = () => {
     if (!firstTimeLoadingComments) {
       setShowComments(!showComments);
@@ -85,6 +64,12 @@ const PublicationRepresentation = ({post}) => {
       setLoadingComments(false);
       setShowComments(true);
     }
+  };
+
+  const newCommentCallback = (comment) => {
+    setComments([...comments, comment]);
+    setSavingComment(false);
+    getAndSetShowComments();
   };
 
   return (
@@ -189,14 +174,14 @@ const PublicationRepresentation = ({post}) => {
       {savingComment ? (
         <ActivityIndicator color={StylesConfiguration.color} />
       ) : (
-        <TextInput
-          style={styles.newComment}
-          onChangeText={setNewComment}
-          onSubmitEditing={saveComment}
+        <CommentInput
           placeholder={'Escribir un nuevo comentario...'}
-          placeholderTextColor={'white'}>
-          {newComment}
-        </TextInput>
+          callback={newCommentCallback}
+          post={post}
+          comments={comments}
+          setSavingComment={setSavingComment}
+          style={styles.newComment}
+        />
       )}
       {/*Fin de nuevo comentario hacia la publicaciòn */}
 
@@ -309,15 +294,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   newComment: {
-    color: 'white',
-    // fontFamily: StylesConfiguration.fontFamily,
-    fontSize: 13,
-    fontWeight: '200',
-    backgroundColor: '#50555C',
-    borderRadius: 10,
-    height: 40,
     marginHorizontal: 10,
-    paddingHorizontal: 15,
     marginTop: 10,
   },
 });
