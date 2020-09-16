@@ -23,7 +23,10 @@ export default function CommentInput({
     res.push(post.user_owner);
     res = res.concat(comments.map(c => c.user_owner));
     // console.log(res);
-    return res;
+    return res.filter(
+      (s) =>
+        s.display_name.slice(0, sugestionsInput.length) === sugestionsInput,
+    );
   };
 
   const saveComment = async () => {
@@ -54,12 +57,13 @@ export default function CommentInput({
             <TouchableOpacity
               key={i}
               onPress={() => selectSugestion(sugestion)}
+              activeOpacity={0.4}
               style={styles.sugestionContainer}>
               <Image
                 source={require('../assets/foto.png')}
                 style={styles.icon_profile}
               />
-              <Text style={styles.sugestion}>{sugestion.display_name}</Text>
+              <Text style={styles.sugestion}>@{sugestion.display_name}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -87,14 +91,24 @@ const styles = StyleSheet.create({
   sugestions: {
     position: 'absolute',
     bottom: 70,
-  },
-  sugestionContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'stretch',
     borderWidth: 1,
+    borderBottomWidth: 0,
     borderColor: 'white',
+    marginLeft: 30,
+    backgroundColor: 'black',
+  },
+  sugestionContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    height: 40,
+    backgroundColor: 'black',
+    paddingHorizontal: 10,
   },
   sugestion: {
     color: 'white',
@@ -104,7 +118,6 @@ const styles = StyleSheet.create({
     height: 20,
     marginRight: 5,
     borderRadius: 400 / 2,
-    alignSelf: 'flex-start',
   },
   newComment: {
     color: 'white',
