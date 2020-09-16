@@ -12,6 +12,8 @@ import PostComments from '../screens/PostComments';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
+import PostLikes from '../screens/PostLikes';
+import Publication from '../screens/Publication';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -25,7 +27,9 @@ const HomeGroup = ({navigation}) => {
         headerShown: false,
       }}>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="PostComments" component={PostComments}/>
+      <Stack.Screen name="Publication" component={Publication} />
+      <Stack.Screen name="PostComments" component={PostComments} />
+      <Stack.Screen name="PostLikes" component={PostLikes} />
     </Stack.Navigator>
   );
 };

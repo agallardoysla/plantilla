@@ -1,8 +1,17 @@
-import React, { useContext, useState } from 'react';
-import {View, Text, StyleSheet, Image, Dimensions, TextInput, Alert, ActivityIndicator} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  TextInput,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
-import { HashtagFormatter } from '../utils/HashtagFormatter';
+// import { HashtagFormatter } from '../utils/HashtagFormatter';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import ParsedText from 'react-native-parsed-text';
 import comments_services from '../services/comments_services';
@@ -12,22 +21,29 @@ import {AuthContext} from '../navigation/AuthProvider';
 
 let window = Dimensions.get('window');
 
-export default function Publication({item}) {
-  return <PublicationRepresentation post={item} />;
-};
+export default function Publication({item, navigation}) {
+  
+  return <PublicationRepresentation post={item} navigation={navigation}/>;
+}
 
-const PublicationRepresentation = ({post}) => {
+const PublicationRepresentation = ({post, navigation}) => {
+  
   const [newComment, setNewComment] = useState('');
   const [showComments, setShowComments] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
-  const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(true);
+  const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
+    true,
+  );
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
   const {user} = useContext(AuthContext);
 
-  const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
-  const isImage = (uri) => availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
+  const [postLikesInfo, setPostLikesInfo] = useState(post)
 
+  const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
+  const isImage = (uri) =>
+    availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
+  
   const toView = (file, i) => {
     // console.log(file, i);
     return isImage(file.url) ? (
@@ -53,7 +69,7 @@ const PublicationRepresentation = ({post}) => {
     let pattern = /\[(@[^:]+):([^\]]+)\]/i;
     let match = matchingString.match(pattern);
     return `^^${match[1]}^^`;
-  }
+  };
 
   const saveComment = async () => {
     setSavingComment(true);
@@ -72,7 +88,7 @@ const PublicationRepresentation = ({post}) => {
   const getAndSetShowComments = () => {
     if (!firstTimeLoadingComments) {
       setShowComments(!showComments);
-      console.log("get comments", showComments, loadingComments);
+      console.log('get comments', showComments, loadingComments);
     } else {
       setFirstTimeLoadingComments(false);
     }
@@ -91,7 +107,9 @@ const PublicationRepresentation = ({post}) => {
   return (
     <View style={styles.container}>
       {/*Inicia Nombre de usuario como encabezado*/}
-      <Text style={styles.encabezado_text}>@{post.user_owner.display_name}</Text>
+      <Text style={styles.encabezado_text}>
+        @{post.user_owner.display_name}
+      </Text>
       {/*Finaliza Nombre de usuario como encabezado*/}
 
       {/*Inicia Foto de la publicaciòn */}
@@ -112,10 +130,13 @@ const PublicationRepresentation = ({post}) => {
         />
         <Text style={styles.icon_numbers}>{post.views_count}</Text>
 
-        <Image
-          source={require('../assets/corazon_gris.png')}
-          style={[styles.icon_post, styles.icon_corazon]}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('PostLikes', post.user_owner.display_name)}>
+          <Image
+            source={require('../assets/corazon_gris.png')}
+            style={[styles.icon_post, styles.icon_corazon]}
+          />
+        </TouchableOpacity>
+
         <Text style={styles.icon_numbers}>
           {post.reactionscount.REACTION_TYPE_PRUEBA}
         </Text>
@@ -151,7 +172,7 @@ const PublicationRepresentation = ({post}) => {
           {post.user_owner.display_name}
         </Text>
         <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
-          {post.text === '__post_text__'? '' : post.text}
+          {post.text === '__post_text__' ? '' : post.text}
         </Text>
       </View>
       {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
@@ -168,11 +189,11 @@ const PublicationRepresentation = ({post}) => {
               comment={comment}
               key={i}
             />
-          )
+          ))
         )
-      )) : null}
+      ) : null}
 
-      {firstTimeLoadingComments && post.comments.length > 3? (
+      {firstTimeLoadingComments && post.comments.length > 3 ? (
         <TouchableOpacity onPress={getAndSetShowComments}>
           <Text
             style={{
@@ -181,7 +202,8 @@ const PublicationRepresentation = ({post}) => {
               left: 10,
               textAlign: 'left',
             }}>
-            {post.comments.length - 3} comentario{post.comments.length == 4? '' : 's'} mas...
+            {post.comments.length - 3} comentario
+            {post.comments.length == 4 ? '' : 's'} mas...
           </Text>
         </TouchableOpacity>
       ) : null}
@@ -233,7 +255,7 @@ const PublicationRepresentation = ({post}) => {
       {/*Finaliza franja amarilla */}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

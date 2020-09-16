@@ -1,18 +1,14 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-} from 'react-native';
+import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import posts_services from '../services/posts_services';
 import Publication from './Publication';
 import {FeedContext} from '../navigation/FeedContext';
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
+
   const {posts, setPosts} = useContext(FeedContext);
   const [page, setPage] = useState(0);
+
 
   useEffect(() => {
     if (posts.length === 0) {
@@ -22,7 +18,7 @@ export default function HomeScreen() {
 
   const loadPost = () => {
     posts_services.list(page).then((res) => {
-      console.log("nuevos posts", res.data.length);
+      console.log('nuevos posts', res.data.length);
       setPosts(posts.concat(res.data));
       setPage(page + 1);
     });
@@ -32,7 +28,9 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <FlatList
         data={posts}
-        renderItem={Publication}
+        renderItem={({item}) => {
+          return <Publication item={item} navigation={navigation}/>
+        }}
         onEndReachedThreshold={0.6}
         onEndReached={(info) => loadPost()}
         bouncesZoom={true}
