@@ -8,37 +8,51 @@ import CommentFormatter from './CommentFormatter';
 export default function CommentInput({
   placeholder,
   post,
+  comment,
   comments,
   setSavingComment,
   callback,
   style,
+  initialText,
 }) {
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState(initialText);
   const [showSugestions, setShowSugestions] = useState(false);
   const [sugestionsInput, setSugestionsInput] = useState('');
   const {user} = useContext(AuthContext);
   
   const getMentionsSugestions = () => {
+    // console.log(post, comment, comments);
     var res = [];
-    res.push(post.user_owner);
-    res = res.concat(comments.map(c => c.user_owner));
-    // console.log(res);
-    return res.filter(
+    if (post) {
+      res.push(post.user_owner);
+    }
+    if (comment) {
+      res.push(comment.user_owner);
+    }
+    if (comments) {
+      res = res.concat(comments.map(c => c.user_owner));
+    }
+    res = res.filter(
       (s) =>
-        s.display_name.slice(0, sugestionsInput.length) === sugestionsInput,
+        s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase(),
     );
+    // console.log(res);
+    return res;
   };
 
   const saveComment = async () => {
     setSavingComment(true);
-    const comment = {
+    const _comment = {
       post: post.id,
       text: newComment,
       user_owner: user,
     };
-    await comments_services.create(comment);
-    callback(comment);
+    if (comment) _comment.original_comment = comment.id;
+    await comments_services.create(_comment);
+    setNewComment('');
+    callback(_comment);
   };
+
   const selectSugestion = (sugestion) => {
     setNewComment(
       newComment
@@ -52,7 +66,13 @@ export default function CommentInput({
   return (
     <>
       {showSugestions ? (
-        <View style={styles.sugestions}>
+        <View
+          style={[
+            styles.sugestions,
+            comment === undefined
+              ? styles.sugestionsPositionComment
+              : styles.sugestionsPositionAnswer,
+          ]}>
           {getMentionsSugestions().map((sugestion, i) => (
             <TouchableOpacity
               key={i}
@@ -89,8 +109,6 @@ export default function CommentInput({
 
 const styles = StyleSheet.create({
   sugestions: {
-    position: 'absolute',
-    bottom: 70,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
@@ -98,8 +116,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderBottomWidth: 0,
     borderColor: 'white',
-    marginLeft: 30,
     backgroundColor: 'black',
+    position: 'absolute',
+  },
+  sugestionsPositionComment: {
+    bottom: 70,
+    marginLeft: 30,
+  },
+  sugestionsPositionAnswer: {
+    bottom: 50,
+    marginLeft: 70,
   },
   sugestionContainer: {
     display: 'flex',

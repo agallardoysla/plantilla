@@ -23,7 +23,7 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
   };
 
   const renderUserMention = (matchingString, matches) => {
-    console.log(matches);
+    // console.log(matches);
     if (isInput && comment.slice(-matches[1].length) == matches[1]) {
       setShowSugestions(true);
       setSugestionsInput(matches[1]);

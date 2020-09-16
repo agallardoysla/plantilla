@@ -148,7 +148,7 @@ const PublicationRepresentation = ({post}) => {
           comments.map((comment, i) => (
             <PublicationsComments
               style={styles.publicationComments}
-              postId={post.id}
+              post={post}
               comment={comment}
               key={i}
             />
@@ -181,6 +181,7 @@ const PublicationRepresentation = ({post}) => {
           comments={comments}
           setSavingComment={setSavingComment}
           style={styles.newComment}
+          initialText={''}
         />
       )}
       {/*Fin de nuevo comentario hacia la publicaciòn */}
