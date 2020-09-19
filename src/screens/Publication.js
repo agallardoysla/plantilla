@@ -15,6 +15,7 @@ import StylesConfiguration from '../utils/StylesConfiguration';
 import posts_services from '../services/posts_services';
 import PublicationsComments from './PublicationsComments';
 import CommentInput from '../utils/CommentInput';
+import CommentFormatter from '../utils/CommentFormatter';
 
 let window = Dimensions.get('window');
 
@@ -131,19 +132,14 @@ export default function Publication({post, navigation}) {
       {/*Fin de iconos de una publicaciòn*/}
 
       {/*Inicio de nombre de usuario y la descripciòn de la publicaciòn*/}
-      <View style={{flexDirection: 'row'}}>
-        <Text
-          style={{
-            color: '#E8FC64',
-            marginHorizontal: 10,
-            marginBottom: 10,
-            fontWeight: 'bold',
-          }}>
+      <View style={styles.descriptionContainer}>
+        <Text style={styles.descriptionOwner}>
           {post.user_owner.display_name}
         </Text>
-        <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
-          {post.text === '__post_text__' ? '' : post.text}
-        </Text>
+        <CommentFormatter
+          style={styles.descriptionContent}
+          comment={post.text === '__post_text__' ? '' : post.text}
+        />
       </View>
       {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
@@ -298,6 +294,20 @@ const styles = StyleSheet.create({
   icon_menu_desbordamiento: {
     top: 5,
     left: -5,
+  },
+  descriptionContainer: {
+    flexDirection: 'row',
+  },
+  descriptionOwner: {
+    color: StylesConfiguration.color,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    fontWeight: 'bold',
+  },
+  descriptionContent: {
+    color: 'white', 
+    alignItems: 'stretch', 
+    marginBottom: 10,
   },
   publicationComments: {
     flex: 1,
