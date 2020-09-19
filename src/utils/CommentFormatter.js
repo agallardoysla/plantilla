@@ -5,6 +5,8 @@ import ParsedText from 'react-native-parsed-text';
 import StylesConfiguration from './StylesConfiguration';
 
 export default function CommentFormatter({comment, isInput, setShowSugestions, setSugestionsInput}) {
+  const postOwnerPattern = /\[(\w+)\]/;
+  const commentOwnerPattern = /\{(\w+)\}/;
   const hashtagPattern = /#(\w+)/;
   const initUserMentionPattern = /@/;
   const userMentionPattern = /@(\w+)/;
@@ -13,7 +15,7 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
     Alert.alert(`${hashtag} ${matchIndex}`);
   };
 
-  const handleUserMentionPress = (username, matchIndex) => {
+  const handleUserPress = (username, matchIndex) => {
     Alert.alert(`${username} ${matchIndex}`);
   };
 
@@ -31,6 +33,14 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
     return matchingString;
   };
 
+  const renderPostOwner = (matchingString, matches) => {
+    return matches[1];
+  };
+
+  const renderCommentOwner = (matchingString, matches) => {
+    return '@' + matches[1];
+  };
+
   return (
     <ParsedText
       style={styles.text}
@@ -43,8 +53,20 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
         {
           pattern: userMentionPattern,
           style: styles.userMention,
-          onPress: handleUserMentionPress,
+          onPress: handleUserPress,
           renderText: renderUserMention,
+        },
+        {
+          pattern: postOwnerPattern,
+          style: styles.postOwner,
+          onPress: handleUserPress,
+          renderText: renderPostOwner,
+        },
+        {
+          pattern: commentOwnerPattern,
+          style: styles.postOwner,
+          onPress: handleUserPress,
+          renderText: renderCommentOwner,
         },
         {
           pattern: initUserMentionPattern,
@@ -63,6 +85,10 @@ const styles = StyleSheet.create({
   hashTag: {
     // fontStyle: 'italic',
     color: '#8A2BE2',
+  },
+  postOwner: {
+    color: StylesConfiguration.color,
+    fontWeight: 'bold',
   },
   userMention: {
     color: StylesConfiguration.color,

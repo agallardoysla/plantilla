@@ -133,12 +133,14 @@ export default function Publication({post, navigation}) {
 
       {/*Inicio de nombre de usuario y la descripciòn de la publicaciòn*/}
       <View style={styles.descriptionContainer}>
-        <Text style={styles.descriptionOwner}>
-          {post.user_owner.display_name}
-        </Text>
         <CommentFormatter
           style={styles.descriptionContent}
-          comment={post.text === '__post_text__' ? '' : post.text}
+          comment={
+            '[' +
+            post.user_owner.display_name +
+            '] ' +
+            (post.text === '__post_text__' ? '' : post.text)
+          }
         />
       </View>
       {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
@@ -296,17 +298,12 @@ const styles = StyleSheet.create({
     left: -5,
   },
   descriptionContainer: {
+    flex: 1,
     flexDirection: 'row',
   },
-  descriptionOwner: {
-    color: StylesConfiguration.color,
-    marginHorizontal: 10,
-    marginBottom: 10,
-    fontWeight: 'bold',
-  },
   descriptionContent: {
-    color: 'white', 
-    alignItems: 'stretch', 
+    color: 'white',
+    alignItems: 'stretch',
     marginBottom: 10,
   },
   publicationComments: {

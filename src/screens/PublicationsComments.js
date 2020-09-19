@@ -27,9 +27,11 @@ export default function PublicationsComments({post, comment}) {
             source={require('../assets/foto.png')}
             style={styles.icon_profile}
           />
-          <Text style={styles.sender}>@{comment.user_owner.display_name}</Text>
         </TouchableOpacity>
-        <CommentFormatter style={styles.content} comment={comment.text} />
+        <CommentFormatter
+          style={styles.content}
+          comment={'{' + comment.user_owner.display_name + '} ' + comment.text}
+        />
       </View>
       {comment.comments && comment.comments.length > 0
         ? comment.comments.map((answer, i) => (
@@ -38,13 +40,12 @@ export default function PublicationsComments({post, comment}) {
                 source={require('../assets/foto.png')}
                 style={styles.icon_profile}
               />
-              <Text style={styles.sender}>
-                @{answer.user_owner.display_name}
-              </Text>
               <Text style={styles.contentContainer}>
                 <CommentFormatter
                   style={styles.content}
-                  comment={answer.text}
+                  comment={
+                    '{' + answer.user_owner.display_name + '} ' + answer.text
+                  }
                 />
               </Text>
             </View>
