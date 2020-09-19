@@ -1,91 +1,47 @@
-import React, {useContext} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   ScrollView,
   Image,
   FlatList,
   Alert,
-  Fragment,
 } from 'react-native';
 
 import FormButton from '../components/FormButton';
-import {AuthContext} from '../navigation/AuthProvider';
 import StylesConfiguration from '../utils/StylesConfiguration';
-import {Icon} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import users_services from '../services/users_services';
 
-//para el flatList
-const data = [
-  {
-    id: '0',
-    Photo: '../assets/photo_perrito.png',
-    icono_vist: '../assets/ojo_vista.png',
-    icono_like: '../assets/corazon_like.png',
-    icono_coment: '../assets/comentario.png',
-    icono_compartir: '../assets/compartir.png',
-  },
-  {
-    id: '1',
-    Photo: '../assets/photo_perrito.png',
-    icono_vist: '../assets/ojo_vista.png',
-    icono_like: '../assets/corazon_like.png',
-    icono_coment: '../assets/comentario.png',
-    icono_compartir: '../assets/compartir.png',
-  },
-  {
-    id: '2',
-    Photo: '../assets/photo_perrito.png',
-    icono_vist: '../assets/ojo_vista.png',
-    icono_like: '../assets/corazon_like.png',
-    icono_coment: '../assets/comentario.png',
-    icono_compartir: '../assets/compartir.png',
-  },
-  {
-    id: '3',
-    Photo: '../assets/photo_perrito.png',
-    icono_vist: '../assets/ojo_vista.png',
-    icono_like: '../assets/corazon_like.png',
-    icono_coment: '../assets/comentario.png',
-    icono_compartir: '../assets/compartir.png',
-  },
-  {
-    id: '4',
-    Photo: '../assets/photo_perrito.png',
-    icono_vist: '../assets/ojo_vista.png',
-    icono_like: '../assets/corazon_like.png',
-    icono_coment: '../assets/comentario.png',
-    icono_compartir: '../assets/compartir.png',
-  },
-  {
-    id: '5',
-    Photo: '../assets/photo_perrito.png',
-    icono_vist: '../assets/ojo_vista.png',
-    icono_like: '../assets/corazon_like.png',
-    icono_coment: '../assets/comentario.png',
-    icono_compartir: '../assets/compartir.png',
-  },
-  {
-    id: '6',
-    Photo: '../assets/photo_perrito.png',
-    icono_vist: '../assets/ojo_vista.png',
-    icono_like: '../assets/corazon_like.png',
-    icono_coment: '../assets/comentario.png',
-    icono_compartir: '../assets/compartir.png',
-  },
-];
 const numColumns = 3; //para el flatList
 
 export default function GenericProfile({navigation, user, isLoggedUser}) {
+  const [usersPosts, setUsersPosts] = useState([]);
+
+  useEffect(() => {
+    users_services.listPosts(user.id).then((res) => {
+      let postsPaginated = [];
+      // Se paginan los post de acuerdo a la cantidad de columnas
+      res.data.forEach((p, i) => {
+        // si se llega a (i % numColumns === 0) se agrega una nueva pagina
+        if (i % numColumns === 0) {
+          postsPaginated.push([]);
+        }
+        // siempre se agregan los posts en la ultima fila que se agrego
+        postsPaginated[postsPaginated.length - 1].push(p);
+      });
+      setUsersPosts(postsPaginated);
+    });
+  }, []);
+
   const go_to_followed = () => {
     navigation.navigate('Followed');
   };
 
   const go_to_followers = () => {
-    navigation.navigate('Followers')
-  }
+    navigation.navigate('Followers');
+  };
 
   const MyProfileView = () => {
     return (
@@ -181,17 +137,19 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
 
         <View style={styles.profilePublications}>
           <FlatList
-            data={data}
+            data={usersPosts}
             renderItem={({item}) => (
               <View style={styles.itemContainer}>
-                <Image
-                  source={require('../assets/foto_publicacion.png')}
-                  style={{width: 120, height: 120, top: 20}}
-                />
+                {item.map((post, i) => (
+                  <Image
+                    source={{uri: post.files_with_urls[0].url}}
+                    style={styles.itemImage}
+                    key={i}
+                  />
+                ))}
               </View>
             )}
-            keyExtractor={(item) => item.id}
-            numColumns={numColumns}
+            keyExtractor={(item) => item[0].id}
           />
         </View>
       </View>
@@ -222,7 +180,7 @@ const styles = StyleSheet.create({
   profilePublications: {
     flex: 1,
     alignContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
 
   //columnas dentro de profileData
@@ -313,13 +271,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: 15,
   },
-
   itemContainer: {
-    top: 2,
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
+    alignSelf: 'stretch',
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    height: 120,
+  },
+  itemImage: {
+    width: undefined,
+    height: undefined,
+    flex: 1,
+    marginHorizontal: 1.5,
+    marginVertical: 1.5,
   },
 });
