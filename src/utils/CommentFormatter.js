@@ -4,7 +4,7 @@ import { withTheme } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
 import StylesConfiguration from './StylesConfiguration';
 
-export default function CommentFormatter({comment, isInput, setShowSugestions, setSugestionsInput}) {
+export default function CommentFormatter({comment, isInput, setShowSugestions, setSugestionsInput, style}) {
   const postOwnerPattern = /\[(\w+)\]/;
   const commentOwnerPattern = /\{(\w+)\}/;
   const hashtagPattern = /#(\w+)/;
@@ -43,7 +43,7 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
 
   return (
     <ParsedText
-      style={styles.text}
+      style={[styles.text, style]}
       parse={[
         {
           pattern: hashtagPattern,
