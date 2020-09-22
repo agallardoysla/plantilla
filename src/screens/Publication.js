@@ -22,12 +22,10 @@ import {AuthContext} from '../navigation/AuthProvider';
 let window = Dimensions.get('window');
 
 export default function Publication({item, navigation}) {
-  
-  return <PublicationRepresentation post={item} navigation={navigation}/>;
+  return <PublicationRepresentation post={item} navigation={navigation} />;
 }
 
 const PublicationRepresentation = ({post, navigation}) => {
-  
   const [newComment, setNewComment] = useState('');
   const [showComments, setShowComments] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
@@ -35,15 +33,18 @@ const PublicationRepresentation = ({post, navigation}) => {
     true,
   );
   const [comments, setComments] = useState(post.comments);
+
   const [savingComment, setSavingComment] = useState(false);
   const {user} = useContext(AuthContext);
 
-  const [postLikesInfo, setPostLikesInfo] = useState(post)
+  const [CountLike, setCountLike] = useState({
+    REACTION_TYPE_PRUEBA: post.reactionscount.REACTION_TYPE_PRUEBA,
+  });
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
-  
+
   const toView = (file, i) => {
     // console.log(file, i);
     return isImage(file.url) ? (
@@ -104,6 +105,39 @@ const PublicationRepresentation = ({post, navigation}) => {
     }
   };
 
+  const AddLike = async () => {
+    try {
+      //seteo a vacio
+      setCountLike('');
+
+      //traigo el post seleccionado
+      const selectPost = await posts_services.get(post.id);
+
+      //filtro mi id dentro de la lista de likes y almaceno mis datos en filterLikePost en caso de estar
+      const filterLikePost = selectPost.data.reactions_details.filter(
+        (value) => value.user_id === user.id,
+      );
+
+      //si contiene algo lo elimino si no lo agrego
+      if (filterLikePost.length > 0) {
+        posts_services.deleteReaction(post.id);
+        console.log('like eliminado');
+      } else {
+        posts_services.addReaction(post.id, 1);
+        console.log('like agregado');
+      }
+
+      //traigo nuevamenta el post seleccionado
+      const count = await posts_services.get(post.id);
+      //seteo con nuevo valor
+      setCountLike({
+        REACTION_TYPE_PRUEBA: count.data.reactionscount.REACTION_TYPE_PRUEBA,
+      });
+    } catch (error) {
+      console.log('Error de agregar like' + error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/*Inicia Nombre de usuario como encabezado*/}
@@ -130,16 +164,29 @@ const PublicationRepresentation = ({post, navigation}) => {
         />
         <Text style={styles.icon_numbers}>{post.views_count}</Text>
 
-        <TouchableOpacity onPress={() => navigation.navigate('PostLikes', post.user_owner.display_name)}>
+        <TouchableOpacity
+          onPress={() =>
+            //dar likes
+            AddLike()
+          }>
           <Image
-            source={require('../assets/corazon_gris.png')}
+            source={
+              CountLike.REACTION_TYPE_PRUEBA >= 1
+                ? require('../assets/corazon_limon.png')
+                : require('../assets/corazon_gris.png')
+            }
             style={[styles.icon_post, styles.icon_corazon]}
           />
         </TouchableOpacity>
 
-        <Text style={styles.icon_numbers}>
-          {post.reactionscount.REACTION_TYPE_PRUEBA}
-        </Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('PostLikes', post.user_owner.display_name)
+          }>
+          <Text style={styles.icon_numbers}>
+            {CountLike.REACTION_TYPE_PRUEBA}
+          </Text>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={getAndSetShowComments}>
           <Image

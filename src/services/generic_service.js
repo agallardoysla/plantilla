@@ -24,7 +24,7 @@ export default {
     try {
       res = await axios.get(url, config);
     } catch (e) {
-      console.log('Error GET' + e);
+      console.log('Error GET ' + e);
     }
     return res;
   },
