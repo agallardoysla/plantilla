@@ -18,7 +18,23 @@ export default function PublicationsComments({post, comment, comments, setCommen
   const [savingComment, setSavingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [editingComment, setEditingComment] = useState(false);
+  const [savingAnswer, setSavingAnswer] = useState(comment.comments.map(() => false));
+  const [showMenuAnswer, setShowMenuAnswer] = useState(comment.comments.map(() => false));
+  const [editingAnswer, setEditingAnswer] = useState(comment.comments.map(() => false));
   const {user} = useContext(AuthContext);
+
+  const showMenuForAnswer = (index) => {
+    console.log(index);
+    setShowMenuAnswer(showMenuAnswer.map((_, i) => i === index));
+  };
+
+  const edittedAnswerCallback = (index) => {
+    setEditingAnswer(editingAnswer.map((_,i) => i === index));
+  }
+
+  const setSavingForAnswer = (index) => {
+    setSavingAnswer(savingAnswer.map((_,i) => i === index));
+  }
 
   const newCommentCallback = (_comment) => {
     comment.comments.push(_comment);
@@ -97,20 +113,57 @@ export default function PublicationsComments({post, comment, comments, setCommen
       </TouchableHighlight>
       {comment.comments && comment.comments.length > 0
         ? comment.comments.map((answer, i) => (
-            <View style={[styles.comment, styles.answer]} key={i}>
-              <Image
-                source={require('../assets/foto.png')}
-                style={styles.icon_profile}
-              />
-              <Text style={styles.contentContainer}>
-                <CommentFormatter
-                  style={styles.content}
-                  comment={
-                    '{' + answer.user_owner.display_name + '} ' + answer.text
-                  }
+            <TouchableHighlight
+              style={styles.commentContainer}
+              onLongPress={() => showMenuForAnswer(i)}
+              key={i}
+              underlayColor={StylesConfiguration.colorSelection}>
+              <View style={[styles.comment, styles.answer]}>
+                <Image
+                  source={require('../assets/foto.png')}
+                  style={styles.icon_profile}
                 />
-              </Text>
-            </View>
+                {editingAnswer[i] ? (
+                  savingAnswer[i] ? (
+                    <ActivityIndicator color={StylesConfiguration.color} />
+                  ) : (
+                    <CommentInput
+                      placeholder={''}
+                      callback={edittedAnswerCallback(i)}
+                      post={post}
+                      comment={comment}
+                      setSavingComment={setSavingForAnswer(i)}
+                      style={styles.newComment}
+                      initialText={answer.text}
+                      isEdition={true}
+                    />
+                  )
+                ) : (
+                  <>
+                    <CommentFormatter
+                      style={styles.content}
+                      comment={
+                        '{' + answer.user_owner.display_name + '} ' + answer.text
+                      }
+                    />
+                    <Menu
+                      opened={showMenuAnswer[i] && answer.user_owner.user_id === user.id}
+                      onBackdropPress={() => showMenuForAnswer(-1)}>
+                      <MenuTrigger />
+                      <MenuOptions>
+                        <MenuOption
+                          onSelect={() => setEditingComment(true)}
+                          text="Editar comentario"
+                        />
+                        <MenuOption onSelect={doDeleteComment} >
+                          <Text style={{color: 'red'}}>Eliminar</Text>
+                        </MenuOption>
+                      </MenuOptions>
+                    </Menu>
+                  </>
+                )}
+              </View>
+            </TouchableHighlight>
           ))
         : null}
       {showAnswerToComments ? (
