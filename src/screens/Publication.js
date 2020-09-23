@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
@@ -15,6 +16,7 @@ import StylesConfiguration from '../utils/StylesConfiguration';
 import posts_services from '../services/posts_services';
 import PublicationsComments from './PublicationsComments';
 import CommentInput from '../utils/CommentInput';
+import { AuthContext } from '../navigation/AuthProvider';
 
 let window = Dimensions.get('window');
 
@@ -24,11 +26,17 @@ export default function Publication({post, navigation}) {
   const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(true);
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
+  const {user} = useContext(AuthContext);
+  const [likesCounter, setLikesCounter] = useState(
+    post.reactionscount.REACTION_TYPE_PRUEBA,
+  );
+  const [iLiked, setILiked] = useState(post.reactions_details.filter((value) => value.user_id === user.id).length > 0);
+
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
-  
+
   const toView = (file, i) => {
     // console.log(file, i);
     return isImage(file.url) ? (
@@ -74,6 +82,27 @@ export default function Publication({post, navigation}) {
     // getAndSetShowComments();
   };
 
+  const AddLike = async () => {
+    try {
+      //si contiene algo lo elimino si no lo agrego
+      if (iLiked) {
+        posts_services.deleteReaction(post.id).then(_ => {
+          console.log('like eliminado');
+          setLikesCounter(likesCounter - 1);
+          setILiked(false);
+        });
+      } else {
+        posts_services.addReaction(post.id, 1).then(res => {
+          console.log('like agregado');
+          setLikesCounter(likesCounter + 1);
+          setILiked(true);
+        });
+      }
+    } catch (error) {
+      console.log('Error de agregar like' + error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/*Inicia Nombre de usuario como encabezado*/}
@@ -100,16 +129,21 @@ export default function Publication({post, navigation}) {
         />
         <Text style={styles.icon_numbers}>{post.views_count}</Text>
 
-        <TouchableOpacity onPress={() => navigation.navigate('PostLikes', post.user_owner.display_name)}>
+        <TouchableOpacity onPress={AddLike}>
           <Image
-            source={require('../assets/corazon_gris.png')}
-            style={[styles.icon_post, styles.icon_corazon]}
+            source={
+              iLiked
+                ? require('../assets/corazon_limon.png')
+                : require('../assets/corazon_gris.png')
+            }
           />
         </TouchableOpacity>
-
-        <Text style={styles.icon_numbers}>
-          {post.reactionscount.REACTION_TYPE_PRUEBA}
-        </Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('PostLikes', post.user_owner.display_name)
+          }>
+          <Text style={styles.icon_numbers}>{likesCounter}</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={getAndSetShowComments}>
           <Image
