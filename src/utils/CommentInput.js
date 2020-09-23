@@ -14,6 +14,7 @@ export default function CommentInput({
   callback,
   style,
   initialText,
+  isEdition,
 }) {
   const [newComment, setNewComment] = useState(initialText);
   const [showSugestions, setShowSugestions] = useState(false);
@@ -48,10 +49,20 @@ export default function CommentInput({
       user_owner: user,
       comments: [],
     };
-    if (comment) _comment.original_comment = comment.id;
-    const res = await comments_services.create(_comment);
-    console.log(res.data);
-    _comment.id = res.data.id;
+    if (comment && !isEdition) _comment.original_comment = comment.id;
+
+    if (isEdition) {
+      const res = await comments_services.edit(comment.id, _comment);
+      console.log(res.data);
+    } else {
+      const res = await comments_services.create(_comment);
+      console.log(res.data);
+      _comment.id = res.data.id;
+      _comment.user_owner = {
+        user_id: user.id,
+        display_name: user.display_name,
+      };
+    }
     setNewComment('');
     callback(_comment);
   };

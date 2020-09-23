@@ -5,10 +5,7 @@ import {
   StyleSheet,
   Image,
   Dimensions,
-  TextInput,
-  Alert,
   ActivityIndicator,
-  FlatList,
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
@@ -16,7 +13,8 @@ import StylesConfiguration from '../utils/StylesConfiguration';
 import posts_services from '../services/posts_services';
 import PublicationsComments from './PublicationsComments';
 import CommentInput from '../utils/CommentInput';
-import { AuthContext } from '../navigation/AuthProvider';
+import {AuthContext} from '../navigation/AuthProvider';
+import CommentFormatter from '../utils/CommentFormatter';
 
 let window = Dimensions.get('window');
 
@@ -27,9 +25,7 @@ export default function Publication({post, navigation}) {
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
   const {user} = useContext(AuthContext);
-  const [likesCounter, setLikesCounter] = useState(
-    post.reactionscount.REACTION_TYPE_PRUEBA,
-  );
+  const [likesCounter, setLikesCounter] = useState(post.reactionscount.REACTION_TYPE_PRUEBA);
   const [iLiked, setILiked] = useState(post.reactions_details.filter((value) => value.user_id === user.id).length > 0);
 
 
@@ -136,7 +132,7 @@ export default function Publication({post, navigation}) {
                 ? require('../assets/corazon_limon.png')
                 : require('../assets/corazon_gris.png')
             }
-          />
+        />  
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
@@ -165,20 +161,15 @@ export default function Publication({post, navigation}) {
       {/*Fin de iconos de una publicaciòn*/}
 
       {/*Inicio de nombre de usuario y la descripciòn de la publicaciòn*/}
-      <View style={{flexDirection: 'row'}}>
-        <Text
-          style={{
-            color: '#E8FC64',
-            marginHorizontal: 10,
-            marginBottom: 10,
-            fontWeight: 'bold',
-          }}>
-          {post.user_owner.display_name}
-        </Text>
-        <Text style={{color: 'white', alignItems: 'stretch', marginBottom: 10}}>
-          {post.text === '__post_text__' ? '' : post.text}
-        </Text>
-      </View>
+      <CommentFormatter
+        style={styles.description}
+        comment={
+          '[' +
+          post.user_owner.display_name +
+          '] ' +
+          (post.text === '__post_text__' ? '' : post.text)
+        }
+      />
       {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
       {/*Inicia comentarios hacia la publicaciòn */}
@@ -192,6 +183,8 @@ export default function Publication({post, navigation}) {
               post={post}
               comment={comment}
               key={i}
+              comments={comments}
+              setComments={setComments}
             />
           ))
         )
@@ -332,6 +325,12 @@ const styles = StyleSheet.create({
   icon_menu_desbordamiento: {
     top: 5,
     left: -5,
+  },
+  description: {
+    flex: 1,
+    color: 'white',
+    paddingHorizontal: 10,
+    marginBottom: 10,
   },
   publicationComments: {
     flex: 1,

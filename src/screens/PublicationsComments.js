@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Image, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import CommentFormatter from '../utils/CommentFormatter';
 import CommentInput from '../utils/CommentInput';
 import StylesConfiguration from '../utils/StylesConfiguration';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+import { AuthContext } from '../navigation/AuthProvider';
+import comments_services from '../services/comments_services';
 
-export default function PublicationsComments({post, comment}) {
+export default function PublicationsComments({post, comment, comments, setComments}) {
   const [showAnswerToComments, setShowAnswerToComments] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [editingComment, setEditingComment] = useState(false);
+  const {user} = useContext(AuthContext);
 
   const newCommentCallback = (_comment) => {
     comment.comments.push(_comment);
@@ -15,22 +26,75 @@ export default function PublicationsComments({post, comment}) {
     setShowAnswerToComments(false);
   };
 
+  const edittedCommentCallback = (_comment) => {
+    comment.text = _comment.text;
+    setEditingComment(false);
+    setShowMenu(false);
+  };
+
+  const doDeleteComment = () => {
+    comments_services.delete(comment.id).then(res => {
+      setComments(comments.filter(c => c.id !== comment.id));
+      setShowMenu(false);
+    });
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.comment}>
-        <TouchableOpacity
-          style={styles.senderContainer}
-          onPress={() =>
-            Alert.alert('Ir a perfil de' + comment.user_owner.display_name)
-          }>
-          <Image
-            source={require('../assets/foto.png')}
-            style={styles.icon_profile}
-          />
-          <Text style={styles.sender}>@{comment.user_owner.display_name}</Text>
-        </TouchableOpacity>
-        <CommentFormatter style={styles.content} comment={comment.text} />
-      </View>
+      <TouchableHighlight
+        style={styles.commentContainer}
+        onLongPress={() => setShowMenu(true)}
+        underlayColor={StylesConfiguration.colorSelection}>
+        <View style={styles.comment}>
+          <TouchableOpacity
+            style={styles.senderContainer}
+            onPress={() =>
+              Alert.alert('Ir a perfil de' + comment.user_owner.display_name)
+            }>
+            <Image
+              source={require('../assets/foto.png')}
+              style={styles.icon_profile}
+            />
+          </TouchableOpacity>
+          {editingComment ? (
+            savingComment ? (
+              <ActivityIndicator color={StylesConfiguration.color} />
+            ) : (
+              <CommentInput
+                placeholder={''}
+                callback={edittedCommentCallback}
+                post={post}
+                comment={comment}
+                setSavingComment={setSavingComment}
+                style={styles.newComment}
+                initialText={comment.text}
+                isEdition={true}
+              />
+            )
+          ) : (
+            <>
+              <CommentFormatter
+                style={styles.content}
+                comment={'{' + comment.user_owner.display_name + '} ' + comment.text}
+              />
+              <Menu
+                opened={showMenu && comment.user_owner.user_id === user.id}
+                onBackdropPress={() => setShowMenu(false)}>
+                <MenuTrigger />
+                <MenuOptions>
+                  <MenuOption
+                    onSelect={() => setEditingComment(true)}
+                    text="Editar comentario"
+                  />
+                  <MenuOption onSelect={doDeleteComment} >
+                    <Text style={{color: 'red'}}>Eliminar</Text>
+                  </MenuOption>
+                </MenuOptions>
+              </Menu>
+            </>
+          )}
+        </View>
+      </TouchableHighlight>
       {comment.comments && comment.comments.length > 0
         ? comment.comments.map((answer, i) => (
             <View style={[styles.comment, styles.answer]} key={i}>
@@ -38,13 +102,12 @@ export default function PublicationsComments({post, comment}) {
                 source={require('../assets/foto.png')}
                 style={styles.icon_profile}
               />
-              <Text style={styles.sender}>
-                @{answer.user_owner.display_name}
-              </Text>
               <Text style={styles.contentContainer}>
                 <CommentFormatter
                   style={styles.content}
-                  comment={answer.text}
+                  comment={
+                    '{' + answer.user_owner.display_name + '} ' + answer.text
+                  }
                 />
               </Text>
             </View>
@@ -85,6 +148,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'stretch',
     paddingLeft: 10,
+  },
+  commentContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
   },
   comment: {
     flexDirection: 'row',
