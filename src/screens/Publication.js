@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
@@ -38,8 +39,10 @@ const PublicationRepresentation = ({post, navigation}) => {
   const {user} = useContext(AuthContext);
 
   const [CountLike, setCountLike] = useState({
-    REACTION_TYPE_PRUEBA: post.reactionscount.REACTION_TYPE_PRUEBA,
+    REACTION_TYPE_PRUEBA: post.reactionscount.REACTION_TYPE_PRUEBA, //contador de like
+    reactions_details: post.reactions_details.filter((value) => value.user_id === user.id).length >= 1 ? post.reactions_details : [] //me filtra dentro de detalle de likes mi id_unico
   });
+
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
@@ -107,8 +110,6 @@ const PublicationRepresentation = ({post, navigation}) => {
 
   const AddLike = async () => {
     try {
-      //seteo a vacio
-      setCountLike('');
 
       //traigo el post seleccionado
       const selectPost = await posts_services.get(post.id);
@@ -119,7 +120,7 @@ const PublicationRepresentation = ({post, navigation}) => {
       );
 
       //si contiene algo lo elimino si no lo agrego
-      if (filterLikePost.length > 0) {
+      if (filterLikePost.length >= 1) {
         posts_services.deleteReaction(post.id);
         console.log('like eliminado');
       } else {
@@ -132,6 +133,7 @@ const PublicationRepresentation = ({post, navigation}) => {
       //seteo con nuevo valor
       setCountLike({
         REACTION_TYPE_PRUEBA: count.data.reactionscount.REACTION_TYPE_PRUEBA,
+        reactions_details: count.data.reactions_details.filter((value) => value.user_id === user.id).length > 0 ? count.data.reactions_details : []
       });
     } catch (error) {
       console.log('Error de agregar like' + error);
@@ -169,14 +171,12 @@ const PublicationRepresentation = ({post, navigation}) => {
             //dar likes
             AddLike()
           }>
-          <Image
-            source={
-              CountLike.REACTION_TYPE_PRUEBA >= 1
-                ? require('../assets/corazon_limon.png')
-                : require('../assets/corazon_gris.png')
-            }
-            style={[styles.icon_post, styles.icon_corazon]}
-          />
+
+            
+               <Image source={CountLike.reactions_details.length >= 1 ? require('../assets/corazon_limon.png') : require('../assets/corazon_gris.png')} />
+            
+
+
         </TouchableOpacity>
 
         <TouchableOpacity
