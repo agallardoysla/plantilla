@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import CommentFormatter from '../utils/CommentFormatter';
@@ -18,26 +18,42 @@ export default function PublicationsComments({post, comment, comments, setCommen
   const [savingComment, setSavingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [editingComment, setEditingComment] = useState(false);
-  const [savingAnswer, setSavingAnswer] = useState(comment.comments.map(() => false));
-  const [showMenuAnswer, setShowMenuAnswer] = useState(comment.comments.map(() => false));
-  const [editingAnswer, setEditingAnswer] = useState(comment.comments.map(() => false));
+  const [answers, setAnswers] = useState(comment.comments);
+  const [savingAnswer, setSavingAnswer] = useState(answers.map(() => false));
+  const [showMenuAnswer, setShowMenuAnswer] = useState(answers.map(() => false));
+  const [editingAnswer, setEditingAnswer] = useState(answers.map(() => false));
   const {user} = useContext(AuthContext);
 
   const showMenuForAnswer = (index) => {
     console.log(index);
-    setShowMenuAnswer(showMenuAnswer.map((_, i) => i === index));
+    setShowMenuAnswer(answers.map((_, i) => i === index));
   };
 
-  const edittedAnswerCallback = (index) => {
-    setEditingAnswer(editingAnswer.map((_,i) => i === index));
+  const editForAnswer = (index) => {
+    setEditingAnswer(answers.map((_, i) => i === index));
   }
 
-  const setSavingForAnswer = (index) => {
+  const edittedAnswerCallback = (index) => (_comment) => {
+    answers[index].text = _comment.text;
+    setAnswers(
+      answers.map((a, i) => {
+        if (i === index) {
+          a.text = _comment.text;
+        }
+        return a;
+      }),
+    );
+    editForAnswer(-1);
+    setSavingForAnswer(-1);
+    setShowMenu(false);
+  };
+
+  const setSavingForAnswer = (index) => () => {
     setSavingAnswer(savingAnswer.map((_,i) => i === index));
-  }
+  };
 
   const newCommentCallback = (_comment) => {
-    comment.comments.push(_comment);
+    setAnswers([...answers, _comment]);
     setSavingComment(false);
     setShowAnswerToComments(false);
   };
@@ -54,6 +70,14 @@ export default function PublicationsComments({post, comment, comments, setCommen
       setShowMenu(false);
     });
   };
+
+  const doDeleteAnswer = index => () => {
+    comments_services.delete(answers[index].id).then(_ => {
+      setAnswers(answers.filter((_,i) => i !== index));
+      setShowMenu(false);
+    });
+  };
+
 
   return (
     <View style={styles.container}>
@@ -111,8 +135,8 @@ export default function PublicationsComments({post, comment, comments, setCommen
           )}
         </View>
       </TouchableHighlight>
-      {comment.comments && comment.comments.length > 0
-        ? comment.comments.map((answer, i) => (
+      {answers && answers.length > 0
+        ? answers.map((answer, i) => (
             <TouchableHighlight
               style={styles.commentContainer}
               onLongPress={() => showMenuForAnswer(i)}
@@ -131,7 +155,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
                       placeholder={''}
                       callback={edittedAnswerCallback(i)}
                       post={post}
-                      comment={comment}
+                      comment={answer}
                       setSavingComment={setSavingForAnswer(i)}
                       style={styles.newComment}
                       initialText={answer.text}
@@ -152,10 +176,10 @@ export default function PublicationsComments({post, comment, comments, setCommen
                       <MenuTrigger />
                       <MenuOptions>
                         <MenuOption
-                          onSelect={() => setEditingComment(true)}
+                          onSelect={() => editForAnswer(i)}
                           text="Editar comentario"
                         />
-                        <MenuOption onSelect={doDeleteComment} >
+                        <MenuOption onSelect={doDeleteAnswer(i)}>
                           <Text style={{color: 'red'}}>Eliminar</Text>
                         </MenuOption>
                       </MenuOptions>
@@ -175,7 +199,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
             callback={newCommentCallback}
             post={post}
             comment={comment}
-            comments={comment.comments}
+            comments={answers}
             setSavingComment={setSavingComment}
             style={styles.newComment}
             initialText={`@${comment.user_owner.display_name} `}
