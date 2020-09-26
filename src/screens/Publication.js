@@ -28,7 +28,6 @@ export default function Publication({post, navigation}) {
   const [likesCounter, setLikesCounter] = useState(post.reactionscount.REACTION_TYPE_PRUEBA);
   const [iLiked, setILiked] = useState(post.reactions_details.filter((value) => value.user_id === user.id).length > 0);
 
-
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);

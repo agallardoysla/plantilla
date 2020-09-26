@@ -14,6 +14,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import PostLikes from '../screens/PostLikes';
 import Publication from '../screens/Publication';
+import ImagePostSearch from '../screens/ImagePostSearch';
+import ProfileSearch from '../screens/ProfileSearch';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -58,6 +60,11 @@ const ProfileGroup = ({navigation}) => {
         component={Followers}
         options={{headerShown: false}}
       />
+      <Stack.Screen 
+        name="ProfileSearch"
+        component={ProfileSearch}
+        options={{headerShown:false}}
+      />
     </Stack.Navigator>
   );
 };
@@ -83,8 +90,11 @@ const SearchGroup = ({navigation}) => {
       screenOptions={{
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
+        headerShown: false,
       }}>
       <Stack.Screen name="Search" component={SearchScreen} />
+      <Stack.Screen name="ImagePostSearch" component={ImagePostSearch}/>
+      <Stack.Screen name="ProfileSearch" component={ProfileSearch}/>
     </Stack.Navigator>
   );
 };
