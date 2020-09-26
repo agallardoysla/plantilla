@@ -132,7 +132,7 @@ export default function Publication({post, navigation}) {
                 ? require('../assets/corazon_limon.png')
                 : require('../assets/corazon_gris.png')
             }
-        />  
+          />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>

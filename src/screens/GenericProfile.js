@@ -46,22 +46,15 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
   const MyProfileView = () => {
     return (
       <View View style={[styles.profileDataColumn, styles.columnRight]}>
-        <Text style={styles.text_profile}>Amigos</Text>
         <FormButton
-          buttonTitle={user.following_with_details.length}
-          style={styles.counter}
-          onPress={go_to_followed}
+          buttonTitle="CHALLENGE"
+          style={styles.challengeButton}
+          textStyle={styles.challengeContent}
         />
-        <Text style={styles.text_profile}>Te siguen</Text>
         <FormButton
-          buttonTitle={user.followers_with_details.length}
-          style={styles.counter}
-          onPress={go_to_followers}
-        />
-        <FormButton buttonTitle="CHALLENGE" style={styles.profileButton} />
-        <Image
-          source={require('../assets/sobre_amarillo.png')}
-          style={styles.sobre_amarillo_chico}
+          buttonTitle="V.I.P."
+          style={styles.vipButton}
+          textStyle={styles.vipContent}
         />
       </View>
     );
@@ -70,6 +63,7 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
   const OtherProfileView = () => {
     return (
       <View View style={[styles.profileDataColumn, styles.columnRight]}>
+        <FormButton buttonTitle="CHALLENGE" style={styles.challengeButton} />
         <FormButton buttonTitle="CHALLENGE" style={styles.profileButton} />
         <Image
           source={require('../assets/sobre_amarillo.png')}
@@ -90,10 +84,22 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
               buttonTitle={user.posts_count.POST_TYPE_PRUEBA}
               style={styles.counter}
             />
-            <Text style={styles.text_profile}>Patrocinado por:</Text>
+            <Text style={styles.text_profile}>Seguidos</Text>
+            <FormButton
+              buttonTitle={user.following_with_details.length}
+              style={styles.counter}
+              onPress={go_to_followed}
+            />
+            <Text style={styles.text_profile}>Seguidores</Text>
+            <FormButton
+              buttonTitle={user.followers_with_details.length}
+              style={styles.counter}
+              onPress={go_to_followers}
+            />
+            {/* <Text style={styles.text_profile}>Patrocinado por:</Text>
             <FormButton buttonTitle="@Doggi" style={styles.patreon} />
             <FormButton buttonTitle="@Dogchow" style={styles.patreon} />
-            <FormButton buttonTitle="@Pedigree" style={styles.patreon} />
+            <FormButton buttonTitle="@Pedigree" style={styles.patreon} /> */}
           </View>
           <View style={[styles.profileDataColumn, styles.columnCenter]}>
             <View style={styles.profleFoto}>
@@ -104,29 +110,35 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
                   <Image
                     source={require('../assets/tuerca_blanca.png')}
                     style={styles.tuerca_blanca}
+                    resizeMode={'center'}
                   />
                 </TouchableOpacity>
-              ) : null}
+              ) : (
+                <View style={styles.tuerca_blanca_container} />
+              )}
               <Image
                 source={require('../assets/foto_perfil_superior.png')}
                 style={styles.circle_image}
               />
             </View>
             <Text style={styles.name_user}>@{user.display_name}</Text>
-            {!isLoggedUser ? (
+            {isLoggedUser ? (
               <Image
                 source={require('../assets/sobre_amarillo.png')}
                 style={styles.sobre_amarillo}
               />
-            ) : null}
+            ) : (
+              <>
+                <Image source={require('../assets/corazon_gris.png')} />
+                <Text style={styles.icon_numbers}>{8}k</Text>
+              </>
+            )}
           </View>
-         
-            {
-              //si isLoggedUser es verdadero mostrar columna con boton amigos, te siguen, CHALLENGE, y icono de sobre amarillo
-              //si isLoggedUser es falso mostrar boton CHALLENGE, icono de sobre amarillo, boton seguido
-              isLoggedUser ? <MyProfileView /> : <OtherProfileView />
-            }
-       
+          {
+            //si isLoggedUser es verdadero mostrar columna con boton amigos, te siguen, CHALLENGE, y icono de sobre amarillo
+            //si isLoggedUser es falso mostrar boton CHALLENGE, icono de sobre amarillo, boton seguido
+            isLoggedUser ? <MyProfileView /> : <OtherProfileView />
+          }
         </View>
 
         <View style={styles.profileDescription}>
@@ -157,6 +169,9 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
   );
 }
 
+// define el ancho relativo de las columnas del perfil
+const columns = [3, 7];
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -175,6 +190,7 @@ const styles = StyleSheet.create({
 
   profileDescription: {
     // flex: 1,
+    marginHorizontal: 20,
   },
 
   profilePublications: {
@@ -186,34 +202,40 @@ const styles = StyleSheet.create({
   //columnas dentro de profileData
 
   profileDataColumn: {
-    flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },
   columnLeft: {
+    flex: columns[0],
     alignItems: 'flex-start',
+    // backgroundColor: 'red',
   },
   columnCenter: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 15,
+    flex: columns[1],
+    alignItems: 'stretch',
+    // backgroundColor: 'white',
   },
   columnRight: {
+    flex: columns[0],
     alignItems: 'flex-end',
+    // backgroundColor: 'blue',
   },
   text_profile: {
-    fontFamily: StylesConfiguration.fontFamily,
+    // fontFamily: StylesConfiguration.fontFamily,
     fontWeight: '400',
     fontSize: 12,
     color: 'white',
-    marginTop: 5,
+    marginTop: 3,
     marginBottom: 2,
   },
   counter: {
     marginTop: 0,
-    marginBottom: 7,
+    marginBottom: 0,
     width: 'auto',
+    height: 'auto',
     minWidth: 75,
+    borderWidth: 0.5,
+    padding: 9,
   },
   patreon: {
     marginTop: 0,
@@ -221,38 +243,56 @@ const styles = StyleSheet.create({
     width: 105,
   },
   profleFoto: {
-    marginTop: 15,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'yellow',
   },
   circle_image: {
-    top: -30,
+    // top: -30,
   },
   tuerca_blanca_container: {
-    left: 100,
-    top: -10,
-    width: 31,
-    height: 31,
+    marginLeft: 90,
+    top: 20,
+    width: 20,
+    height: 20,
   },
   tuerca_blanca: {
-    width: 31,
-    height: 31,
+    width: 20,
+    height: 20,
     borderRadius: 15,
   },
   name_user: {
     fontFamily: StylesConfiguration.fontFamily,
-    fontWeight: '900',
     fontSize: 14,
+    textAlign: 'center',
     color: StylesConfiguration.color,
     marginTop: 10,
-    marginBottom: 20,
   },
   sobre_amarillo: {
+    alignSelf: 'center',
     width: 55,
     height: 55,
-    marginVertical: 10,
+    marginTop: 5,
   },
   sobre_amarillo_chico: {
     width: 35,
     height: 35,
+  },
+  challengeButton: {
+    marginTop: 22,
+    width: 110,
+  },
+  challengeContent: {
+    fontSize: 12,
+  },
+  vipButton: {
+    marginTop: 80,
+    width: 90,
+    marginLeft: 11,
+  },
+  vipContent: {
+    fontSize: 24,
   },
   profileButton: {
     marginTop: 3,
