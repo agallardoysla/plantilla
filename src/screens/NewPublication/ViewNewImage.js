@@ -1,4 +1,3 @@
-import { CardStyleInterpolators } from '@react-navigation/stack';
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 

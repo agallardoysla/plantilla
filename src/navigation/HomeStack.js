@@ -16,6 +16,7 @@ import PostLikes from '../screens/PostLikes';
 import Publication from '../screens/Publication';
 import TakePicture from '../screens/NewPublication/TakePicture';
 import ViewNewImage from '../screens/NewPublication/ViewNewImage';
+import NewPublicationContainer from '../screens/NewPublication/NewPublicationContainer';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -101,7 +102,7 @@ const NewPublicationGroup = ({navigation}) => {
       }}>
       <Stack.Screen
         name="NewPublication"
-        component={TakePicture}
+        component={NewPublicationContainer}
         options={{headerShown: false}}
       />
       <Stack.Screen

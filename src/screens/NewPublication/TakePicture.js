@@ -17,17 +17,21 @@ const PendingView = () => (
   </View>
 );
 
-export default function ExampleApp({navigation}) {
-  const {setPosts} = useContext(FeedContext);
-  const [images, setImages] = useState([]);
-  const [videoSource, setVideoSource] = useState('');
-  const [challengeText, setChallengeText] = useState('');
-  const [publishing, setPublishing] = useState(false);
+export default function TakePicture({
+  navigation,
+  maxDuration,
+  maxImages,
+  images,
+  setImages,
+  video,
+  setVideo,
+}) {
+  const [isRecording, setIsRecording] = useState(false);
+  const [timeCounter, setTimeCounter] = useState(maxDuration);
   const [flashMode, setFlashMode] = useState(RNCamera.Constants.FlashMode.on);
   const [flash, setFlash] = useState(0);
   const [cameraMode, setCameraMode] = useState(RNCamera.Constants.Type.back);
-  const [camera, setCamera] = useState(0);
-  const maxImages = 5;
+  const [_camera, setCamera] = useState(0);
   
   const takePicture = async (camera) => {
     if (images.length < maxImages) {
@@ -39,11 +43,26 @@ export default function ExampleApp({navigation}) {
   };
 
   const recordVideo = async (camera) => {
-    const options = { quality: 0.5, base64: true };
+    setIsRecording(true);
+    let localCounter = timeCounter;
+    const timeCounterInterval = setInterval(() => {
+      setTimeCounter(--localCounter);
+    }, 1000);
+    const options = {
+      quality: RNCamera.Constants.VideoQuality['720p'],
+      maxDuration,
+    };
     const data = await camera.recordAsync(options);
+    clearInterval(timeCounterInterval);
+    setTimeCounter(maxDuration);
+    setIsRecording(false);
     console.log(data.uri);
-    setImages([...images, data.uri]);
-  };
+    setVideo(data.uri);
+  }; 
+
+  const stopRecording = async (camera) => {
+    camera.stopRecording();
+  }
 
   const turnFlash = () => {
     if (flash === 0) {
@@ -80,7 +99,7 @@ export default function ExampleApp({navigation}) {
     return (
       <Icon
         onPress={flipCamera}
-        name={cameraIcons[camera]}
+        name={cameraIcons[_camera]}
         color="#FFFFFF"
         size={iconSize}
         style={styles.cameraControl}
@@ -89,11 +108,11 @@ export default function ExampleApp({navigation}) {
   };
 
   const flipCamera = () => {
-    if (camera === 0) {
+    if (_camera === 0) {
       setCameraMode(RNCamera.Constants.Type.front);
       setCamera(1);
     }
-    if (camera === 1) {
+    if (_camera === 1) {
       setCameraMode(RNCamera.Constants.Type.back);
       setCamera(0);
     }
@@ -127,14 +146,18 @@ export default function ExampleApp({navigation}) {
                 {images.length > 0 ? (
                   <Text style={styles.imagesCounter}>{images.length} / {maxImages}</Text>
                 ) : (
-                  <TouchableOpacity
-                    onPress={() => recordVideo(camera)}
-                    style={styles.takeVideo}>
-                    <Image
-                      style={styles.boton_takeVideo}
-                      source={require('../../assets/temporizador_15_seg.png')}
-                    />
-                  </TouchableOpacity>
+                  isRecording ? (
+                  <Text style={styles.imagesCounter}>0:{timeCounter}</Text>
+                  ) :(
+                    <TouchableOpacity
+                      onPress={() => recordVideo(camera)}
+                      style={styles.takeVideo}>
+                      <Image
+                        style={styles.boton_takeVideo}
+                        source={require('../../assets/temporizador_15_seg.png')}
+                      />
+                    </TouchableOpacity>
+                  )
                 )}
                 <TouchableOpacity
                   onPress={() => takePicture(camera)}
@@ -162,14 +185,25 @@ export default function ExampleApp({navigation}) {
                   <GetFlashIcon />
                 </View>
               </View>
-              <TouchableOpacity
-                onPress={() => takePicture(camera)}
-                style={styles.takePicture}>
-                <Image
-                  style={styles.boton_takePicture}
-                  source={require('../../assets/boton_ya.png')}
-                />
-              </TouchableOpacity>
+              {isRecording ? (
+                <TouchableOpacity
+                  onPress={() => stopRecording(camera)}
+                  style={styles.takePicture}>
+                  <Image
+                    style={styles.boton_takePicture}
+                    source={require('../../assets/temporizador_15_seg.png')}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => takePicture(camera)}
+                  style={styles.takePicture}>
+                  <Image
+                    style={styles.boton_takePicture}
+                    source={require('../../assets/boton_ya.png')}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           );
         }}
