@@ -131,7 +131,7 @@ export default function Publication({post, navigation}) {
                 ? require('../assets/corazon_limon.png')
                 : require('../assets/corazon_gris.png')
             }
-        />  
+          />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
@@ -184,6 +184,7 @@ export default function Publication({post, navigation}) {
               key={i}
               comments={comments}
               setComments={setComments}
+              navigation={navigation}
             />
           ))
         )
