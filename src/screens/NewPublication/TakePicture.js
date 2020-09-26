@@ -30,10 +30,12 @@ export default function ExampleApp({navigation}) {
   const maxImages = 5;
   
   const takePicture = async (camera) => {
-    const options = { base64: true };
-    const data = await camera.takePictureAsync(options);
-    console.log(data.uri);
-    setImages([...images, data.uri]);
+    if (images.length < maxImages) {
+      const options = { base64: true };
+      const data = await camera.takePictureAsync(options);
+      console.log(data.uri);
+      setImages([...images, data.uri]);
+    }
   };
 
   const recordVideo = async (camera) => {
