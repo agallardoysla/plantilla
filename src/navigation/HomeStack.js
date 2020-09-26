@@ -15,6 +15,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import PostLikes from '../screens/PostLikes';
 import Publication from '../screens/Publication';
 import TakePicture from '../screens/NewPublication/TakePicture';
+import ViewNewImage from '../screens/NewPublication/ViewNewImage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -101,6 +102,11 @@ const NewPublicationGroup = ({navigation}) => {
       <Stack.Screen
         name="NewPublication"
         component={TakePicture}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ViewNewImage"
+        component={ViewNewImage}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

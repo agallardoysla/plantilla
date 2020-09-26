@@ -1,34 +1,110 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, useContext, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { RNCamera } from 'react-native-camera';
+import {Icon} from 'react-native-elements';
+import { FeedContext } from '../../navigation/FeedContext';
 
 const PendingView = () => (
   <View
     style={{
       flex: 1,
-      backgroundColor: 'lightgreen',
+      backgroundColor: 'black',
       justifyContent: 'center',
       alignItems: 'center',
     }}
   >
-    <Text>Waiting</Text>
+    <Text>Esperando permisos...</Text>
   </View>
 );
 
-export default function ExampleApp() {
+export default function ExampleApp({navigation}) {
+  const {setPosts} = useContext(FeedContext);
+  const [images, setImages] = useState([]);
+  const [videoSource, setVideoSource] = useState('');
+  const [challengeText, setChallengeText] = useState('');
+  const [publishing, setPublishing] = useState(false);
+  const [flashMode, setFlashMode] = useState(RNCamera.Constants.FlashMode.on);
+  const [flash, setFlash] = useState(0);
+  const [cameraMode, setCameraMode] = useState(RNCamera.Constants.Type.back);
+  const [camera, setCamera] = useState(0);
+  const maxImages = 5;
   
   const takePicture = async (camera) => {
-    const options = { quality: 0.5, base64: true };
+    const options = { base64: true };
     const data = await camera.takePictureAsync(options);
     console.log(data.uri);
+    setImages([...images, data.uri]);
   };
+
+  const recordVideo = async (camera) => {
+    const options = { quality: 0.5, base64: true };
+    const data = await camera.recordAsync(options);
+    console.log(data.uri);
+    setImages([...images, data.uri]);
+  };
+
+  const turnFlash = () => {
+    if (flash === 0) {
+      setFlashMode(RNCamera.Constants.FlashMode.on);
+      setFlash(1);
+    }
+    if (flash === 1) {
+      setFlashMode(RNCamera.Constants.FlashMode.off);
+      setFlash(2);
+    }
+    if (flash === 2) {
+      setFlashMode(RNCamera.Constants.FlashMode.auto);
+      setFlash(0);
+    }
+  };
+
+  const iconSize = 32;
+
+  const GetFlashIcon = () => {
+    const flashIcons = ['flash-auto', 'flash-on', 'flash-off'];
+    return (
+      <Icon
+        onPress={turnFlash}
+        name={flashIcons[flash]}
+        color="#FFFFFF"
+        size={iconSize}
+        style={styles.cameraControl}
+      />
+    );
+  };
+
+  const GetSwitchCameraIcon = () => {
+    const cameraIcons = ['camera-rear', 'camera-front'];
+    return (
+      <Icon
+        onPress={flipCamera}
+        name={cameraIcons[camera]}
+        color="#FFFFFF"
+        size={iconSize}
+        style={styles.cameraControl}
+      />
+    );
+  };
+
+  const flipCamera = () => {
+    if (camera === 0) {
+      setCameraMode(RNCamera.Constants.Type.front);
+      setCamera(1);
+    }
+    if (camera === 1) {
+      setCameraMode(RNCamera.Constants.Type.back);
+      setCamera(0);
+    }
+  }
 
   return (
     <View style={styles.container}>
       <RNCamera
         style={styles.preview}
         type={RNCamera.Constants.Type.back}
-        flashMode={RNCamera.Constants.FlashMode.on}
+        flashMode={flashMode}
+        type={cameraMode}
+        useNativeZoom={true}
         androidCameraPermissionOptions={{
           title: 'Permission to use camera',
           message: 'We need your permission to use your camera',
@@ -46,14 +122,18 @@ export default function ExampleApp() {
           return (
             <View style={styles.actionsBar}>
               <View style={styles.actionsBarBottom}>
-                <TouchableOpacity
-                  onPress={() => takePicture(camera)}
-                  style={styles.takeVideo}>
-                  <Image
-                    style={styles.boton_takeVideo}
-                    source={require('../../assets/temporizador_15_seg.png')}
-                  />
-                </TouchableOpacity>
+                {images.length > 0 ? (
+                  <Text style={styles.imagesCounter}>{images.length} / {maxImages}</Text>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => recordVideo(camera)}
+                    style={styles.takeVideo}>
+                    <Image
+                      style={styles.boton_takeVideo}
+                      source={require('../../assets/temporizador_15_seg.png')}
+                    />
+                  </TouchableOpacity>
+                )}
                 <TouchableOpacity
                   onPress={() => takePicture(camera)}
                   style={styles.editPicture}>
@@ -62,6 +142,23 @@ export default function ExampleApp() {
                     source={require('../../assets/pincel_blanco.png')}
                   />
                 </TouchableOpacity>
+              </View>
+              <View style={styles.actionsBarTop}>
+                <View style={styles.imagesContainer}>
+                  {images.map((image, i) => (
+                    <TouchableOpacity
+                      style={styles.miniImage}
+                      onPress={() => navigation.navigate('ViewNewImage', {uri: image})}
+                      key={i}
+                    >
+                      <Image style={styles.miniImage} source={{uri: image}} />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <View style={styles.cameraControls}>
+                  <GetSwitchCameraIcon />
+                  <GetFlashIcon />
+                </View>
               </View>
               <TouchableOpacity
                 onPress={() => takePicture(camera)}
@@ -92,10 +189,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   actionsBar: {
-    height: 110,
+    height: 160,
     flexDirection: "column-reverse",
     alignSelf: 'stretch',
     alignItems: 'stretch',
+  },
+  actionsBarTop: {
+    height: 86,
+  },
+  imagesContainer: {
+    height: 45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  cameraControls: {
+    height: 41,
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingHorizontal: 30,
+  },
+  cameraControl: {
+  },
+  miniImage: {
+    height: 45,
+    width: 45,
+    marginHorizontal: 4,
   },
   actionsBarBottom: {
     height: 74,
@@ -109,7 +230,7 @@ const styles = StyleSheet.create({
   },
   takePicture: {
     alignSelf: 'center',
-    top: -64,
+    top: -150,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -130,5 +251,8 @@ const styles = StyleSheet.create({
   boton_editPicture: {
     width: 50,
     height: 50,
+  },
+  imagesCounter: {
+    color: 'white',
   },
 });
