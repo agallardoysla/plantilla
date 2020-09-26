@@ -13,7 +13,7 @@ import {
 import { AuthContext } from '../navigation/AuthProvider';
 import comments_services from '../services/comments_services';
 
-export default function PublicationsComments({post, comment, comments, setComments}) {
+export default function PublicationsComments({post, comment, comments, setComments, navigation}) {
   const [showAnswerToComments, setShowAnswerToComments] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -88,9 +88,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
         <View style={styles.comment}>
           <TouchableOpacity
             style={styles.senderContainer}
-            onPress={() =>
-              Alert.alert('Ir a perfil de' + comment.user_owner.display_name)
-            }>
+            onPress={() => navigation.navigate('OtherProfile', comment.user_owner)}>
             <Image
               source={require('../assets/foto.png')}
               style={styles.icon_profile}

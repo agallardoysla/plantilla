@@ -185,6 +185,7 @@ export default function Publication({post, navigation}) {
               key={i}
               comments={comments}
               setComments={setComments}
+              navigation={navigation}
             />
           ))
         )

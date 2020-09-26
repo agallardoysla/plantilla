@@ -3,6 +3,7 @@ import React from 'react';
 import {Image} from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import MyProfileScreen from '../screens/MyProfileScreen';
+import OtherProfile from '../screens/OtherProfile';
 import NotificationScreen from '../screens/NotificationScreen';
 import SearchScreen from '../screens/SearchScreen';
 import NewPublicationScreen from '../screens/NewPublicationScreen';
@@ -23,6 +24,8 @@ const HomeGroup = ({navigation}) => {
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
+        headerStyle: {backgroundColor: 'black'},
+        headerTintColor: 'black',
         //oculto el header
         headerShown: false,
       }}>
@@ -30,6 +33,7 @@ const HomeGroup = ({navigation}) => {
       <Stack.Screen name="Publication" component={Publication} />
       <Stack.Screen name="PostComments" component={PostComments} />
       <Stack.Screen name="PostLikes" component={PostLikes} />
+      <Stack.Screen name="OtherProfile" component={OtherProfile} />
     </Stack.Navigator>
   );
 };
@@ -41,23 +45,11 @@ const ProfileGroup = ({navigation}) => {
       screenOptions={{
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
+        headerShown: false,
       }}>
-      <Stack.Screen
-        name="Profile"
-        component={MyProfileScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Followed"
-        component={Followed}
-        options={{headerShown: false}}
-      />
-
-      <Stack.Screen
-        name="Followers"
-        component={Followers}
-        options={{headerShown: false}}
-      />
+      <Stack.Screen name="Profile" component={MyProfileScreen} />
+      <Stack.Screen name="Followed" component={Followed} />
+      <Stack.Screen name="Followers" component={Followers} />
     </Stack.Navigator>
   );
 };
@@ -83,6 +75,7 @@ const SearchGroup = ({navigation}) => {
       screenOptions={{
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
+        headerShown: false,
       }}>
       <Stack.Screen name="Search" component={SearchScreen} />
     </Stack.Navigator>
@@ -96,12 +89,9 @@ const NewPublicationGroup = ({navigation}) => {
       screenOptions={{
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
+        headerShown: false,
       }}>
-      <Stack.Screen
-        name="NewPublication"
-        component={NewPublicationScreen}
-        options={{headerShown: false}}
-      />
+      <Stack.Screen name="NewPublication" component={NewPublicationScreen} />
     </Stack.Navigator>
   );
 };
