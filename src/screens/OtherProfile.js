@@ -17,8 +17,8 @@ export default function OtherProfile({route}) {
 
   return userId !== user.id ? (
     otherUser ? (
-      <GenericProfile user={otherUser} isLoggedUser={false} />) : null
+      <GenericProfile localUser={otherUser} isLoggedUser={false} />) : null
   ) : (
-    <GenericProfile user={user} isLoggedUser={true} />
+    <GenericProfile localUser={user} isLoggedUser={true} />
   );
 };

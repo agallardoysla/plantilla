@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -13,14 +13,16 @@ import FormButton from '../components/FormButton';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import users_services from '../services/users_services';
+import { AuthContext } from '../navigation/AuthProvider';
 
 const numColumns = 3; //para el flatList
 
-export default function GenericProfile({navigation, user, isLoggedUser}) {
+export default function GenericProfile({navigation, localUser, isLoggedUser}) {
+  const {user} = useContext(AuthContext);
   const [usersPosts, setUsersPosts] = useState([]);
 
   useEffect(() => {
-    users_services.listPosts(user.id).then((res) => {
+    users_services.listPosts(localUser.id).then((res) => {
       let postsPaginated = [];
       // Se paginan los post de acuerdo a la cantidad de columnas
       res.data.forEach((p, i) => {
@@ -41,6 +43,12 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
 
   const go_to_followers = () => {
     navigation.navigate('Followers');
+  };
+
+  const profileFollowLoggedUser = () => {
+    console.log(user.id);
+    return localUser.following_with_details.filter((u) => u.user_id === user.id)
+      .length > 0;
   };
 
   const MyProfileView = () => {
@@ -76,12 +84,12 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
 
     const doFollow = () => {
       if (followed) {
-        users_services.unfollow(user.id).then(() => {
+        users_services.unfollow(localUser.id).then(() => {
           setFollowed(false);
           console.log('dejado de seguir');
         });
       } else {
-        users_services.follow(user.id).then(() => {
+        users_services.follow(localUser.id).then(() => {
           setFollowed(true);
           console.log('seguido');
         });
@@ -106,6 +114,10 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
           style={styles.patreon}
           textStyle={styles.patreonContent}
         />
+        {profileFollowLoggedUser() ? (
+          <Text style={styles.textFollowed}>Te sigue</Text>
+        ) : null
+        }
         {followed ? (
           <FormButton
             buttonTitle="Pendiente"
@@ -132,18 +144,18 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
           <View style={[styles.profileDataColumn, styles.columnLeft]}>
             <Text style={styles.text_profile}>Publicaciones</Text>
             <FormButton
-              buttonTitle={user.posts_count.POST_TYPE_PRUEBA}
+              buttonTitle={localUser.posts_count.POST_TYPE_PRUEBA}
               style={styles.counter}
             />
             <Text style={styles.text_profile}>Seguidos</Text>
             <FormButton
-              buttonTitle={user.following_with_details.length}
+              buttonTitle={localUser.following_with_details.length}
               style={styles.counter}
               onPress={go_to_followed}
             />
             <Text style={styles.text_profile}>Seguidores</Text>
             <FormButton
-              buttonTitle={user.followers_with_details.length}
+              buttonTitle={localUser.followers_with_details.length}
               style={styles.counter}
               onPress={go_to_followers}
             />
@@ -174,7 +186,7 @@ export default function GenericProfile({navigation, user, isLoggedUser}) {
               ) : (
                 <View style={styles.tuerca_blanca_container} />
               )}
-              <Text style={styles.name_user}>@{user.display_name}</Text>
+              <Text style={styles.name_user}>@{localUser.display_name}</Text>
             </View>
             <View style={styles.folowersInfo}>
               <Image source={require('../assets/corazon_gris.png')} />
@@ -369,6 +381,11 @@ const styles = StyleSheet.create({
   },
   vipContent: {
     fontSize: 24,
+  },
+  textFollowed: {
+    color: StylesConfiguration.color,
+    fontFamily: StylesConfiguration.fontFamily,
+    marginTop: -13,
   },
   followButton: {
     backgroundColor: StylesConfiguration.color,
