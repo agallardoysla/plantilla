@@ -18,6 +18,9 @@ export default function NewPublicationContainer({navigation}) {
   const [challengeText, setChallengeText] = useState('');
   const [publishing, setPublishing] = useState(false);
 
+  const canPublish = () => {
+    return images.length > 0;
+  };
 
   return (
     <View style={styles.container}>
@@ -42,6 +45,10 @@ export default function NewPublicationContainer({navigation}) {
           maxImages={maxImages}
           images={images}
           setImages={setImages}
+          navigation={navigation}
+          video={video}
+          setVideo={setVideo}
+          canPublish={canPublish}
         />
         <TakePicture
           style={styles.view}
@@ -52,6 +59,7 @@ export default function NewPublicationContainer({navigation}) {
           setImages={setImages}
           video={video}
           setVideo={setVideo}
+          canPublish={canPublish}
         />
       </Swiper>
     </View>

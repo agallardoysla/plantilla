@@ -27,6 +27,7 @@ export default function TakePicture({
   setImages,
   video,
   setVideo,
+  canPublish,
 }) {
   const [isRecording, setIsRecording] = useState(false);
   const [timeCounter, setTimeCounter] = useState(maxDuration);
@@ -134,10 +135,6 @@ export default function TakePicture({
       setCameraMode(RNCamera.Constants.Type.back);
       setCamera(0);
     }
-  };
-
-  const canPublish = () => {
-    return images.length > 0;
   };
 
   return (
@@ -297,9 +294,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 15,
   },
   takeVideo: {
-    marginLeft: 5,
+    // marginLeft: 5,
   },
   takePicture: {
     alignSelf: 'center',
