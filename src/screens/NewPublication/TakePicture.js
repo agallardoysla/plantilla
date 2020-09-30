@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import {Icon} from 'react-native-elements';
 import { FeedContext } from '../../navigation/FeedContext';
+import StylesConfiguration from '../../utils/StylesConfiguration';
 
 const PendingView = () => (
   <View
@@ -116,13 +117,16 @@ export default function TakePicture({
       setCameraMode(RNCamera.Constants.Type.back);
       setCamera(0);
     }
-  }
+  };
+
+  const canPublish = () => {
+    return images.length > 0;
+  };
 
   return (
     <View style={styles.container}>
       <RNCamera
         style={styles.preview}
-        type={RNCamera.Constants.Type.back}
         flashMode={flashMode}
         type={cameraMode}
         useNativeZoom={true}
@@ -161,10 +165,13 @@ export default function TakePicture({
                 )}
                 <TouchableOpacity
                   onPress={() => takePicture(camera)}
-                  style={styles.editPicture}>
-                  <Image
-                    style={styles.boton_editPicture}
-                    source={require('../../assets/pincel_blanco.png')}
+                  style={styles.editPicture}
+                  disabled={!canPublish()}>
+                  <Icon
+                    name={canPublish() ? 'done-all' : 'done'}
+                    color={canPublish() ? StylesConfiguration.color : 'grey'}
+                    size={iconSize}
+                    style={styles.action}
                   />
                 </TouchableOpacity>
               </View>
