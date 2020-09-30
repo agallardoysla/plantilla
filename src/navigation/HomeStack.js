@@ -17,6 +17,7 @@ import Followed from '../screens/profile/Followed';
 import Followers from '../screens/profile/Followers';
 import MyProfileScreen from '../screens/profile/MyProfileScreen';
 import {NavigationContainer} from '@react-navigation/native';
+import Preferences from '../screens/profile/Preferences';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,6 +53,7 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen name="Profile" component={MyProfileScreen} />
       <Stack.Screen name="Followed" component={Followed} />
       <Stack.Screen name="Followers" component={Followers} />
+      <Stack.Screen name="Preferences" component={Preferences} />
     </Stack.Navigator>
   );
 };

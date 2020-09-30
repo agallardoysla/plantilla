@@ -176,7 +176,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
               {isLoggedUser ? (
                 <TouchableOpacity
                   style={styles.tuerca_blanca_container}
-                  onPress={() => Alert.alert('configuraciones')}>
+                  onPress={() => navigation.navigate('Preferences')}>
                   <Image
                     source={require('../../assets/tuerca_blanca.png')}
                     style={styles.tuerca_blanca}
