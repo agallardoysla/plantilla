@@ -20,7 +20,6 @@ export default function Routes() {
       if (!user) {
         const backendUser = await users_services.me();
         setUser(backendUser.data);
-        console.log(backendUser.data.profile.is_ready, user);
         setExistProfile(backendUser.data.profile.is_ready);
       }
     } else {

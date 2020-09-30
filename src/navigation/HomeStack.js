@@ -2,22 +2,25 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {Image, StatusBar} from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
-import MyProfileScreen from '../screens/MyProfileScreen';
-import OtherProfile from '../screens/OtherProfile';
 import NotificationScreen from '../screens/NotificationScreen';
 import SearchScreen from '../screens/SearchScreen';
-import NewPublicationScreen from '../screens/NewPublicationScreen';
-import Followed from '../screens/Followed';
-import Followers from '../screens/Followers';
 import PostComments from '../screens/PostComments';
-import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import PostLikes from '../screens/PostLikes';
 import Publication from '../screens/Publication';
+import ViewNewImage from '../screens/NewPublication/ViewNewImage';
+import NewPublicationContainer from '../screens/NewPublication/NewPublicationContainer';
+import PublishPublication from '../screens/NewPublication/PublishPublication';
 import ImagePostSearch from '../screens/ImagePostSearch';
 import ProfileSearch from '../screens/ProfileSearch';
 import MyConversations from '../screens/MyConversations';
+import OtherProfile from '../screens/profile/OtherProfile';
+import Followed from '../screens/profile/Followed';
+import Followers from '../screens/profile/Followers';
+import MyProfileScreen from '../screens/profile/MyProfileScreen';
+import Preferences from '../screens/profile/Preferences';
+import PublicationDetails from '../screens/PublicationDetails';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -34,6 +37,7 @@ const HomeGroup = ({navigation}) => {
       }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Publication" component={Publication} />
+      <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="PostComments" component={PostComments} />
       <Stack.Screen name="PostLikes" component={PostLikes} />
       <Stack.Screen name="OtherProfile" component={OtherProfile} />
@@ -54,6 +58,7 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen name="Followed" component={Followed} />
       <Stack.Screen name="Followers" component={Followers} />
       <Stack.Screen name="MyConversations" component={MyConversations}/>
+      <Stack.Screen name="Preferences" component={Preferences} />
     </Stack.Navigator>
   );
 };
@@ -82,8 +87,8 @@ const SearchGroup = ({navigation}) => {
         headerShown: false,
       }}>
       <Stack.Screen name="Search" component={SearchScreen} />
-      <Stack.Screen name="ImagePostSearch" component={ImagePostSearch}/>
-      <Stack.Screen name="ProfileSearch" component={ProfileSearch}/>
+      <Stack.Screen name="ImagePostSearch" component={ImagePostSearch} />
+      <Stack.Screen name="ProfileSearch" component={ProfileSearch} />
     </Stack.Navigator>
   );
 };
@@ -97,7 +102,21 @@ const NewPublicationGroup = ({navigation}) => {
         headerTintColor: 'black',
         headerShown: false,
       }}>
-      <Stack.Screen name="NewPublication" component={NewPublicationScreen} />
+      <Stack.Screen
+        name="NewPublication"
+        component={NewPublicationContainer}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ViewNewImage"
+        component={ViewNewImage}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="PublishPublication"
+        component={PublishPublication}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };
