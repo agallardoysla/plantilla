@@ -17,7 +17,6 @@ export default function Gallery({
   const [imagesGallery, setImagesGallery] = useState([]);
   const numColumns = 3;
   const pageSize = 12;
-  const [startCursor, setStartCursor] = useState(0);
   const [endCursor, setEndCursor] = useState("0");
   const [hasNextPage, setHasNextPage] = useState(true);
 
@@ -55,7 +54,7 @@ export default function Gallery({
             postsPaginated.push([]);
           }
           // siempre se agregan los posts en la ultima fila que se agrego
-          postsPaginated[postsPaginated.length - 1].push(p);
+          postsPaginated[postsPaginated.length - 1].push(p.node.image.uri);
         });
         // setImagesGallery([...imagesGallery, ...postsPaginated]);
         setImagesGallery([...imagesGallery, ...postsPaginated]);
@@ -68,12 +67,18 @@ export default function Gallery({
   };
 
   const selectImage = (image) => {
-    setImages(...images, image);
-  }
+    if (!imageIsSelected(image)) {
+      if (images.length < maxImages) {
+        setImages([...images, image]);
+      }
+    } else {
+      setImages(images.filter(i => i !== image));
+    }
+  };
 
   const imageIsSelected = (image) => {
     return images.includes(image);
-  }
+  };
 
   const iconSize = 32;
 
@@ -85,12 +90,12 @@ export default function Gallery({
           renderItem={({item}) => (
             <View style={styles.itemContainer}>
               {item.map((image, i) => (
-                <View style={styles.item} key={i}>
+                <View style={[styles.item, (imageIsSelected(image) ? styles.imageSelected : {})]} key={i}>
                   <TouchableWithoutFeedback
                     onPress={() => selectImage(image)}
                     style={styles.itemImageContainer}>
                     <Image
-                      source={{uri: image.node.image.uri}}
+                      source={{uri: image}}
                       style={styles.itemImage}
                     />
                   </TouchableWithoutFeedback>
@@ -189,6 +194,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 1.5,
     marginVertical: 1.5,
+  },
+  imageSelected: {
+    transform: [{scaleX: 0.9}, {scaleY: 0.9}],
+    borderColor: StylesConfiguration.color,
+    borderWidth: 0.5,
   },
   preview: {
     flex: 1,
