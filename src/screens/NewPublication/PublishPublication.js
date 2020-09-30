@@ -85,7 +85,7 @@ export default function PublishPublication({route}) {
             {video !== '' ? (
               <View style={styles.fullRow}>
                 <Video
-                  source={video}
+                  source={{uri: video}}
                   style={styles.backgroundVideo}
                   controls={true}
                   fullscreen={true}

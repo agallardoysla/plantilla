@@ -17,6 +17,7 @@ export default function NewPublicationContainer({navigation}) {
   const [video, setVideo] = useState('');
   const [challengeText, setChallengeText] = useState('');
   const [publishing, setPublishing] = useState(false);
+  const [assetType, setAssetType] = useState('Photos');
 
   const canPublish = () => {
     return images.length > 0 || video !== '';
@@ -36,7 +37,7 @@ export default function NewPublicationContainer({navigation}) {
       <Swiper
         style={styles.slider}
         showsButtons={true}
-        index={0}
+        index={1}
         loop={false}
         showsPagination={false}
       >
@@ -49,6 +50,8 @@ export default function NewPublicationContainer({navigation}) {
           video={video}
           setVideo={setVideo}
           canPublish={canPublish}
+          assetType={assetType}
+          setAssetType={setAssetType}
         />
         <TakePicture
           style={styles.view}
@@ -60,6 +63,8 @@ export default function NewPublicationContainer({navigation}) {
           video={video}
           setVideo={setVideo}
           canPublish={canPublish}
+          assetType={assetType}
+          setAssetType={setAssetType}
         />
       </Swiper>
     </View>

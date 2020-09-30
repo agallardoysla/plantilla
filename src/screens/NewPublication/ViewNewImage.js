@@ -15,7 +15,7 @@ export default function ViewNewImage({route}) {
   const tryDelete = () => {
     Alert.alert(
       '¿Quitar imagen de la publicación?',
-      'Si es de la galeria de imagenes, se puede agregar nuevamente',
+      'En la galeria se puede agregar nuevamente',
       [
         {
           text: 'Cancelar',

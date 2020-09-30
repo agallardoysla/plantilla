@@ -20,13 +20,14 @@ export default function Gallery({
   video,
   setVideo,
   canPublish,
+  assetType,
+  setAssetType,
 }) {
   const [assetsGallery, setAssetsGallery] = useState([]);
   const numColumns = 3;
   const pageSize = 12;
   const [endCursor, setEndCursor] = useState('0');
   const [hasNextPage, setHasNextPage] = useState(true);
-  const [assetType, setAssetType] = useState('Photos');
   const [showMenu, setShowMenu] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,7 +47,7 @@ export default function Gallery({
       loadAssets();
     }
     init();
-  }, [images, video]);
+  }, [images, video, assetType]);
 
   const loadAssets = () => {
     loadAssetsParams(hasNextPage, assetType, endCursor, assetsGallery);
@@ -164,9 +165,11 @@ export default function Gallery({
         />
       </View>
       <View style={styles.actionsBarBottom}>
-        <Text style={styles.imagesCounter}>
-          {images.length} / {maxImages}
-        </Text>
+        {video === '' ? (
+          <Text style={styles.imagesCounter}>
+            {images.length} / {maxImages}
+          </Text>
+        ) : null}
         <View style={styles.imagesContainer}>
           {images.map((image, i) => (
             <TouchableOpacity

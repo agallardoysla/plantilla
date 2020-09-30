@@ -1,10 +1,11 @@
 import React, { PureComponent, useContext, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Image, PermissionsAndroid, Platform } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, PermissionsAndroid, Platform, Alert, Dimensions } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import {Icon} from 'react-native-elements';
 import { FeedContext } from '../../navigation/FeedContext';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import CameraRoll from '@react-native-community/cameraroll';
+import Video from 'react-native-video';
 
 const PendingView = () => (
   <View
@@ -19,6 +20,8 @@ const PendingView = () => (
   </View>
 );
 
+let window = Dimensions.get('window');
+
 export default function TakePicture({
   navigation,
   maxDuration,
@@ -28,6 +31,8 @@ export default function TakePicture({
   video,
   setVideo,
   canPublish,
+  assetType,
+  setAssetType,
 }) {
   const [isRecording, setIsRecording] = useState(false);
   const [timeCounter, setTimeCounter] = useState(maxDuration);
@@ -54,10 +59,12 @@ export default function TakePicture({
       const data = await camera.takePictureAsync(options);
       console.log(data.uri);
       setImages([...images, data.uri]);
+      setVideo('');
       if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
         return;
       }
       CameraRoll.save(data.uri);
+      // setAssetType('Photo');
     }
   };
 
@@ -65,7 +72,9 @@ export default function TakePicture({
     setIsRecording(true);
     let localCounter = timeCounter;
     const timeCounterInterval = setInterval(() => {
-      setTimeCounter(--localCounter);
+      if (--localCounter >= 0) {
+        setTimeCounter(localCounter);
+      }
     }, 1000);
     const options = {
       quality: RNCamera.Constants.VideoQuality['720p'],
@@ -77,10 +86,12 @@ export default function TakePicture({
     setIsRecording(false);
     console.log(data.uri);
     setVideo(data.uri);
+    setImages([]);
     if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
       return;
     }
     CameraRoll.save(data.uri);
+    // setAssetType('Video');
   }; 
 
   const stopRecording = async (camera) => {
@@ -141,111 +152,167 @@ export default function TakePicture({
     }
   };
 
+  const twoDigits = (n) => (n < 10 ? '0' + n : n);
+
+  const tryEdit = () => {
+    Alert.alert('Editar imagen');
+  };
+
+  const tryDelete = () => {
+    Alert.alert(
+      '¿Quitar video de la publicación?',
+      'En la galeria se puede agregar nuevamente',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: doDelete,
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const doDelete = () => {
+    setVideo('');
+  };
+
   return (
     <View style={styles.container}>
-      <RNCamera
-        style={styles.preview}
-        flashMode={flashMode}
-        type={cameraMode}
-        useNativeZoom={true}
-        androidCameraPermissionOptions={{
-          title: 'Permission to use camera',
-          message: 'We need your permission to use your camera',
-          buttonPositive: 'Ok',
-          buttonNegative: 'Cancel',
-        }}
-        androidRecordAudioPermissionOptions={{
-          title: 'Permission to use audio recording',
-          message: 'We need your permission to use your audio',
-          buttonPositive: 'Ok',
-          buttonNegative: 'Cancel',
-        }}>
-        {({ camera, status, recordAudioPermissionStatus }) => {
-          if (status !== 'READY') return <PendingView />;
-          return (
-            <View style={styles.actionsBar}>
-              <View style={styles.actionsBarBottom}>
-                {images.length > 0 ? (
-                  <Text style={styles.imagesCounter}>{images.length} / {maxImages}</Text>
-                ) : (
-                  isRecording ? (
-                  <Text style={styles.imagesCounter}>0:{timeCounter}</Text>
+      {video === '' ? (
+        <RNCamera
+          style={styles.preview}
+          flashMode={flashMode}
+          type={cameraMode}
+          useNativeZoom={true}
+          androidCameraPermissionOptions={{
+            title: 'Permission to use camera',
+            message: 'We need your permission to use your camera',
+            buttonPositive: 'Ok',
+            buttonNegative: 'Cancel',
+          }}
+          androidRecordAudioPermissionOptions={{
+            title: 'Permission to use audio recording',
+            message: 'We need your permission to use your audio',
+            buttonPositive: 'Ok',
+            buttonNegative: 'Cancel',
+          }}>
+          {({ camera, status, recordAudioPermissionStatus }) => {
+            if (status !== 'READY') return <PendingView />;
+            return (
+              <View style={styles.actionsBar}>
+                <View style={styles.actionsBarBottom}>
+                  {images.length > 0 ? (
+                    <Text style={styles.imagesCounter}>{images.length} / {maxImages}</Text>
                   ) : (
+                    isRecording ? (
+                    <Text style={styles.imagesCounter}>{twoDigits(0)}:{twoDigits(timeCounter)}</Text>
+                    ) : (
+                    <TouchableOpacity
+                      onPress={() => recordVideo(camera)}
+                      style={styles.takeVideo}>
+                      <Image
+                        style={styles.boton_takeVideo}
+                        source={require('../../assets/temporizador_15_seg.png')}
+                      />
+                    </TouchableOpacity>
+                  ))}
                   <TouchableOpacity
-                    onPress={() => recordVideo(camera)}
-                    style={styles.takeVideo}>
+                    onPress={() =>
+                      navigation.navigate('PublishPublication', {
+                        images: images,
+                        setImages: setImages,
+                        video: video,
+                        setVideo: setVideo,
+                        navigation: navigation,
+                      })
+                    }
+                    style={styles.editPicture}
+                    disabled={!canPublish()}>
+                    <Icon
+                      name={canPublish() ? 'done-all' : 'done'}
+                      color={canPublish() ? StylesConfiguration.color : 'grey'}
+                      size={iconSize}
+                      style={styles.action}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.actionsBarTop}>
+                  <View style={styles.imagesContainer}>
+                    {images.map((image, i) => (
+                      <TouchableOpacity
+                        style={styles.miniImage}
+                        onPress={() =>
+                          navigation.navigate('ViewNewImage', {
+                            uri: image,
+                            images: images,
+                            setImages: setImages,
+                            navigation: navigation,
+                          })
+                        }
+                        key={i}>
+                        <Image style={styles.miniImage} source={{uri: image}} />
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                  <View style={styles.cameraControls}>
+                    <GetSwitchCameraIcon />
+                    <GetFlashIcon />
+                  </View>
+                </View>
+                {isRecording ? (
+                  <TouchableOpacity
+                    onPress={() => stopRecording(camera)}
+                    style={styles.takePicture}>
                     <Image
-                      style={styles.boton_takeVideo}
+                      style={styles.boton_takePicture}
                       source={require('../../assets/temporizador_15_seg.png')}
                     />
                   </TouchableOpacity>
-                ))}
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('PublishPublication', {
-                      images: images,
-                      setImages: setImages,
-                      video: video,
-                      setVideo: setVideo,
-                      navigation: navigation,
-                    })
-                  }
-                  style={styles.editPicture}
-                  disabled={!canPublish()}>
-                  <Icon
-                    name={canPublish() ? 'done-all' : 'done'}
-                    color={canPublish() ? StylesConfiguration.color : 'grey'}
-                    size={iconSize}
-                    style={styles.action}
-                  />
-                </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => takePicture(camera)}
+                    style={styles.takePicture}>
+                    <Image
+                      style={styles.boton_takePicture}
+                      source={require('../../assets/boton_ya.png')}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
-              <View style={styles.actionsBarTop}>
-                <View style={styles.imagesContainer}>
-                  {images.map((image, i) => (
-                    <TouchableOpacity
-                      style={styles.miniImage}
-                      onPress={() =>
-                        navigation.navigate('ViewNewImage', {
-                          uri: image,
-                          images: images,
-                          setImages: setImages,
-                          navigation: navigation,
-                        })
-                      }
-                      key={i}>
-                      <Image style={styles.miniImage} source={{uri: image}} />
-                    </TouchableOpacity>
-                  ))}
-                </View>
-                <View style={styles.cameraControls}>
-                  <GetSwitchCameraIcon />
-                  <GetFlashIcon />
-                </View>
-              </View>
-              {isRecording ? (
-                <TouchableOpacity
-                  onPress={() => stopRecording(camera)}
-                  style={styles.takePicture}>
-                  <Image
-                    style={styles.boton_takePicture}
-                    source={require('../../assets/temporizador_15_seg.png')}
-                  />
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={() => takePicture(camera)}
-                  style={styles.takePicture}>
-                  <Image
-                    style={styles.boton_takePicture}
-                    source={require('../../assets/boton_ya.png')}
-                  />
-                </TouchableOpacity>
-              )}
-            </View>
-          );
-        }}
-      </RNCamera>
+            );
+          }}
+        </RNCamera>
+      ) : (
+        <View style={styles.container}>
+          <Video
+            source={{uri: video}}
+            style={styles.backgroundVideo}
+            controls={true}
+            fullscreen={true}
+          />
+          <View style={styles.actionsContainer}>
+            <Icon
+              onPress={tryEdit}
+              name={'edit'}
+              color="#FFFFFF"
+              size={iconSize}
+              style={styles.action}
+            />
+            <Icon
+              onPress={tryDelete}
+              name={'delete'}
+              color="#FFFFFF"
+              size={iconSize}
+              style={styles.action}
+            />
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -329,5 +396,20 @@ const styles = StyleSheet.create({
   },
   imagesCounter: {
     color: 'white',
+  },
+  backgroundVideo: {
+    width: window.width - 20,
+    height: (window.height - 50),
+  },
+  actionsContainer: {
+    height: 50,
+    bottom: 73,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  action: {
+    opacity: 1,
   },
 });
