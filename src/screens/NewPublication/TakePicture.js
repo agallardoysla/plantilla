@@ -77,6 +77,10 @@ export default function TakePicture({
     setIsRecording(false);
     console.log(data.uri);
     setVideo(data.uri);
+    if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
+      return;
+    }
+    CameraRoll.save(data.uri);
   }; 
 
   const stopRecording = async (camera) => {

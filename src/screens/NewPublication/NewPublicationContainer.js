@@ -19,7 +19,7 @@ export default function NewPublicationContainer({navigation}) {
   const [publishing, setPublishing] = useState(false);
 
   const canPublish = () => {
-    return images.length > 0;
+    return images.length > 0 || video !== '';
   };
 
   return (
