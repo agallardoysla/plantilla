@@ -176,8 +176,9 @@ export default function TakePicture({
                       onPress={() =>
                         navigation.navigate('ViewNewImage', {
                           uri: image,
+                          images: images,
                           setImages: setImages,
-                          index: i,
+                          navigation: navigation,
                         })
                       }
                       key={i}>
