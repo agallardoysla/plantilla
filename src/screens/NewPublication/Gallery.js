@@ -4,6 +4,13 @@ import { Image, PermissionsAndroid, StyleSheet, Text, View } from 'react-native'
 import { FlatList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import {Icon} from 'react-native-elements';
 import StylesConfiguration from '../../utils/StylesConfiguration';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+import FormButton from '../../components/FormButton';
 
 export default function Gallery({
   maxImages,
@@ -14,11 +21,13 @@ export default function Gallery({
   setVideo,
   canPublish,
 }) {
-  const [imagesGallery, setImagesGallery] = useState([]);
+  const [assetsGallery, setAssetsGallery] = useState([]);
   const numColumns = 3;
   const pageSize = 12;
-  const [endCursor, setEndCursor] = useState("0");
+  const [endCursor, setEndCursor] = useState('0');
   const [hasNextPage, setHasNextPage] = useState(true);
+  const [assetType, setAssetType] = useState('Photos');
+  const [showMenu, setShowMenu] = useState(false);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -34,30 +43,35 @@ export default function Gallery({
         console.log('Access to pictures was denied');
         return;
       }
-      loadPhotos();
+      loadAssets();
     }
     init();
-  }, [images]);
+  }, [images, video]);
 
-  const loadPhotos = () => {
-    if (hasNextPage) {
+  const loadAssets = () => {
+    loadAssetsParams(hasNextPage, assetType, endCursor, assetsGallery);
+  }
+
+  const loadAssetsParams = (_hasNextPage, _assetType, _endCursor, assetsLoaded) => {
+    console.log()
+    if (_hasNextPage) {
       CameraRoll.getPhotos({
         first: pageSize,
-        after: endCursor,
-        assetType: 'Photos',
+        after: _endCursor,
+        assetType: _assetType,
       }).then(res => {
-        let postsPaginated = [];
+        let assetsPaginated = [];
         // Se paginan los post de acuerdo a la cantidad de columnas
         res.edges.forEach((p, i) => {
           // si se llega a (i % numColumns === 0) se agrega una nueva pagina
           if (i % numColumns === 0) {
-            postsPaginated.push([]);
+            assetsPaginated.push([]);
           }
           // siempre se agregan los posts en la ultima fila que se agrego
-          postsPaginated[postsPaginated.length - 1].push(p.node.image.uri);
+          assetsPaginated[assetsPaginated.length - 1].push(p.node.image.uri);
         });
-        // setImagesGallery([...imagesGallery, ...postsPaginated]);
-        setImagesGallery([...imagesGallery, ...postsPaginated]);
+        // setAssetsGallery([...assetsGallery, ...assetsPaginated]);
+        setAssetsGallery([...assetsLoaded, ...assetsPaginated]);
         console.log("end:", res.page_info.end_cursor);
         setEndCursor(res.page_info.end_cursor);
         setHasNextPage(res.page_info.has_next_page);
@@ -66,38 +80,78 @@ export default function Gallery({
     }
   };
 
-  const selectImage = (image) => {
-    if (!imageIsSelected(image)) {
-      if (images.length < maxImages) {
-        setImages([...images, image]);
+  const selectAsset = (asset) => {
+    if (assetType === 'Photos') {
+      if (!assetIsSelected(asset)) {
+        if (images.length < maxImages) {
+          setImages([...images, asset]);
+          setVideo('');
+        }
+      } else {
+        setImages(images.filter(i => i !== asset));
       }
-    } else {
-      setImages(images.filter(i => i !== image));
+    }
+    if (assetType === 'Videos') {
+      if (!assetIsSelected(asset)) {
+        setVideo(asset);
+        setImages([]);
+      } else {
+        setVideo('');
+      }
     }
   };
 
-  const imageIsSelected = (image) => {
-    return images.includes(image);
+  const assetIsSelected = (asset) => {
+    if (assetType === 'Photos') {
+      return images.includes(asset);
+    }
+    if (assetType === 'Videos') {
+      return asset === video;
+    }
+  };
+
+  const changeTo = (newAssetType) => {
+    setShowMenu(false);
+    setHasNextPage(true);
+    setAssetType(newAssetType);
+    setEndCursor('0');
+    setAssetsGallery([]);
+    loadAssetsParams(true, newAssetType, '0', []);
   };
 
   const iconSize = 32;
 
   return (
     <View style={styles.container}>
+      <View style={styles.actionsBarTop}>
+        <Menu opened={showMenu} onBackdropPress={() => setShowMenu(false)} >
+          <MenuTrigger
+            text={assetType === 'Photos' ? 'Fotos' : 'Videos'}
+            customStyles={triggerStyles}
+            onPress={() => setShowMenu(true)}
+          />
+          <MenuOptions customStyles={menuOption}>
+            <MenuOption onSelect={() => changeTo('Photos')} text="Fotos" />
+            <MenuOption onSelect={() => changeTo('Videos')} text="Videos" />
+          </MenuOptions>
+        </Menu>
+      </View>
       <View style={styles.gallery}>
         <FlatList
-          data={imagesGallery}
+          data={assetsGallery}
           renderItem={({item}) => (
             <View style={styles.itemContainer}>
-              {item.map((image, i) => (
-                <View style={[styles.item, (imageIsSelected(image) ? styles.imageSelected : {})]} key={i}>
+              {item.map((asset, i) => (
+                <View
+                  style={[
+                    styles.item,
+                    assetIsSelected(asset) ? styles.imageSelected : {},
+                  ]}
+                  key={i}>
                   <TouchableWithoutFeedback
-                    onPress={() => selectImage(image)}
+                    onPress={() => selectAsset(asset)}
                     style={styles.itemImageContainer}>
-                    <Image
-                      source={{uri: image}}
-                      style={styles.itemImage}
-                    />
+                    <Image source={{uri: asset}} style={styles.itemImage} />
                   </TouchableWithoutFeedback>
                 </View>
               ))}
@@ -105,52 +159,50 @@ export default function Gallery({
           )}
           keyExtractor={(item, i) => i.toString()}
           onEndReachedThreshold={0.9}
-          onEndReached={(info) => loadPhotos()}
+          onEndReached={(info) => loadAssets()}
           bouncesZoom={true}
         />
       </View>
-      <View style={styles.actionsBar}>
-        <View style={styles.actionsBarBottom}>
-          <Text style={styles.imagesCounter}>
-            {images.length} / {maxImages}
-          </Text>
-          <View style={styles.imagesContainer}>
-            {images.map((image, i) => (
-              <TouchableOpacity
-                style={styles.miniImage}
-                onPress={() =>
-                  navigation.navigate('ViewNewImage', {
-                    uri: image,
-                    images: images,
-                    setImages: setImages,
-                    navigation: navigation,
-                  })
-                }
-                key={i}>
-                <Image style={styles.miniImage} source={{uri: image}} />
-              </TouchableOpacity>
-            ))}
-          </View>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('PublishPublication', {
-                images: images,
-                setImages: setImages,
-                video: video,
-                setVideo: setVideo,
-                navigation: navigation,
-              })
-            }
-            style={styles.editPicture}
-            disabled={!canPublish()}>
-            <Icon
-              name={canPublish() ? 'done-all' : 'done'}
-              color={canPublish() ? StylesConfiguration.color : 'grey'}
-              size={iconSize}
-              style={styles.action}
-            />
-          </TouchableOpacity>
+      <View style={styles.actionsBarBottom}>
+        <Text style={styles.imagesCounter}>
+          {images.length} / {maxImages}
+        </Text>
+        <View style={styles.imagesContainer}>
+          {images.map((image, i) => (
+            <TouchableOpacity
+              style={styles.miniImage}
+              onPress={() =>
+                navigation.navigate('ViewNewImage', {
+                  uri: image,
+                  images: images,
+                  setImages: setImages,
+                  navigation: navigation,
+                })
+              }
+              key={i}>
+              <Image style={styles.miniImage} source={{uri: image}} />
+            </TouchableOpacity>
+          ))}
         </View>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('PublishPublication', {
+              images: images,
+              setImages: setImages,
+              video: video,
+              setVideo: setVideo,
+              navigation: navigation,
+            })
+          }
+          style={styles.editPicture}
+          disabled={!canPublish()}>
+          <Icon
+            name={canPublish() ? 'done-all' : 'done'}
+            color={canPublish() ? StylesConfiguration.color : 'grey'}
+            size={iconSize}
+            style={styles.action}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -205,12 +257,19 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  actionsBar: {
-    height: 74,
-    flexDirection: "column-reverse",
+  actionsBarTop: {
+    height: 50,
+    flexDirection: 'column',
     alignSelf: 'stretch',
-    alignItems: 'stretch',
-    backgroundColor: 'blue',
+    alignItems: 'flex-end',
+    backgroundColor: 'black',
+  },
+  menu: {
+    marginTop: 10,
+    padding: 5,
+  },
+  menuText: {
+
   },
   imagesContainer: {
     height: 45,
@@ -225,6 +284,7 @@ const styles = StyleSheet.create({
   },
   actionsBarBottom: {
     height: 74,
+    alignSelf: 'stretch',
     backgroundColor: 'black',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -235,3 +295,33 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
+
+const triggerStyles = {
+  triggerText: {
+    color: 'white',
+    alignSelf: 'flex-start',
+  },
+  triggerWrapper: {
+    backgroundColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    borderColor: StylesConfiguration.color,
+    borderWidth: 1,
+    padding: 5,
+    marginTop: 10,
+    width: 150,
+  },
+};
+
+const menuOption = {
+  optionsContainer: {
+    backgroundColor: 'black',
+    padding: 5,
+    borderColor: StylesConfiguration.color,
+    borderWidth: 1,
+    width: 150,
+  },
+  optionText: {
+    color: 'white',
+  },
+};
