@@ -76,6 +76,7 @@ export default function CreateProfile({navigation}) {
     }
     updateCanSubmit();
     setVerifyExistProfile(user && !existProfile);
+    console.log(user.profile ? user.profile : '');
   }, [userPosibleLikes.length, nickname, gender, birthday, user, existProfile]);
 
   const sameDayAsToday = () =>
@@ -84,7 +85,7 @@ export default function CreateProfile({navigation}) {
     birthday.getFullYear() === today.getFullYear();
 
   const getMaximumDate = () => {
-    const maxDate = moment(today).subtract(13, 'years');
+    const maxDate = moment(today).subtract(14, 'years');
     const maxDateObj = new Date(
       maxDate.year(),
       maxDate.month(),
@@ -118,7 +119,8 @@ export default function CreateProfile({navigation}) {
     profile.birth_date = `${birthday.getFullYear()}-${twoDigits(birthday.getMonth() + 1)}-${twoDigits(birthday.getDate())}`;
     profile.gender = gender === 'UNDEFINED2' ? 'UNDEFINED' : gender;
     profile.is_ready = true;
-    
+    profile.display_name = nickname;
+
     profiles_services
       .edit(user.profile.id, profile)
       .then((res) => navigation.navigate('Wellcoming'));
