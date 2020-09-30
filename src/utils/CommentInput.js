@@ -15,6 +15,8 @@ export default function CommentInput({
   style,
   initialText,
   isEdition,
+  countComments,
+  setCountComments
 }) {
   const [newComment, setNewComment] = useState(initialText);
   const [showSugestions, setShowSugestions] = useState(false);
@@ -56,6 +58,7 @@ export default function CommentInput({
       console.log(res.data);
     } else {
       const res = await comments_services.create(_comment);
+      setCountComments(countComments + 1) //sumo al agregar new comment
       console.log(res.data);
       _comment.id = res.data.id;
       _comment.user_owner = {

@@ -137,6 +137,14 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     );
   };
 
+  const goConversations = ()=> {
+    if(isLoggedUser){
+      navigation.navigate('MyConversations')
+    }else{
+      console.log('chat with a profile')
+    }
+  }
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -192,11 +200,15 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
               <Image source={require('../assets/corazon_gris.png')} />
               <Text style={styles.icon_numbers}>{8}k</Text>
             </View>
+            
+            <TouchableOpacity onPress={goConversations}>
             <Image
               source={require('../assets/sobre_amarillo.png')}
               style={styles.sobre_amarillo}
               resizeMode={'contain'}
             />
+            </TouchableOpacity>
+
           </View>
           {
             //si isLoggedUser es verdadero mostrar columna con boton amigos, te siguen, CHALLENGE, y icono de sobre amarillo

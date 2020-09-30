@@ -14,9 +14,9 @@ import {Icon} from 'react-native-elements';
 
 let window = Dimensions.get('window');
 
-const ProfileSearch = ({item}) => {
+const ProfileSearch = ({item, key}) => {
   return (
-    <View style={{flexDirection: 'row'}}>
+    <View style={{flexDirection: 'row'}} key={key}>
       <View style={styles.column}>
         <View style={{flexDirection: 'row'}}>
           <Image
@@ -33,6 +33,7 @@ const ProfileSearch = ({item}) => {
         </View>
       </View>
 
+      <FormButton_small buttonTitle="Seguir" style={{top: 5}} />
       <Icon name="email" color={StylesConfiguration.color} size={46} />
     </View>
   );

@@ -13,7 +13,7 @@ import {
 import { AuthContext } from '../navigation/AuthProvider';
 import comments_services from '../services/comments_services';
 
-export default function PublicationsComments({post, comment, comments, setComments, navigation}) {
+export default function PublicationsComments({post, comment, comments, setComments, navigation, setCountComments, countComments}) {
   const [showAnswerToComments, setShowAnswerToComments] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -67,6 +67,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
   const doDeleteComment = () => {
     comments_services.delete(comment.id).then(res => {
       setComments(comments.filter(c => c.id !== comment.id));
+      setCountComments(countComments - 1) //a nivel local resto 1 al comment
       setShowMenu(false);
     });
   };

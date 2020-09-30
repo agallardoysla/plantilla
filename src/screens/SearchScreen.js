@@ -18,6 +18,7 @@ import ImagePostSearch from '../screens/ImagePostSearch';
 import ProfileSearch from '../screens/ProfileSearch';
 import users_services from '../services/users_services';
 import {set} from 'react-native-reanimated';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
 export default function SearchScreen({navigation}) {
   const {user, logout} = useContext(AuthContext);
@@ -42,7 +43,7 @@ export default function SearchScreen({navigation}) {
       loadPost();
     }
   }, [posts, setPosts]); //los posts se actualizan constantemente pero los perfiles son traidos una vez
-
+  
   const loadPost = () => {
     posts_services.list(page).then((res) => {
       console.log('nuevos posts', res.data.length);
@@ -57,6 +58,7 @@ export default function SearchScreen({navigation}) {
 
   return (
     <View style={{flex: 1, backgroundColor: 'black'}}>
+      
       <View style={styles.row}>
         <FormSearchInput
           value={valueSearch}
@@ -64,17 +66,20 @@ export default function SearchScreen({navigation}) {
         />
       </View>
 
+
+    <ScrollView>
     {valueSearch.length > 0 ?  
-    
+   
     users.map((item, i) => {
-        if (item.id === parseInt(valueSearch)) {
+
+        if (item.display_name.toLowerCase().indexOf(valueSearch.toLowerCase()) !== -1 ) {
           console.log('Si existe el user: ' + item.id);
-          return <ProfileSearch item={item} />;
+          return <ProfileSearch item={item} key={item.id}/>;
         } else {
           return null;
         }
       }) : 
-    
+ 
       <View style={styles.container}>
       <FlatList
         data={posts}
@@ -88,11 +93,10 @@ export default function SearchScreen({navigation}) {
         numColumns={3}
       />
     </View>
-
-
     }
      
-      
+ 
+      </ScrollView>
      
     </View>
   );

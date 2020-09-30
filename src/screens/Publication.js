@@ -21,12 +21,20 @@ let window = Dimensions.get('window');
 export default function Publication({post, navigation}) {
   const [showComments, setShowComments] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
-  const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(true);
+  const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
+    true,
+  );
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
   const {user} = useContext(AuthContext);
-  const [likesCounter, setLikesCounter] = useState(post.reactionscount.REACTION_TYPE_PRUEBA);
-  const [iLiked, setILiked] = useState(post.reactions_details.filter((value) => value.user_id === user.id).length > 0);
+  const [likesCounter, setLikesCounter] = useState(
+    post.reactionscount.REACTION_TYPE_PRUEBA,
+  );
+  const [iLiked, setILiked] = useState(
+    post.reactions_details.filter((value) => value.user_id === user.id).length >
+      0,
+  );
+  const [countComments, setCountComments] = useState(post.comments.length)
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
@@ -81,13 +89,13 @@ export default function Publication({post, navigation}) {
     try {
       //si contiene algo lo elimino si no lo agrego
       if (iLiked) {
-        posts_services.deleteReaction(post.id).then(_ => {
+        posts_services.deleteReaction(post.id).then((_) => {
           console.log('like eliminado');
           setLikesCounter(likesCounter - 1);
           setILiked(false);
         });
       } else {
-        posts_services.addReaction(post.id, 1).then(res => {
+        posts_services.addReaction(post.id, 1).then((res) => {
           console.log('like agregado');
           setLikesCounter(likesCounter + 1);
           setILiked(true);
@@ -118,44 +126,83 @@ export default function Publication({post, navigation}) {
 
       {/*Inicio de iconos de la publicaciòn*/}
       <View style={styles.icon_container}>
-        <Image
-          source={require('../assets/ojo_vista.png')}
-          style={[styles.icon_post, styles.icon_ojo]}
-        />
-        <Text style={styles.icon_numbers}>{post.views_count}</Text>
 
-        <TouchableOpacity onPress={AddLike}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent:'center'
+          }}>
           <Image
-            source={
-              iLiked
-                ? require('../assets/corazon_limon.png')
-                : require('../assets/corazon_gris.png')
-            }
+            source={require('../assets/ojo_vista.png')}
+            style={[styles.icon_post, styles.icon_ojo]}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('PostLikes', post.user_owner.display_name)
-          }>
-          <Text style={styles.icon_numbers}>{likesCounter}</Text>
-        </TouchableOpacity>
+          <Text style={styles.icon_numbers_view}>{post.views_count}</Text>
+        </View>
 
-        <TouchableOpacity onPress={getAndSetShowComments}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent:'center'
+          }}>
+          <TouchableOpacity onPress={AddLike}>
+            <Image
+              source={
+                iLiked
+                  ? require('../assets/corazon_limon.png')
+                  : require('../assets/corazon_gris.png')
+              }
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('PostLikes', post.user_owner.display_name)
+            }>
+            <Text style={styles.icon_numbers_like}>{likesCounter}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent:'center',
+        
+          }}>
+          <TouchableOpacity onPress={getAndSetShowComments}>
+            <Image
+              source={require('../assets/comentario.png')}
+              style={[styles.icon_post, styles.icon_comentario]}
+            />
+          </TouchableOpacity>
+
+          <Text style={styles.icon_numbers_comment}>{countComments}</Text>
+        </View>
+
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent:'center'
+          }}>
           <Image
-            source={require('../assets/comentario.png')}
-            style={[styles.icon_post, styles.icon_comentario]}
+            source={require('../assets/compartir.png')}
+            style={[styles.icon_post, styles.icon_compartir]}
           />
-        </TouchableOpacity>
+        </View>
 
-        <Image
-          source={require('../assets/compartir.png')}
-          style={[styles.icon_post, styles.icon_compartir]}
-        />
-
-        <Image
-          source={require('../assets/menu_desbordamiento.png')}
-          style={[styles.icon_post, styles.icon_mostrarMas]}
-        />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent:'center'
+          }}>
+          <Image
+            source={require('../assets/menu_desbordamiento.png')}
+            style={[styles.icon_post, styles.icon_mostrarMas]}
+          />
+        </View>
       </View>
       {/*Fin de iconos de una publicaciòn*/}
 
@@ -185,6 +232,8 @@ export default function Publication({post, navigation}) {
               comments={comments}
               setComments={setComments}
               navigation={navigation}
+              setCountComments={setCountComments}
+              countComments={countComments}
             />
           ))
         )
@@ -217,6 +266,8 @@ export default function Publication({post, navigation}) {
           setSavingComment={setSavingComment}
           style={styles.newComment}
           initialText={''}
+          setCountComments={setCountComments}
+          countComments={countComments}
         />
       )}
       {/*Fin de nuevo comentario hacia la publicaciòn */}
@@ -253,7 +304,7 @@ export default function Publication({post, navigation}) {
       {/*Finaliza franja amarilla */}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -287,44 +338,57 @@ const styles = StyleSheet.create({
   },
   icon_container: {
     flex: 1,
+    justifyContent: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 10,
-    paddingHorizontal: 10,
   },
   icon_post: {
     marginRight: 10,
   },
   icon_ojo: {
-    width: 20,
-    height: 20,
-    marginRight: 5,
+    width: 25,
+    height: 25,
   },
   icon_corazon: {
-    width: 20,
-    height: 18,
-    marginRight: 5,
+    width: 25,
+    height: 25,
   },
   icon_comentario: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
   icon_compartir: {
-    width: 23,
-    height: 23,
+    width: 25,
+    height: 25,
   },
   icon_mostrarMas: {
     width: 33,
     height: 10,
   },
-  icon_numbers: {
+  icon_numbers_view: {
     color: 'white',
-    marginRight: 15,
+    fontSize: 14,
+    top: 3,
+    marginHorizontal: -5
   },
+  icon_numbers_like:{
+    color:'white',
+    fontSize: 14,
+    marginHorizontal: 5
+
+  },
+
+  icon_numbers_comment:{
+    color:'white',
+    fontSize: 14,
+    marginHorizontal: -5
+
+  },
+
   icon_menu_desbordamiento: {
-    top: 5,
-    left: -5,
+    top: 0,
+    left: 0,
   },
   description: {
     flex: 1,

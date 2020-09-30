@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {Image} from 'react-native';
+import {Image, StatusBar} from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import MyProfileScreen from '../screens/MyProfileScreen';
 import OtherProfile from '../screens/OtherProfile';
@@ -17,6 +17,7 @@ import PostLikes from '../screens/PostLikes';
 import Publication from '../screens/Publication';
 import ImagePostSearch from '../screens/ImagePostSearch';
 import ProfileSearch from '../screens/ProfileSearch';
+import MyConversations from '../screens/MyConversations';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,6 +53,7 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen name="Profile" component={MyProfileScreen} />
       <Stack.Screen name="Followed" component={Followed} />
       <Stack.Screen name="Followers" component={Followers} />
+      <Stack.Screen name="MyConversations" component={MyConversations}/>
     </Stack.Navigator>
   );
 };
@@ -117,6 +119,9 @@ const HomeStack = () => {
   };
 
   return (
+    <>
+    <StatusBar backgroundColor='black'   />
+
     <Tab.Navigator
       initialRouteName="HomeGroup"
       tabBarOptions={{
@@ -193,6 +198,7 @@ const HomeStack = () => {
         options={{title: ''}}
       />
     </Tab.Navigator>
+    </>
   );
 };
 
