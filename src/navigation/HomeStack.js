@@ -59,6 +59,7 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen name="Followers" component={Followers} />
       <Stack.Screen name="MyConversations" component={MyConversations}/>
       <Stack.Screen name="Preferences" component={Preferences} />
+      <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
     </Stack.Navigator>
   );
 };

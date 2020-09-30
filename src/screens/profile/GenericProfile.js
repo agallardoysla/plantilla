@@ -202,11 +202,11 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
             </View>
             
             <TouchableOpacity onPress={goConversations}>
-            <Image
-              source={require('../../assets/sobre_amarillo.png')}
-              style={styles.sobre_amarillo}
-              resizeMode={'contain'}
-            />
+              <Image
+                source={require('../../assets/sobre_amarillo.png')}
+                style={styles.sobre_amarillo}
+                resizeMode={'contain'}
+              />
             </TouchableOpacity>
 
           </View>
@@ -229,15 +229,22 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
             renderItem={({item}) => (
               <View style={styles.itemContainer}>
                 {item.map((post, i) => (
-                  <Image
-                    source={{
-                      uri: post.files_with_urls[0]
-                        ? post.files_with_urls[0].url
-                        : '',
-                    }}
-                    style={styles.itemImage}
-                    key={i}
-                  />
+                  <View style={styles.item} key={i}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate('PublicationDetails', {post})
+                      }
+                      style={styles.itemImageContainer}>
+                      <Image
+                        source={{
+                          uri: post.files_with_urls[0]
+                            ? post.files_with_urls[0].url
+                            : '',
+                        }}
+                        style={styles.itemImage}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 ))}
               </View>
             )}
@@ -415,11 +422,23 @@ const styles = StyleSheet.create({
     width: 115,
   },
   itemContainer: {
-    alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'stretch',
     height: 120,
+  },
+  item: {
+    flex: 1,
+    height: 120,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'stretch',
+  },
+  itemImageContainer: {
+    height: 120,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
   },
   itemImage: {
     width: undefined,
