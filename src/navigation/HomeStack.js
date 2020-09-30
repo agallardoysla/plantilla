@@ -135,7 +135,7 @@ const HomeStack = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="HomeGroup"
+      initialRouteName="NewPublicationGroup"
       tabBarOptions={{
         activeBackgroundColor: 'black',
         inactiveBackgroundColor: 'black',

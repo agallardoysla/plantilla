@@ -1,7 +1,7 @@
 import CameraRoll from '@react-native-community/cameraroll';
 import React, { useEffect, useState } from 'react';
 import { Image, PermissionsAndroid, StyleSheet, Text, View } from 'react-native';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import {Icon} from 'react-native-elements';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 
@@ -57,14 +57,23 @@ export default function Gallery({
           // siempre se agregan los posts en la ultima fila que se agrego
           postsPaginated[postsPaginated.length - 1].push(p);
         });
+        // setImagesGallery([...imagesGallery, ...postsPaginated]);
         setImagesGallery([...imagesGallery, ...postsPaginated]);
         console.log("end:", res.page_info.end_cursor);
         setEndCursor(res.page_info.end_cursor);
         setHasNextPage(res.page_info.has_next_page);
-        setImages(res.edges.slice(0,5).map(edge => edge.node.image.uri));
+        // setImages(res.edges.slice(0,5).map(edge => edge.node.image.uri));
       });
     }
   };
+
+  const selectImage = (image) => {
+    setImages(...images, image);
+  }
+
+  const imageIsSelected = (image) => {
+    return images.includes(image);
+  }
 
   const iconSize = 32;
 
@@ -76,16 +85,16 @@ export default function Gallery({
           renderItem={({item}) => (
             <View style={styles.itemContainer}>
               {item.map((image, i) => (
-                // <TouchableOpacity
-                //   onPress={() => {}}
-                //   style={styles.itemImage}
-                // >
-                  <Image
-                    source={{uri: image.node.image.uri}}
-                    style={styles.itemImage}
-                    key={i}
-                  />
-                // </TouchableOpacity>
+                <View style={styles.item} key={i}>
+                  <TouchableWithoutFeedback
+                    onPress={() => selectImage(image)}
+                    style={styles.itemImageContainer}>
+                    <Image
+                      source={{uri: image.node.image.uri}}
+                      style={styles.itemImage}
+                    />
+                  </TouchableWithoutFeedback>
+                </View>
               ))}
             </View>
           )}
@@ -156,11 +165,23 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   itemContainer: {
-    alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'stretch',
     height: 120,
+  },
+  item: {
+    flex: 1,
+    height: 120,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'stretch',
+  },
+  itemImageContainer: {
+    height: 120,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
   },
   itemImage: {
     width: undefined,

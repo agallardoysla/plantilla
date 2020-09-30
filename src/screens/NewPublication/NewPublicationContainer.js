@@ -36,7 +36,7 @@ export default function NewPublicationContainer({navigation}) {
       <Swiper
         style={styles.slider}
         showsButtons={true}
-        index={1}
+        index={0}
         loop={false}
         showsPagination={false}
       >
