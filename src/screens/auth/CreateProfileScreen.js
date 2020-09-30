@@ -9,6 +9,7 @@ import CheckBox from '@react-native-community/checkbox';
 import moment from 'moment';
 import {AuthContext} from '../../navigation/AuthProvider';
 import profiles_services from '../../services/profiles_services';
+import users_services from '../../services/users_services';
 
 export default function CreateProfile({navigation}) {
   const today = new Date();
@@ -84,7 +85,7 @@ export default function CreateProfile({navigation}) {
     birthday.getFullYear() === today.getFullYear();
 
   const getMaximumDate = () => {
-    const maxDate = moment(today).subtract(13, 'years');
+    const maxDate = moment(today).subtract(14, 'years');
     const maxDateObj = new Date(
       maxDate.year(),
       maxDate.month(),
@@ -111,17 +112,18 @@ export default function CreateProfile({navigation}) {
     setCanSubmit(nickname !== '' && !existNickname && !sameDayAsToday() && gender !== '');
   };
 
-  const submitProfile = () => {
+  const submitProfile = async () => {
     const profile = {...user.profile};
 
     const twoDigits = (n) => (n < 10 ? '0' + n : n);
     profile.birth_date = `${birthday.getFullYear()}-${twoDigits(birthday.getMonth() + 1)}-${twoDigits(birthday.getDate())}`;
     profile.gender = gender === 'UNDEFINED2' ? 'UNDEFINED' : gender;
     profile.is_ready = true;
-    
-    profiles_services
-      .edit(user.profile.id, profile)
-      .then((res) => navigation.navigate('Wellcoming'));
+
+    await profiles_services.edit(user.id, profile);
+    await users_services.edit(user.id, {display_name: nickname});
+
+    navigation.navigate('Wellcoming');
   };
 
   const GenderSelectionCheckbox = (props) => (

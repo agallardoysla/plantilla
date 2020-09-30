@@ -5,8 +5,6 @@ import {
   StyleSheet,
   Image,
   Dimensions,
-  TextInput,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
@@ -15,6 +13,7 @@ import StylesConfiguration from '../utils/StylesConfiguration';
 import posts_services from '../services/posts_services';
 import PublicationsComments from './PublicationsComments';
 import CommentInput from '../utils/CommentInput';
+import {AuthContext} from '../navigation/AuthProvider';
 import CommentFormatter from '../utils/CommentFormatter';
 
 let window = Dimensions.get('window');
@@ -25,19 +24,22 @@ export default function Publication({post, navigation}) {
   const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(true);
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
+  const {user} = useContext(AuthContext);
+  const [likesCounter, setLikesCounter] = useState(post.reactionscount.REACTION_TYPE_PRUEBA);
+  const [iLiked, setILiked] = useState(post.reactions_details.filter((value) => value.user_id === user.id).length > 0);
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
-  
+
   const toView = (file, i) => {
     // console.log(file, i);
     return isImage(file.url) ? (
       <Image
         source={{uri: file.url}}
-        style={styles.image_post}
+        style={[styles.image_post, i >= 1 ? {marginLeft: 10,} : {}]}
         key={i}
-        resizeMode="cover"
+        resizeMode="contain"
       />
     ) : (
       <Video
@@ -75,6 +77,27 @@ export default function Publication({post, navigation}) {
     // getAndSetShowComments();
   };
 
+  const AddLike = async () => {
+    try {
+      //si contiene algo lo elimino si no lo agrego
+      if (iLiked) {
+        posts_services.deleteReaction(post.id).then(_ => {
+          console.log('like eliminado');
+          setLikesCounter(likesCounter - 1);
+          setILiked(false);
+        });
+      } else {
+        posts_services.addReaction(post.id, 1).then(res => {
+          console.log('like agregado');
+          setLikesCounter(likesCounter + 1);
+          setILiked(true);
+        });
+      }
+    } catch (error) {
+      console.log('Error de agregar like' + error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/*Inicia Nombre de usuario como encabezado*/}
@@ -86,9 +109,15 @@ export default function Publication({post, navigation}) {
       {/*Inicia Foto de la publicaciòn */}
       {post.files_with_urls.length > 0 ? (
         <View style={styles.postImagesContainer}>
-          <ScrollView horizontal={true} indicatorStyle="white">
-            {post.files_with_urls.map(toView)}
-          </ScrollView>
+          <TouchableOpacity
+            style={styles.postImagesContainerPresable}
+            onPress={() =>
+              navigation.navigate('PublicationDetails', {post})
+            }>
+            <ScrollView horizontal={true} indicatorStyle="white">
+              {post.files_with_urls.map(toView)}
+            </ScrollView>
+          </TouchableOpacity>
         </View>
       ) : null}
       {/*Finaliza Foto de la publicaciòn*/}
@@ -101,16 +130,21 @@ export default function Publication({post, navigation}) {
         />
         <Text style={styles.icon_numbers}>{post.views_count}</Text>
 
-        <TouchableOpacity onPress={() => navigation.navigate('PostLikes', post.user_owner.display_name)}>
+        <TouchableOpacity onPress={AddLike}>
           <Image
-            source={require('../assets/corazon_gris.png')}
-            style={[styles.icon_post, styles.icon_corazon]}
+            source={
+              iLiked
+                ? require('../assets/corazon_limon.png')
+                : require('../assets/corazon_gris.png')
+            }
           />
         </TouchableOpacity>
-
-        <Text style={styles.icon_numbers}>
-          {post.reactionscount.REACTION_TYPE_PRUEBA}
-        </Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('PostLikes', post.user_owner.display_name)
+          }>
+          <Text style={styles.icon_numbers}>{likesCounter}</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={getAndSetShowComments}>
           <Image
@@ -154,6 +188,9 @@ export default function Publication({post, navigation}) {
               post={post}
               comment={comment}
               key={i}
+              comments={comments}
+              setComments={setComments}
+              navigation={navigation}
             />
           ))
         )
@@ -227,7 +264,8 @@ export default function Publication({post, navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     alignItems: 'stretch',
     backgroundColor: 'black',
     marginBottom: 30,
@@ -240,22 +278,31 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     color: 'white',
     fontWeight: 'bold',
+    marginRight: 5,
   },
   postImagesContainer: {
-    flex: 1,
-    height: 300,
+    height: 360,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    marginBottom: 5,
+    marginHorizontal: 5,
+    // backgroundColor: 'blue',
+  },
+  postImagesContainerPresable: {
+    height: 360,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    marginBottom: 5,
+    alignItems: 'flex-start',
+    // backgroundColor: 'red',
   },
   image_post: {
-    width: window.width - 20,
-    height: 300,
+    width: window.width - 10,
+    height: 360,
   },
   icon_container: {
-    flex: 1,
+    // flex: 1,
+    height: 44,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

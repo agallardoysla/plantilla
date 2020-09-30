@@ -58,6 +58,10 @@ export default function CommentInput({
       const res = await comments_services.create(_comment);
       console.log(res.data);
       _comment.id = res.data.id;
+      _comment.user_owner = {
+        user_id: user.id,
+        display_name: user.display_name,
+      };
     }
     setNewComment('');
     callback(_comment);

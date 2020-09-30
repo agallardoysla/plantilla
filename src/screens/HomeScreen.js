@@ -21,6 +21,8 @@ export default function HomeScreen({navigation}) {
       setPosts(posts.concat(res.data));
       setPage(page + 1);
     });
+
+
   };
 
   return (

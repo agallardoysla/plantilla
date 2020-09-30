@@ -1,18 +1,98 @@
-import React, {useContext} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useContext, useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Dimensions,
+} from 'react-native';
+
 import FormButton from '../components/FormButton';
 import {AuthContext} from '../navigation/AuthProvider';
+import posts_services from '../services/posts_services';
+import {FeedContext} from '../navigation/FeedContext';
+import FormSearchInput from '../components/FormSearchInput';
+import ImagePostSearch from '../screens/ImagePostSearch';
+import ProfileSearch from '../screens/ProfileSearch';
+import users_services from '../services/users_services';
+import {set} from 'react-native-reanimated';
 
-//Una vez en el home, puedo acceder a los datos del usuario por medio del state user
-export default function SearchScreen() {
+export default function SearchScreen({navigation}) {
   const {user, logout} = useContext(AuthContext);
+  const {posts, setPosts} = useContext(FeedContext);
+  const [page, setPage] = useState(0);
+  const [valueSearch, setValueSearch] = useState('');
+  const [result, setResult] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [est, setEst] = useState(false);
+
+  useEffect(() => {
+    //promesa para traer valor de usuario solo una vez
+    users_services.list().then((res) => {
+      let usersList = [];
+      res.data.forEach((p, i) => {
+        usersList.push(p);
+      });
+      setUsers(usersList);
+    });
+
+    if (posts.length === 0) {
+      loadPost();
+    }
+  }, [posts, setPosts]); //los posts se actualizan constantemente pero los perfiles son traidos una vez
+
+  const loadPost = () => {
+    posts_services.list(page).then((res) => {
+      console.log('nuevos posts', res.data.length);
+      setPosts(posts.concat(res.data));
+      setPage(page + 1);
+    });
+  };
+
+  const showSearch = (e) => {
+    setValueSearch(e);
+  };
 
   return (
-    <View style={styles.container}>
+    <View style={{flex: 1, backgroundColor: 'black'}}>
+      <View style={styles.row}>
+        <FormSearchInput
+          value={valueSearch}
+          onChangeText={(e) => showSearch(e)}
+        />
+      </View>
 
-      {/* <Text style={styles.text}>Holaa {user.uid}</Text> */}
-      <Text style={styles.text}>Search</Text>
-      {/* <FormButton buttonTitle="Logout" onPress={() => logout()} /> */}
+    {valueSearch.length > 0 ?  
+    
+    users.map((item, i) => {
+        if (item.id === parseInt(valueSearch)) {
+          console.log('Si existe el user: ' + item.id);
+          return <ProfileSearch item={item} />;
+        } else {
+          return null;
+        }
+      }) : 
+    
+      <View style={styles.container}>
+      <FlatList
+        data={posts}
+        renderItem={({item, index}) => {
+          return <ImagePostSearch post={item} navigation={navigation} />;
+        }}
+        onEndReachedThreshold={0.6}
+        onEndReached={(info) => loadPost()}
+        bouncesZoom={true}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={3}
+      />
+    </View>
+
+
+    }
+     
+      
      
     </View>
   );
@@ -21,12 +101,20 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'black',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+    paddingHorizontal: 0,
     backgroundColor: 'black',
   },
   text: {
     fontSize: 20,
     color: 'white',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
 });

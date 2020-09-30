@@ -1,25 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View, TextInput, Image} from 'react-native';
 import {windowHeight, windowWidth} from '../utils/Dimensions';
 import StylesConfiguration from '../utils/StylesConfiguration';
 
-export default function FormSearchInput({
-  labelValue,
-  placeholderText,
-  ...rest
-}) {
+export default function FormSearchInput({labelValue, placeholderText, ...rest }){
   return (
-    <View style={styles.container}>
+  
+    <View style={styles.container} >
       <View style={styles.SectionStyle}>
         <Image
           source={require('../assets/lupa.png')}
           style={styles.ImageStyle}
         />
-        <TextInput style={{flex: 1, color: 'white'}} underlineColorAndroid="transparent" />
+        <TextInput style={{flex: 1, color: 'white'}} underlineColorAndroid="transparent" {...rest}/>
       </View>
     </View>
-  );
-}
+  )}
 
 const styles = StyleSheet.create({
   container: {

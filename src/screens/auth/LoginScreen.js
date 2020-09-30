@@ -35,7 +35,7 @@ export default function LoginScreen({navigation}) {
   };
 
   const updateCanSubmit = () => {
-    console.log(emailIsOk(email) && passwordIsOk(password));
+    console.log("can submit: ", emailIsOk(email) && passwordIsOk(password));
     setCanSubmit(emailIsOk(email) && passwordIsOk(password));
   };
 
