@@ -23,7 +23,7 @@ export default function PublishPublication({route}) {
   const doPubliish = async () => {
     setPublishing(true);
     var re = /(?:\.([^.]+))?$/;
-    let paths = images.length > 0 ? images.map((image) => image.path) : [video];
+    let paths = images.length > 0 ? images : [video];
     paths = paths.map((p) => {
       return {
         url: p,

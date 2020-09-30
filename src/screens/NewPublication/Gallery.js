@@ -44,7 +44,7 @@ export default function Gallery({maxImages, images, setImages}) {
         postsPaginated[postsPaginated.length - 1].push(p);
       });
       setImagesGallery(postsPaginated);
-      setImages(res.edges.slice(0,3).map(edge => edge.node.image.uri));
+      // setImages(res.edges.slice(0,3).map(edge => edge.node.image.uri));
     });
   };
 
