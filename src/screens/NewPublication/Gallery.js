@@ -12,35 +12,39 @@ export default function Gallery({
   const numColumns = 3;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(async () => {
-    const result = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      {
-        title: 'Permission Explanation',
-        message: 'ReactNativeForYou would like to access your photos!',
-      },
-    );
-    if (result !== 'granted') {
-      console.log('Access to pictures was denied');
-      return;
-    }
-  
-    CameraRoll.getPhotos({
-      first: 50,
-      assetType: 'Photos',
-    }).then(res => {
-      let postsPaginated = [];
-      // Se paginan los post de acuerdo a la cantidad de columnas
-      res.edges.forEach((p, i) => {
-        // si se llega a (i % numColumns === 0) se agrega una nueva pagina
-        if (i % numColumns === 0) {
-          postsPaginated.push([]);
-        }
-        // siempre se agregan los posts en la ultima fila que se agrego
-        postsPaginated[postsPaginated.length - 1].push(p);
+  useEffect(() => {
+    const init = async () => {
+      const result = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'Permission Explanation',
+          message: 'ReactNativeForYou would like to access your photos!',
+        },
+      );
+      if (result !== 'granted') {
+        console.log('Access to pictures was denied');
+        return;
+      }
+    
+      CameraRoll.getPhotos({
+        first: 50,
+        assetType: 'Photos',
+      }).then(res => {
+        let postsPaginated = [];
+        // Se paginan los post de acuerdo a la cantidad de columnas
+        res.edges.forEach((p, i) => {
+          // si se llega a (i % numColumns === 0) se agrega una nueva pagina
+          if (i % numColumns === 0) {
+            postsPaginated.push([]);
+          }
+          // siempre se agregan los posts en la ultima fila que se agrego
+          postsPaginated[postsPaginated.length - 1].push(p);
+        });
+        setImagesGallery(postsPaginated);
+        setImages([res.edges[0].node.image.uri]);
       });
-      setImagesGallery(postsPaginated);
-    });
+    }
+    init();
   }, []);
 
   return (

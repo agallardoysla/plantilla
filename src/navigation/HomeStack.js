@@ -5,16 +5,13 @@ import HomeScreen from '../screens/HomeScreen';
 import MyProfileScreen from '../screens/MyProfileScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import SearchScreen from '../screens/SearchScreen';
-import NewPublicationScreen from '../screens/NewPublicationScreen';
 import Followed from '../screens/Followed';
 import Followers from '../screens/Followers';
 import PostComments from '../screens/PostComments';
-import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import PostLikes from '../screens/PostLikes';
 import Publication from '../screens/Publication';
-import TakePicture from '../screens/NewPublication/TakePicture';
 import ViewNewImage from '../screens/NewPublication/ViewNewImage';
 import NewPublicationContainer from '../screens/NewPublication/NewPublicationContainer';
 

@@ -1,10 +1,56 @@
 import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import {Icon} from 'react-native-elements';
+
+const height = Dimensions.get('window').height;
+const iconSize = 40;
 
 export default function ViewNewImage({route}) {
+
+  const {uri}
+
+  const tryEdit = () => {
+    Alert.alert('Editar imagen');
+  };
+
+  const tryDelete = () => {
+    Alert.alert(
+      '¿Quitar imagen de la publicación?',
+      'Si es de la galeria de imagenes, se puede agregar nuevamente',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => 
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={{uri: route.params.uri}} />
+      <View style={styles.actionsContainer}>
+        <Icon
+          onPress={tryEdit}
+          name={'edit'}
+          color="#FFFFFF"
+          size={iconSize}
+          style={styles.action}
+        />
+        <Icon
+          onPress={tryDelete}
+          name={'delete'}
+          color="#FFFFFF"
+          size={iconSize}
+          style={styles.action}
+        />
+      </View>
     </View>
   );
 }
@@ -13,10 +59,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'black',
     alignItems: 'stretch',
   },
   image: {
-    flex: 1,
+    height,
+  },
+  actionsContainer: {
+    height: 50,
+    bottom: 123,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  action: {
+    opacity: 1,
   },
 });

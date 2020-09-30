@@ -31,15 +31,20 @@ export default function NewPublicationContainer({navigation}) {
         autoplayDirection={false}
       > */}
       <Swiper
-        style={styles.slider} 
+        style={styles.slider}
         showsButtons={false}
         index={1}
         loop={false}
         showsPagination={false}
       >
-        <Gallery style={styles.view} />
-        <TakePicture 
-          style={styles.view} 
+        <Gallery
+          style={styles.view}
+          maxImages={maxImages}
+          images={images}
+          setImages={setImages}
+        />
+        <TakePicture
+          style={styles.view}
           navigation={navigation}
           maxDuration={maxDuration}
           maxImages={maxImages}

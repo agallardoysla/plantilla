@@ -173,9 +173,14 @@ export default function TakePicture({
                   {images.map((image, i) => (
                     <TouchableOpacity
                       style={styles.miniImage}
-                      onPress={() => navigation.navigate('ViewNewImage', {uri: image})}
-                      key={i}
-                    >
+                      onPress={() =>
+                        navigation.navigate('ViewNewImage', {
+                          uri: image,
+                          setImages: setImages,
+                          index: i,
+                        })
+                      }
+                      key={i}>
                       <Image style={styles.miniImage} source={{uri: image}} />
                     </TouchableOpacity>
                   ))}
