@@ -9,11 +9,11 @@ import {
   Alert,
 } from 'react-native';
 
-import FormButton from '../components/FormButton';
-import StylesConfiguration from '../utils/StylesConfiguration';
+import FormButton from '../../components/FormButton';
+import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import users_services from '../services/users_services';
-import { AuthContext } from '../navigation/AuthProvider';
+import users_services from '../../services/users_services';
+import { AuthContext } from '../../navigation/AuthProvider';
 
 const numColumns = 3; //para el flatList
 
@@ -168,7 +168,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           <View style={[styles.profileDataColumn, styles.columnCenter]}>
             <View style={styles.profleFoto}>
               <Image
-                source={require('../assets/foto_perfil_superior.png')}
+                source={require('../../assets/foto_perfil_superior.png')}
                 style={styles.circle_image}
               />
             </View>
@@ -178,7 +178,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
                   style={styles.tuerca_blanca_container}
                   onPress={() => Alert.alert('configuraciones')}>
                   <Image
-                    source={require('../assets/tuerca_blanca.png')}
+                    source={require('../../assets/tuerca_blanca.png')}
                     style={styles.tuerca_blanca}
                     resizeMode={'center'}
                   />
@@ -189,11 +189,11 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
               <Text style={styles.name_user}>@{localUser.display_name}</Text>
             </View>
             <View style={styles.folowersInfo}>
-              <Image source={require('../assets/corazon_gris.png')} />
+              <Image source={require('../../assets/corazon_gris.png')} />
               <Text style={styles.icon_numbers}>{8}k</Text>
             </View>
             <Image
-              source={require('../assets/sobre_amarillo.png')}
+              source={require('../../assets/sobre_amarillo.png')}
               style={styles.sobre_amarillo}
               resizeMode={'contain'}
             />

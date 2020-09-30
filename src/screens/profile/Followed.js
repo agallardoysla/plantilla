@@ -8,8 +8,8 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import StylesConfiguration from '../utils/StylesConfiguration';
-import FormButton_small from '../components/FormButton_small';
+import StylesConfiguration from '../../utils/StylesConfiguration';
+import FormButton_small from '../../components/FormButton_small';
 import {Icon} from 'react-native-elements';
 
 let window = Dimensions.get('window');
@@ -68,24 +68,24 @@ const Followed = ({navigation}) => {
         <TouchableOpacity onPress={go_back}>
           <Image
             style={styles.boton_back}
-            source={require('../assets/boton_volver_atras.png')}
+            source={require('../../assets/boton_volver_atras.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.titulo}>SEGUIDORES</Text>
+        <Text style={styles.titulo}>SEGUIDOS</Text>
 
         <FlatList
           data={data}
           renderItem={({item}) => (
             <View style={styles.row_content}>
               <Image
-                source={require('../assets/pride-dog_1.png')}
+                source={require('../../assets/pride-dog_1.png')}
                 resizeMode="contain"
                 style={styles.image}
               />
               <Text style={styles.text}>@Skay</Text>
               <Icon name="email" color={StylesConfiguration.color} size={32} />
-              <FormButton_small buttonTitle="Seguir" />
-              <FormButton_small buttonTitle="..." />
+              <FormButton_small buttonTitle="Borrar" />
+              <FormButton_small buttonTitle="Bloquear" />
             </View>
           )}
           keyExtractor={(item) => item.id}

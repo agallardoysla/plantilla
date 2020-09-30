@@ -2,21 +2,21 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {Image} from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
-import MyProfileScreen from '../screens/MyProfileScreen';
-import OtherProfile from '../screens/OtherProfile';
 import NotificationScreen from '../screens/NotificationScreen';
 import SearchScreen from '../screens/SearchScreen';
 import NewPublicationScreen from '../screens/NewPublicationScreen';
-import Followed from '../screens/Followed';
-import Followers from '../screens/Followers';
 import PostComments from '../screens/PostComments';
-import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import PostLikes from '../screens/PostLikes';
 import Publication from '../screens/Publication';
 import ImagePostSearch from '../screens/ImagePostSearch';
 import ProfileSearch from '../screens/ProfileSearch';
+import OtherProfile from '../screens/profile/OtherProfile';
+import Followed from '../screens/profile/Followed';
+import Followers from '../screens/profile/Followers';
+import MyProfileScreen from '../screens/profile/MyProfileScreen';
+import {NavigationContainer} from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -80,8 +80,8 @@ const SearchGroup = ({navigation}) => {
         headerShown: false,
       }}>
       <Stack.Screen name="Search" component={SearchScreen} />
-      <Stack.Screen name="ImagePostSearch" component={ImagePostSearch}/>
-      <Stack.Screen name="ProfileSearch" component={ProfileSearch}/>
+      <Stack.Screen name="ImagePostSearch" component={ImagePostSearch} />
+      <Stack.Screen name="ProfileSearch" component={ProfileSearch} />
     </Stack.Navigator>
   );
 };

@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { AuthContext } from '../navigation/AuthProvider';
-import users_services from '../services/users_services';
+import { AuthContext } from '../../navigation/AuthProvider';
+import users_services from '../../services/users_services';
 import GenericProfile from './GenericProfile';
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
