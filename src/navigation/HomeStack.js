@@ -18,6 +18,7 @@ import Followers from '../screens/profile/Followers';
 import MyProfileScreen from '../screens/profile/MyProfileScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import Preferences from '../screens/profile/Preferences';
+import PublicationDetails from '../screens/PublicationDetails';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -34,6 +35,7 @@ const HomeGroup = ({navigation}) => {
       }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Publication" component={Publication} />
+      <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="PostComments" component={PostComments} />
       <Stack.Screen name="PostLikes" component={PostLikes} />
       <Stack.Screen name="OtherProfile" component={OtherProfile} />

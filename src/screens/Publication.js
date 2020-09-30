@@ -37,9 +37,9 @@ export default function Publication({post, navigation}) {
     return isImage(file.url) ? (
       <Image
         source={{uri: file.url}}
-        style={styles.image_post}
+        style={[styles.image_post, i >= 1 ? {marginLeft: 10,} : {}]}
         key={i}
-        resizeMode="cover"
+        resizeMode="contain"
       />
     ) : (
       <Video
@@ -109,9 +109,15 @@ export default function Publication({post, navigation}) {
       {/*Inicia Foto de la publicaciòn */}
       {post.files_with_urls.length > 0 ? (
         <View style={styles.postImagesContainer}>
-          <ScrollView horizontal={true} indicatorStyle="white">
-            {post.files_with_urls.map(toView)}
-          </ScrollView>
+          <TouchableOpacity
+            style={styles.postImagesContainerPresable}
+            onPress={() =>
+              navigation.navigate('PublicationDetails', {post})
+            }>
+            <ScrollView horizontal={true} indicatorStyle="white">
+              {post.files_with_urls.map(toView)}
+            </ScrollView>
+          </TouchableOpacity>
         </View>
       ) : null}
       {/*Finaliza Foto de la publicaciòn*/}
@@ -258,7 +264,8 @@ export default function Publication({post, navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     alignItems: 'stretch',
     backgroundColor: 'black',
     marginBottom: 30,
@@ -271,22 +278,31 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     color: 'white',
     fontWeight: 'bold',
+    marginRight: 5,
   },
   postImagesContainer: {
-    flex: 1,
-    height: 300,
+    height: 360,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    marginBottom: 5,
+    marginHorizontal: 5,
+    // backgroundColor: 'blue',
+  },
+  postImagesContainerPresable: {
+    height: 360,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    marginBottom: 5,
+    alignItems: 'flex-start',
+    // backgroundColor: 'red',
   },
   image_post: {
-    width: window.width - 20,
-    height: 300,
+    width: window.width - 10,
+    height: 360,
   },
   icon_container: {
-    flex: 1,
+    // flex: 1,
+    height: 44,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
