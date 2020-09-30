@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { FeedContext } from '../../navigation/FeedContext';
 import NewPublicationScreen from '../NewPublicationScreen';
@@ -32,7 +32,7 @@ export default function NewPublicationContainer({navigation}) {
       > */}
       <Swiper
         style={styles.slider}
-        showsButtons={false}
+        showsButtons={true}
         index={1}
         loop={false}
         showsPagination={false}

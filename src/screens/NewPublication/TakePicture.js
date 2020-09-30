@@ -1,9 +1,10 @@
 import React, { PureComponent, useContext, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, PermissionsAndroid, Platform } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import {Icon} from 'react-native-elements';
 import { FeedContext } from '../../navigation/FeedContext';
 import StylesConfiguration from '../../utils/StylesConfiguration';
+import CameraRoll from '@react-native-community/cameraroll';
 
 const PendingView = () => (
   <View
@@ -33,6 +34,18 @@ export default function TakePicture({
   const [flash, setFlash] = useState(0);
   const [cameraMode, setCameraMode] = useState(RNCamera.Constants.Type.back);
   const [_camera, setCamera] = useState(0);
+
+  const hasAndroidPermission = async () => {
+    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+  
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+  
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  }
   
   const takePicture = async (camera) => {
     if (images.length < maxImages) {
@@ -40,6 +53,10 @@ export default function TakePicture({
       const data = await camera.takePictureAsync(options);
       console.log(data.uri);
       setImages([...images, data.uri]);
+      if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
+        return;
+      }
+      CameraRoll.save(data.uri);
     }
   };
 
@@ -152,19 +169,26 @@ export default function TakePicture({
                 ) : (
                   isRecording ? (
                   <Text style={styles.imagesCounter}>0:{timeCounter}</Text>
-                  ) :(
-                    <TouchableOpacity
-                      onPress={() => recordVideo(camera)}
-                      style={styles.takeVideo}>
-                      <Image
-                        style={styles.boton_takeVideo}
-                        source={require('../../assets/temporizador_15_seg.png')}
-                      />
-                    </TouchableOpacity>
-                  )
-                )}
+                  ) : (
+                  <TouchableOpacity
+                    onPress={() => recordVideo(camera)}
+                    style={styles.takeVideo}>
+                    <Image
+                      style={styles.boton_takeVideo}
+                      source={require('../../assets/temporizador_15_seg.png')}
+                    />
+                  </TouchableOpacity>
+                ))}
                 <TouchableOpacity
-                  onPress={() => takePicture(camera)}
+                  onPress={() =>
+                    navigation.navigate('PublishPublication', {
+                      images: images,
+                      setImages: setImages,
+                      video: video,
+                      setVideo: setVideo,
+                      navigation: navigation,
+                    })
+                  }
                   style={styles.editPicture}
                   disabled={!canPublish()}>
                   <Icon
