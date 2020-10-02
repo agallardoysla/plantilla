@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
 
   profilePublications: {
     flex: 1,
-    minHeight: 400,
+    // minHeight: 400,
     alignContent: 'center',
     alignItems: 'stretch',
   },
