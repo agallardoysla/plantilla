@@ -1,8 +1,9 @@
-import React, {useContext, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {AuthContext} from '../navigation/AuthProvider';
 import comments_services from '../services/comments_services';
+import users_services from '../services/users_services';
 import CommentFormatter from './CommentFormatter';
 
 export default function CommentInput({
@@ -16,16 +17,26 @@ export default function CommentInput({
   initialText,
   isEdition,
   countComments,
-  setCountComments
+  setCountComments,
 }) {
   const [newComment, setNewComment] = useState(initialText);
   const [showSugestions, setShowSugestions] = useState(false);
   const [sugestionsInput, setSugestionsInput] = useState('');
   const {user} = useContext(AuthContext);
-  
-  const getMentionsSugestions = () => {
-    // console.log(post, comment, comments);
-    var res = [];
+  const [sugestionsAsync, setSugestionsAsync] = useState([]);
+  const maxSugestions = 5;
+
+  useEffect(() => {
+    let filteredSugestions = getFixedSugestions;
+    filteredSugestions = filteredSugestions.filter(
+      (s) =>
+        s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase(),
+    );
+    getMentionsSugestionsAsync(filteredSugestions);
+  }, [getFixedSugestions, getMentionsSugestionsAsync, sugestionsInput]);
+
+  const getFixedSugestions = useMemo(() => {
+    const res = [];
     if (post) {
       res.push(post.user_owner);
     }
@@ -33,15 +44,41 @@ export default function CommentInput({
       res.push(comment.user_owner);
     }
     if (comments) {
-      res = res.concat(comments.map(c => c.user_owner));
+      comments.forEach((c) => {
+        if (
+          res.reduce((r, s) => r && c.user_owner.user_id !== s.user_id, true)
+        ) {
+          res.push(c.user_owner);
+        }
+      });
     }
-    res = res.filter(
+    return res;
+  }, [post, comment, comments]);
+
+  const getMentionsSugestions = () => {
+    const filteredSugestions = getFixedSugestions.filter(
       (s) =>
         s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase(),
     );
-    // console.log(res);
-    return res;
+    return filteredSugestions;
   };
+
+  const getMentionsSugestionsAsync = useCallback(
+    async (filteredSugestions) => {
+      const context = await users_services.getContext({
+        search: sugestionsInput.toLowerCase(),
+        exclude: filteredSugestions.map(s => s.user_id),
+        limit: maxSugestions - filteredSugestions.length,
+      });
+      setSugestionsAsync(
+        context.data.filter(
+          (s) =>
+            s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase(),
+        ),
+      );
+    },
+    [sugestionsInput],
+  );
 
   const saveComment = async () => {
     setSavingComment(true);
@@ -80,6 +117,20 @@ export default function CommentInput({
     setShowSugestions(false);
   };
 
+  const Mention = ({sugestion, key}) => (
+    <TouchableOpacity
+      key={key}
+      onPress={() => selectSugestion(sugestion)}
+      activeOpacity={0.4}
+      style={styles.sugestionContainer}>
+      <Image
+        source={require('../assets/foto.png')}
+        style={styles.icon_profile}
+      />
+      <Text style={styles.sugestion}>@{sugestion.display_name}</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <>
       {showSugestions ? (
@@ -91,17 +142,10 @@ export default function CommentInput({
               : styles.sugestionsPositionAnswer,
           ]}>
           {getMentionsSugestions().map((sugestion, i) => (
-            <TouchableOpacity
-              key={i}
-              onPress={() => selectSugestion(sugestion)}
-              activeOpacity={0.4}
-              style={styles.sugestionContainer}>
-              <Image
-                source={require('../assets/foto.png')}
-                style={styles.icon_profile}
-              />
-              <Text style={styles.sugestion}>@{sugestion.display_name}</Text>
-            </TouchableOpacity>
+            <Mention sugestion={sugestion} key={i} />
+          ))}
+          {sugestionsAsync.map((sugestion, i) => (
+            <Mention sugestion={sugestion} key={i} />
           ))}
         </View>
       ) : null}

@@ -4,7 +4,7 @@ import api_config from './api_config';
 
 /* Todo este modulo se usa solo cuando el usuario ya esta logueado con Firebase */
 
-const getConfig = async () => {
+const getConfig = async (params = {}) => {
   const token = await auth().currentUser.getIdToken(true);
   return {
     headers: {
@@ -13,12 +13,13 @@ const getConfig = async () => {
       // 'Access-Control-Allow-Origin': '*',
       'Authorization': `JWT ${token}`,
     },
+    params,
   };
 };
 
 export default {
-  doGet: async (url) => {
-    const config = await getConfig();
+  doGet: async (url, data) => {
+    const config = await getConfig(data);
     console.log(api_config.baseURL, 'GET', url, config);
     let res;
     try {
