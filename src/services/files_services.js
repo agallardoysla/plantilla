@@ -1,6 +1,6 @@
 import generic_service from './generic_service';
 import auth from '@react-native-firebase/auth';
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import api_config from './api_config';
 
 const url = 'files/';
