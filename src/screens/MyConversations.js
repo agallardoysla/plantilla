@@ -1,21 +1,57 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image, FlatList} from 'react-native';
+import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import FormSearchInput from '../components/FormSearchInput';
 import StylesConfiguration from '../utils/StylesConfiguration';
+import ListConversation from '../screens/ListConversation';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
 const MyConversations = ({navigation}) => {
   const go_back = () => {
     navigation.navigate('Profile');
   };
 
-  const data = [
-      {id: 1, name: 'example 1'},
-      {id: 2, name: 'example 2'},
-      {id: 3, name: 'example 3'},
-      {id: 4, name: 'example 4'},
-      {id: 5, name: 'example 5'},
-      {id: 6, name: 'example 6'},
-]
+  const datos = [
+    {
+      id: 0,
+      photo: 'url',
+      name_user: 'name',
+    },
+    {
+      id: 1,
+      photo: 'url',
+      name_user: 'name',
+    },
+    {
+      id: 2,
+      photo: 'url',
+      name_user: 'name',
+    },
+    {
+      id: 3,
+      photo: 'url',
+      name_user: 'name',
+    },
+    {
+      id: 4,
+      photo: 'url',
+      name_user: 'name',
+    },
+    {
+      id: 5,
+      photo: 'url',
+      name_user: 'name',
+    },
+    {
+      id: 6,
+      photo: 'url',
+      name_user: 'name',
+    },
+    {
+      id: 8,
+      photo: 'url',
+      name_user: 'name',
+    },
+  ];
 
   return (
     <View style={styles.container}>
@@ -39,31 +75,16 @@ const MyConversations = ({navigation}) => {
       <View style={styles.row}>
         <FormSearchInput />
       </View>
-
-
-        <FlatList 
-            data={data}
-            renderItem={(item, i) => {
-              return  <View style={styles.row}>
-                <View style={{flexDirection: 'column', top: 10}}>
-                  <Image
-                    source={require('../assets/pride-dog_1.png')}
-                    resizeMode="contain"
-                    style={styles.image}
-                  />
-                </View>
-                <View style={{flex: 1, flexDirection: 'column', top: 10}}>
-                <Text style={styles.text_title_profile}>@Skay</Text>
-                <Text style={styles.text_description}><Text style={styles.text_title_profile}>@Gruñon: </Text>Buen dia como estas?</Text>
-                </View>
-              </View>
-            }}
-            keyExtractor={(item)=> {item.id}}
-        />
-     
-
-
-
+   
+      <FlatList
+        data={datos}
+        renderItem={({item}) => (
+         <ListConversation item={item} navigation={navigation}/>
+     )}
+        keyExtractor={(item) => {
+          item.id;
+        }}
+      />
     </View>
   );
 };
@@ -87,20 +108,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
   },
-  boton_back: {
-    marginHorizontal: 5,
-    marginVertical: 5,
-  },
-  text_title_profile: {
-    fontFamily: StylesConfiguration.fontFamily,
-    color: 'white',
-  
-  },
-  text_description: {
-    fontFamily: 'GothamBlack-Normal',
-    color: 'white',
-    marginHorizontal: 10
-  }
+ 
 });
 
 export default MyConversations;

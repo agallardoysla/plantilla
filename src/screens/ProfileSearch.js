@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,30 @@ import {
 import StylesConfiguration from '../utils/StylesConfiguration';
 import FormButton_small from '../components/FormButton_small';
 import {Icon} from 'react-native-elements';
+import users_services from '../services/users_services';
 
 let window = Dimensions.get('window');
 
-const ProfileSearch = ({item, key}) => {
+const ProfileSearch = ({item, key, myId}) => {
+
+  const [FollowedUser, setFollowedUser] = useState(item.followers_with_details.filter((u) => u.user_id === myId).length > 0)
+  
+  //seguir usuario
+  const goFollower = () => {
+
+    if (FollowedUser) {
+      users_services.unfollow(item.id).then(() => {
+        setFollowedUser(false);
+        console.log('dejado de seguir');
+      });
+    } else {
+      users_services.follow(item.id).then(() => {
+        setFollowedUser(true);
+        console.log('seguido');
+      });
+    }
+  };
+
   return (
     <View style={{flexDirection: 'row'}} key={key}>
       <View style={styles.column}>
@@ -25,16 +45,21 @@ const ProfileSearch = ({item, key}) => {
             style={styles.image}
           />
           <View style={styles.row_content}>
-            <View style={{flexDirection: 'column'}}>
+            <View style={{flexDirection: 'column', top: -5}}>
               <Text style={styles.text}>@{item.display_name}</Text>
-              <Text style={{color: 'white'}}>Descripciòn del Perfil</Text>
+              <Text style={{color: 'white', marginLeft: 5,}}>Descripciòn del Perfil</Text>
             </View>
           </View>
         </View>
       </View>
 
-      <FormButton_small buttonTitle="Seguir" style={{top: 5}} />
-      <Icon name="email" color={StylesConfiguration.color} size={46} />
+        <FormButton_small
+          buttonTitle= {FollowedUser ? 'Pendiente' : 'Seguir'}
+          style={{top: 5,  width: 68, height: 40, marginRight: 5, marginLeft: 5,}}
+          onPress={goFollower}
+        />
+
+      <Icon name="email" color={StylesConfiguration.color} style={{top: 4}} size={43} />
     </View>
   );
 };
@@ -58,7 +83,6 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'flex-start',
     backgroundColor: 'black',
-
   },
   row_content: {
     flex: 1,
@@ -70,11 +94,11 @@ const styles = StyleSheet.create({
     height: 60,
     marginBottom: 10,
     borderRadius: 400 / 2,
-    
   },
   text: {
     fontFamily: StylesConfiguration.fontFamily,
     color: 'white',
+    marginLeft: 5
   },
 });
 

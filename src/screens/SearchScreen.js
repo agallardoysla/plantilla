@@ -43,7 +43,7 @@ export default function SearchScreen({navigation}) {
       loadPost();
     }
   }, [posts, setPosts]); //los posts se actualizan constantemente pero los perfiles son traidos una vez
-  
+
   const loadPost = () => {
     posts_services.list(page).then((res) => {
       console.log('nuevos posts', res.data.length);
@@ -58,7 +58,6 @@ export default function SearchScreen({navigation}) {
 
   return (
     <View style={{flex: 1, backgroundColor: 'black'}}>
-      
       <View style={styles.row}>
         <FormSearchInput
           value={valueSearch}
@@ -66,38 +65,31 @@ export default function SearchScreen({navigation}) {
         />
       </View>
 
-
-    <ScrollView>
-    {valueSearch.length > 0 ?  
-   
-    users.map((item, i) => {
-
-        if (item.display_name.toLowerCase().indexOf(valueSearch.toLowerCase()) !== -1 ) {
-          console.log('Si existe el user: ' + item.id);
-          return <ProfileSearch item={item} key={item.id}/>;
-        } else {
-          return null;
-        }
-      }) : 
- 
-      <View style={styles.container}>
-      <FlatList
-        data={posts}
-        renderItem={({item, index}) => {
-          return <ImagePostSearch post={item} navigation={navigation} />;
-        }}
-        onEndReachedThreshold={0.6}
-        onEndReached={(info) => loadPost()}
-        bouncesZoom={true}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={3}
-      />
-    </View>
-    }
-     
- 
+      <ScrollView>
+        {valueSearch.length > 0 ? (
+          users.map((item, i) => {
+            if (item.display_name.toLowerCase().indexOf(valueSearch.toLowerCase()) !== -1 && item.id !== user.id){
+              return <ProfileSearch item={item} key={item.id} myId={user.id} />
+            }
+            
+            return null
+          })
+        ) : (
+          <View style={styles.container}>
+            <FlatList
+              data={posts}
+              renderItem={({item, index}) => {
+                return <ImagePostSearch post={item} navigation={navigation} />;
+              }}
+              onEndReachedThreshold={0.6}
+              onEndReached={(info) => loadPost()}
+              bouncesZoom={true}
+              keyExtractor={(item) => item.id.toString()}
+              numColumns={3}
+            />
+          </View>
+        )}
       </ScrollView>
-     
     </View>
   );
 }
@@ -120,5 +112,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     justifyContent: 'flex-start',
+    marginBottom: 30,
   },
 });
