@@ -120,7 +120,7 @@ export default function CreateProfile({navigation}) {
     profile.gender = gender === 'UNDEFINED2' ? 'UNDEFINED' : gender;
     profile.is_ready = true;
 
-    await profiles_services.edit(user.id, profile);
+    await profiles_services.edit(user.profile.id, profile);
     await users_services.edit(user.id, {display_name: nickname});
 
     navigation.navigate('Wellcoming');
@@ -210,7 +210,7 @@ export default function CreateProfile({navigation}) {
         )}
       </View>
       <View style={[styles.formRow, styles.formRowStart]}>
-        <Text style={styles.text}>Gendero:</Text>
+        <Text style={styles.text}>Género:</Text>
         <View style={styles.selectGender}>
           <View style={[styles.formRow, styles.genderCheckbox]}>
             <Text style={styles.text}>Hombre</Text>

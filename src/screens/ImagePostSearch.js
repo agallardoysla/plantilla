@@ -1,27 +1,11 @@
-import React, {useContext, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  ActivityIndicator,
-  FlatList,
-} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import React from 'react';
+import {View, StyleSheet, Image, Dimensions} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
-import StylesConfiguration from '../utils/StylesConfiguration';
-import posts_services from '../services/posts_services';
-import PublicationsComments from './PublicationsComments';
-import CommentInput from '../utils/CommentInput';
-import {AuthContext} from '../navigation/AuthProvider';
-import CommentFormatter from '../utils/CommentFormatter';
 
 let window = Dimensions.get('window');
 
-export default function ImagePostSearch({post, navigation}) {
-  const {user} = useContext(AuthContext);
-
+export default function ImagePostSearch({post}) {
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);

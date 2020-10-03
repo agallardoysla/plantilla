@@ -146,113 +146,109 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   }
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.profileData}>
-          <View style={[styles.profileDataColumn, styles.columnLeft]}>
-            <Text style={styles.text_profile}>Publicaciones</Text>
-            <FormButton
-              buttonTitle={localUser.posts_count.POST_TYPE_PRUEBA}
-              style={styles.counter}
-            />
-            <Text style={styles.text_profile}>Seguidos</Text>
-            <FormButton
-              buttonTitle={localUser.following_with_details.length}
-              style={styles.counter}
-              onPress={go_to_followed}
-            />
-            <Text style={styles.text_profile}>Seguidores</Text>
-            <FormButton
-              buttonTitle={localUser.followers_with_details.length}
-              style={styles.counter}
-              onPress={go_to_followers}
-            />
-            <FormButton
-              buttonTitle="CHALLENGE"
-              style={styles.challengeButton}
-              textStyle={styles.challengeContent}
-            />
-          </View>
-          <View style={[styles.profileDataColumn, styles.columnCenter]}>
-            <View style={styles.profleFoto}>
-              <Image
-                source={require('../../assets/foto_perfil_superior.png')}
-                style={styles.circle_image}
-              />
-            </View>
-            <View style={styles.infoContainer}>
-              {isLoggedUser ? (
-                <TouchableOpacity
-                  style={styles.tuerca_blanca_container}
-                  onPress={() => navigation.navigate('Preferences')}>
-                  <Image
-                    source={require('../../assets/tuerca_blanca.png')}
-                    style={styles.tuerca_blanca}
-                    resizeMode={'center'}
-                  />
-                </TouchableOpacity>
-              ) : (
-                <View style={styles.tuerca_blanca_container} />
-              )}
-              <Text style={styles.name_user}>@{localUser.display_name}</Text>
-            </View>
-            <View style={styles.folowersInfo}>
-              <Image source={require('../../assets/corazon_gris.png')} />
-              <Text style={styles.icon_numbers}>{8}k</Text>
-            </View>
-            
-            <TouchableOpacity onPress={goConversations}>
-              <Image
-                source={require('../../assets/sobre_amarillo.png')}
-                style={styles.sobre_amarillo}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-
-          </View>
-          {
-            //si isLoggedUser es verdadero mostrar columna con boton amigos, te siguen, CHALLENGE, y icono de sobre amarillo
-            //si isLoggedUser es falso mostrar boton CHALLENGE, icono de sobre amarillo, boton seguido
-            isLoggedUser ? <MyProfileView /> : <OtherProfileView />
-          }
-        </View>
-
-        <View style={styles.profileDescription}>
-          <Text style={styles.container_description}>
-            BullDog frances que vive en burzaco me gusta dormir y comer
-          </Text>
-        </View>
-
-        <View style={styles.profilePublications}>
-          <FlatList
-            data={usersPosts}
-            renderItem={({item}) => (
-              <View style={styles.itemContainer}>
-                {item.map((post, i) => (
-                  <View style={styles.item} key={i}>
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate('PublicationDetails', {post})
-                      }
-                      style={styles.itemImageContainer}>
-                      <Image
-                        source={{
-                          uri: post.files_with_urls[0]
-                            ? post.files_with_urls[0].url
-                            : '',
-                        }}
-                        style={styles.itemImage}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
-            )}
-            keyExtractor={(item) => item[0].id}
+    <View style={styles.container}>
+      <View style={styles.profileData}>
+        <View style={[styles.profileDataColumn, styles.columnLeft]}>
+          <Text style={styles.text_profile}>Publicaciones</Text>
+          <FormButton
+            buttonTitle={localUser.posts_count.POST_TYPE_PRUEBA}
+            style={styles.counter}
+          />
+          <Text style={styles.text_profile}>Seguidos</Text>
+          <FormButton
+            buttonTitle={localUser.following_with_details.length}
+            style={styles.counter}
+            onPress={go_to_followed}
+          />
+          <Text style={styles.text_profile}>Seguidores</Text>
+          <FormButton
+            buttonTitle={localUser.followers_with_details.length}
+            style={styles.counter}
+            onPress={go_to_followers}
+          />
+          <FormButton
+            buttonTitle="CHALLENGE"
+            style={styles.challengeButton}
+            textStyle={styles.challengeContent}
           />
         </View>
+        <View style={[styles.profileDataColumn, styles.columnCenter]}>
+          <View style={styles.profleFoto}>
+            <Image
+              source={require('../../assets/foto_perfil_superior.png')}
+              style={styles.circle_image}
+            />
+          </View>
+          <View style={styles.infoContainer}>
+            {isLoggedUser ? (
+              <TouchableOpacity
+                style={styles.tuerca_blanca_container}
+                onPress={() => navigation.navigate('Preferences')}>
+                <Image
+                  source={require('../../assets/tuerca_blanca.png')}
+                  style={styles.tuerca_blanca}
+                  resizeMode={'center'}
+                />
+              </TouchableOpacity>
+            ) : (
+              <View style={styles.tuerca_blanca_container} />
+            )}
+            <Text style={styles.name_user}>@{localUser.display_name}</Text>
+          </View>
+          <View style={styles.folowersInfo}>
+            <Image source={require('../../assets/corazon_gris.png')} />
+            <Text style={styles.icon_numbers}>{8}k</Text>
+          </View>
+          
+          <TouchableOpacity onPress={goConversations}>
+            <Image
+              source={require('../../assets/sobre_amarillo.png')}
+              style={styles.sobre_amarillo}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+
+        </View>
+        {
+          //si isLoggedUser es verdadero mostrar columna con boton amigos, te siguen, CHALLENGE, y icono de sobre amarillo
+          //si isLoggedUser es falso mostrar boton CHALLENGE, icono de sobre amarillo, boton seguido
+          isLoggedUser ? <MyProfileView /> : <OtherProfileView />
+        }
       </View>
-    </ScrollView>
+
+      <Text style={styles.container_description}>
+        BullDog frances que vive en burzaco me gusta dormir y comer
+      </Text>
+
+      <View style={styles.profilePublications}>
+        <FlatList
+          data={usersPosts}
+          renderItem={({item}) => (
+            <View style={styles.itemContainer}>
+              {item.map((post, i) => (
+                <View style={styles.item} key={i}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate('PublicationDetails', {post})
+                    }
+                    style={styles.itemImageContainer}>
+                    <Image
+                      source={{
+                        uri: post.files_with_urls[0]
+                          ? post.files_with_urls[0].url
+                          : '',
+                      }}
+                      style={styles.itemImage}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          )}
+          keyExtractor={(item) => item[0].id}
+        />
+      </View>
+    </View>
   );
 }
 
@@ -277,11 +273,11 @@ const styles = StyleSheet.create({
   },
 
   profileDescription: {
-    // flex: 1,
-    marginHorizontal: 20,
+    flex: 1,
+    padding: 5,
   },
   container_description: {
-    flex: 1,
+    // flex: 1,
     borderWidth: 1,
     borderColor: '#E9FC64',
     borderRadius: 10,
@@ -291,11 +287,13 @@ const styles = StyleSheet.create({
     fontFamily: 'GothamBlack-normal',
     textAlign: 'center',
     paddingVertical: 10,
+    marginHorizontal: 20,
+    minHeight: 40,
   },
 
   profilePublications: {
     flex: 1,
-    minHeight: 400,
+    // minHeight: 400,
     alignContent: 'center',
     alignItems: 'stretch',
   },

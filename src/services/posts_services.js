@@ -1,7 +1,7 @@
 import generic_service from './generic_service';
 
 const url = 'posts/';
-const pageSize = 20;
+const pageSize = 10;
 
 export default {
   list: (page) => generic_service.doGet(`${url}?limit=${pageSize}&offset=${page*pageSize}`),
