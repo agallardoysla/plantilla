@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
@@ -9,8 +9,28 @@ import chats_services from '../services/chats_services';
 
 const MyChat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
-  const conversation = route.params;
   const [newMessage, setNewMessage] = useState('');
+  const [conversation, setConversation] = useState({});
+
+  useEffect(() => {
+    if (route.params.conversation) {
+      setConversation(route.params.conversation);
+    } else {
+      chats_services.list().then(res => {
+        const localConversation = res.data.filter((c) =>
+          c.users.filter((u) => u.user_id === route.params.receiver.user_id).length > 0,
+        );
+        if (localConversation.length > 0) {
+          setConversation(localConversation[0]);
+        } else {
+          setConversation({
+            messages: [],
+            users: [route.params.receiver, user], // tiene que estar en este orden por si es una conversacion nueva
+          });
+        }
+      });
+    }
+  }, []);
 
   const go_back = () => {
     navigation.navigate('MyConversations');
@@ -19,7 +39,9 @@ const MyChat = ({navigation, route}) => {
   const iSendIt = (message) => message.from === user.id;
 
   const sendNewMessage = async () => {
+    console.log('conversation', conversation);
     const other = conversation.users.filter(u => u.user_id !== user.id)[0];
+    console.log('other', other);
     chats_services
       .sendMessage(other.user_id, {text: newMessage})
       .then((res) => {
@@ -62,23 +84,23 @@ const MyChat = ({navigation, route}) => {
           inverted={true}
           style={styles.chat}
           renderItem={({item}) =>
-            iSendIt ? (
+            iSendIt(item) ? (
               <View style={styles.row_chat_me}>
-                <Text style={styles.text_chat}>{item.text}</Text>
                 <Image
                   source={require('../assets/pride-dog_1.png')}
                   resizeMode="contain"
                   style={styles.image}
                 />
+                <Text style={styles.text_chat}>{item.text}</Text>
               </View>
             ) : (
               <View style={styles.row_chat_third}>
+                <Text style={styles.text_chat}>{item.text}</Text>
                 <Image
                   source={require('../assets/pride-dog_1.png')}
                   resizeMode="contain"
                   style={styles.image}
                 />
-                <Text style={styles.text_chat}>{item.text}</Text>
               </View>
             )
           }
@@ -141,7 +163,7 @@ const styles = StyleSheet.create({
   //tercero
   row_chat_third: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignItems: 'flex-start',
     paddingVertical: 8,
   },
@@ -149,7 +171,7 @@ const styles = StyleSheet.create({
   //yo
   row_chat_me: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     alignItems: 'flex-start',
 
     paddingVertical: 8,

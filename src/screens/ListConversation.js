@@ -8,7 +8,7 @@ const ListConversation = ({conversation, navigation}) => {
   const {user} = useContext(AuthContext);
   //MyConversations > ListConversation(FlatList) > MyChat
   const goMyChat = () => {
-    navigation.navigate('MyChat', conversation);
+    navigation.navigate('MyChat', {conversation});
   };
 
   const getProfileName = () => {

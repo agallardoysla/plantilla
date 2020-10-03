@@ -45,6 +45,7 @@ const HomeGroup = ({navigation}) => {
       <Stack.Screen name="PostComments" component={PostComments} />
       <Stack.Screen name="PostLikes" component={PostLikes} />
       <Stack.Screen name="OtherProfile" component={OtherProfile} />
+      <Stack.Screen name="MyChat" component={MyChat} />
     </Stack.Navigator>
   );
 };
@@ -64,8 +65,8 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen name="MyConversations" component={MyConversations} />
       <Stack.Screen name="Preferences" component={Preferences} />
       <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
-      <Stack.Screen name="ListConversation" component={ListConversation}/>
-      <Stack.Screen name="MyChat" component={MyChat}/>
+      <Stack.Screen name="ListConversation" component={ListConversation} />
+      <Stack.Screen name="MyChat" component={MyChat} />
 
     </Stack.Navigator>
   );

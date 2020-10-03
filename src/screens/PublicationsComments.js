@@ -89,7 +89,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
         <View style={styles.comment}>
           <TouchableOpacity
             style={styles.senderContainer}
-            onPress={() => navigation.navigate('OtherProfile', comment.user_owner)}>
+            onPress={() => navigation.navigate('OtherProfile', {user_id: comment.user_owner, navigation})}>
             <Image
               source={require('../assets/foto.png')}
               style={styles.icon_profile}

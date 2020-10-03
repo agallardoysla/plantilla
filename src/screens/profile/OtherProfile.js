@@ -8,6 +8,7 @@ export default function OtherProfile({route}) {
   const {user} = useContext(AuthContext);
   const [otherUser, setOtherUser] = useState();
   const userId = route.params.user_id;
+  const navigation = route.params.navigation;
   
   useEffect(() => {
     if (userId !== user.id) {
@@ -17,8 +18,8 @@ export default function OtherProfile({route}) {
 
   return userId !== user.id ? (
     otherUser ? (
-      <GenericProfile localUser={otherUser} isLoggedUser={false} />) : null
+      <GenericProfile localUser={otherUser} isLoggedUser={false} navigation={navigation}/>) : null
   ) : (
-    <GenericProfile localUser={user} isLoggedUser={true} />
+    <GenericProfile localUser={user} isLoggedUser={true} navigation={navigation} />
   );
 };
