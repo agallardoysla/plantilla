@@ -120,7 +120,8 @@ export default function CreateProfile({navigation}) {
     profile.gender = gender === 'UNDEFINED2' ? 'UNDEFINED' : gender;
     profile.is_ready = true;
 
-    await profiles_services.edit(user.profile.id, profile);
+    console.log(user);
+    await profiles_services.edit(profile.id, profile);
     await users_services.edit(user.id, {display_name: nickname});
 
     navigation.navigate('Wellcoming');
@@ -162,7 +163,7 @@ export default function CreateProfile({navigation}) {
       </View>
       <View style={styles.formRow}>
         <Text style={styles.text}>Fecha de nacimiento: </Text>
-        <Text style={[styles.text, styles.textImportant]}>+13</Text>
+        <Text style={[styles.text, styles.textImportant]}>+14</Text>
         {sameDayAsToday() ? (
           <TouchableOpacity
             style={styles.datePicker}
