@@ -4,14 +4,14 @@ import {windowHeight, windowWidth} from '../utils/Dimensions';
 import StylesConfiguration from '../utils/StylesConfiguration';
 
 export default function FormInput({
-  labelValue,
+  value,
   placeholderText,
   textStyle,
   ...rest
 }) {
   return (
     <TextInput
-      value={labelValue}
+      value={value}
       style={[styles.input, textStyle]}
       placeholder={placeholderText}
       placeholderTextColor="gray"

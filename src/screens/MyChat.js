@@ -5,16 +5,29 @@ import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import FormInputChat from '../components/FormInputChat';
 import FormButton_small from '../components/FormButton_small';
 import { AuthContext } from '../navigation/AuthProvider';
+import chats_services from '../services/chats_services';
 
 const MyChat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
   const conversation = route.params;
+  const [newMessage, setNewMessage] = useState('');
 
   const go_back = () => {
     navigation.navigate('MyConversations');
   };
 
   const iSendIt = (message) => message.from === user.id;
+
+  const sendNewMessage = async () => {
+    const other = conversation.users.filter(u => u.user_id !== user.id)[0];
+    chats_services
+      .sendMessage(other.user_id, {text: newMessage})
+      .then((res) => {
+        setNewMessage('');
+        console.log(res);
+        conversation.messages.unshift(res.data);
+      });
+  };
 
   return (
     <>
@@ -82,6 +95,8 @@ const MyChat = ({navigation, route}) => {
         <FormInputChat
           textStyle={{color: 'white'}}
           placeholderText="Escriba un mensaje..."
+          value={newMessage}
+          onChangeText={setNewMessage}
         />
 
         <FormButton_small
@@ -95,6 +110,7 @@ const MyChat = ({navigation, route}) => {
             marginRight: 10,
           }}
           textStyle={{color: 'black'}}
+          onPress={sendNewMessage}
         />
       </View>
     </>
