@@ -114,7 +114,8 @@ export default function PublicationsComments({post, comment, comments, setCommen
             <>
               <CommentFormatter
                 style={styles.content}
-                comment={'{' + comment.user_owner.display_name + '} ' + comment.text}
+                comment={`{${comment.user_owner.display_name}:${comment.user_owner.user_id}} ` + comment.text}
+                navigation={navigation}
               />
               <Menu
                 opened={showMenu && comment.user_owner.user_id === user.id}

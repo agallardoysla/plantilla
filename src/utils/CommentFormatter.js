@@ -4,33 +4,22 @@ import { withTheme } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
 import StylesConfiguration from './StylesConfiguration';
 
-export default function CommentFormatter({comment, isInput, setShowSugestions, setSugestionsInput, style}) {
-  const postOwnerPattern = /\[(\w+)\]/;
-  const commentOwnerPattern = /\{(\w+)\}/;
+export default function CommentFormatter({comment, isInput, setShowSugestions, setSugestionsInput, style, navigation}) {
   const hashtagPattern = /#(\w+)/;
-  const initUserMentionPattern = /@/;
-  const userMentionPattern = /@(\w+)/;
+  const postOwnerPattern = /\(([^:]+):([^)]+)\)/i;
+  const commentOwnerPattern = /\{([^:]+):([^}]+)\}/i;
+  const userMentionPattern = /\[([^:]+):([^\]]+)\]/i;
+  const initUserMentionPattern = /@(\w+)/;
 
   const handlehashtagPress = (hashtag, matchIndex) => {
     Alert.alert(`${hashtag} ${matchIndex}`);
   };
 
-  const handleUserPress = (username, matchIndex) => {
-    Alert.alert(`${username} ${matchIndex}`);
-  };
-
-  const renderInitUserMention = (matchingString) => {
-    setShowSugestions(false);
-    return matchingString;
-  };
-
-  const renderUserMention = (matchingString, matches) => {
-    // console.log(matches);
-    if (isInput && comment.slice(-matches[1].length) === matches[1]) {
-      setShowSugestions(true);
-      setSugestionsInput(matches[1]);
-    }
-    return matchingString;
+  const handleUserPress = (code, matchIndex) => {
+    const test = /(\(|\{|\[)([^:]+):([^\]]+)(\)|\}|\])/i;
+    const founds = code.match(test);
+    console.log(founds);
+    navigation.navigate('OtherProfile', {user_id: founds[3]});
   };
 
   const renderPostOwner = (matchingString, matches) => {
@@ -39,6 +28,19 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
 
   const renderCommentOwner = (matchingString, matches) => {
     return '@' + matches[1];
+  };
+
+  const renderUserMention = (matchingString, matches) => {
+    // console.log(matches);
+    return matchingString;
+  };
+
+  const renderInitUserMention = (matchingString, matches) => {
+    if (isInput && matches[1].length > 0 && comment.slice(-matches[1].length) === matches[1]) {
+      setShowSugestions(true);
+      setSugestionsInput(matches[1]);
+    }
+    return matchingString;
   };
 
   return (
@@ -51,12 +53,6 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
           onPress: handlehashtagPress,
         },
         {
-          pattern: userMentionPattern,
-          style: styles.userMention,
-          onPress: handleUserPress,
-          renderText: renderUserMention,
-        },
-        {
           pattern: postOwnerPattern,
           style: styles.postOwner,
           onPress: handleUserPress,
@@ -67,6 +63,12 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
           style: styles.postOwner,
           onPress: handleUserPress,
           renderText: renderCommentOwner,
+        },
+        {
+          pattern: userMentionPattern,
+          style: styles.userMention,
+          onPress: handleUserPress,
+          renderText: renderUserMention,
         },
         {
           pattern: initUserMentionPattern,
