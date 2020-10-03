@@ -15,7 +15,7 @@ const ListConversation = ({conversation, navigation}) => {
     return conversation.users.filter(u => u.user_id !== user.id)[0].display_name;
   };
 
-  const getLastMessage = () => conversation.messages[conversation.messages.length - 1];
+  const getLastMessage = () => conversation.messages[0];
 
   const getLastMessageText = () => {
     return getLastMessage().text;

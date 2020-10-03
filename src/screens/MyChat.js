@@ -1,18 +1,20 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import FormInputChat from '../components/FormInputChat';
 import FormButton_small from '../components/FormButton_small';
+import { AuthContext } from '../navigation/AuthProvider';
 
 const MyChat = ({navigation, route}) => {
-  console.log(route.params);
-
-  const [ChatMe, setChatMe] = useState(false); //si es falso porque no es mio es del tercero y cambio de posicion la info
+  const {user} = useContext(AuthContext);
+  const conversation = route.params;
 
   const go_back = () => {
     navigation.navigate('MyConversations');
   };
+
+  const iSendIt = (message) => message.from === user.id;
 
   return (
     <>
@@ -42,46 +44,32 @@ const MyChat = ({navigation, route}) => {
             <Text style={styles.text_title}>@Skay</Text>
           </View>
         </View>
-
-        {/*Logica para organizar el chat 
-      {ChatMe ? (
-        <View style={styles.row_chat_me}>
-          <Text style={styles.text_chat}>Skay</Text>
-          <Image
-            source={require('../assets/pride-dog_1.png')}
-            resizeMode="contain"
-            style={styles.image}
-          />
-        </View>
-      ) : (
-        <View style={styles.row_chat_third}>
-          <Image
-            source={require('../assets/pride-dog_1.png')}
-            resizeMode="contain"
-            style={styles.image}
-          />
-          <Text style={styles.text_chat}>Skay</Text>
-        </View>
-      )} */}
-        <ScrollView>
-          <View style={styles.row_chat_third}>
-            <Image
-              source={require('../assets/pride-dog_1.png')}
-              resizeMode="contain"
-              style={styles.image}
-            />
-            <Text style={styles.text_chat}>Hola buen dia, como estas?</Text>
-          </View>
-
-          <View style={styles.row_chat_me}>
-            <Text style={styles.text_chat}>Hola bien, que haces?</Text>
-            <Image
-              source={require('../assets/pride-dog_1.png')}
-              resizeMode="contain"
-              style={styles.image}
-            />
-          </View>
-        </ScrollView>
+        <FlatList
+          data={conversation.messages}
+          inverted={true}
+          style={styles.chat}
+          renderItem={({item}) =>
+            iSendIt ? (
+              <View style={styles.row_chat_me}>
+                <Text style={styles.text_chat}>{item.text}</Text>
+                <Image
+                  source={require('../assets/pride-dog_1.png')}
+                  resizeMode="contain"
+                  style={styles.image}
+                />
+              </View>
+            ) : (
+              <View style={styles.row_chat_third}>
+                <Image
+                  source={require('../assets/pride-dog_1.png')}
+                  resizeMode="contain"
+                  style={styles.image}
+                />
+                <Text style={styles.text_chat}>{item.text}</Text>
+              </View>
+            )
+          }
+        />
       </View>
 
       <View style={styles.bottomBar}>
@@ -172,6 +160,9 @@ const styles = StyleSheet.create({
     top: 20,
     marginRight: 10,
     marginLeft: 10,
+  },
+  chat: {
+    marginBottom: 15,
   },
 });
 

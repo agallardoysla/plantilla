@@ -61,9 +61,7 @@ const MyConversations = ({navigation}) => {
         renderItem={({item}) => (
           <ListConversation conversation={item} navigation={navigation} />
      )}
-        keyExtractor={(item) => {
-          item.id;
-        }}
+        keyExtractor={(item, i) => i}
       />
     </View>
   );
