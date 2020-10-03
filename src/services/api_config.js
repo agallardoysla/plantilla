@@ -2,6 +2,7 @@ export default {
   // Produccion
   https: true,
   baseURL: 'https://friendschallenge.webredirect.org/api/v1/',
+  webSocketUrl: 'wss://friendschallenge.webredirect.org/push/',
 
   // Desarrollo
   // https: false,
