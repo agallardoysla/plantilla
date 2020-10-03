@@ -70,6 +70,7 @@ export default function CommentInput({
         exclude: filteredSugestions.map(s => s.user_id),
         limit: maxSugestions - filteredSugestions.length,
       });
+      console.log(context.data);
       setSugestionsAsync(
         context.data.filter(
           (s) =>
@@ -110,9 +111,8 @@ export default function CommentInput({
   const selectSugestion = (sugestion) => {
     setNewComment(
       newComment
-        .slice(0, -sugestionsInput.length)
-        .concat(sugestion.display_name)
-        .concat(' '),
+        .slice(0, -(sugestionsInput.length + 2))
+        .concat(`[@${sugestion.display_name}:${sugestion.user_id}] `)
     );
     setShowSugestions(false);
   };
