@@ -46,7 +46,7 @@ const MyChat = ({navigation, route}) => {
       .sendMessage(other.user_id, {text: newMessage})
       .then((res) => {
         setNewMessage('');
-        console.log(res);
+        // console.log(res);
         conversation.messages.unshift(res.data);
       });
   };
@@ -86,21 +86,21 @@ const MyChat = ({navigation, route}) => {
           renderItem={({item}) =>
             iSendIt(item) ? (
               <View style={styles.row_chat_me}>
+                <Text style={styles.text_chat}>{item.text}</Text>
                 <Image
                   source={require('../assets/pride-dog_1.png')}
                   resizeMode="contain"
                   style={styles.image}
                 />
-                <Text style={styles.text_chat}>{item.text}</Text>
               </View>
             ) : (
               <View style={styles.row_chat_third}>
-                <Text style={styles.text_chat}>{item.text}</Text>
                 <Image
                   source={require('../assets/pride-dog_1.png')}
                   resizeMode="contain"
                   style={styles.image}
                 />
+                <Text style={styles.text_chat}>{item.text}</Text>
               </View>
             )
           }
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   //tercero
   row_chat_third: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     alignItems: 'flex-start',
     paddingVertical: 8,
   },
@@ -171,9 +171,8 @@ const styles = StyleSheet.create({
   //yo
   row_chat_me: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignItems: 'flex-start',
-
     paddingVertical: 8,
   },
   text_title: {

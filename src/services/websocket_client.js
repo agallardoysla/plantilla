@@ -22,7 +22,7 @@ const init = async () => {
   });
 
   ws.on('message', function incoming(data) {
-    console.log(data);
+    console.log("message", data);
   });
 };
 

@@ -20,6 +20,7 @@ const numColumns = 3; //para el flatList
 export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const {user} = useContext(AuthContext);
   const [usersPosts, setUsersPosts] = useState([]);
+  const [followers, setFollowers] = useState(localUser.followers_with_details);
 
   useEffect(() => {
     users_services.listPosts(localUser.id).then((res) => {
@@ -85,13 +86,15 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     const doFollow = () => {
       if (followed) {
         users_services.unfollow(localUser.id).then(() => {
-          setFollowed(false);
           console.log('dejado de seguir');
+          setFollowers(followers.filter(f => f.user_id === localUser.id));
+          setFollowed(false);
         });
       } else {
-        users_services.follow(localUser.id).then(() => {
+        users_services.follow(localUser.id).then((res) => {
+          console.log('seguido', res.data);
+          setFollowers([...followers, user]);
           setFollowed(true);
-          console.log('seguido');
         });
       }
     };
@@ -163,7 +166,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           />
           <Text style={styles.text_profile}>Seguidores</Text>
           <FormButton
-            buttonTitle={localUser.followers_with_details.length}
+            buttonTitle={followers.length}
             style={styles.counter}
             onPress={go_to_followers}
           />
