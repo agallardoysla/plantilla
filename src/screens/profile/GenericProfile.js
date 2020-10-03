@@ -137,13 +137,13 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     );
   };
 
-  const goConversations = ()=> {
-    if(isLoggedUser){
-      navigation.navigate('MyConversations')
-    }else{
-      console.log('chat with a profile')
+  const goConversations = () => {
+    if (isLoggedUser) {
+      navigation.navigate('MyConversations');
+    } else {
+      console.log('chat with a profile');
     }
-  }
+  };
 
   return (
     <View style={styles.container}>

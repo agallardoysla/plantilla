@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import FormSearchInput from '../components/FormSearchInput';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import ListConversation from '../screens/ListConversation';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import chats_services from '../services/chats_services';
 
 const MyConversations = ({navigation}) => {
+  const [conversations, setConversations] = useState([]);
+  const [filteredConversations, setFilteredConversations] = useState([]);
+
   const go_back = () => {
     navigation.navigate('Profile');
   };
@@ -16,42 +20,18 @@ const MyConversations = ({navigation}) => {
       photo: 'url',
       name_user: 'name',
     },
-    {
-      id: 1,
-      photo: 'url',
-      name_user: 'name',
-    },
-    {
-      id: 2,
-      photo: 'url',
-      name_user: 'name',
-    },
-    {
-      id: 3,
-      photo: 'url',
-      name_user: 'name',
-    },
-    {
-      id: 4,
-      photo: 'url',
-      name_user: 'name',
-    },
-    {
-      id: 5,
-      photo: 'url',
-      name_user: 'name',
-    },
-    {
-      id: 6,
-      photo: 'url',
-      name_user: 'name',
-    },
-    {
-      id: 8,
-      photo: 'url',
-      name_user: 'name',
-    },
   ];
+
+  useEffect(() => {
+    chats_services.list().then(res => {
+      console.log(res.data);
+      console.log(res.data[0].messages);
+      console.log(res.data[0].users);
+      const newConversations = res.data.filter(c => c.is_active);
+      setConversations(newConversations);
+      setFilteredConversations(newConversations);
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -75,11 +55,11 @@ const MyConversations = ({navigation}) => {
       <View style={styles.row}>
         <FormSearchInput />
       </View>
-   
+
       <FlatList
-        data={datos}
+        data={filteredConversations}
         renderItem={({item}) => (
-         <ListConversation item={item} navigation={navigation}/>
+          <ListConversation conversation={item} navigation={navigation} />
      )}
         keyExtractor={(item) => {
           item.id;

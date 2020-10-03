@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import { AuthContext } from '../navigation/AuthProvider';
 import StylesConfiguration from '../utils/StylesConfiguration';
 
-const ListConversation = ({item, navigation}) => {
+const ListConversation = ({conversation, navigation}) => {
+  const {user} = useContext(AuthContext);
   //MyConversations > ListConversation(FlatList) > MyChat
   const goMyChat = () => {
-    navigation.navigate('MyChat', item);
+    navigation.navigate('MyChat', conversation);
+  };
+
+  const getProfileName = () => {
+    return conversation.users.filter(u => u.user_id !== user.id)[0].display_name;
+  };
+
+  const getLastMessage = () => conversation.messages[conversation.messages.length - 1];
+
+  const getLastMessageText = () => {
+    return getLastMessage().text;
+  };
+
+  const getLastMessageSender = () => {
+    return getLastMessage().from === user.id ? 'Yo' : `@${getProfileName()}`;
   };
 
   return (
@@ -21,10 +37,10 @@ const ListConversation = ({item, navigation}) => {
 
       <View style={{flex: 1, flexDirection: 'column', top: 10}}>
         <TouchableOpacity onPress={goMyChat}>
-          <Text style={styles.text_title_profile}>@Skay</Text>
+          <Text style={styles.text_title_profile}>@{getProfileName()}</Text>
           <Text style={styles.text_description}>
-            <Text style={styles.text_title_profile}>@Gruñon: </Text>Buen dia
-            como estas?
+            <Text style={styles.text_title_profile}>{getLastMessageSender()}: </Text>
+            {getLastMessageText()}
           </Text>
         </TouchableOpacity>
       </View>
