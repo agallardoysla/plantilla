@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Alert, StyleSheet} from 'react-native';
 import { withTheme } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
@@ -9,7 +9,24 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
   const postOwnerPattern = /\(([^:]+):([^)]+)\)/i;
   const commentOwnerPattern = /\{([^:]+):([^}]+)\}/i;
   const userMentionPattern = /\[([^:]+):([^\]]+)\]/i;
-  const initUserMentionPattern = /@(\w+)/;
+  const initUserMentionPattern = /@(\w+)\b/g;
+
+  useEffect(() => {
+    if (isInput && comment.length > 0) {
+      console.log(comment);
+      const matches = comment.match(initUserMentionPattern);
+      setShowSugestions(!!matches);
+      if (matches) {
+        const lastMatch = matches[matches.length - 1];
+        console.log("input matches: ", matches);
+        const showSugestions = comment.slice(-lastMatch.length) === lastMatch;
+        if (showSugestions) {
+          setSugestionsInput(lastMatch.slice(1));
+        }
+        setShowSugestions(showSugestions);
+      }
+    }
+  }, [comment, initUserMentionPattern, isInput, setShowSugestions, setSugestionsInput]);
 
   const handlehashtagPress = (hashtag, matchIndex) => {
     Alert.alert(`${hashtag} ${matchIndex}`);
@@ -17,9 +34,9 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
 
   const handleUserPress = (code, matchIndex) => {
     const test = /(\(|\{|\[)([^:]+):([^\]]+)(\)|\}|\])/i;
-    const founds = code.match(test);
-    console.log(founds);
-    navigation.navigate('OtherProfile', {user_id: founds[3]});
+    const matches = code.match(test);
+    console.log(matches);
+    navigation.navigate('OtherProfile', {user_id: matches[3]});
   };
 
   const renderPostOwner = (matchingString, matches) => {
@@ -32,14 +49,10 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
 
   const renderUserMention = (matchingString, matches) => {
     // console.log(matches);
-    return matchingString;
+    return '@' + matches[1];
   };
 
   const renderInitUserMention = (matchingString, matches) => {
-    if (isInput && matches[1].length > 0 && comment.slice(-matches[1].length) === matches[1]) {
-      setShowSugestions(true);
-      setSugestionsInput(matches[1]);
-    }
     return matchingString;
   };
 
@@ -95,9 +108,5 @@ const styles = StyleSheet.create({
   userMention: {
     color: StylesConfiguration.color,
   },
-  sugestions: {
-    borderColor: 'white',
-    borderWidth: 1,
-    borderStyle: 'solid',
-  },
+  
 });

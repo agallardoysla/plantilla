@@ -57,26 +57,40 @@ export default function CommentInput({
 
   const getMentionsSugestions = () => {
     const filteredSugestions = getFixedSugestions.filter(
-      (s) =>
-        s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase(),
+      sugestionsInput.length > 0
+        ? (s) =>
+            s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase()
+        : [],
     );
     return filteredSugestions;
   };
 
   const getMentionsSugestionsAsync = useCallback(
     async (filteredSugestions) => {
-      const context = await users_services.getContext({
-        search: sugestionsInput.toLowerCase(),
-        exclude: filteredSugestions.map(s => s.user_id),
-        limit: maxSugestions - filteredSugestions.length,
-      });
-      console.log(context.data);
-      setSugestionsAsync(
-        context.data.filter(
-          (s) =>
-            s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase(),
-        ),
-      );
+      if (sugestionsInput.length > 0) {
+        const context = await users_services.getContext({
+          search: sugestionsInput.toLowerCase(),
+          exclude: filteredSugestions.map(s => s.user_id),
+          limit: maxSugestions - filteredSugestions.length,
+        });
+        // console.log(context.data);
+        context.data = context.data.map(d => {
+          return {
+            user_id: d.id,
+            ...d,
+          };
+        });
+        setSugestionsAsync(
+          sugestionsInput.length > 0
+            ? context.data.filter(
+                (s) =>
+                  s.display_name
+                    .slice(0, sugestionsInput.length)
+                    .toLowerCase() === sugestionsInput.toLowerCase(),
+              )
+            : [],
+        );
+      }
     },
     [sugestionsInput],
   );
@@ -112,7 +126,7 @@ export default function CommentInput({
     setNewComment(
       newComment
         .slice(0, -(sugestionsInput.length + 2))
-        .concat(`[@${sugestion.display_name}:${sugestion.user_id}] `)
+        .concat(`[${sugestion.display_name}:${sugestion.user_id}] `)
     );
     setShowSugestions(false);
   };
