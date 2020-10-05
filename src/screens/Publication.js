@@ -266,6 +266,7 @@ export default function Publication({post, navigation}) {
             ') ' +
             (post.text === '__post_text__' ? '' : post.text)
           }
+          navigation={navigation}
         />
         {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 

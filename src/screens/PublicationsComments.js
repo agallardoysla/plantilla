@@ -169,6 +169,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
                       comment={
                         '{' + answer.user_owner.display_name + '} ' + answer.text
                       }
+                      navigation={navigation}
                     />
                     <Menu
                       opened={showMenuAnswer[i] && answer.user_owner.user_id === user.id}
