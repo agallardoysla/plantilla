@@ -5,7 +5,7 @@ import {Icon} from 'react-native-elements';
 import { FeedContext } from '../../navigation/FeedContext';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import CameraRoll from '@react-native-community/cameraroll';
-import Video from 'react-native-video';
+import Video from 'react-native-video-player';
 
 const PendingView = () => (
   <View
@@ -290,10 +290,11 @@ export default function TakePicture({
       ) : (
         <View style={styles.container}>
           <Video
-            source={{uri: video}}
+            video={{uri: video}}
             style={styles.backgroundVideo}
-            controls={true}
-            fullscreen={true}
+            autoplay={true}
+            defaultMuted={true}
+            loop={true}
           />
           <View style={styles.actionsContainer}>
             <Icon
@@ -413,12 +414,12 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   backgroundVideo: {
-    width: window.width - 20,
-    height: (window.height - 50),
+    width: window.width,
+    height: (window.height - 130),
   },
   actionsContainer: {
     height: 50,
-    bottom: 73,
+    bottom: -0,
     backgroundColor: 'rgba(0,0,0,0.6)',
     flexDirection: 'row',
     alignItems: 'center',

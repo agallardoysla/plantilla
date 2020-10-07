@@ -7,7 +7,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView, TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import Video from 'react-native-video-player';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import posts_services from '../services/posts_services';
@@ -170,11 +170,11 @@ export default function Publication({post, navigation}) {
         {/*Inicia Foto de la publicaciòn */}
         {post.files_with_urls.length > 0 ? (
           <View style={styles.postImagesContainer}>
-            <TouchableOpacity
+            <TouchableWithoutFeedback
               style={styles.postImagesContainerPresable}
               onPress={() => navigation.navigate('PublicationDetails', {post})}>
               {toView(post.files_with_urls)}
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
           </View>
         ) : null}
         {/*Finaliza Foto de la publicaciòn*/}
