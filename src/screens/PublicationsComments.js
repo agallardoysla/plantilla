@@ -166,9 +166,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
                   <>
                     <CommentFormatter
                       style={styles.content}
-                      comment={
-                        '{' + answer.user_owner.display_name + '} ' + answer.text
-                      }
+                      comment={`{${answer.user_owner.display_name}:${answer.user_owner.user_id}} ${answer.text}`}
                       navigation={navigation}
                     />
                     <Menu
