@@ -1,6 +1,6 @@
 import React, { useState, useEffect,  useContext } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import Video from 'react-native-video';
+import Video from 'react-native-video-player';
 import FormButton from '../../components/FormButton';
 import MatInput from '../../components/MatInput';
 import { FeedContext } from '../../navigation/FeedContext';
@@ -85,10 +85,11 @@ export default function PublishPublication({route}) {
             {video !== '' ? (
               <View style={styles.fullRow}>
                 <Video
-                  source={{uri: video}}
+                  video={{uri: video}}
                   style={styles.backgroundVideo}
-                  controls={true}
-                  fullscreen={true}
+                  autoplay={true}
+                  defaultMuted={true}
+                  loop={true}
                 />
               </View>
             ) : null}
