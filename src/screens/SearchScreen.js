@@ -71,8 +71,7 @@ export default function SearchScreen({navigation}) {
             if (item.display_name.toLowerCase().indexOf(valueSearch.toLowerCase()) !== -1 && item.id !== user.id){
               return <ProfileSearch item={item} key={item.id} myId={user.id} />
             }
-            
-            return null
+            return null;
           })
         ) : (
           <View style={styles.container}>
@@ -84,7 +83,7 @@ export default function SearchScreen({navigation}) {
               onEndReachedThreshold={0.6}
               onEndReached={(info) => loadPost()}
               bouncesZoom={true}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item, index) => index.toString()}
               numColumns={3}
             />
           </View>

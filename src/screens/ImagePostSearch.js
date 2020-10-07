@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Image, Dimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import Video from 'react-native-video';
+import Video from 'react-native-video-player';
 
 let window = Dimensions.get('window');
 
@@ -10,34 +10,29 @@ export default function ImagePostSearch({post}) {
   const isImage = (uri) =>
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
 
-  const toView = (file, i) => {
+  const toView = (file) => {
     return isImage(file.url) ? (
       <Image
         source={{uri: file.url}}
         style={styles.itemImage}
-        key={i}
-        resizeMode="repeat"
+        resizeMode="cover"
       />
     ) : (
       <Video
-        source={{uri: file.url}}
+        video={{uri: file.url}}
         style={styles.itemImage}
-        key={i}
-        controls={true}
-        fullscreen={false}
+        autoplay={false}
+        defaultMuted={true}
+        loop={true}
+        videoWidth={window.width / 3}
+        videoHeight={120}
       />
     );
   };
 
-  return post.files_with_urls.length > 0 ? (
-    <ScrollView horizontal={true} indicatorStyle="white">
-      <View style={styles.profilePublications}>
-        <View style={styles.itemContainer}>
-          {post.files_with_urls.map(toView)}
-        </View>
-      </View>
-    </ScrollView>
-  ) : null;
+  return (
+    <View style={styles.itemContainer}>{toView(post.files_with_urls[0])}</View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -58,7 +53,7 @@ const styles = StyleSheet.create({
   },
   image_post: {
     width: window.width,
-    height: 300,
+    height: 120,
     top: 20,
   },
   itemContainer: {
@@ -67,11 +62,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'stretch',
     height: 120,
+    width: window.width / 3,
   },
   itemImage: {
     flex: 1,
-    width: 200,
-    height: 200,
+    width: window.width / 3,
+    height: 120,
     top: 5,
   },
 });
