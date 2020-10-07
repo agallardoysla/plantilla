@@ -310,6 +310,21 @@ export default function TakePicture({
               size={iconSize}
               style={styles.action}
             />
+            <Icon
+              name="done-all"
+              color={StylesConfiguration.color}
+              size={iconSize}
+              style={styles.action}
+              onPress={() =>
+                navigation.navigate('PublishPublication', {
+                  images: images,
+                  setImages: setImages,
+                  video: video,
+                  setVideo: setVideo,
+                  navigation: navigation,
+                })
+              }
+            />
           </View>
         </View>
       )}

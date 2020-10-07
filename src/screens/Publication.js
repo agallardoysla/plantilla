@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import Video from 'react-native-video';
+import Video from 'react-native-video-player';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import posts_services from '../services/posts_services';
 import PublicationsComments from './PublicationsComments';
@@ -40,22 +40,26 @@ export default function Publication({post, navigation}) {
   const isImage = (uri) =>
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
 
-  const toView = (file, i) => {
+  const toView = (files) => {
     // console.log(file, i);
-    return isImage(file.url) ? (
-      <Image
-        source={{uri: file.url}}
-        style={[styles.image_post, i >= 1 ? {marginLeft: 10} : {}]}
-        key={i}
-        resizeMode="contain"
-      />
+    return isImage(files[0].url) ? (
+      <ScrollView horizontal={true} indicatorStyle="white">
+        {files.map((file, i) => (
+          <Image
+            source={{uri: file.url}}
+            style={[styles.image_post, i >= 1 ? {marginLeft: 10} : {}]}
+            key={i}
+            resizeMode="contain"
+          />
+        ))}
+      </ScrollView>
     ) : (
       <Video
-        source={{uri: file.url}}
+        video={{uri: files[0].url}}
         style={styles.image_post}
-        key={i}
-        controls={true}
-        fullscreen={false}
+        autoplay={true}
+        defaultMuted={true}
+        loop={true}
       />
     );
   };
@@ -169,9 +173,7 @@ export default function Publication({post, navigation}) {
             <TouchableOpacity
               style={styles.postImagesContainerPresable}
               onPress={() => navigation.navigate('PublicationDetails', {post})}>
-              <ScrollView horizontal={true} indicatorStyle="white">
-                {post.files_with_urls.map(toView)}
-              </ScrollView>
+              {toView(post.files_with_urls)}
             </TouchableOpacity>
           </View>
         ) : null}
