@@ -5,11 +5,11 @@ import ParsedText from 'react-native-parsed-text';
 import StylesConfiguration from './StylesConfiguration';
 
 export default function CommentFormatter({comment, isInput, setShowSugestions, setSugestionsInput, style, navigation}) {
-  const hashtagPattern = /#(\w+)/;
-  const postOwnerPattern = /\(([^:]+):([^)]+)\)/i;
-  const commentOwnerPattern = /\{([^:]+):([^}]+)\}/i;
-  const userMentionPattern = /\[([^:]+):([^\]]+)\]/i;
-  const initUserMentionPattern = /@(\w+)\b/g;
+  const hashtagPattern = /#(\w+)/;                      // #nombre
+  const postOwnerPattern = /\(([^:]+):([^)]+)\)/i;      // (nombre:id)
+  const commentOwnerPattern = /\{([^:]+):([^}]+)\}/i;   // {nombre:id}
+  const userMentionPattern = /\[([^:]+):([^\]]+)\]/i;   // [nombre:id]
+  const initUserMentionPattern = /@(\w+)\b/g;           // @nombre
 
   useEffect(() => {
     if (isInput && comment.length > 0) {
@@ -48,7 +48,8 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
   };
 
   const renderUserMention = (matchingString, matches) => {
-    // console.log(matches);
+    // console.log("renderUserMention", matches, matchingString);
+    // return matchingString;
     return '@' + matches[1];
   };
 
