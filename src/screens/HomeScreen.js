@@ -1,27 +1,36 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, StyleSheet, FlatList, Text, TouchableWithoutFeedback, Image} from 'react-native';
+import {View, StyleSheet, FlatList, Text, TouchableOpacity, Image} from 'react-native';
 import posts_services from '../services/posts_services';
 import {FeedContext} from '../navigation/FeedContext';
 import Publication from './Publication';
 import Modal from 'react-native-modal';
 import FormSearchInput from '../components/FormSearchInput';
-import search_services from '../services/search_services';
 import users_services from '../services/users_services';
 import StylesConfiguration from '../utils/StylesConfiguration';
+import chats_services from '../services/chats_services';
 
 export default function HomeScreen({navigation}) {
   const {posts, setPosts} = useContext(FeedContext);
   const [page, setPage] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [valueSearch, setValueSearch] = useState('');
+  const [originalUsersSearched, setOriginalUsersSearched] = useState([]);
   const [usersSearched, setUsersSearched] = useState([]);
   const [sharedPost, setSharedPost] = useState({});
 
   useEffect(() => {
-    if (posts.length === 0) {
-      loadPost();
-    }
-  });
+    const init = async () => {
+      if (posts.length === 0) {
+        loadPost();
+      }
+      const res = await users_services.getContext({
+        search: '',
+      });
+      setUsersSearched(res.data);
+      setOriginalUsersSearched(res.data);
+    };
+    init();
+  }, []);
 
   const loadPost = () => {
     posts_services.list(page).then((res) => {
@@ -40,19 +49,42 @@ export default function HomeScreen({navigation}) {
       });
       console.log(res.data.map(u => u.display_name));
       setUsersSearched(res.data);
+      setOriginalUsersSearched(res.data);
     } else {
-      setUsersSearched([]);
+      setUsersSearched(originalUsersSearched);
+      setValueSearch('');
     }
-  }
+  };
 
-  const showSearch = (e) => {
-    setValueSearch(e);
+  const showSearch = async (seachedString) => {
+    setValueSearch(seachedString);
+    if (seachedString.length > 0) {
+      setUsersSearched(
+        originalUsersSearched.filter((u) =>
+          u.display_name.toLowerCase().includes(seachedString.toLowerCase()),
+        ),
+      );
+      if (seachedString.length >= 3) {
+        const res = await users_services.getContext({
+          search: seachedString,
+        });
+        console.log(res.data.map(u => u.display_name));
+        setUsersSearched(res.data);
+      }
+    } else {
+      setUsersSearched(originalUsersSearched);
+    }
   };
 
   const showUserInfo = (user) => {
-    console.log(user);
     return user.display_name.slice(0, 20);
   }
+
+  const shareSelectedPost = (userId) => {
+    console.log(userId, `[post:${sharedPost.id}]`);
+    chats_services.sendMessage(userId, {text: `[post:${sharedPost.id}]`});
+    setShowModalAndContext(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -79,10 +111,7 @@ export default function HomeScreen({navigation}) {
         onBackButtonPress={() => setShowModalAndContext(false)}
         onBackdropPress={() => setShowModalAndContext(false)}>
         <View style={styles.shareModalContent}>
-          <FormSearchInput
-            value={valueSearch}
-            onChangeText={(e) => showSearch(e)}
-          />
+          <FormSearchInput value={valueSearch} onChangeText={showSearch} />
           {usersSearched.length > 0 ? (
             <FlatList
               style={styles.usersList}
@@ -96,11 +125,15 @@ export default function HomeScreen({navigation}) {
                       style={styles.image}
                     />
                     <Text style={styles.userName}>{showUserInfo(item)}</Text>
-                    <Image
-                      source={require('../assets/sobre_amarillo_1.png')}
-                      resizeMode="contain"
-                      style={styles.image}
-                    />
+                    <TouchableOpacity
+                      style={styles.sendMessage}
+                      onPress={() => shareSelectedPost(item.id)}>
+                      <Image
+                        source={require('../assets/sobre_amarillo_1.png')}
+                        resizeMode="contain"
+                        style={styles.image}
+                      />
+                    </TouchableOpacity>
                   </View>
                 );
               }}
@@ -126,6 +159,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'stretch',
     margin: 0,
+    padding: 0,
   },
   shareModalContent: {
     height: 370,
@@ -133,6 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'stretch',
     backgroundColor: 'black',
+    margin: 0,
   },
   usersList: {
     height: 280,
@@ -150,5 +185,12 @@ const styles = StyleSheet.create({
   },
   image: {
     marginHorizontal: 10,
+  },
+  sendMessage: {
+    height: 40,
+    width: 60,
+    backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

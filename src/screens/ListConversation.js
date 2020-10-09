@@ -12,7 +12,9 @@ const ListConversation = ({conversation, navigation}) => {
   };
 
   const getProfileName = () => {
-    return conversation.users.filter(u => u.user_id !== user.id)[0].display_name;
+    const other = conversation.users.filter(u => u.user_id !== user.id);
+    console.log('other', other);
+    return other[0] ? other[0].display_name : conversation.users[0].display_name;
   };
 
   const getLastMessage = () => conversation.messages[0];
