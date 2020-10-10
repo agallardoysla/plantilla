@@ -6,6 +6,7 @@ import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
 import { AuthContext } from '../../navigation/AuthProvider';
 import chats_services from '../../services/chats_services';
+import MessageFormatter from './MessageFormatter';
 
 const MyChat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
@@ -97,7 +98,11 @@ const MyChat = ({navigation, route}) => {
           renderItem={({item}) =>
             iSendIt(item) ? (
               <View style={styles.row_chat_me}>
-                <Text style={styles.text_chat}>{item.text}</Text>
+                <MessageFormatter
+                  style={styles.text_chat}
+                  message={item.text}
+                  navigation={navigation}
+                />
                 <Image
                   source={require('../../assets/pride-dog_1.png')}
                   resizeMode="contain"
