@@ -28,38 +28,36 @@ export default function MessageFormatter({message, navigation, style}) {
   const toView = (file) => {
     // console.log(file, i);
     return isImage(file.url) ? (
-      <Image source={{uri: file.url}} resizeMode="contain" />
+      <Image
+        source={{uri: file.url}}
+        resizeMode="cover"
+        style={styles.postImage}
+      />
     ) : null;
   };
 
   const renderPost = (matchingString, matches) => {
-    return (
+    return post ? (
       <TouchableOpacity
         style={styles.postContainer}
         onPress={() => navigation.navigate('PublicationDetails', {post})}>
-        {post ? (
-          <View style={styles.postContentContainer}>
-            <View style={styles.postRow}>
-              <CommentFormatter
-                style={styles.postOwner}
-                comment={`(${post.user_owner.display_name}:${post.user_owner.user_id})`}
-                navigation={navigation}
-              />
-            </View>
-            <View style={styles.postImage}>
-              {toView(post.files_with_urls[0])}
-            </View>
-            <View style={styles.postRow}>
-              <CommentFormatter
-                style={styles.postContent}
-                comment={post.text === '__post_text__' ? '' : post.text}
-                navigation={navigation}
-              />
-            </View>
-          </View>
-        ) : null}
+        <View style={styles.postOwner}>
+          <CommentFormatter
+            style={styles.postOwner}
+            comment={`(${post.user_owner.display_name}:${post.user_owner.user_id})`}
+            navigation={navigation}
+          />
+        </View>
+        <View style={styles.postImage}>{toView(post.files_with_urls[0])}</View>
+        <View style={styles.postContent}>
+          <CommentFormatter
+            style={styles.postContent}
+            comment={post.text === '__post_text__' ? '' : post.text}
+            navigation={navigation}
+          />
+        </View>
       </TouchableOpacity>
-    );
+    ) : null;
   };
 
   return (
@@ -87,29 +85,25 @@ const styles = StyleSheet.create({
   postContainer: {
     width: 200,
     height: 200,
-    backgroundColor: 'rgb(84, 84, 84)',
-    borderWidth: 1,
-    borderColor: 'white',
+    backgroundColor: 'rgb(15, 15, 15)',
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'stretch',
-  },
-  postContentContainer: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: 'white',
-  },
-  postRow: {
-    flexDirection: 'row',
+    // padding: 5,
   },
   postOwner: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     textAlign: 'right',
   },
   postContent: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
     textAlign: 'left',
   },
   postImage: {
     height: 160,
     width: 120,
+    paddingHorizontal: 40,
   },
 });
