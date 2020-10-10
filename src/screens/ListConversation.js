@@ -11,10 +11,13 @@ const ListConversation = ({conversation, navigation}) => {
     navigation.navigate('MyChat', {conversation});
   };
 
-  const getProfileName = () => {
+  const getOther = () => {
     const other = conversation.users.filter(u => u.user_id !== user.id);
-    console.log('other', other);
-    return other[0] ? other[0].display_name : conversation.users[0].display_name;
+    return other[0] ? other[0] : conversation.users[0];
+  };
+
+  const getProfileName = () => {
+    return getOther().display_name;
   };
 
   const getLastMessage = () => conversation.messages[0];
