@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import { AuthContext } from '../navigation/AuthProvider';
-import StylesConfiguration from '../utils/StylesConfiguration';
+import { AuthContext } from '../../navigation/AuthProvider';
+import StylesConfiguration from '../../utils/StylesConfiguration';
 
 const ListConversation = ({conversation, navigation}) => {
   const {user} = useContext(AuthContext);
@@ -34,7 +34,7 @@ const ListConversation = ({conversation, navigation}) => {
     <View style={styles.row}>
       <View style={{flexDirection: 'column', top: 10}}>
         <Image
-          source={require('../assets/pride-dog_1.png')}
+          source={require('../../assets/pride-dog_1.png')}
           resizeMode="contain"
           style={styles.image}
         />

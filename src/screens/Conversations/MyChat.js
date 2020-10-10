@@ -1,11 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
-import StylesConfiguration from '../utils/StylesConfiguration';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import FormInputChat from '../components/FormInputChat';
-import FormButton_small from '../components/FormButton_small';
-import { AuthContext } from '../navigation/AuthProvider';
-import chats_services from '../services/chats_services';
+import StylesConfiguration from '../../utils/StylesConfiguration';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import FormInputChat from '../../components/FormInputChat';
+import FormButton_small from '../../components/FormButton_small';
+import { AuthContext } from '../../navigation/AuthProvider';
+import chats_services from '../../services/chats_services';
 
 const MyChat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
@@ -75,7 +75,7 @@ const MyChat = ({navigation, route}) => {
             <TouchableOpacity onPress={go_back}>
               <Image
                 style={styles.boton_back}
-                source={require('../assets/boton_volver_atras.png')}
+                source={require('../../assets/boton_volver_atras.png')}
               />
             </TouchableOpacity>
           </View>
@@ -99,7 +99,7 @@ const MyChat = ({navigation, route}) => {
               <View style={styles.row_chat_me}>
                 <Text style={styles.text_chat}>{item.text}</Text>
                 <Image
-                  source={require('../assets/pride-dog_1.png')}
+                  source={require('../../assets/pride-dog_1.png')}
                   resizeMode="contain"
                   style={styles.image}
                 />
@@ -107,7 +107,7 @@ const MyChat = ({navigation, route}) => {
             ) : (
               <View style={styles.row_chat_third}>
                 <Image
-                  source={require('../assets/pride-dog_1.png')}
+                  source={require('../../assets/pride-dog_1.png')}
                   resizeMode="contain"
                   style={styles.image}
                 />
@@ -120,7 +120,7 @@ const MyChat = ({navigation, route}) => {
 
       <View style={styles.bottomBar}>
         <Image
-          source={require('../assets/camara.png')}
+          source={require('../../assets/camara.png')}
        
           style={{marginLeft: 10, marginRight: 10, width: 36, height: 36}}
         />

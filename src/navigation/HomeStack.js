@@ -14,15 +14,15 @@ import NewPublicationContainer from '../screens/NewPublication/NewPublicationCon
 import PublishPublication from '../screens/NewPublication/PublishPublication';
 import ImagePostSearch from '../screens/ImagePostSearch';
 import ProfileSearch from '../screens/ProfileSearch';
-import MyConversations from '../screens/MyConversations';
+import MyConversations from '../screens/Conversations/MyConversations';
 import OtherProfile from '../screens/profile/OtherProfile';
 import Followed from '../screens/profile/Followed';
 import Followers from '../screens/profile/Followers';
 import MyProfileScreen from '../screens/profile/MyProfileScreen';
 import Preferences from '../screens/profile/Preferences';
 import PublicationDetails from '../screens/PublicationDetails';
-import ListConversation from '../screens/ListConversation';
-import MyChat from '../screens/MyChat';
+import ListConversation from '../screens/Conversations/ListConversation';
+import MyChat from '../screens/Conversations/MyChat';
 
 import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
