@@ -11,22 +11,28 @@ const MyChat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
   const [newMessage, setNewMessage] = useState('');
   const [conversation, setConversation] = useState({});
+  const [other, setOther] = useState({});
 
   useEffect(() => {
     if (route.params.conversation) {
       setConversation(route.params.conversation);
+      setOther(getOther(route.params.conversation));
     } else {
       chats_services.list().then(res => {
-        const localConversation = res.data.filter((c) =>
+        let localConversation = res.data.filter((c) =>
           c.users.filter((u) => u.user_id === route.params.receiver.user_id).length > 0,
         );
         if (localConversation.length > 0) {
-          setConversation(localConversation[0]);
+          localConversation = localConversation[0];
+          setConversation(localConversation);
+          setOther(getOther(localConversation));
         } else {
-          setConversation({
+          localConversation = {
             messages: [],
             users: [route.params.receiver, user], // tiene que estar en este orden por si es una conversacion nueva
-          });
+          };
+          setConversation(localConversation);
+          setOther(getOther(localConversation));
         }
       });
     }
@@ -36,17 +42,22 @@ const MyChat = ({navigation, route}) => {
     navigation.navigate('MyConversations');
   };
 
-  const iSendIt = (message) => message.from === user.id;
+  const iSendIt = (message) =>
+    message.from === user.id ||
+    (message.from.user_id && message.from.user_id === user.id); // hablar con Alberto por este problema
+
+  const getOther = (conv) => {
+    const _other = conv.users.filter(u => u.user_id !== user.id);
+    return _other[0] ? _other[0] : conv.users[0];
+  };
 
   const sendNewMessage = async () => {
     console.log('conversation', conversation);
-    const other = conversation.users.filter(u => u.user_id !== user.id)[0];
-    console.log('other', other);
     chats_services
       .sendMessage(other.user_id, {text: newMessage})
       .then((res) => {
         setNewMessage('');
-        // console.log(res);
+        console.log(res.data);
         conversation.messages.unshift(res.data);
       });
   };
@@ -76,7 +87,7 @@ const MyChat = ({navigation, route}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={styles.text_title}>@Skay</Text>
+            <Text style={styles.text_title}>@{other.display_name}</Text>
           </View>
         </View>
         <FlatList
