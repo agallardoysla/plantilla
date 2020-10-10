@@ -7,6 +7,7 @@ import FormButton_small from '../../components/FormButton_small';
 import { AuthContext } from '../../navigation/AuthProvider';
 import chats_services from '../../services/chats_services';
 import MessageFormatter from './MessageFormatter';
+import websocket_client from '../../services/websocket_client';
 
 const MyChat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
@@ -15,6 +16,7 @@ const MyChat = ({navigation, route}) => {
   const [other, setOther] = useState({});
 
   useEffect(() => {
+    websocket_client.subscribe(receiveMessage);
     if (route.params.conversation) {
       setConversation(route.params.conversation);
       setOther(getOther(route.params.conversation));
@@ -38,6 +40,11 @@ const MyChat = ({navigation, route}) => {
       });
     }
   }, []);
+
+  const receiveMessage = {
+    eventType: 'message_received',
+    action: (message) => conversation.messages.unshift(message),
+  };
 
   const go_back = () => {
     navigation.navigate('MyConversations');

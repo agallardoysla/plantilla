@@ -1,31 +1,38 @@
-// import api_config from './api_config';
-// import auth from '@react-native-firebase/auth';
+import api_config from './api_config';
+import auth from '@react-native-firebase/auth';
 
-// const url = api_config.webSocketUrl;
+const url = api_config.webSocketUrl;
+const subscribers = [];
 
-// const init = async () => {
-//   console.log('Init WS');
-//   const token = await auth().currentUser.getIdToken(true);
+const init = async () => {
+  console.log('Init WS');
+  const token = await auth().currentUser.getIdToken(true);
 
-//   const headers = {
-//     Authorization: `JWT ${token}`,
-//   };
-  
-//   const ws = new WebSocket(url, '', {origin: url, headers: headers});
+  const headers = {
+    Authorization: `JWT ${token}`,
+  };
 
-//   ws.onopen = () => {
-//     console.log('connected');
-//   };
+  const ws = new WebSocket(url, '', {headers: headers});
 
-//   ws.on('close', function close() {
-//     console.log('disconnected');
-//   });
+  ws.onopen = () => {
+    console.log('connected');
+  };
 
-//   ws.onmessage = function incoming(data) {
-//     console.log("message", data);
-//   };
-// };
+  // ws.on('close', function close() {
+  //   console.log('disconnected');
+  // });
 
-// export default {
-//   init,
-// };
+  ws.onmessage = function incoming(message) {
+    console.log("message", message, subscribers);
+    subscribers.forEach(
+      (s) => s.eventType === message.event && s.action(message.data),
+    );
+  };
+};
+
+const subscribe = subscribers.push;
+
+export default {
+  init,
+  subscribe,
+};
