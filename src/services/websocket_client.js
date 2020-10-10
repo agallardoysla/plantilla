@@ -10,7 +10,7 @@
 //   const headers = {
 //     Authorization: `JWT ${token}`,
 //   };
-  
+
 //   const ws = new WebSocket(url, '', {origin: url, headers: headers});
 
 //   ws.onopen = () => {

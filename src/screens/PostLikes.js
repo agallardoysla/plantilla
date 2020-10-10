@@ -10,44 +10,38 @@ import {
 import FormButton_small from '../components/FormButton_small';
 import FormSearchInput from '../components/FormSearchInput';
 import StylesConfiguration from '../utils/StylesConfiguration';
-import {Icon} from 'react-native-elements';
+import Icon from '../components/Icon';
 import {ScrollView} from 'react-native-gesture-handler';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const PostLikes = ({navigation, route}) => {
- 
   //trae el nombre del usuario
-  console.log(route.params)
+  console.log(route.params);
 
   const data = [
     {
       id: 0,
       photo: 'url',
-   
     },
     {
       id: 1,
       photo: 'url',
-
     },
     {
       id: 2,
       photo: 'url',
-
     },
     {
       id: 3,
       photo: 'url',
-   
     },
     {
       id: 4,
       photo: 'url',
-
     },
     {
       id: 5,
       photo: 'url',
-  
     },
     {
       id: 6,
@@ -57,27 +51,22 @@ const PostLikes = ({navigation, route}) => {
     {
       id: 8,
       photo: 'url',
-
     },
     {
       id: 9,
       photo: 'url',
-
     },
     {
       id: 10,
       photo: 'url',
-
     },
     {
       id: 11,
       photo: 'url',
- 
     },
     {
       id: 12,
       photo: 'url',
-   
     },
   ];
 
@@ -86,7 +75,7 @@ const PostLikes = ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.column_back}>
         <TouchableOpacity onPress={showPublication}>
           <Image
@@ -99,13 +88,17 @@ const PostLikes = ({navigation, route}) => {
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.sub_colummn}>
-            <Text style={{color: 'white', fontFamily: 'GothamBlack-normal'}}>
+            <Text
+              style={{
+                color: 'white',
+                // fontFamily: 'GothamBlack-normal'
+              }}>
               Seguidores
             </Text>
             <Text
               style={{
                 color: 'white',
-                fontFamily: 'GothamBlack-normal',
+                // fontFamily: 'GothamBlack-normal',
                 top: 20,
               }}>
               Otros
@@ -118,8 +111,12 @@ const PostLikes = ({navigation, route}) => {
           </View>
 
           <View style={styles.sub_colummn}>
-            <Icon name="favorite" color="red" size={32} />
-            <Text style={{color: 'white', fontFamily: 'GothamBlack-normal'}}>
+            <Icon source={'favorite'} color="red" size={32} />
+            <Text
+              style={{
+                color: 'white',
+                // fontFamily: 'GothamBlack-normal'
+              }}>
               9646
             </Text>
           </View>
@@ -158,7 +155,7 @@ const PostLikes = ({navigation, route}) => {
                       <Text
                         style={{
                           color: 'white',
-                          fontFamily: 'GothamBlack-Normal',
+                          // fontFamily: 'GothamBlack-Normal',
                           left: 5,
                         }}>
                         #QuedateEnCasa
@@ -174,7 +171,7 @@ const PostLikes = ({navigation, route}) => {
                     />
                     <View style={styles.contentView}>
                       <Icon
-                        name="email"
+                        source={'email'}
                         color={StylesConfiguration.color}
                         size={32}
                       />
@@ -186,7 +183,7 @@ const PostLikes = ({navigation, route}) => {
           }}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

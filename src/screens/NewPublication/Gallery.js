@@ -1,8 +1,12 @@
 import CameraRoll from '@react-native-community/cameraroll';
-import React, { useEffect, useState } from 'react';
-import { Image, PermissionsAndroid, StyleSheet, Text, View } from 'react-native';
-import { FlatList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import {Icon} from 'react-native-elements';
+import React, {useEffect, useState} from 'react';
+import {Image, PermissionsAndroid, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
+import Icon from '../../components/Icon';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {
   Menu,
@@ -11,6 +15,7 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import FormButton from '../../components/FormButton';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function Gallery({
   maxImages,
@@ -45,22 +50,27 @@ export default function Gallery({
         return;
       }
       loadAssets();
-    }
+    };
     init();
   }, [images, video, assetType]);
 
   const loadAssets = () => {
     loadAssetsParams(hasNextPage, assetType, endCursor, assetsGallery);
-  }
+  };
 
-  const loadAssetsParams = (_hasNextPage, _assetType, _endCursor, assetsLoaded) => {
-    console.log()
+  const loadAssetsParams = (
+    _hasNextPage,
+    _assetType,
+    _endCursor,
+    assetsLoaded,
+  ) => {
+    console.log();
     if (_hasNextPage) {
       CameraRoll.getPhotos({
         first: pageSize,
         after: _endCursor,
         assetType: _assetType,
-      }).then(res => {
+      }).then((res) => {
         let assetsPaginated = [];
         // Se paginan los post de acuerdo a la cantidad de columnas
         res.edges.forEach((p, i) => {
@@ -73,7 +83,7 @@ export default function Gallery({
         });
         // setAssetsGallery([...assetsGallery, ...assetsPaginated]);
         setAssetsGallery([...assetsLoaded, ...assetsPaginated]);
-        console.log("end:", res.page_info.end_cursor);
+        console.log('end:', res.page_info.end_cursor);
         setEndCursor(res.page_info.end_cursor);
         setHasNextPage(res.page_info.has_next_page);
         // setImages(res.edges.slice(0,5).map(edge => edge.node.image.uri));
@@ -89,7 +99,7 @@ export default function Gallery({
           setVideo('');
         }
       } else {
-        setImages(images.filter(i => i !== asset));
+        setImages(images.filter((i) => i !== asset));
       }
     }
     if (assetType === 'Videos') {
@@ -125,7 +135,7 @@ export default function Gallery({
   return (
     <View style={styles.container}>
       <View style={styles.actionsBarTop}>
-        <Menu opened={showMenu} onBackdropPress={() => setShowMenu(false)} >
+        <Menu opened={showMenu} onBackdropPress={() => setShowMenu(false)}>
           <MenuTrigger
             text={assetType === 'Photos' ? 'Fotos' : 'Videos'}
             customStyles={triggerStyles}
@@ -200,7 +210,10 @@ export default function Gallery({
           style={styles.editPicture}
           disabled={!canPublish()}>
           <Icon
-            name={canPublish() ? 'done-all' : 'done'}
+            // TODO: Cambiar el icono por el similar al done-all y el done.
+            showSecondIcon={canPublish()}
+            source={'done_all'}
+            secondIcon={'done'}
             color={canPublish() ? StylesConfiguration.color : 'grey'}
             size={iconSize}
             style={styles.action}
@@ -271,9 +284,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 5,
   },
-  menuText: {
-
-  },
+  menuText: {},
   imagesContainer: {
     height: 45,
     flexDirection: 'row',

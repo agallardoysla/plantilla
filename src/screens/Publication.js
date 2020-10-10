@@ -7,7 +7,11 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
-import {ScrollView, TouchableOpacity, TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {
+  ScrollView,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 import Video from 'react-native-video-player';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import posts_services from '../services/posts_services';
@@ -264,7 +268,9 @@ export default function Publication({post, navigation}) {
           style={styles.description}
           comment={
             '(' +
-            post.user_owner.display_name + ':' + post.user_owner.user_id +
+            post.user_owner.display_name +
+            ':' +
+            post.user_owner.user_id +
             ') ' +
             (post.text === '__post_text__' ? '' : post.text)
           }

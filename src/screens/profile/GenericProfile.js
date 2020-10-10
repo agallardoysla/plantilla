@@ -13,7 +13,8 @@ import FormButton from '../../components/FormButton';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import users_services from '../../services/users_services';
-import { AuthContext } from '../../navigation/AuthProvider';
+import {AuthContext} from '../../navigation/AuthProvider';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const numColumns = 3; //para el flatList
 
@@ -48,8 +49,10 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
 
   const profileFollowLoggedUser = () => {
     console.log(user.id);
-    return localUser.following_with_details.filter((u) => u.user_id === user.id)
-      .length > 0;
+    return (
+      localUser.following_with_details.filter((u) => u.user_id === user.id)
+        .length > 0
+    );
   };
 
   const MyProfileView = () => {
@@ -87,7 +90,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
       if (followed) {
         users_services.unfollow(localUser.id).then(() => {
           console.log('dejado de seguir');
-          setFollowers(followers.filter(f => f.user_id === localUser.id));
+          setFollowers(followers.filter((f) => f.user_id === localUser.id));
           setFollowed(false);
         });
       } else {
@@ -119,8 +122,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
         />
         {profileFollowLoggedUser() ? (
           <Text style={styles.textFollowed}>Te sigue</Text>
-        ) : null
-        }
+        ) : null}
         {followed ? (
           <FormButton
             buttonTitle="Pendiente"
@@ -150,7 +152,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.profileData}>
         <View style={[styles.profileDataColumn, styles.columnLeft]}>
           <Text style={styles.text_profile}>Publicaciones</Text>
@@ -203,7 +205,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
             <Image source={require('../../assets/corazon_gris.png')} />
             <Text style={styles.icon_numbers}>{8}k</Text>
           </View>
-          
+
           <TouchableOpacity onPress={goConversations}>
             <Image
               source={require('../../assets/sobre_amarillo.png')}
@@ -211,7 +213,6 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
               resizeMode={'contain'}
             />
           </TouchableOpacity>
-
         </View>
         {
           //si isLoggedUser es verdadero mostrar columna con boton amigos, te siguen, CHALLENGE, y icono de sobre amarillo
@@ -252,7 +253,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           keyExtractor={(item) => item[0].id}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -288,7 +289,7 @@ const styles = StyleSheet.create({
     top: 5,
     marginBottom: 10,
     color: 'white',
-    fontFamily: 'GothamBlack-normal',
+    // fontFamily: 'GothamBlack-normal',
     textAlign: 'center',
     paddingVertical: 10,
     marginHorizontal: 20,
@@ -350,7 +351,7 @@ const styles = StyleSheet.create({
     padding: 9,
   },
   patreonContent: {
-    fontFamily: 'Roboto',
+    // fontFamily: 'Roboto',
   },
   profleFoto: {
     flexDirection: 'column',

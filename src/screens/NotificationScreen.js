@@ -7,6 +7,7 @@ import {
   ImageBackground,
   ScrollView,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import FormButton from '../components/FormButton';
 import {AuthContext} from '../navigation/AuthProvider';
 
@@ -15,7 +16,7 @@ export default function NotificationScreen() {
   const {user, logout} = useContext(AuthContext);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={{color: '#E9FC64', marginTop: 10}}>NOTIFICACIONES</Text>
       <ScrollView>
         <View style={styles.imageRow}>
@@ -78,18 +79,16 @@ export default function NotificationScreen() {
           <ImageBackground
             source={require('../assets/foto.png')}
             resizeMode="contain"
-            style={styles.image6}
-          >
+            style={styles.image6}>
             <Image
               source={require('../assets/boton_play_1.png')}
               resizeMode="contain"
-              style={{left:3, top:3}}
-
+              style={{left: 3, top: 3}}
             />
           </ImageBackground>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
     color: 'rgba(233,252,100,1)',
     marginLeft: 9,
     marginTop: 22,
-    fontWeight:'bold'
+    fontWeight: 'bold',
   },
   leGuastaTuFoto: {
     color: 'rgba(255,255,255,1)',

@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, Text, Image} from 'react-native';
 import StylesConfiguration from '../utils/StylesConfiguration';
 
-
 export function FacebookButton({buttonTitle, ...props}) {
   return (
     <TouchableOpacity
@@ -11,7 +10,7 @@ export function FacebookButton({buttonTitle, ...props}) {
       {...props}>
       <Image
         style={styles.icon}
-        source={require('../assets/facebook-icon.png')}
+        source={require('../assets/facebook_icon.png')}
       />
     </TouchableOpacity>
   );
@@ -25,7 +24,7 @@ export function GoogleButton({buttonTitle, ...props}) {
       {...props}>
       <Image
         style={styles.icon}
-        source={require('../assets/google-icon.png')}
+        source={require('../assets/google_icon.png')}
       />
     </TouchableOpacity>
   );

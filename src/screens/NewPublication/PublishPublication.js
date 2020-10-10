@@ -1,9 +1,19 @@
-import React, { useState, useEffect,  useContext } from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Video from 'react-native-video-player';
 import FormButton from '../../components/FormButton';
 import MatInput from '../../components/MatInput';
-import { FeedContext } from '../../navigation/FeedContext';
+import {FeedContext} from '../../navigation/FeedContext';
 import files_services from '../../services/files_services';
 import posts_services from '../../services/posts_services';
 import StylesConfiguration from '../../utils/StylesConfiguration';
@@ -17,7 +27,7 @@ export default function PublishPublication({route}) {
   const {images, setImages, video, setVideo, navigation} = route.params;
 
   useEffect(() => {
-    console.log("Cargado:", images, video);
+    console.log('Cargado:', images, video);
   });
 
   const doPubliish = async () => {
@@ -64,7 +74,7 @@ export default function PublishPublication({route}) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {!publishing ? (
         <ScrollView>
           <View style={styles.container}>
@@ -127,7 +137,7 @@ export default function PublishPublication({route}) {
           <ActivityIndicator size="large" color={StylesConfiguration.color} />
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

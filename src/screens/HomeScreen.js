@@ -3,9 +3,9 @@ import {View, StyleSheet, FlatList} from 'react-native';
 import posts_services from '../services/posts_services';
 import {FeedContext} from '../navigation/FeedContext';
 import Publication from './Publication';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function HomeScreen({navigation}) {
-
   const {posts, setPosts} = useContext(FeedContext);
   const [page, setPage] = useState(0);
 
@@ -21,12 +21,10 @@ export default function HomeScreen({navigation}) {
       setPosts(posts.concat(res.data));
       setPage(page + 1);
     });
-
-
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={posts}
         renderItem={({item}) => {
@@ -37,7 +35,7 @@ export default function HomeScreen({navigation}) {
         bouncesZoom={true}
         keyExtractor={(item) => item.id.toString()}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

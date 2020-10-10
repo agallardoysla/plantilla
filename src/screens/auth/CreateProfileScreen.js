@@ -3,19 +3,31 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import FormButton from '../../components/FormButton';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import MatInput from '../../components/MatInput';
-import DatePicker from '@react-native-community/datetimepicker';
-import {Icon} from 'react-native-elements';
-import CheckBox from '@react-native-community/checkbox';
+import DatePickerModal from '../../components/DatePickerModal';
+import Icon from '../../components/Icon';
+import CheckBox from '../../components/CheckBox';
 import moment from 'moment';
 import {AuthContext} from '../../navigation/AuthProvider';
 import profiles_services from '../../services/profiles_services';
 import users_services from '../../services/users_services';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function CreateProfile({navigation}) {
   const today = new Date();
+  const getMaximumDate = () => {
+    const maxDate = moment(today).subtract(14, 'years');
+    const maxDateObj = new Date(
+      maxDate.year(),
+      maxDate.month(),
+      maxDate.date(),
+    );
+    return maxDateObj;
+  };
+  // console.warn(today, moment(today).subtract(14, 'years'));
   const [nickname, setNickname] = useState('');
   const [existNickname, setExistNickname] = useState(false);
-  const [birthday, setBirthday] = useState(today);
+  // const [birthday, setBirthday] = useState(today);
+  const [birthday, setBirthday] = useState(getMaximumDate());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [gender, setGender] = useState('');
   const [customGender, setCustomGender] = useState('');
@@ -84,16 +96,6 @@ export default function CreateProfile({navigation}) {
     birthday.getMonth() === today.getMonth() &&
     birthday.getFullYear() === today.getFullYear();
 
-  const getMaximumDate = () => {
-    const maxDate = moment(today).subtract(14, 'years');
-    const maxDateObj = new Date(
-      maxDate.year(),
-      maxDate.month(),
-      maxDate.date(),
-    );
-    return maxDateObj;
-  };
-
   const checkNicknameExist = () => {
     // api.get(`users/profiles/${nickname}/existNickname/`).then((res) => {
     //   setExistNickname(res.data.exist);
@@ -109,14 +111,18 @@ export default function CreateProfile({navigation}) {
     );
 
   const updateCanSubmit = () => {
-    setCanSubmit(nickname !== '' && !existNickname && !sameDayAsToday() && gender !== '');
+    setCanSubmit(
+      nickname !== '' && !existNickname && !sameDayAsToday() && gender !== '',
+    );
   };
 
   const submitProfile = async () => {
     const profile = {...user.profile};
 
     const twoDigits = (n) => (n < 10 ? '0' + n : n);
-    profile.birth_date = `${birthday.getFullYear()}-${twoDigits(birthday.getMonth() + 1)}-${twoDigits(birthday.getDate())}`;
+    profile.birth_date = `${birthday.getFullYear()}-${twoDigits(
+      birthday.getMonth() + 1,
+    )}-${twoDigits(birthday.getDate())}`;
     profile.gender = gender === 'UNDEFINED2' ? 'UNDEFINED' : gender;
     profile.is_ready = true;
 
@@ -128,22 +134,11 @@ export default function CreateProfile({navigation}) {
   };
 
   const GenderSelectionCheckbox = (props) => (
-    <CheckBox
-      // Conf para Android
-      tintColors={checkboxConfAndroid}
-      // Conf para iOS
-      boxType="square"
-      tintColor="white"
-      onCheckColor="black"
-      onFillColor={StylesConfiguration.color}
-      onTintColor={StylesConfiguration.color}
-      {...props}
-    />
+    <CheckBox onCheckColor={StylesConfiguration.color} {...props} />
   );
 
-  return verifyExistProfile ? 
-  (
-    <View style={styles.container}>
+  return verifyExistProfile ? (
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>REGISTRATE</Text>
       <View style={styles.formRowCenter}>
         <MatInput
@@ -154,7 +149,7 @@ export default function CreateProfile({navigation}) {
           containerStyle={styles.input}
           renderLeftAccessory={() => <Text style={styles.at}>@</Text>}
           renderRightAccessory={() =>
-            existNickname ? <Icon name="clear" color="#ff0000" /> : <></>
+            existNickname ? <Icon source={'clear'} color="#ff0000" /> : <></>
           }
           fontSize={18}
           labelFontSize={18}
@@ -174,9 +169,9 @@ export default function CreateProfile({navigation}) {
             <Text style={styles.datePickerSeparator}>-</Text>
             <Text style={styles.datePickerPlaceholder}>Año</Text>
             <Icon
-              name="keyboard-arrow-down"
-              style={styles.arrow}
+              source={require('../../assets/k_arrow_down.png')}
               color={StylesConfiguration.color}
+              style={styles.arrow}
             />
           </TouchableOpacity>
         ) : (
@@ -189,26 +184,19 @@ export default function CreateProfile({navigation}) {
             <Text style={styles.datePickerSeparator}>-</Text>
             <Text style={styles.datePickerData}>{birthday.getFullYear()}</Text>
             <Icon
-              name="keyboard-arrow-down"
+              source={require('../../assets/k_arrow_down.png')}
               style={styles.arrow}
               color={StylesConfiguration.color}
             />
           </TouchableOpacity>
         )}
-        {showDatePicker && (
-          <DatePicker
-            value={birthday}
-            onChange={(event, date) => {
-              setShowDatePicker(false);
-              setBirthday(date);
-            }}
-            mode="date"
-            display="spinner"
-            placeholder="Dia-Mes-Año"
-            format="DD-MM-YYYY"
-            maximumDate={getMaximumDate()}
-          />
-        )}
+        <DatePickerModal
+          onBack={() => setShowDatePicker(false)}
+          showDatePicker={showDatePicker}
+          date={birthday}
+          onChange={setBirthday}
+          maximumDate={getMaximumDate()}
+        />
       </View>
       <View style={[styles.formRow, styles.formRowStart]}>
         <Text style={styles.text}>Género:</Text>
@@ -272,7 +260,8 @@ export default function CreateProfile({navigation}) {
       </View>
       <View style={styles.formRowCenter}>
         <Text style={styles.text}>
-          Queremos conocerte un poco para ofrecerte perfiles similares a tus gustos
+          Queremos conocerte un poco para ofrecerte perfiles similares a tus
+          gustos
         </Text>
       </View>
       <View style={styles.posibleLikesContainer}>
@@ -304,11 +293,11 @@ export default function CreateProfile({navigation}) {
           disabled={!canSubmit}
         />
       </View>
-    </View>
+    </SafeAreaView>
   ) : (
-    <View style={styles.verificationContainer}>
+    <SafeAreaView style={styles.verificationContainer}>
       <Text style={styles.verificationText}>Verificando perfil...</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 

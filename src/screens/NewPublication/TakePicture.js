@@ -1,8 +1,18 @@
-import React, { PureComponent, useContext, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Image, PermissionsAndroid, Platform, Alert, Dimensions } from 'react-native';
-import { RNCamera } from 'react-native-camera';
-import {Icon} from 'react-native-elements';
-import { FeedContext } from '../../navigation/FeedContext';
+import React, {PureComponent, useContext, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  PermissionsAndroid,
+  Platform,
+  Alert,
+  Dimensions,
+} from 'react-native';
+import {RNCamera} from 'react-native-camera';
+import Icon from '../../components/Icon';
+import {FeedContext} from '../../navigation/FeedContext';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import CameraRoll from '@react-native-community/cameraroll';
 import Video from 'react-native-video-player';
@@ -14,8 +24,7 @@ const PendingView = () => (
       backgroundColor: 'black',
       justifyContent: 'center',
       alignItems: 'center',
-    }}
-  >
+    }}>
     <Text>Esperando permisos...</Text>
   </View>
 );
@@ -43,19 +52,19 @@ export default function TakePicture({
 
   const hasAndroidPermission = async () => {
     const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
-  
+
     const hasPermission = await PermissionsAndroid.check(permission);
     if (hasPermission) {
       return true;
     }
-  
+
     const status = await PermissionsAndroid.request(permission);
     return status === 'granted';
-  }
-  
+  };
+
   const takePicture = async (camera) => {
     if (images.length < maxImages) {
-      const options = { base64: true };
+      const options = {base64: true};
       const data = await camera.takePictureAsync(options);
       console.log(data.uri);
       setImages([...images, data.uri]);
@@ -92,11 +101,11 @@ export default function TakePicture({
     }
     CameraRoll.save(data.uri);
     // setAssetType('Video');
-  }; 
+  };
 
   const stopRecording = async (camera) => {
     camera.stopRecording();
-  }
+  };
 
   const turnFlash = () => {
     if (flash === 0) {
@@ -116,11 +125,11 @@ export default function TakePicture({
   const iconSize = 32;
 
   const GetFlashIcon = () => {
-    const flashIcons = ['flash-auto', 'flash-on', 'flash-off'];
+    const flashIcons = ['flash_auto', 'flash_on', 'flash_off'];
     return (
       <Icon
         onPress={turnFlash}
-        name={flashIcons[flash]}
+        source={flashIcons[flash]}
         color="#FFFFFF"
         size={iconSize}
         style={styles.cameraControl}
@@ -129,11 +138,11 @@ export default function TakePicture({
   };
 
   const GetSwitchCameraIcon = () => {
-    const cameraIcons = ['camera-rear', 'camera-front'];
+    const cameraIcons = ['camera_rear', 'camera_front'];
     return (
       <Icon
         onPress={flipCamera}
-        name={cameraIcons[_camera]}
+        source={cameraIcons[_camera]}
         color="#FFFFFF"
         size={iconSize}
         style={styles.cameraControl}
@@ -201,17 +210,20 @@ export default function TakePicture({
             buttonPositive: 'Ok',
             buttonNegative: 'Cancel',
           }}>
-          {({ camera, status, recordAudioPermissionStatus }) => {
+          {({camera, status, recordAudioPermissionStatus}) => {
             if (status !== 'READY') return <PendingView />;
             return (
               <View style={styles.actionsBar}>
                 <View style={styles.actionsBarBottom}>
                   {images.length > 0 ? (
-                    <Text style={styles.imagesCounter}>{images.length} / {maxImages}</Text>
+                    <Text style={styles.imagesCounter}>
+                      {images.length} / {maxImages}
+                    </Text>
+                  ) : isRecording ? (
+                    <Text style={styles.imagesCounter}>
+                      {twoDigits(0)}:{twoDigits(timeCounter)}
+                    </Text>
                   ) : (
-                    isRecording ? (
-                    <Text style={styles.imagesCounter}>{twoDigits(0)}:{twoDigits(timeCounter)}</Text>
-                    ) : (
                     <TouchableOpacity
                       onPress={() => recordVideo(camera)}
                       style={styles.takeVideo}>
@@ -220,7 +232,7 @@ export default function TakePicture({
                         source={require('../../assets/temporizador_15_seg.png')}
                       />
                     </TouchableOpacity>
-                  ))}
+                  )}
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate('PublishPublication', {
@@ -234,7 +246,9 @@ export default function TakePicture({
                     style={styles.editPicture}
                     disabled={!canPublish()}>
                     <Icon
-                      name={canPublish() ? 'done-all' : 'done'}
+                      showSecondIcon={canPublish()}
+                      source={'done_all'}
+                      secondIcon={'done'}
                       color={canPublish() ? StylesConfiguration.color : 'grey'}
                       size={iconSize}
                       style={styles.action}
@@ -299,32 +313,17 @@ export default function TakePicture({
           <View style={styles.actionsContainer}>
             <Icon
               onPress={tryEdit}
-              name={'edit'}
+              source={'edit'}
               color="#FFFFFF"
               size={iconSize}
               style={styles.action}
             />
             <Icon
               onPress={tryDelete}
-              name={'delete'}
+              source={'delete'}
               color="#FFFFFF"
               size={iconSize}
               style={styles.action}
-            />
-            <Icon
-              name="done-all"
-              color={StylesConfiguration.color}
-              size={iconSize}
-              style={styles.action}
-              onPress={() =>
-                navigation.navigate('PublishPublication', {
-                  images: images,
-                  setImages: setImages,
-                  video: video,
-                  setVideo: setVideo,
-                  navigation: navigation,
-                })
-              }
             />
           </View>
         </View>
@@ -347,7 +346,7 @@ const styles = StyleSheet.create({
   },
   actionsBar: {
     height: 160,
-    flexDirection: "column-reverse",
+    flexDirection: 'column-reverse',
     alignSelf: 'stretch',
     alignItems: 'stretch',
   },
@@ -368,8 +367,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingHorizontal: 30,
   },
-  cameraControl: {
-  },
+  cameraControl: {},
   miniImage: {
     height: 45,
     width: 45,
@@ -415,7 +413,7 @@ const styles = StyleSheet.create({
   },
   backgroundVideo: {
     width: window.width,
-    height: (window.height - 130),
+    height: window.height - 130,
   },
   actionsContainer: {
     height: 50,

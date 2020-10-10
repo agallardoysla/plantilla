@@ -24,7 +24,7 @@ import PublicationDetails from '../screens/PublicationDetails';
 import ListConversation from '../screens/ListConversation';
 import MyChat from '../screens/MyChat';
 
-import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
+// import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -38,8 +38,8 @@ const HomeGroup = ({navigation}) => {
         headerTintColor: '#242424', //color del titulo
         //oculto el header
         headerShown: false,
-     }}>
-      <Stack.Screen name="Home" component={HomeScreen}/>
+      }}>
+      <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Publication" component={Publication} />
       <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="PostComments" component={PostComments} />
@@ -67,7 +67,6 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="ListConversation" component={ListConversation} />
       <Stack.Screen name="MyChat" component={MyChat} />
-
     </Stack.Navigator>
   );
 };
@@ -157,6 +156,9 @@ const HomeStack = () => {
           inactiveBackgroundColor: 'black',
           activeTintColor: 'yellow',
           inactiveTintColor: 'white',
+          style: {
+            borderTopWidth: 0,
+          },
         }}
         screenOptions={({route}) => ({
           tabBarIcon: ({focused}) => {
@@ -225,7 +227,10 @@ const HomeStack = () => {
         <Tab.Screen
           name="NewPublicationGroup"
           component={NewPublicationGroup}
-          options={{title: ''}}
+          options={({route}) => ({
+            title: '',
+            // tabBarVisible: route.name === 'NewPublicationGroup',
+          })}
         />
       </Tab.Navigator>
     </>

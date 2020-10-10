@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import {Alert, StyleSheet} from 'react-native';
-import { withTheme } from 'react-native-elements';
+// import { withTheme } from 'react-native-elements';
 import ParsedText from 'react-native-parsed-text';
 import StylesConfiguration from './StylesConfiguration';
 
