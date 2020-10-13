@@ -121,7 +121,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
                 opened={showMenu && comment.user_owner.user_id === user.id}
                 onBackdropPress={() => setShowMenu(false)}>
                 <MenuTrigger />
-                <MenuOptions>
+                <MenuOptions customStyles={menuOptions}>
                   <MenuOption
                     onSelect={() => setEditingComment(true)}
                     text="Editar comentario"
@@ -279,3 +279,17 @@ const styles = StyleSheet.create({
     marginLeft: 40,
   },
 });
+
+const menuOptions = {
+  optionsContainer: {
+    backgroundColor: '#898A8D',
+    padding: 5,
+    borderColor: StylesConfiguration.color,
+    borderWidth: 1,
+    borderRadius: 10,
+    width: 150,
+  },
+  optionText: {
+    color: 'black',
+  },
+}
