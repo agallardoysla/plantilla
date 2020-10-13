@@ -108,6 +108,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
                 style={styles.newComment}
                 initialText={comment.text}
                 isEdition={true}
+                setCountComments={setCountComments}
               />
             )
           ) : (
@@ -160,6 +161,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
                       style={styles.newComment}
                       initialText={answer.text}
                       isEdition={true}
+                      setCountComments={setCountComments}
                     />
                   )
                 ) : (
@@ -173,7 +175,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
                       opened={showMenuAnswer[i] && answer.user_owner.user_id === user.id}
                       onBackdropPress={() => showMenuForAnswer(-1)}>
                       <MenuTrigger />
-                      <MenuOptions>
+                      <MenuOptions customStyles={menuOptions}>
                         <MenuOption
                           onSelect={() => editForAnswer(i)}
                           text="Editar comentario"
@@ -202,6 +204,7 @@ export default function PublicationsComments({post, comment, comments, setCommen
             setSavingComment={setSavingComment}
             style={styles.newComment}
             initialText={`@${comment.user_owner.display_name} `}
+            setCountComments={setCountComments}
           />
         )
       ) : (
