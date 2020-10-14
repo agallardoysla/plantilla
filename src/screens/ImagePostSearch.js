@@ -1,10 +1,13 @@
-import React from 'react';
-import {View, StyleSheet, Image, Dimensions} from 'react-native';
+import React, { useState } from 'react';
+import {View, StyleSheet, Image, Dimensions, ActivityIndicator} from 'react-native';
 import Video from 'react-native-video-player';
+import StylesConfiguration from '../utils/StylesConfiguration';
 
 let window = Dimensions.get('window');
 
 export default function ImagePostSearch({post}) {
+  const [loading, setLoading] = useState(true);
+
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
@@ -13,10 +16,20 @@ export default function ImagePostSearch({post}) {
     return isImage(file.url) ? (
       <Image
         source={{uri: file.url}}
-        style={styles.itemImage}
+        style={loading ? {} : styles.itemImage}
         resizeMode="cover"
+        // onLoadStart={() => setLoading(true)}
+        onLoad={() => setLoading(false)}
       />
-    ) : null;
+    ) : (
+      <Image
+        source={require('../assets/boton_play_1.png')}
+        style={loading ? {} : styles.itemVideo}
+        resizeMode="cover"
+        // onLoadStart={() => setLoading(true)}
+        onLoad={() => setLoading(false)}
+      />
+    );
       // <Video
       //   video={{uri: file.url}}
       //   style={styles.itemImage}
@@ -29,43 +42,33 @@ export default function ImagePostSearch({post}) {
   };
 
   return (
-    <View style={styles.itemContainer}>{toView(post.files_with_urls[0])}</View>
+    <View style={styles.itemContainer}>
+      {toView(post.files_with_urls[0])}
+      {loading && (
+        <ActivityIndicator
+          size="small"
+          color={StylesConfiguration.color}
+          style={styles.itemImage}
+        />
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  profilePublications: {
-    flex: 1,
-    alignContent: 'center',
-    alignItems: 'stretch',
-  },
-
-  postImagesContainer: {
-    flex: 1,
-    height: 300,
+  itemContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    marginBottom: 1,
-  },
-  image_post: {
-    width: window.width,
-    height: 120,
-    top: 20,
-  },
-  itemContainer: {
-    alignSelf: 'stretch',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'stretch',
     height: 120,
     width: window.width / 3,
   },
   itemImage: {
-    flex: 1,
     width: window.width / 3,
     height: 120,
-    top: 5,
+  },
+  itemVideo: {
+    width: 50,
+    height: 50,
   },
 });
