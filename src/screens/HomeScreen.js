@@ -17,6 +17,7 @@ export default function HomeScreen({navigation}) {
   const [originalUsersSearched, setOriginalUsersSearched] = useState([]);
   const [usersSearched, setUsersSearched] = useState([]);
   const [sharedPost, setSharedPost] = useState({});
+  const pages = [5, 3, 4, 5, 6, 8, 10];
 
   useEffect(() => {
     const init = async () => {
@@ -32,12 +33,22 @@ export default function HomeScreen({navigation}) {
     init();
   }, []);
 
+  const getPageOffset = (_page) => {
+    let res = 0;
+    for (var i = 0; i < _page; i++) {
+      res += pages[i];
+    }
+    return res;
+  };
+
   const loadPost = () => {
-    posts_services.list(page).then((res) => {
-      console.log('nuevos posts', res.data.length);
-      setPosts(posts.concat(res.data));
-      setPage(page + 1);
-    });
+    posts_services
+      .list(pages[Math.min(page, pages.length - 1)], getPageOffset(page))
+      .then((res) => {
+        console.log('nuevos posts', res.data.length);
+        setPosts([...posts, ...res.data]);
+        setPage(page + 1);
+      });
   };
 
   const setShowModalAndContext = async (newVal, post) => {
@@ -78,7 +89,7 @@ export default function HomeScreen({navigation}) {
 
   const showUserInfo = (user) => {
     return user.display_name.slice(0, 20);
-  }
+  };
 
   const shareSelectedPost = (userId) => {
     console.log(userId, `[post:${sharedPost.id}]`);
@@ -123,10 +134,10 @@ export default function HomeScreen({navigation}) {
       <FlatList
         data={posts}
         renderItem={PublicationItem}
-        onEndReachedThreshold={0.6}
-        onEndReached={(info) => loadPost()}
+        onEndReachedThreshold={0.8}
+        onEndReached={loadPost}
         bouncesZoom={true}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => index.toString()}
       />
       <Modal
         isVisible={showModal}
@@ -143,8 +154,7 @@ export default function HomeScreen({navigation}) {
               renderItem={SearchedProfileItem}
               keyExtractor={(item, index) => index.toString()}
             />
-            ) : null
-          }
+          ) : null}
         </View>
       </Modal>
     </View>
