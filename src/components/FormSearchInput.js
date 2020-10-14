@@ -4,15 +4,14 @@ import {windowHeight, windowWidth} from '../utils/Dimensions';
 import StylesConfiguration from '../utils/StylesConfiguration';
 
 export default function FormSearchInput({labelValue, placeholderText, ...rest }){
-  return (
-  
+  return (  
     <View style={styles.container} >
       <View style={styles.SectionStyle}>
         <Image
           source={require('../assets/lupa.png')}
           style={styles.ImageStyle}
         />
-        <TextInput style={{flex: 1, color: 'white'}} underlineColorAndroid="transparent" {...rest}/>
+        <TextInput style={styles.texInput} underlineColorAndroid="transparent" {...rest}/>
       </View>
     </View>
   )}
@@ -37,5 +36,10 @@ const styles = StyleSheet.create({
     width: 20,
     resizeMode: 'stretch',
     alignItems: 'center',
+  },
+  texInput: {
+    flex: 1,
+    color: 'white',
+    paddingBottom: 5,
   },
 });
