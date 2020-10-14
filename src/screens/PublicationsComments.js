@@ -295,4 +295,4 @@ const menuOptions = {
   optionText: {
     color: 'black',
   },
-}
+};

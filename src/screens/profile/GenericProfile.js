@@ -14,6 +14,8 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import users_services from '../../services/users_services';
 import { AuthContext } from '../../navigation/AuthProvider';
+import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
+import { Icon } from 'react-native-elements';
 
 const numColumns = 3; //para el flatList
 
@@ -21,6 +23,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const {user} = useContext(AuthContext);
   const [usersPosts, setUsersPosts] = useState([]);
   const [followers, setFollowers] = useState(localUser.followers_with_details);
+  const [showFollowMenu, setShowFollowMenu] = useState(false);
 
   useEffect(() => {
     users_services.listPosts(localUser.id).then((res) => {
@@ -46,11 +49,9 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     navigation.navigate('Followers');
   };
 
-  const profileFollowLoggedUser = () => {
-    console.log(user.id);
-    return localUser.following_with_details.filter((u) => u.user_id === user.id)
-      .length > 0;
-  };
+  const profileFollowLoggedUser = () => localUser.following_with_details.filter((u) => u.user_id === user.id).length > 0;
+
+  const loggedUserFollowProfile = () => user.following_with_details.filter((u) => u.user_id === localUser.id).length > 0;
 
   const MyProfileView = () => {
     return (
@@ -117,11 +118,47 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           style={styles.patreon}
           textStyle={styles.patreonContent}
         />
-        {profileFollowLoggedUser() ? (
-          <Text style={styles.textFollowed}>Te sigue</Text>
-        ) : null
-        }
-        {followed ? (
+        <View style={styles.followInfo}>
+          {profileFollowLoggedUser() ? (
+            <Text style={styles.textFollowed}>Te sigue</Text>
+          ) : null}
+          <Menu
+            opened={showFollowMenu}
+            onBackdropPress={() => setShowFollowMenu(false)}>
+            <MenuTrigger
+              style={styles.followButton}
+              onPress={() => setShowFollowMenu(true)}>
+              <Text
+                style={[
+                  styles.menuFollowText,
+                  loggedUserFollowProfile() ? {color: 'black'} : {color: 'white'},
+                ]}>
+                {loggedUserFollowProfile() ? 'Seguido' : 'Seguir'}
+              </Text>
+              <Icon
+                style={styles.menuFollowIcon}
+                name={'play-arrow'}
+                color={loggedUserFollowProfile() ? 'black' : 'white'}
+                size={24}
+              />
+            </MenuTrigger>
+            {loggedUserFollowProfile() ? (
+              <MenuOptions customStyles={menuOptions}>
+                <MenuOption onSelect={doFollow} text="Dejar de seguir" />
+                <MenuOption onSelect={doFollow} text="Añadir a VIP" />
+                <MenuOption onSelect={doFollow} text="Bloquear" />
+              </MenuOptions>
+            ) : (
+              <MenuOptions customStyles={menuOptions}>
+                <MenuOption onSelect={doFollow} text="Seguir" />
+                <MenuOption onSelect={doFollow} text="Añadir a VIP" />
+                <MenuOption onSelect={doFollow} text="Bloquear" />
+                <MenuOption onSelect={doFollow} text="Ocultar publicaciones" />
+              </MenuOptions>
+            )}
+          </Menu>
+        </View>
+        {/* {followed ? (
           <FormButton
             buttonTitle="Pendiente"
             style={styles.followButton}
@@ -135,7 +172,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
             textStyle={styles.followButtonContent}
             onPress={doFollow}
           />
-        )}
+        )} */}
       </View>
     );
   };
@@ -401,6 +438,14 @@ const styles = StyleSheet.create({
     width: 90,
     marginLeft: 11,
   },
+  followInfo: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    marginRight: 5,
+    width: 120,
+    height: 50,
+  },
   vipContent: {
     fontSize: 24,
   },
@@ -410,10 +455,22 @@ const styles = StyleSheet.create({
     marginTop: -13,
   },
   followButton: {
-    backgroundColor: StylesConfiguration.color,
-    height: 'auto',
-    padding: 6,
-    marginTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 110,
+    borderColor: StylesConfiguration.color,
+    padding: 5,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginTop: 3,
+  },
+  menuFollowText: {
+    fontSize: 15,
+    marginRight: 10,
+  },
+  menuFollowIcon: {
+    transform: [{rotate: '90deg'}],
   },
   followButtonContent: {
     color: 'black',
@@ -459,3 +516,18 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
+
+const menuOptions = {
+  optionsContainer: {
+    backgroundColor: '#898A8D',
+    padding: 5,
+    borderColor: StylesConfiguration.color,
+    borderWidth: 1.5,
+    borderRadius: 10,
+    width: 110,
+    // left: 5,
+  },
+  optionText: {
+    color: 'black',
+  },
+};
