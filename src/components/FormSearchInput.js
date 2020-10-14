@@ -20,6 +20,7 @@ export default function FormSearchInput({labelValue, placeholderText, ...rest })
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginHorizontal: 10,
   },
   SectionStyle: {
     flexDirection: 'row',
@@ -27,14 +28,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#50555C',
     borderWidth: 0.5,
     borderColor: '#000',
-    height: 40,
-    borderRadius: 5,
+    height: 30,
+    borderRadius: 10,
   },
   ImageStyle: {
-    padding: 10,
-    margin: 5,
-    height: 25,
-    width: 25,
+    margin: 10,
+    height: 20,
+    width: 20,
     resizeMode: 'stretch',
     alignItems: 'center',
   },
