@@ -1,14 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { FeedContext } from '../../navigation/FeedContext';
 import Gallery from './Gallery';
 import TakePicture from './TakePicture';
 
 const { width } = Dimensions.get('window');
 
 export default function NewPublicationContainer({navigation}) {
-  const {setPosts} = useContext(FeedContext);
   const maxImages = 5;
   const maxDuration = 5;
   const [images, setImages] = useState([]);

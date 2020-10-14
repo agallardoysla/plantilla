@@ -2,7 +2,6 @@ import React, { PureComponent, useContext, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, PermissionsAndroid, Platform, Alert, Dimensions } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import {Icon} from 'react-native-elements';
-import { FeedContext } from '../../navigation/FeedContext';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import CameraRoll from '@react-native-community/cameraroll';
 import Video from 'react-native-video-player';
