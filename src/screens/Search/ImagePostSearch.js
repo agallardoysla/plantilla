@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {View, StyleSheet, Image, Dimensions, ActivityIndicator} from 'react-native';
 import Video from 'react-native-video-player';
-import StylesConfiguration from '../utils/StylesConfiguration';
+import StylesConfiguration from '../../utils/StylesConfiguration';
 
 let window = Dimensions.get('window');
 
@@ -23,7 +23,7 @@ export default function ImagePostSearch({post}) {
       />
     ) : (
       <Image
-        source={require('../assets/boton_play_1.png')}
+        source={require('../../assets/boton_play_1.png')}
         style={loading ? {} : styles.itemVideo}
         resizeMode="cover"
         // onLoadStart={() => setLoading(true)}

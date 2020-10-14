@@ -1,16 +1,13 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import {AuthContext} from '../navigation/AuthProvider';
-import posts_services from '../services/posts_services';
-import FormSearchInput from '../components/FormSearchInput';
-import ImagePostSearch from '../screens/ImagePostSearch';
-import ProfileSearch from '../screens/ProfileSearch';
-import users_services from '../services/users_services';
-import {ScrollView} from 'react-native-gesture-handler';
-import GoBackButton from '../components/GoBackButton';
+import posts_services from '../../services/posts_services';
+import FormSearchInput from '../../components/FormSearchInput';
+import ImagePostSearch from './ImagePostSearch';
+import ProfileSearch from './ProfileSearch';
+import search_services from '../../services/search_services';
+import GoBackButton from '../../components/GoBackButton';
 
 export default function SearchScreen({navigation}) {
-  const {user} = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(0);
   const [searchString, setSearchString] = useState('');
@@ -22,12 +19,9 @@ export default function SearchScreen({navigation}) {
       loadPost();
     }
     //promesa para traer valor de usuario solo una vez
-    users_services.list().then((res) => {
-      let usersList = [];
-      res.data.forEach((p, i) => {
-        usersList.push(p);
-      });
-      setUsers(usersList);
+    search_services.search(buildUserSearch(searchString)).then((res) => {
+      console.log(res.data);
+      setUsers(res.data);
     });
   }, []);
 
@@ -41,8 +35,22 @@ export default function SearchScreen({navigation}) {
     });
   };
 
+  const buildUserSearch = (searchingString) => ({
+    search: searchingString,
+    search_in: 'users',
+  });
+
   const showSearch = (e) => {
     setSearchString(e);
+    if (e.length > 0) {
+      search_services.search(buildUserSearch(e));
+    }
+  };
+
+  const ProfileSearchItem = ({item}) => {
+    console.log("usuario buscado", item);
+    return null;
+    // return <ProfileSearch post={item} navigation={navigation} />;
   };
 
   const PostSearchItem = ({item}) => {
@@ -59,12 +67,12 @@ export default function SearchScreen({navigation}) {
         />
       </View>
       {searchString.length > 0 ? (
-        users.map((item, i) => {
-          if (item.display_name.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 && item.id !== user.id){
-            return <ProfileSearch item={item} key={item.id} myId={user.id} />
-          }
-          return null;
-        })
+        <FlatList
+          data={users}
+          renderItem={ProfileSearchItem}
+          bouncesZoom={true}
+          keyExtractor={(item, index) => index.toString()}
+        />
       ) : (
         <FlatList
           data={posts}

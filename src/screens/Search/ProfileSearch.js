@@ -5,30 +5,27 @@ import {
   StyleSheet,
   Image,
   Dimensions,
-  FlatList,
   TouchableOpacity,
 } from 'react-native';
-import StylesConfiguration from '../utils/StylesConfiguration';
-import FormButton_small from '../components/FormButton_small';
-import {Icon} from 'react-native-elements';
-import users_services from '../services/users_services';
+import StylesConfiguration from '../../utils/StylesConfiguration';
+import users_services from '../../services/users_services';
 
 let window = Dimensions.get('window');
 
-const ProfileSearch = ({item, key, myId}) => {
+const ProfileSearch = ({user}) => {
 
-  const [FollowedUser, setFollowedUser] = useState(item.followers_with_details.filter((u) => u.user_id === myId).length > 0)
+  const [FollowedUser, setFollowedUser] = useState(user.followers_with_details.filter((u) => u.user_id === myId).length > 0);
   
   //seguir usuario
   const goFollower = () => {
 
     if (FollowedUser) {
-      users_services.unfollow(item.id).then(() => {
+      users_services.unfollow(user.id).then(() => {
         setFollowedUser(false);
         console.log('dejado de seguir');
       });
     } else {
-      users_services.follow(item.id).then(() => {
+      users_services.follow(user.id).then(() => {
         setFollowedUser(true);
         console.log('seguido');
       });
@@ -36,69 +33,53 @@ const ProfileSearch = ({item, key, myId}) => {
   };
 
   return (
-    <View style={{flexDirection: 'row'}} key={key}>
-      <View style={styles.column}>
-        <View style={{flexDirection: 'row'}}>
-          <Image
-            source={require('../assets/pride-dog_1.png')}
-            resizeMode="contain"
-            style={styles.image}
-          />
-          <View style={styles.row_content}>
-            <View style={{flexDirection: 'column', top: -5}}>
-              <Text style={styles.text}>@{item.display_name}</Text>
-              <Text style={{color: 'white', marginLeft: 5,}}>Descripciòn del Perfil</Text>
-            </View>
-          </View>
-        </View>
+    <View style={styles.row}>
+      <View style={{flexDirection: 'column', top: 10}}>
+        <Image
+          source={require('../../assets/pride-dog_1.png')}
+          resizeMode="contain"
+          style={styles.image}
+        />
       </View>
 
-        <FormButton_small
-          buttonTitle= {FollowedUser ? 'Pendiente' : 'Seguir'}
-          style={{top: 5,  width: 68, height: 40, marginRight: 5, marginLeft: 5,}}
-          onPress={goFollower}
-        />
-
-      <Icon name="email" color={StylesConfiguration.color} style={{top: 4}} size={43} />
+      <View style={{flex: 1, flexDirection: 'column', top: 10}}>
+        <TouchableOpacity onPress={goMyChat}>
+          <Text style={styles.text}>@{user.display_name}</Text>
+          <Text style={{color: 'white', marginLeft: 5,}}>Descripciòn del Perfil</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  titulo: {
-    fontFamily: StylesConfiguration.fontFamily,
-    color: StylesConfiguration.color,
-    fontSize: 18,
-    marginHorizontal: 10,
-    marginVertical: 10,
+  row: {
+    flexDirection: 'row',
+    backgroundColor: 'black',
+    marginBottom: 10,
+  },
+  sobre_amarillo: {
+    width: 42,
+    height: 42,
   },
   boton_back: {
-    marginHorizontal: 10,
-    marginVertical: 10,
+    marginHorizontal: 5,
+    marginVertical: 5,
   },
-
-  column: {
-    flex: 1,
-    flexDirection: 'column',
-    alignContent: 'center',
-    alignItems: 'flex-start',
-    backgroundColor: 'black',
-  },
-  row_content: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  image: {
-    width: 60,
-    height: 60,
-    marginBottom: 10,
-    borderRadius: 400 / 2,
-  },
-  text: {
+  text_title_profile: {
     fontFamily: StylesConfiguration.fontFamily,
     color: 'white',
-    marginLeft: 5
+  },
+  text_description: {
+    fontFamily: 'GothamBlack-Normal',
+    color: 'white',
+    marginHorizontal: 10,
+  },
+  image: {
+    width: 40,
+    height: 40,
+    marginBottom: 10,
+    borderRadius: 400 / 2,
   },
 });
 
