@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, StyleSheet, Image, Dimensions} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
 import Video from 'react-native-video-player';
 
 let window = Dimensions.get('window');
@@ -17,17 +16,16 @@ export default function ImagePostSearch({post}) {
         style={styles.itemImage}
         resizeMode="cover"
       />
-    ) : (
-      <Video
-        video={{uri: file.url}}
-        style={styles.itemImage}
-        autoplay={false}
-        defaultMuted={true}
-        loop={true}
-        videoWidth={window.width / 3}
-        videoHeight={120}
-      />
-    );
+    ) : null;
+      // <Video
+      //   video={{uri: file.url}}
+      //   style={styles.itemImage}
+      //   autoplay={false}
+      //   defaultMuted={true}
+      //   loop={true}
+      //   videoWidth={window.width / 3}
+      //   videoHeight={120}
+      // />
   };
 
   return (
