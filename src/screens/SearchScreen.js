@@ -1,35 +1,26 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Keyboard,
-  TouchableWithoutFeedback,
-  Dimensions,
-} from 'react-native';
-
-import FormButton from '../components/FormButton';
+import {View, StyleSheet, FlatList} from 'react-native';
 import {AuthContext} from '../navigation/AuthProvider';
 import posts_services from '../services/posts_services';
-import {FeedContext} from '../navigation/FeedContext';
 import FormSearchInput from '../components/FormSearchInput';
 import ImagePostSearch from '../screens/ImagePostSearch';
 import ProfileSearch from '../screens/ProfileSearch';
 import users_services from '../services/users_services';
-import {set} from 'react-native-reanimated';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
+import GoBackButton from '../components/GoBackButton';
 
 export default function SearchScreen({navigation}) {
-  const {user, logout} = useContext(AuthContext);
-  const {posts, setPosts} = useContext(FeedContext);
+  const {user} = useContext(AuthContext);
+  const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(0);
-  const [valueSearch, setValueSearch] = useState('');
-  const [result, setResult] = useState(false);
+  const [searchString, setSearchString] = useState('');
   const [users, setUsers] = useState([]);
-  const [est, setEst] = useState(false);
+  const pageSize = 24;
 
   useEffect(() => {
+    if (posts.length === 0) {
+      loadPost();
+    }
     //promesa para traer valor de usuario solo una vez
     users_services.list().then((res) => {
       let usersList = [];
@@ -38,57 +29,53 @@ export default function SearchScreen({navigation}) {
       });
       setUsers(usersList);
     });
+  }, []);
 
-    if (posts.length === 0) {
-      loadPost();
-    }
-  }, [posts, setPosts]); //los posts se actualizan constantemente pero los perfiles son traidos una vez
+  const getPageOffset = (_page) => pageSize * _page;
 
   const loadPost = () => {
-    posts_services.list(page).then((res) => {
+    posts_services.list(pageSize, getPageOffset(page)).then((res) => {
       console.log('nuevos posts', res.data.length);
-      setPosts(posts.concat(res.data));
+      setPosts([...posts, ...res.data]);
       setPage(page + 1);
     });
   };
 
   const showSearch = (e) => {
-    setValueSearch(e);
+    setSearchString(e);
+  };
+
+  const PostSearchItem = ({item}) => {
+    return <ImagePostSearch post={item} navigation={navigation} />;
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: 'black'}}>
+    <View style={styles.container}>
       <View style={styles.row}>
+        <GoBackButton navigation={navigation} />
         <FormSearchInput
-          value={valueSearch}
+          value={searchString}
           onChangeText={(e) => showSearch(e)}
         />
       </View>
-
-      <ScrollView>
-        {valueSearch.length > 0 ? (
-          users.map((item, i) => {
-            if (item.display_name.toLowerCase().indexOf(valueSearch.toLowerCase()) !== -1 && item.id !== user.id){
-              return <ProfileSearch item={item} key={item.id} myId={user.id} />
-            }
-            return null;
-          })
-        ) : (
-          <View style={styles.container}>
-            <FlatList
-              data={posts}
-              renderItem={({item, index}) => {
-                return <ImagePostSearch post={item} navigation={navigation} />;
-              }}
-              onEndReachedThreshold={0.6}
-              onEndReached={(info) => loadPost()}
-              bouncesZoom={true}
-              keyExtractor={(item, index) => index.toString()}
-              numColumns={3}
-            />
-          </View>
-        )}
-      </ScrollView>
+      {searchString.length > 0 ? (
+        users.map((item, i) => {
+          if (item.display_name.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 && item.id !== user.id){
+            return <ProfileSearch item={item} key={item.id} myId={user.id} />
+          }
+          return null;
+        })
+      ) : (
+        <FlatList
+          data={posts}
+          renderItem={PostSearchItem}
+          onEndReachedThreshold={0.8}
+          onEndReached={(info) => loadPost()}
+          bouncesZoom={true}
+          keyExtractor={(item, index) => index.toString()}
+          numColumns={3}
+        />
+      )}
     </View>
   );
 }
@@ -97,11 +84,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'stretch',
     paddingHorizontal: 0,
-    backgroundColor: 'black',
   },
   text: {
     fontSize: 20,
@@ -110,7 +96,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    justifyContent: 'flex-start',
-    marginBottom: 30,
+    alignItems: 'center',
+    marginTop: 10,
   },
 });
