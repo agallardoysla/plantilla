@@ -1,7 +1,8 @@
-import React, { useEffect, useContext } from 'react';
+import React, {useEffect, useContext} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
-import { AuthContext } from '../../navigation/AuthProvider';
+import {AuthContext} from '../../navigation/AuthProvider';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function Wellcoming({navigation}) {
   const {setExistProfile} = useContext(AuthContext);
@@ -9,12 +10,12 @@ export default function Wellcoming({navigation}) {
   useEffect(() => {
     setTimeout(() => {
       setExistProfile(true);
-      console.log("existi!!");
+      console.log('existi!!');
     }, 2 * 1000);
   });
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.thanks}>¡Gracias!</Text>
       <Text style={styles.text}>Su registro fue creado</Text>
       <Text style={styles.text}>con exito</Text>
@@ -23,7 +24,7 @@ export default function Wellcoming({navigation}) {
         style={styles.logo}
         source={require('../../assets/logo-home.png')}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

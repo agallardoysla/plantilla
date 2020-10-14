@@ -1,11 +1,12 @@
-import React, { useContext, useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import React, {useContext, useState} from 'react';
+import {Dimensions, StyleSheet, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import { FeedContext } from '../../navigation/FeedContext';
+import {FeedContext} from '../../navigation/FeedContext';
 import Gallery from './Gallery';
 import TakePicture from './TakePicture';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 export default function NewPublicationContainer({navigation}) {
   const {setPosts} = useContext(FeedContext);
@@ -22,7 +23,7 @@ export default function NewPublicationContainer({navigation}) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* <Swiper 
         style={styles.slider} 
         showsButtons={true}
@@ -37,8 +38,7 @@ export default function NewPublicationContainer({navigation}) {
         showsButtons={true}
         index={1}
         loop={false}
-        showsPagination={false}
-      >
+        showsPagination={false}>
         <Gallery
           style={styles.view}
           maxImages={maxImages}
@@ -65,7 +65,7 @@ export default function NewPublicationContainer({navigation}) {
           setAssetType={setAssetType}
         />
       </Swiper>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -73,17 +73,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    // backgroundColor: 'black',
+    backgroundColor: 'black',
     alignItems: 'stretch',
   },
-  slider: {
-  },
+  slider: {},
   view: {
     width: width,
   },
   text: {
     color: '#fff',
     fontSize: 30,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 });

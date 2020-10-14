@@ -19,6 +19,7 @@ import ProfileSearch from '../screens/ProfileSearch';
 import users_services from '../services/users_services';
 import {set} from 'react-native-reanimated';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function SearchScreen({navigation}) {
   const {user, logout} = useContext(AuthContext);
@@ -57,7 +58,7 @@ export default function SearchScreen({navigation}) {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: 'black'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>
       <View style={styles.row}>
         <FormSearchInput
           value={valueSearch}
@@ -68,9 +69,15 @@ export default function SearchScreen({navigation}) {
       <ScrollView>
         {valueSearch.length > 0 ? (
           users.map((item, i) => {
-            if (item.display_name.toLowerCase().indexOf(valueSearch.toLowerCase()) !== -1 && item.id !== user.id){
-              return <ProfileSearch item={item} key={item.id} myId={user.id} />
+            if (
+              item.display_name
+                .toLowerCase()
+                .indexOf(valueSearch.toLowerCase()) !== -1 &&
+              item.id !== user.id
+            ) {
+              return <ProfileSearch item={item} key={item.id} myId={user.id} />;
             }
+
             return null;
           })
         ) : (
@@ -83,13 +90,13 @@ export default function SearchScreen({navigation}) {
               onEndReachedThreshold={0.6}
               onEndReached={(info) => loadPost()}
               bouncesZoom={true}
-              keyExtractor={(item, index) => index.toString()}
+              keyExtractor={(item) => item.id.toString()}
               numColumns={3}
             />
           </View>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

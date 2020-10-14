@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import FormButton_small from '../../components/FormButton_small';
-import {Icon} from 'react-native-elements';
+import Icon from '../../components/Icon';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 let window = Dimensions.get('window');
 
@@ -59,11 +60,12 @@ const Followed = ({navigation}) => {
   ];
 
   const go_back = () => {
-    navigation.navigate("Profile")
-  }
+    navigation.navigate('Profile');
+  };
 
   return (
-    <View style={{flexDirection: 'row', flex: 1}}>
+    <SafeAreaView
+      style={{flexDirection: 'row', flex: 1, backgroundColor: 'black'}}>
       <View style={styles.column}>
         <TouchableOpacity onPress={go_back}>
           <Image
@@ -83,7 +85,11 @@ const Followed = ({navigation}) => {
                 style={styles.image}
               />
               <Text style={styles.text}>@Skay</Text>
-              <Icon name="email" color={StylesConfiguration.color} size={32} />
+              <Icon
+                source={'email'}
+                color={StylesConfiguration.color}
+                size={32}
+              />
               <FormButton_small buttonTitle="Borrar" />
               <FormButton_small buttonTitle="Bloquear" />
             </View>
@@ -91,7 +97,7 @@ const Followed = ({navigation}) => {
           keyExtractor={(item) => item.id}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

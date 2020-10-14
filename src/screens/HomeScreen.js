@@ -8,6 +8,7 @@ import FormSearchInput from '../components/FormSearchInput';
 import users_services from '../services/users_services';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import chats_services from '../services/chats_services';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function HomeScreen({navigation}) {
   const {posts, setPosts} = useContext(FeedContext);
@@ -87,7 +88,7 @@ export default function HomeScreen({navigation}) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={posts}
         renderItem={({item}) => {
@@ -142,7 +143,7 @@ export default function HomeScreen({navigation}) {
           ) : null}
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }
 

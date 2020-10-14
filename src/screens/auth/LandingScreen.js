@@ -3,10 +3,11 @@ import {View, Text, Image, StyleSheet} from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import FilledButton from '../../components/FilledButton';
 import LinkButton from '../../components/LinkButtom';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function LandingScreen({navigation}) {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Bienvenido</Text>
       <Text style={styles.text}>a</Text>
       <Image
@@ -25,7 +26,7 @@ export default function LandingScreen({navigation}) {
         buttonTitle="Condiciones / Privacidad"
         onPress={() => navigation.navigate('TermsAndConditions')}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

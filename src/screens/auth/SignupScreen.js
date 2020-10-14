@@ -1,10 +1,18 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {GoogleButton, FacebookButton} from '../../components/SocialButton';
 import FormButton from '../../components/FormButton';
 import {AuthContext} from '../../navigation/AuthProvider';
 import MatInput from '../../components/MatInput';
 import StylesConfiguration from '../../utils/StylesConfiguration';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function SignupScreen({navigation}) {
   const {register, loginFacebook, loginGoogle} = useContext(AuthContext);
@@ -25,10 +33,12 @@ export default function SignupScreen({navigation}) {
 
   const emailIsOk = (newEmail) => newEmail.length > 0;
   const passwordIsOk = (newPassword) => newPassword.length >= 6;
-  const passwordCheckIsOk = (newPassword) => newPassword.length >= 6 && password === newPassword;
+  const passwordCheckIsOk = (newPassword) =>
+    newPassword.length >= 6 && password === newPassword;
 
-
-  const doSetField = (setter, validator, errorId, errorLabel) => async (newValue) => {
+  const doSetField = (setter, validator, errorId, errorLabel) => async (
+    newValue,
+  ) => {
     await setter(newValue);
     if (validator(newValue)) {
       errors[errorId] = '';
@@ -69,7 +79,7 @@ export default function SignupScreen({navigation}) {
   useEffect(updateCanSubmit);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Image
         style={styles.logo}
         source={require('../../assets/logo-home.png')}
@@ -137,7 +147,7 @@ export default function SignupScreen({navigation}) {
         <Text style={styles.navButtonText}>¿Ya tenes cuenta? </Text>
         <Text style={styles.navButtonText2}>Ingresa</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
-import {Icon} from 'react-native-elements';
+import {Alert, Dimensions, Image, StyleSheet, Text, View} from 'react-native';
+import Icon from '../../components/Icon';
 
 const height = Dimensions.get('window').height;
 const iconSize = 40;
@@ -42,14 +42,14 @@ export default function ViewNewImage({route}) {
       <View style={styles.actionsContainer}>
         <Icon
           onPress={tryEdit}
-          name={'edit'}
+          source={'edit'}
           color="#FFFFFF"
           size={iconSize}
           style={styles.action}
         />
         <Icon
           onPress={tryDelete}
-          name={'delete'}
+          source={'delete'}
           color="#FFFFFF"
           size={iconSize}
           style={styles.action}

@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   text_description: {
-    fontFamily: 'GothamBlack-Normal',
+    // fontFamily: 'GothamBlack-Normal',
     color: 'white',
     marginHorizontal: 10,
   },

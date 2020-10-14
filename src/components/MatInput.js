@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet} from 'react-native';
 import {TextField} from 'react-native-material-textfield';
 import StylesConfiguration from '../utils/StylesConfiguration';
-import {Icon} from 'react-native-elements';
+import Icon from './Icon';
 
 /* 
   Por algun motivo que no logro descifrar, TextField solo funciona con componentes declarados como clases
@@ -20,7 +20,7 @@ class MatInput extends Component {
   handleClickShowPassword = () => {
     console.log(this.state.showPassword);
     this.setState({showPassword: !this.state.showPassword});
-  }
+  };
 
   render() {
     if (this.state.showIcon) {
@@ -34,21 +34,14 @@ class MatInput extends Component {
           secureTextEntry={this.state.showIcon && !this.state.showPassword}
           fontSize={15}
           labelFontSize={15}
-          renderRightAccessory={() =>
-            this.state.showPassword ? (
-              <Icon
-                onPress={this.handleClickShowPassword}
-                name="visibility-off"
-                color="#FFFFFF"
-              />
-            ) : (
-              <Icon
-                onPress={this.handleClickShowPassword}
-                name="visibility"
-                color="#FFFFFF"
-              />
-            )
-          }
+          renderRightAccessory={() => (
+            <Icon
+              onPress={this.handleClickShowPassword}
+              showSecondIcon={this.state.showPassword}
+              source={require('../assets/visibility_off.png')}
+              secondIcon={require('../assets/visibility.png')}
+            />
+          )}
           {...this.props}
         />
       );

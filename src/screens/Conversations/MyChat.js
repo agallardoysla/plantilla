@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   },
   text_title: {
     color: StylesConfiguration.color,
-    fontFamily: 'GothamBlack-Normal',
+    // fontFamily: 'GothamBlack-Normal',
     fontSize: 18,
   },
   boton_back: {
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   text_chat: {
-    fontFamily: 'GothamBlack-Normal',
+    // fontFamily: 'GothamBlack-Normal',
     color: 'white',
     top: 38,
   },

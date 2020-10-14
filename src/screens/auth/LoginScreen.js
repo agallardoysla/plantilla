@@ -5,6 +5,7 @@ import {FacebookButton, GoogleButton} from '../../components/SocialButton';
 import {AuthContext} from '../../navigation/AuthProvider';
 import MatInput from '../../components/MatInput';
 import StylesConfiguration from '../../utils/StylesConfiguration';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function LoginScreen({navigation}) {
   const {login, loginFacebook, loginGoogle} = useContext(AuthContext);
@@ -35,7 +36,7 @@ export default function LoginScreen({navigation}) {
   };
 
   const updateCanSubmit = () => {
-    console.log("can submit: ", emailIsOk(email) && passwordIsOk(password));
+    console.log('can submit: ', emailIsOk(email) && passwordIsOk(password));
     setCanSubmit(emailIsOk(email) && passwordIsOk(password));
   };
 
@@ -66,7 +67,7 @@ export default function LoginScreen({navigation}) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Image
         style={styles.logo}
         source={require('../../assets/logo-home.png')}
@@ -120,7 +121,7 @@ export default function LoginScreen({navigation}) {
         <Text style={styles.navButtonText}>¿No tenes cuenta? </Text>
         <Text style={styles.navButtonText2}>Registrate</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 

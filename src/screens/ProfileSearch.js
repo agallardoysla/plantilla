@@ -10,18 +10,18 @@ import {
 } from 'react-native';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import FormButton_small from '../components/FormButton_small';
-import {Icon} from 'react-native-elements';
+import Icon from '../components/Icon';
 import users_services from '../services/users_services';
 
 let window = Dimensions.get('window');
 
 const ProfileSearch = ({item, key, myId}) => {
+  const [FollowedUser, setFollowedUser] = useState(
+    item.followers_with_details.filter((u) => u.user_id === myId).length > 0,
+  );
 
-  const [FollowedUser, setFollowedUser] = useState(item.followers_with_details.filter((u) => u.user_id === myId).length > 0)
-  
   //seguir usuario
   const goFollower = () => {
-
     if (FollowedUser) {
       users_services.unfollow(item.id).then(() => {
         setFollowedUser(false);
@@ -47,19 +47,21 @@ const ProfileSearch = ({item, key, myId}) => {
           <View style={styles.row_content}>
             <View style={{flexDirection: 'column', top: -5}}>
               <Text style={styles.text}>@{item.display_name}</Text>
-              <Text style={{color: 'white', marginLeft: 5,}}>Descripciòn del Perfil</Text>
+              <Text style={{color: 'white', marginLeft: 5}}>
+                Descripciòn del Perfil
+              </Text>
             </View>
           </View>
         </View>
       </View>
 
-        <FormButton_small
-          buttonTitle= {FollowedUser ? 'Pendiente' : 'Seguir'}
-          style={{top: 5,  width: 68, height: 40, marginRight: 5, marginLeft: 5,}}
-          onPress={goFollower}
-        />
+      <FormButton_small
+        buttonTitle={FollowedUser ? 'Pendiente' : 'Seguir'}
+        style={{top: 5, width: 68, height: 40, marginRight: 5, marginLeft: 5}}
+        onPress={goFollower}
+      />
 
-      <Icon name="email" color={StylesConfiguration.color} style={{top: 4}} size={43} />
+      <Icon source={'email'} size={46} color={StylesConfiguration.color} />
     </View>
   );
 };
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: StylesConfiguration.fontFamily,
     color: 'white',
-    marginLeft: 5
+    marginLeft: 5,
   },
 });
 
