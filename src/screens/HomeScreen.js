@@ -86,19 +86,43 @@ export default function HomeScreen({navigation}) {
     setShowModalAndContext(false);
   };
 
+  const PublicationItem = ({item}) => {
+    return (
+      <Publication
+        post={item}
+        navigation={navigation}
+        showSharePost={setShowModalAndContext}
+      />
+    );
+  };
+
+  const SearchedProfileItem = ({item}) => {
+    return (
+      <View style={styles.user}>
+        <Image
+          source={require('../assets/pride-dog_1.png')}
+          resizeMode="contain"
+          style={styles.image}
+        />
+        <Text style={styles.userName}>{showUserInfo(item)}</Text>
+        <TouchableOpacity
+          style={styles.sendMessage}
+          onPress={() => shareSelectedPost(item.id)}>
+          <Image
+            source={require('../assets/sobre_amarillo_1.png')}
+            resizeMode="contain"
+            style={styles.image}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={posts}
-        renderItem={({item}) => {
-          return (
-            <Publication
-              post={item}
-              navigation={navigation}
-              showSharePost={setShowModalAndContext}
-            />
-          );
-        }}
+        renderItem={PublicationItem}
         onEndReachedThreshold={0.6}
         onEndReached={(info) => loadPost()}
         bouncesZoom={true}
@@ -116,30 +140,11 @@ export default function HomeScreen({navigation}) {
             <FlatList
               style={styles.usersList}
               data={usersSearched}
-              renderItem={({item}) => {
-                return (
-                  <View style={styles.user}>
-                    <Image
-                      source={require('../assets/pride-dog_1.png')}
-                      resizeMode="contain"
-                      style={styles.image}
-                    />
-                    <Text style={styles.userName}>{showUserInfo(item)}</Text>
-                    <TouchableOpacity
-                      style={styles.sendMessage}
-                      onPress={() => shareSelectedPost(item.id)}>
-                      <Image
-                        source={require('../assets/sobre_amarillo_1.png')}
-                        resizeMode="contain"
-                        style={styles.image}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                );
-              }}
+              renderItem={SearchedProfileItem}
               keyExtractor={(item, index) => index.toString()}
             />
-          ) : null}
+            ) : null
+          }
         </View>
       </Modal>
     </View>
@@ -189,7 +194,7 @@ const styles = StyleSheet.create({
   sendMessage: {
     height: 40,
     width: 60,
-    backgroundColor: 'blue',
+    // backgroundColor: 'blue',
     justifyContent: 'center',
     alignItems: 'center',
   },
