@@ -98,6 +98,7 @@ const SearchGroup = ({navigation}) => {
       <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="ImagePostSearch" component={ImagePostSearch} />
       <Stack.Screen name="ProfileSearch" component={ProfileSearch} />
+      <Stack.Screen name="MyConversations" component={MyConversations} />
     </Stack.Navigator>
   );
 };

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,26 +10,22 @@ import {
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import users_services from '../../services/users_services';
 
-let window = Dimensions.get('window');
-
-const ProfileSearch = ({user}) => {
-
-  const [FollowedUser, setFollowedUser] = useState(user.followers_with_details.filter((u) => u.user_id === myId).length > 0);
+const ProfileSearch = ({user, navigation}) => {
   
-  //seguir usuario
-  const goFollower = () => {
+  useEffect(() => {
+    chats_services.list().then(res => {
+      console.log(res.data);
+      console.log(res.data[0].messages);
+      console.log(res.data[0].users);
+      const newConversations = res.data.filter(c => c.is_active);
+      setConversations(newConversations);
+      setFilteredConversations(newConversations);
+    });
+  }, []);
 
-    if (FollowedUser) {
-      users_services.unfollow(user.id).then(() => {
-        setFollowedUser(false);
-        console.log('dejado de seguir');
-      });
-    } else {
-      users_services.follow(user.id).then(() => {
-        setFollowedUser(true);
-        console.log('seguido');
-      });
-    }
+  const goMyChat = () => {
+    // navigation.navigate('MyChat', {itemData});
+    navigation.navigate('MyChat');
   };
 
   return (

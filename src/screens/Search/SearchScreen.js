@@ -1,9 +1,9 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import posts_services from '../../services/posts_services';
 import FormSearchInput from '../../components/FormSearchInput';
-import ImagePostSearch from './ImagePostSearch';
-import ProfileSearch from './ProfileSearch';
+import PostSearched from './PostSearched';
+import ProfileSearched from './ProfileSearched';
 import search_services from '../../services/search_services';
 import GoBackButton from '../../components/GoBackButton';
 
@@ -61,11 +61,11 @@ export default function SearchScreen({navigation}) {
   };
 
   const ProfileSearchItem = ({item}) => {
-    return <ProfileSearch user={item} navigation={navigation} />;
+    return <ProfileSearched user={item} navigation={navigation} />;
   };
 
   const PostSearchItem = ({item}) => {
-    return <ImagePostSearch post={item} navigation={navigation} />;
+    return <PostSearched post={item} navigation={navigation} />;
   };
 
   const SearchedUsers = () => (
