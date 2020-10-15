@@ -10,6 +10,7 @@ import GoBackButton from '../../components/GoBackButton';
 export default function SearchScreen({navigation}) {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(0);
+  const [showSearch, setShowSearch] = useState(false);
   const [searchString, setSearchString] = useState('');
   const [users, setUsers] = useState([]);
   const pageSize = 24;
@@ -20,8 +21,8 @@ export default function SearchScreen({navigation}) {
     }
     //promesa para traer valor de usuario solo una vez
     search_services.search(buildUserSearch(searchString)).then((res) => {
-      // console.log(res.data);
-      setUsers(res.data);
+      console.log(res.data.users[0]);
+      setUsers(res.data.users);
     });
   }, []);
 
@@ -40,31 +41,54 @@ export default function SearchScreen({navigation}) {
     search_in: 'users',
   });
 
-  const showSearch = (e) => {
-    setSearchString(e);
-    if (e.length > 3) {
-      search_services.search(buildUserSearch(e)).then((res) => {
-        console.log(res.data);
-        setUsers(res.data);
-      });
-    } else {
-      setUsers(
-        users.filter((u) =>
-          u.display_name.toLowerCase().includes(e.toLowerCase()),
-        ),
-      );
+  const doShowSearch = (searchedString) => {
+    setSearchString(searchedString);
+    setShowSearch(searchedString.length > 0);
+    if (searchedString.length > 0) {
+      if (searchedString.length > 3) {
+        search_services.search(buildUserSearch(searchedString)).then((res) => {
+          console.log(res.data);
+          setUsers(res.data);
+        });
+      } else {
+        setUsers(
+          users.filter((u) =>
+            u.display_name.toLowerCase().includes(searchedString.toLowerCase()),
+          ),
+        );
+      }
     }
   };
 
   const ProfileSearchItem = ({item}) => {
-    console.log("usuario buscado", item);
-    return null;
-    // return <ProfileSearch post={item} navigation={navigation} />;
+    return <ProfileSearch user={item} navigation={navigation} />;
   };
 
   const PostSearchItem = ({item}) => {
     return <ImagePostSearch post={item} navigation={navigation} />;
   };
+
+  const SearchedUsers = () => (
+    <FlatList
+      data={users}
+      renderItem={ProfileSearchItem}
+      bouncesZoom={true}
+      keyExtractor={(item) => item.id.toString()}
+      numColumns={1}
+    />
+  );
+
+  const PostsFeed = () => (
+    <FlatList
+      data={posts}
+      renderItem={PostSearchItem}
+      onEndReachedThreshold={0.8}
+      onEndReached={(info) => loadPost()}
+      bouncesZoom={true}
+      keyExtractor={(item) => item.id.toString()}
+      numColumns={3}
+    />
+  );
 
   return (
     <View style={styles.container}>
@@ -72,27 +96,10 @@ export default function SearchScreen({navigation}) {
         <GoBackButton navigation={navigation} />
         <FormSearchInput
           value={searchString}
-          onChangeText={(e) => showSearch(e)}
+          onChangeText={(e) => doShowSearch(e)}
         />
       </View>
-      {searchString.length > 0 ? (
-        <FlatList
-          data={users}
-          renderItem={ProfileSearchItem}
-          bouncesZoom={true}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      ) : (
-        <FlatList
-          data={posts}
-          renderItem={PostSearchItem}
-          onEndReachedThreshold={0.8}
-          onEndReached={(info) => loadPost()}
-          bouncesZoom={true}
-          keyExtractor={(item, index) => index.toString()}
-          // numColumns={3}
-        />
-      )}
+      {showSearch ? <SearchedUsers /> : <PostsFeed />}
     </View>
   );
 }
