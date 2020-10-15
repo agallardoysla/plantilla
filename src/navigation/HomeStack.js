@@ -4,8 +4,6 @@ import {Image, StatusBar, View} from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import SearchScreen from '../screens/Search/SearchScreen';
-import ImagePostSearch from '../screens/Search/ImagePostSearch';
-import ProfileSearch from '../screens/Search/ProfileSearch';
 import PostComments from '../screens/PostComments';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -96,8 +94,6 @@ const SearchGroup = ({navigation}) => {
         headerShown: false,
       }}>
       <Stack.Screen name="Search" component={SearchScreen} />
-      <Stack.Screen name="ImagePostSearch" component={ImagePostSearch} />
-      <Stack.Screen name="ProfileSearch" component={ProfileSearch} />
       <Stack.Screen name="MyConversations" component={MyConversations} />
     </Stack.Navigator>
   );
