@@ -20,7 +20,7 @@ export default function SearchScreen({navigation}) {
     }
     //promesa para traer valor de usuario solo una vez
     search_services.search(buildUserSearch(searchString)).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       setUsers(res.data);
     });
   }, []);
@@ -42,8 +42,17 @@ export default function SearchScreen({navigation}) {
 
   const showSearch = (e) => {
     setSearchString(e);
-    if (e.length > 0) {
-      search_services.search(buildUserSearch(e));
+    if (e.length > 3) {
+      search_services.search(buildUserSearch(e)).then((res) => {
+        console.log(res.data);
+        setUsers(res.data);
+      });
+    } else {
+      setUsers(
+        users.filter((u) =>
+          u.display_name.toLowerCase().includes(e.toLowerCase()),
+        ),
+      );
     }
   };
 
@@ -81,7 +90,7 @@ export default function SearchScreen({navigation}) {
           onEndReached={(info) => loadPost()}
           bouncesZoom={true}
           keyExtractor={(item, index) => index.toString()}
-          numColumns={3}
+          // numColumns={3}
         />
       )}
     </View>
