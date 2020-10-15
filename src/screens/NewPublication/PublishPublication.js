@@ -44,7 +44,9 @@ export default function PublishPublication({route}) {
 
     const filesIds = await Promise.all(
       paths.map(async (file) => {
-        const result = await files_services.create(file.url, file.ext);
+        // const result = await files_services.create(file.url, file.ext);
+        const result = await files_services.createPost(file.url, file.ext);
+        console.warn('RESULT', result);
         return await result.json().id;
       }),
     );

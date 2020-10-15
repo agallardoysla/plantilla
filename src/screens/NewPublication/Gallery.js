@@ -1,8 +1,15 @@
 import CameraRoll from '@react-native-community/cameraroll';
 import React, {useEffect, useState} from 'react';
-import {Image, PermissionsAndroid, StyleSheet, Text, View} from 'react-native';
 import {
+  Image,
+  PermissionsAndroid,
+  StyleSheet,
+  Text,
+  View,
   FlatList,
+  Platform,
+} from 'react-native';
+import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native-gesture-handler';
@@ -51,7 +58,11 @@ export default function Gallery({
       }
       loadAssets();
     };
-    init();
+    if (Platform.OS === 'ios') {
+      loadAssets();
+    } else {
+      init();
+    }
   }, [images, video, assetType]);
 
   const loadAssets = () => {
@@ -68,7 +79,7 @@ export default function Gallery({
     if (_hasNextPage) {
       CameraRoll.getPhotos({
         first: pageSize,
-        after: _endCursor,
+        // after: _endCursor,
         assetType: _assetType,
       }).then((res) => {
         let assetsPaginated = [];
@@ -211,7 +222,7 @@ export default function Gallery({
           disabled={!canPublish()}>
           <Icon
             // TODO: Cambiar el icono por el similar al done-all y el done.
-            showSecondIcon={canPublish()}
+            showSecondIcon={!canPublish()}
             source={'done_all'}
             secondIcon={'done'}
             color={canPublish() ? StylesConfiguration.color : 'grey'}

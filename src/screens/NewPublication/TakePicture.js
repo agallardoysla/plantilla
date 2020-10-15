@@ -246,7 +246,7 @@ export default function TakePicture({
                     style={styles.editPicture}
                     disabled={!canPublish()}>
                     <Icon
-                      showSecondIcon={canPublish()}
+                      showSecondIcon={!canPublish()}
                       source={'done_all'}
                       secondIcon={'done'}
                       color={canPublish() ? StylesConfiguration.color : 'grey'}

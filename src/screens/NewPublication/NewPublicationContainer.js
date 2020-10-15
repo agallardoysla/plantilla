@@ -36,21 +36,9 @@ export default function NewPublicationContainer({navigation}) {
       <Swiper
         style={styles.slider}
         showsButtons={true}
-        index={1}
+        index={0}
         loop={false}
         showsPagination={false}>
-        <Gallery
-          style={styles.view}
-          maxImages={maxImages}
-          images={images}
-          setImages={setImages}
-          navigation={navigation}
-          video={video}
-          setVideo={setVideo}
-          canPublish={canPublish}
-          assetType={assetType}
-          setAssetType={setAssetType}
-        />
         <TakePicture
           style={styles.view}
           navigation={navigation}
@@ -58,6 +46,18 @@ export default function NewPublicationContainer({navigation}) {
           maxImages={maxImages}
           images={images}
           setImages={setImages}
+          video={video}
+          setVideo={setVideo}
+          canPublish={canPublish}
+          assetType={assetType}
+          setAssetType={setAssetType}
+        />
+        <Gallery
+          style={styles.view}
+          maxImages={maxImages}
+          images={images}
+          setImages={setImages}
+          navigation={navigation}
           video={video}
           setVideo={setVideo}
           canPublish={canPublish}

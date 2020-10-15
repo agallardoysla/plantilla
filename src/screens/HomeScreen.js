@@ -1,5 +1,12 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, StyleSheet, FlatList, Text, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import posts_services from '../services/posts_services';
 import {FeedContext} from '../navigation/FeedContext';
 import Publication from './Publication';
@@ -48,7 +55,7 @@ export default function HomeScreen({navigation}) {
       const res = await users_services.getContext({
         search: '',
       });
-      console.log(res.data.map(u => u.display_name));
+      console.log(res.data.map((u) => u.display_name));
       setUsersSearched(res.data);
       setOriginalUsersSearched(res.data);
     } else {
@@ -69,7 +76,7 @@ export default function HomeScreen({navigation}) {
         const res = await users_services.getContext({
           search: seachedString,
         });
-        console.log(res.data.map(u => u.display_name));
+        console.log(res.data.map((u) => u.display_name));
         setUsersSearched(res.data);
       }
     } else {
@@ -79,7 +86,7 @@ export default function HomeScreen({navigation}) {
 
   const showUserInfo = (user) => {
     return user.display_name.slice(0, 20);
-  }
+  };
 
   const shareSelectedPost = (userId) => {
     console.log(userId, `[post:${sharedPost.id}]`);
