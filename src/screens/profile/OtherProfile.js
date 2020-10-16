@@ -8,14 +8,15 @@ import GenericProfile from './GenericProfile';
 export default function OtherProfile({route}) {
   const {user} = useContext(AuthContext);
   const [otherUser, setOtherUser] = useState();
-  const userId = route.params.user_id;
+  const [userId, setuserId] = useState(route.params.user_id);
   const navigation = route.params.navigation;
 
   useEffect(() => {
+    console.log(route.params.user_id);
     if (userId !== user.id) {
       users_services.get(userId).then((res) => setOtherUser(res.data));
     }
-  }, [user.id]);
+  }, [userId]);
 
   return userId !== user.id ? (
     otherUser ? (

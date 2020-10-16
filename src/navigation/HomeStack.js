@@ -46,6 +46,8 @@ const HomeGroup = ({navigation}) => {
       <Stack.Screen name="OtherProfile" component={OtherProfile}  screenOptions={{
         backgroundColor: 'red',
       }}  />
+      <Stack.Screen name="Followeds" component={Followeds} />
+      <Stack.Screen name="Followers" component={Followers} />
       <Stack.Screen name="MyChat" component={MyChat} />
       <Stack.Screen name="MyConversations" component={MyConversations} />
       <Stack.Screen name="ListConversation" component={ListConversation} />

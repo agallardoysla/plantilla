@@ -21,7 +21,7 @@ import Icon from '../../components/Icon';
 const numColumns = 3; //para el flatList
 
 export default function GenericProfile({navigation, localUser, isLoggedUser}) {
-  const {user} = useContext(AuthContext);
+  const {user, followUser, unfollowUser} = useContext(AuthContext);
   const [usersPosts, setUsersPosts] = useState([]);
   const [followers, setFollowers] = useState(localUser.followers_with_details);
   const [followeds, setFolloweds] = useState(localUser.following_with_details);
@@ -53,8 +53,6 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     navigation.navigate('Followers', {profile: localUser});
   };
 
-
-
   const MyProfileView = () => {
     return (
       <View View style={[styles.profileDataColumn, styles.columnRight]}>
@@ -84,22 +82,22 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   };
 
   const OtherProfileView = () => {
-    const [followed, setFollowed] = useState(false);
 
     const doFollow = () => {
-      if (followed) {
-        users_services.unfollow(localUser.id).then(() => {
-          console.log('dejado de seguir');
-          setFollowers(followers.filter((f) => f.user_id === localUser.id));
-          setFollowed(false);
-        });
+      if (loggedUserFollowProfile) {
+        users_services.cancelFollow(localUser.id);
+        const newFollowers = followers.filter((f) => f.user_id !== user.id);
+        setFollowers(newFollowers);
+        localUser.followers_with_details = newFollowers;
+        unfollowUser({user_id: localUser.id});
       } else {
-        users_services.follow(localUser.id).then((res) => {
-          console.log('seguido', res.data);
-          setFollowers([...followers, user]);
-          setFollowed(true);
-        });
+        users_services.follow(localUser.id);
+        const newFollowers = [...followers, {user_id: user.id, display_name: user.display_name}];
+        setFollowers(newFollowers);
+        localUser.followers_with_details = newFollowers;
+        followUser({user_id: localUser.id, display_name: localUser.display_name});
       }
+      setLoggedUserFollowProfile(!loggedUserFollowProfile);
     };
 
     return (
@@ -222,13 +220,13 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           />
           <Text style={styles.text_profile}>Seguidos</Text>
           <FormButton
-            buttonTitle={localUser.following_with_details.length}
+            buttonTitle={followeds.length}
             style={styles.counter}
             onPress={go_to_followed}
           />
           <Text style={styles.text_profile}>Seguidores</Text>
           <FormButton
-            buttonTitle={localUser.followers_with_details.length}
+            buttonTitle={followers.length}
             style={styles.counter}
             onPress={go_to_followers}
           />
