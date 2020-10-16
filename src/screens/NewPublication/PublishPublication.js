@@ -17,6 +17,7 @@ import {FeedContext} from '../../navigation/FeedContext';
 import files_services from '../../services/files_services';
 import posts_services from '../../services/posts_services';
 import StylesConfiguration from '../../utils/StylesConfiguration';
+import NewPostInput from './NewPostInput';
 
 let window = Dimensions.get('window');
 
@@ -43,7 +44,9 @@ export default function PublishPublication({route}) {
 
     const filesIds = await Promise.all(
       paths.map(async (file) => {
-        const result = await files_services.create(file.url, file.ext);
+        // const result = await files_services.create(file.url, file.ext);
+        const result = await files_services.createPost(file.url, file.ext);
+        console.warn('RESULT', result);
         return await result.json().id;
       }),
     );
@@ -108,7 +111,12 @@ export default function PublishPublication({route}) {
               <Text style={styles.text_description}>DESCRIPCIÓN DEL RETO</Text>
             </View>
             <View style={styles.fullRow}>
-              <MatInput
+              <NewPostInput
+                newComment={challengeText}
+                setNewComment={setChallengeText}
+                style={styles.input}
+              />
+              {/* <MatInput
                 value={challengeText}
                 label=""
                 onChangeText={setChallengeText}
@@ -118,7 +126,7 @@ export default function PublishPublication({route}) {
                 numberOfLines={4}
                 fontSize={18}
                 labelFontSize={18}
-              />
+              /> */}
             </View>
             {images.length > 0 || video !== '' ? (
               <View style={styles.fullRow}>
@@ -202,6 +210,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 250,
+    height: 80,
     paddingHorizontal: 10,
     paddingBottom: 10,
     paddingTop: -10,

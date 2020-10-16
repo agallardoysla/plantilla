@@ -10,5 +10,8 @@ export default {
   edit: (userId, edition) => generic_service.doPut(`${url}${userId}/`, edition),
   listPosts: (userId) => generic_service.doGet(`${url}${userId}/posts/`),
   follow: (userId) => generic_service.doGet(`${url}${userId}/follow/`),
-  unfollow: (userId) => generic_service.doDelete(`${url}${userId}/follow/`),
+  cancelFollow: (userId) => generic_service.doDelete(`${url}${userId}/follow/`),
+  acceptFollower: (requestId) => generic_service.doPut(`${url}me/followrequests/${requestId}/`),
+  denyFollower: (requestId) => generic_service.doDelete(`${url}me/followrequests/${requestId}/`),
+  removeFollower: (userId) => generic_service.doDelete(`${url}me/followers/${userId}/`),
 };

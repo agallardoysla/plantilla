@@ -23,7 +23,7 @@ import CommentFormatter from '../utils/CommentFormatter';
 
 let window = Dimensions.get('window');
 
-export default function Publication({post, navigation}) {
+export default function Publication({post, navigation, showSharePost}) {
   const [showComments, setShowComments] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
   const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
@@ -233,7 +233,8 @@ export default function Publication({post, navigation}) {
             <Text style={styles.icon_numbers_comment}>{countComments}</Text>
           </View>
 
-          <View
+          <TouchableOpacity
+            onPress={() => showSharePost(true, post)}
             style={{
               flex: 1,
               flexDirection: 'row',
@@ -243,7 +244,7 @@ export default function Publication({post, navigation}) {
               source={require('../assets/compartir.png')}
               style={[styles.icon_post, styles.icon_compartir]}
             />
-          </View>
+          </TouchableOpacity>
 
           <View
             style={{

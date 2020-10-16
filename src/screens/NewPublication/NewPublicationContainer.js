@@ -2,14 +2,12 @@ import React, {useContext, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import {FeedContext} from '../../navigation/FeedContext';
 import Gallery from './Gallery';
 import TakePicture from './TakePicture';
 
 const {width} = Dimensions.get('window');
 
 export default function NewPublicationContainer({navigation}) {
-  const {setPosts} = useContext(FeedContext);
   const maxImages = 5;
   const maxDuration = 5;
   const [images, setImages] = useState([]);
@@ -36,21 +34,9 @@ export default function NewPublicationContainer({navigation}) {
       <Swiper
         style={styles.slider}
         showsButtons={true}
-        index={1}
+        index={0}
         loop={false}
         showsPagination={false}>
-        <Gallery
-          style={styles.view}
-          maxImages={maxImages}
-          images={images}
-          setImages={setImages}
-          navigation={navigation}
-          video={video}
-          setVideo={setVideo}
-          canPublish={canPublish}
-          assetType={assetType}
-          setAssetType={setAssetType}
-        />
         <TakePicture
           style={styles.view}
           navigation={navigation}
@@ -58,6 +44,18 @@ export default function NewPublicationContainer({navigation}) {
           maxImages={maxImages}
           images={images}
           setImages={setImages}
+          video={video}
+          setVideo={setVideo}
+          canPublish={canPublish}
+          assetType={assetType}
+          setAssetType={setAssetType}
+        />
+        <Gallery
+          style={styles.view}
+          maxImages={maxImages}
+          images={images}
+          setImages={setImages}
+          navigation={navigation}
           video={video}
           setVideo={setVideo}
           canPublish={canPublish}

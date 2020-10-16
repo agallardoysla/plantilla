@@ -1,48 +1,49 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Dimensions, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList} from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import GoBackButton from '../../components/GoBackButton';
-import Follower from './Follower';
+import Followed from './Followed';
 import FormSearchInput from '../../components/FormSearchInput';
 import utils from '../../utils/utils.js';
 
-const Followers = ({navigation, route}) => {
-  const [filteredFollowers, setFilteredFollowers] = useState(route.params.profile.followers_with_details);
+
+const Followeds = ({navigation, route}) => {
+  const [filteredFolloweds, setFilteredFolloweds] = useState(route.params.profile.following_with_details);
   const [searchString, setSearchString] = useState('');
 
-  const searchFollowers = (searchedString) => {
+  const searchFolloweds = (searchedString) => {
     setSearchString(searchedString);
     if (searchedString.length > 0) {
-      setFilteredFollowers(
+      setFilteredFolloweds(
         utils.filterByString(
-          route.params.profile.followers_with_details,
+          route.params.profile.following_with_details,
           (f) => f.display_name,
           searchedString,
         ),
       );
     } else {
-      setFilteredFollowers(route.params.profile.followers_with_details);
+      setFilteredFolloweds(route.params.profile.following_with_details);
     }
   };
 
-  const FollowerItem = ({item}) => (
-    <Follower follower={item} navigation={navigation} />
+  const FollowedItem = ({item}) => (
+    <Followed follower={item} navigation={navigation} />
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.row}>
         <GoBackButton navigation={navigation} />
-        <Text style={styles.titulo}>SEGUIDORES</Text>
+        <Text style={styles.titulo}>SEGUIDOS</Text>
         <View style={styles.placeholder} />
       </View>
       <View style={styles.row}>
-        <FormSearchInput value={searchString} onChangeText={searchFollowers} />
+        <FormSearchInput value={searchString} onChangeText={searchFolloweds} />
       </View>
       <FlatList
         style={styles.list}
-        data={filteredFollowers}
-        renderItem={FollowerItem}
+        data={filteredFolloweds}
+        renderItem={FollowedItem}
         keyExtractor={(item, index) => index.toString()}
       />
     </View>
@@ -80,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Followers;
+export default Followeds;

@@ -3,7 +3,7 @@ import React from 'react';
 import {Image, StatusBar, View} from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import NotificationScreen from '../screens/NotificationScreen';
-import SearchScreen from '../screens/SearchScreen';
+import SearchScreen from '../screens/Search/SearchScreen';
 import PostComments from '../screens/PostComments';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -12,17 +12,15 @@ import Publication from '../screens/Publication';
 import ViewNewImage from '../screens/NewPublication/ViewNewImage';
 import NewPublicationContainer from '../screens/NewPublication/NewPublicationContainer';
 import PublishPublication from '../screens/NewPublication/PublishPublication';
-import ImagePostSearch from '../screens/ImagePostSearch';
-import ProfileSearch from '../screens/ProfileSearch';
-import MyConversations from '../screens/MyConversations';
+import MyConversations from '../screens/Conversations/MyConversations';
 import OtherProfile from '../screens/profile/OtherProfile';
-import Followed from '../screens/profile/Followed';
+import Followeds from '../screens/profile/Followeds';
 import Followers from '../screens/profile/Followers';
 import MyProfileScreen from '../screens/profile/MyProfileScreen';
 import Preferences from '../screens/profile/Preferences';
 import PublicationDetails from '../screens/PublicationDetails';
-import ListConversation from '../screens/ListConversation';
-import MyChat from '../screens/MyChat';
+import ListConversation from '../screens/Conversations/ListConversation';
+import MyChat from '../screens/Conversations/MyChat';
 
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
@@ -67,7 +65,7 @@ const ProfileGroup = ({navigation}) => {
         backgroundColor:'black'
       }}>
       <Stack.Screen name="Profile" component={MyProfileScreen} />
-      <Stack.Screen name="Followed" component={Followed} />
+      <Stack.Screen name="Followeds" component={Followeds} />
       <Stack.Screen name="Followers" component={Followers} />
       <Stack.Screen name="MyConversations" component={MyConversations} />
       <Stack.Screen name="Preferences" component={Preferences} />
@@ -102,8 +100,7 @@ const SearchGroup = ({navigation}) => {
         headerShown: false,
       }}>
       <Stack.Screen name="Search" component={SearchScreen} />
-      <Stack.Screen name="ImagePostSearch" component={ImagePostSearch} />
-      <Stack.Screen name="ProfileSearch" component={ProfileSearch} />
+      <Stack.Screen name="MyConversations" component={MyConversations} />
     </Stack.Navigator>
   );
 };

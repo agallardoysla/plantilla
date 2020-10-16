@@ -1,4 +1,4 @@
-import React, {PureComponent, useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import Icon from '../../components/Icon';
-import {FeedContext} from '../../navigation/FeedContext';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import CameraRoll from '@react-native-community/cameraroll';
 import Video from 'react-native-video-player';
@@ -246,7 +245,7 @@ export default function TakePicture({
                     style={styles.editPicture}
                     disabled={!canPublish()}>
                     <Icon
-                      showSecondIcon={canPublish()}
+                      showSecondIcon={!canPublish()}
                       source={'done_all'}
                       secondIcon={'done'}
                       color={canPublish() ? StylesConfiguration.color : 'grey'}
