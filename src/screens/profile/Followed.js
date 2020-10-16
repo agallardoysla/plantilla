@@ -6,7 +6,6 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 
 
 const Followed = ({follower, navigation}) => {
-  const [userFollowProfile, setUserFollowProfile] = useState(false);
 
   const goToProfile = () => {
     navigation.navigate('HomeGroup', {
