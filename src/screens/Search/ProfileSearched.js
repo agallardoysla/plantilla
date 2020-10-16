@@ -42,21 +42,25 @@ const ProfileSearch = ({profile, navigation}) => {
         />
 
         <View style={styles.userInfo}>
-          <Text style={styles.profileName}>@{profile.display_name}</Text>
-          <Text style={styles.profileDescription}>Descripciòn del Perfil</Text>
+          <Text style={styles.profileName} numberOfLines={1}>
+            @{profile.display_name}
+          </Text>
+          <Text style={styles.profileDescription} numberOfLines={1}>
+            Descripciòn del Perfil
+          </Text>
         </View>
       </TouchableOpacity>
-      <FormButton
-        buttonTitle={userFollowProfile ? 'Dejar de seguir' : 'Seguir'}
-        style={styles.followButton}
-        textStyle={styles.followButtonText}
-      />
       <TouchableOpacity style={styles.sobre_amarillo} onPress={goToMyChat}>
         <Image
           source={require('../../assets/sobre_amarillo.png')}
           style={styles.sobre_amarillo}
         />
       </TouchableOpacity>
+      <FormButton
+        buttonTitle={userFollowProfile ? 'Seguido' : 'Seguir'}
+        style={[styles.followButton, userFollowProfile ? styles.followedButton : {}]}
+        textStyle={[styles.followButtonText, userFollowProfile ? styles.followedButtonText: {}]}
+      />
     </View>
   );
 };
@@ -79,6 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     marginLeft: 5,
+    width: 115,
   },
   image: {
     width: 60,
@@ -95,14 +100,22 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   followButton: {
-    width: 50,
+    width: 55,
     marginTop: 0,
-    padding: 5,
+    padding: 2,
     marginHorizontal: 5,
-    height: 35,
+    height: 26,
+    borderRadius: 5,
   },
   followButtonText: {
     fontSize: 10,
+    color: StylesConfiguration.color,
+  },
+  followedButton: {
+    backgroundColor: StylesConfiguration.color,
+  },
+  followedButtonText: {
+    color: 'black',
   },
   sobre_amarillo: {
     width: 42,
