@@ -99,6 +99,18 @@ export const AuthProvider = ({children}) => {
             callback(e.message);
           }
         },
+        followUser: (newFollowed) => {
+          user.following_with_details.push(newFollowed);
+          setUser(user);
+        },
+        unfollowUser: (followed) => {
+          console.log(user.following_with_details);
+          user.following_with_details = user.following_with_details.filter(
+            (f) => f.user_id !== followed.user_id,
+          );
+          console.log(user.following_with_details);
+          setUser(user);
+        },
       }}>
       {children}
     </AuthContext.Provider>
