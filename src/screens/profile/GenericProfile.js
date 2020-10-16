@@ -23,6 +23,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const {user} = useContext(AuthContext);
   const [usersPosts, setUsersPosts] = useState([]);
   const [followers, setFollowers] = useState(localUser.followers_with_details);
+  const [followeds, setFolloweds] = useState(localUser.following_with_details);
   const [showFollowMenu, setShowFollowMenu] = useState(false);
 
   useEffect(() => {
@@ -42,11 +43,11 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   }, []);
 
   const go_to_followed = () => {
-    navigation.navigate('Followed');
+    navigation.navigate('Followed', {profile: localUser});
   };
 
   const go_to_followers = () => {
-    navigation.navigate('Followers');
+    navigation.navigate('Followers', {profile: localUser});
   };
 
   const profileFollowLoggedUser = () => localUser.following_with_details.filter((u) => u.user_id === user.id).length > 0;
