@@ -16,7 +16,7 @@ const Follower = ({follower, navigation}) => {
     navigation.navigate('HomeGroup', {
       screen: 'OtherProfile',
       params: {
-        user_id: follower.id,
+        user_id: follower.user_id,
         navigation,
       },
     });
@@ -44,9 +44,7 @@ const Follower = ({follower, navigation}) => {
         </Text>
       </TouchableOpacity>
       <View style={styles.actions}>
-        <TouchableOpacity
-          style={styles.sobre_amarillo}
-          onPress={goToMyChat}>
+        <TouchableOpacity style={styles.sobre_amarillo} onPress={goToMyChat}>
           <Image
             source={require('../../assets/sobre_amarillo.png')}
             style={styles.sobre_amarillo}
@@ -72,14 +70,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   user: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
   },
   image: {
     width: 60,

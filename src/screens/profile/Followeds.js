@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginHorizontal: 10,
     marginVertical: 10,
+    textDecorationLine: 'underline',
   },
   list: {
     flex: 1,
