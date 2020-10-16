@@ -5,7 +5,7 @@ import FormButton from '../../components/FormButton';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 
 
-const Follower = ({follower, navigation}) => {
+const Followed = ({follower, navigation}) => {
   const [userFollowProfile, setUserFollowProfile] = useState(false);
 
   const goToProfile = (profile) => {
@@ -98,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Follower;
+export default Followed;

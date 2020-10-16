@@ -13,15 +13,6 @@ const Followers = ({navigation, route}) => {
   const searchFollowers = (searchedString) => {
     setSearchString(searchedString);
     if (searchedString.length > 0) {
-      console.log(
-        'searching...',
-        searchedString,
-        utils.filterByString(
-          route.params.profile.followers_with_details,
-          (f) => f.display_name,
-          searchedString,
-        ),
-      );
       setFilteredFollowers(
         utils.filterByString(
           route.params.profile.followers_with_details,
