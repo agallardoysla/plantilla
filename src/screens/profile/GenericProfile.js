@@ -182,7 +182,9 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
       navigation.navigate('MyConversations');
     } else {
       console.log('otro');
-      navigation.navigate('MyChat', {receiver: {user_id: localUser.id}});
+      navigation.navigate('MyChat', {
+        receiver: {user_id: localUser.id, display_name: localUser.display_name},
+      });
     }
   };
 
