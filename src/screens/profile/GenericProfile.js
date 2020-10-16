@@ -190,6 +190,25 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     }
   };
 
+  const UserPostItem = ({item}) => (
+    <View style={styles.itemContainer}>
+      {item.map((post, i) => (
+        <View style={styles.item} key={i}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('PublicationDetails', {post})}
+            style={styles.itemImageContainer}>
+            <Image
+              source={{
+                uri: post.files_with_urls[0] ? post.files_with_urls[0].url : '',
+              }}
+              style={styles.itemImage}
+            />
+          </TouchableOpacity>
+        </View>
+      ))}
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileData}>
@@ -207,7 +226,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           />
           <Text style={styles.text_profile}>Seguidores</Text>
           <FormButton
-            buttonTitle={followers.length}
+            buttonTitle={localUser.followers_with_details.length}
             style={styles.counter}
             onPress={go_to_followers}
           />
@@ -267,29 +286,8 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
       <View style={styles.profilePublications}>
         <FlatList
           data={usersPosts}
-          renderItem={({item}) => (
-            <View style={styles.itemContainer}>
-              {item.map((post, i) => (
-                <View style={styles.item} key={i}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('PublicationDetails', {post})
-                    }
-                    style={styles.itemImageContainer}>
-                    <Image
-                      source={{
-                        uri: post.files_with_urls[0]
-                          ? post.files_with_urls[0].url
-                          : '',
-                      }}
-                      style={styles.itemImage}
-                    />
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          )}
-          keyExtractor={(item) => item[0].id}
+          renderItem={UserPostItem}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
     </SafeAreaView>
