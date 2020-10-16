@@ -14,7 +14,7 @@ import NewPublicationContainer from '../screens/NewPublication/NewPublicationCon
 import PublishPublication from '../screens/NewPublication/PublishPublication';
 import MyConversations from '../screens/Conversations/MyConversations';
 import OtherProfile from '../screens/profile/OtherProfile';
-import Followed from '../screens/profile/Followed';
+import Followeds from '../screens/profile/Followeds';
 import Followers from '../screens/profile/Followers';
 import MyProfileScreen from '../screens/profile/MyProfileScreen';
 import Preferences from '../screens/profile/Preferences';
@@ -58,7 +58,7 @@ const ProfileGroup = ({navigation}) => {
         headerShown: false,
       }}>
       <Stack.Screen name="Profile" component={MyProfileScreen} />
-      <Stack.Screen name="Followed" component={Followed} />
+      <Stack.Screen name="Followeds" component={Followeds} />
       <Stack.Screen name="Followers" component={Followers} />
       <Stack.Screen name="MyConversations" component={MyConversations} />
       <Stack.Screen name="Preferences" component={Preferences} />

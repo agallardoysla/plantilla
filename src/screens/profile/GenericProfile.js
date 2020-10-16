@@ -43,7 +43,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   }, []);
 
   const go_to_followed = () => {
-    navigation.navigate('Followed', {profile: localUser});
+    navigation.navigate('Followeds', {profile: localUser});
   };
 
   const go_to_followers = () => {

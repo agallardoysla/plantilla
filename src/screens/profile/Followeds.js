@@ -11,10 +11,11 @@ import {
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import FormButton_small from '../../components/FormButton_small';
 import {Icon} from 'react-native-elements';
+import GoBackButton from '../../components/GoBackButton';
 
 let window = Dimensions.get('window');
 
-const Followed = ({navigation}) => {
+const Followeds = ({navigation}) => {
   const data = [
     {
       id: 0,
@@ -58,19 +59,10 @@ const Followed = ({navigation}) => {
     },
   ];
 
-  const go_back = () => {
-    navigation.navigate("Profile")
-  }
-
   return (
     <View style={{flexDirection: 'row', flex: 1}}>
       <View style={styles.column}>
-        <TouchableOpacity onPress={go_back}>
-          <Image
-            style={styles.boton_back}
-            source={require('../../assets/boton_volver_atras.png')}
-          />
-        </TouchableOpacity>
+        <GoBackButton navigation={navigation} />
         <Text style={styles.titulo}>SEGUIDOS</Text>
 
         <FlatList
@@ -134,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Followed;
+export default Followeds;
