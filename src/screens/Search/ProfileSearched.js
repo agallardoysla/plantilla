@@ -2,10 +2,11 @@ import React, { useContext, useState } from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import FormButton from '../../components/FormButton';
 import {AuthContext} from '../../navigation/AuthProvider';
+import users_services from '../../services/users_services';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 
 const ProfileSearch = ({profile, navigation}) => {
-  const {user} = useContext(AuthContext);
+  const {user, followUser, unfollowUser} = useContext(AuthContext);
   const [userFollowProfile, setUserFollowProfile] = useState(
     user.following_with_details.filter((u) => u.user_id === profile.id).length > 0,
   );
@@ -30,6 +31,17 @@ const ProfileSearch = ({profile, navigation}) => {
         },
       },
     });
+  };
+
+  const doFollow = () => {
+    if (userFollowProfile) {
+      users_services.cancelFollow(profile.id);
+      unfollowUser({user_id: profile.id});
+    } else {
+      users_services.follow(profile.id);
+      followUser({user_id: profile.id, display_name: profile.display_name});
+    }
+    setUserFollowProfile(!userFollowProfile);
   };
 
   return (
@@ -60,6 +72,7 @@ const ProfileSearch = ({profile, navigation}) => {
         buttonTitle={userFollowProfile ? 'Seguido' : 'Seguir'}
         style={[styles.followButton, userFollowProfile ? styles.followedButton : {}]}
         textStyle={[styles.followButtonText, userFollowProfile ? styles.followedButtonText: {}]}
+        onPress={doFollow}
       />
     </View>
   );
