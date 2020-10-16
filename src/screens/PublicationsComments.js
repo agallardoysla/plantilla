@@ -130,6 +130,7 @@ export default function PublicationsComments({
                 style={styles.newComment}
                 initialText={comment.text}
                 isEdition={true}
+                setCountComments={setCountComments}
               />
             )
           ) : (
@@ -146,7 +147,7 @@ export default function PublicationsComments({
                 opened={showMenu && comment.user_owner.user_id === user.id}
                 onBackdropPress={() => setShowMenu(false)}>
                 <MenuTrigger />
-                <MenuOptions>
+                <MenuOptions customStyles={menuOptions}>
                   <MenuOption
                     onSelect={() => setEditingComment(true)}
                     text="Editar comentario"
@@ -185,6 +186,7 @@ export default function PublicationsComments({
                       style={styles.newComment}
                       initialText={answer.text}
                       isEdition={true}
+                      setCountComments={setCountComments}
                     />
                   )
                 ) : (
@@ -201,7 +203,7 @@ export default function PublicationsComments({
                       }
                       onBackdropPress={() => showMenuForAnswer(-1)}>
                       <MenuTrigger />
-                      <MenuOptions>
+                      <MenuOptions customStyles={menuOptions}>
                         <MenuOption
                           onSelect={() => editForAnswer(i)}
                           text="Editar comentario"
@@ -230,6 +232,7 @@ export default function PublicationsComments({
             setSavingComment={setSavingComment}
             style={styles.newComment}
             initialText={`@${comment.user_owner.display_name} `}
+            setCountComments={setCountComments}
           />
         )
       ) : (
@@ -306,3 +309,17 @@ const styles = StyleSheet.create({
     marginLeft: 40,
   },
 });
+
+const menuOptions = {
+  optionsContainer: {
+    backgroundColor: '#898A8D',
+    padding: 5,
+    borderColor: StylesConfiguration.color,
+    borderWidth: 1,
+    borderRadius: 10,
+    width: 150,
+  },
+  optionText: {
+    color: 'black',
+  },
+};

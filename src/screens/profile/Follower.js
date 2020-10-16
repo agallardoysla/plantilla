@@ -1,11 +1,16 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import FormButton from '../../components/FormButton';
+import { AuthContext } from '../../navigation/AuthProvider';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 
 
-const Followed = ({follower, navigation}) => {
+const Follower = ({follower, navigation}) => {
+  const {user} = useContext(AuthContext);
+  const [userFollowProfile, setUserFollowProfile] = useState(
+    user.following_with_details.filter((u) => u.user_id === follower.user_id).length > 0,
+  );
 
   const goToProfile = () => {
     navigation.navigate('HomeGroup', {
@@ -46,12 +51,12 @@ const Followed = ({follower, navigation}) => {
           />
         </TouchableOpacity>
         <FormButton
-          buttonTitle={'Borrar'}
-          style={styles.followButton}
-          textStyle={styles.followButtonText}
+          buttonTitle={userFollowProfile ? 'Seguido' : 'Seguir'}
+          style={[styles.followButton, userFollowProfile ? styles.followedButton : {}]}
+          textStyle={[styles.followButtonText, userFollowProfile ? styles.followedButtonText: {}]}
         />
         <FormButton
-          buttonTitle={'Bloquear'}
+          buttonTitle={'...'}
           style={styles.followButton}
           textStyle={styles.followButtonText}
         />
@@ -102,10 +107,16 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: StylesConfiguration.color,
   },
+  followedButton: {
+    backgroundColor: StylesConfiguration.color,
+  },
+  followedButtonText: {
+    color: 'black',
+  },
   sobre_amarillo: {
     width: 42,
     height: 42,
   },
 });
 
-export default Followed;
+export default Follower;
