@@ -3,11 +3,12 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import FormButton from '../../components/FormButton';
 import { AuthContext } from '../../navigation/AuthProvider';
+import users_services from '../../services/users_services';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 
 
 const Follower = ({follower, navigation}) => {
-  const {user} = useContext(AuthContext);
+  const {user, followUser, unfollowUser} = useContext(AuthContext);
   const [userFollowProfile, setUserFollowProfile] = useState(
     user.following_with_details.filter((u) => u.user_id === follower.user_id).length > 0,
   );
@@ -29,6 +30,17 @@ const Follower = ({follower, navigation}) => {
         display_name: follower.display_name,
       },
     });
+  };
+
+  const doFollow = () => {
+    if (userFollowProfile) {
+      users_services.cancelFollow(follower.user_id);
+      unfollowUser(follower);
+    } else {
+      users_services.follow(follower.user_id);
+      followUser(follower);
+    }
+    setUserFollowProfile(!userFollowProfile);
   };
 
   return (
@@ -54,6 +66,7 @@ const Follower = ({follower, navigation}) => {
           buttonTitle={userFollowProfile ? 'Seguido' : 'Seguir'}
           style={[styles.followButton, userFollowProfile ? styles.followedButton : {}]}
           textStyle={[styles.followButtonText, userFollowProfile ? styles.followedButtonText: {}]}
+          onPress={doFollow}
         />
         <FormButton
           buttonTitle={'...'}
