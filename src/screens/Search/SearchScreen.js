@@ -61,7 +61,7 @@ export default function SearchScreen({navigation}) {
   };
 
   const ProfileSearchItem = ({item}) => {
-    return <ProfileSearched user={item} navigation={navigation} />;
+    return <ProfileSearched profile={item} navigation={navigation} />;
   };
 
   const PostSearchItem = ({item}) => {
