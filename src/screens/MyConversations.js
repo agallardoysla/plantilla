@@ -10,10 +10,6 @@ const MyConversations = ({navigation}) => {
   const [conversations, setConversations] = useState([]);
   const [filteredConversations, setFilteredConversations] = useState([]);
 
-  const go_back = () => {
-    navigation.navigate('Profile');
-  };
-
   const datos = [
     {
       id: 0,
@@ -37,7 +33,7 @@ const MyConversations = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.row}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={go_back}>
+          <TouchableOpacity onPress={() => navigation.goBack(null)}>
             <Image
               style={styles.boton_back}
               source={require('../assets/boton_volver_atras.png')}

@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+
 } from 'react-native';
 import {
   ScrollView,
@@ -117,58 +118,53 @@ export default function Publication({post, navigation}) {
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.row_header}>
-          <Image
-            source={require('../assets/sobre_amarillo.png')}
-            style={styles.sobre_amarillo}
-            resizeMode={'contain'}
-          />
-        </View>
+        
 
         {/*Inicia Nombre de usuario, foto, verificacion de cuenta*/}
 
-        <View style={{flexDirection: 'row'}}>
-          {post.user_owner.account_verified ? (
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('OtherProfile', {
+              user_id: post.user_owner.user_id,
+              navigation,
+            })
+          }>
+          <View style={{flexDirection: 'row'}}>
+            {post.user_owner.account_verified ? (
+              <View
+                style={{
+                  flexDirection: 'column',
+                  flex: 1,
+                  alignItems: 'flex-end',
+                  justifyContent: 'center',
+                }}>
+                <Image source={require('../assets/tilde.png')} />
+              </View>
+            ) : null}
+
             <View
               style={{
                 flexDirection: 'column',
-                flex: 1,
+                flex: post.user_owner.account_verified ? 0 : 1,
                 alignItems: 'flex-end',
                 justifyContent: 'center',
               }}>
-              <Image source={require('../assets/tilde.png')} />
+              <Text style={styles.encabezado_text}>
+                {' '}
+                @{post.user_owner.display_name}{' '}
+              </Text>
             </View>
-          ) : null}
-          <View
-            style={{
-              flexDirection: 'column',
-              flex: post.user_owner.account_verified ? 0 : 1,
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-            }}>
-            <Text style={styles.encabezado_text}>
-              {' '}
-              @{post.user_owner.display_name}{' '}
-            </Text>
-          </View>
 
-          <View style={{flexDirection: 'column'}}>
-            <Image
-              source={require('../assets/pride-dog_1.png')}
-              resizeMode="contain"
-              style={styles.image_profile}
-            />
+            <View style={{flexDirection: 'column'}}>
+              <Image
+                source={require('../assets/pride-dog_1.png')}
+                resizeMode="contain"
+                style={styles.image_profile}
+              />
+            </View>
           </View>
-        </View>
-        {/* <Text style={styles.encabezado_text}>
-          @{post.user_owner.display_name}
-          <Image
-            source={require('../assets/pride-dog_1.png')}
-            resizeMode="contain"
-            style={styles.image_profile}
-          />
-          
-        </Text> */}
+        </TouchableOpacity>
+
         {/*Finaliza Nombre de usuario como encabezado*/}
 
         {/*Inicia Foto de la publicaciòn */}
@@ -318,6 +314,8 @@ export default function Publication({post, navigation}) {
         {savingComment ? (
           <ActivityIndicator color={StylesConfiguration.color} />
         ) : (
+      
+
           <CommentInput
             placeholder={'Escribir un nuevo comentario...'}
             callback={newCommentCallback}
@@ -329,6 +327,7 @@ export default function Publication({post, navigation}) {
             setCountComments={setCountComments}
             countComments={countComments}
           />
+   
         )}
         {/*Fin de nuevo comentario hacia la publicaciòn */}
 

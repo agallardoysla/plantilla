@@ -24,6 +24,7 @@ import PublicationDetails from '../screens/PublicationDetails';
 import ListConversation from '../screens/ListConversation';
 import MyChat from '../screens/MyChat';
 
+
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
 const Stack = createStackNavigator();
@@ -44,8 +45,13 @@ const HomeGroup = ({navigation}) => {
       <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="PostComments" component={PostComments} />
       <Stack.Screen name="PostLikes" component={PostLikes} />
-      <Stack.Screen name="OtherProfile" component={OtherProfile} />
+      <Stack.Screen name="OtherProfile" component={OtherProfile}  screenOptions={{
+        backgroundColor: 'red',
+      }}  />
       <Stack.Screen name="MyChat" component={MyChat} />
+      <Stack.Screen name="MyConversations" component={MyConversations} />
+      <Stack.Screen name="ListConversation" component={ListConversation} />
+
     </Stack.Navigator>
   );
 };
@@ -58,6 +64,7 @@ const ProfileGroup = ({navigation}) => {
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
         headerShown: false,
+        backgroundColor:'black'
       }}>
       <Stack.Screen name="Profile" component={MyProfileScreen} />
       <Stack.Screen name="Followed" component={Followed} />
@@ -152,6 +159,7 @@ const HomeStack = () => {
       <Tab.Navigator
         initialRouteName="HomeGroup"
         tabBarOptions={{
+          keyboardHidesTabBar: true,
           activeBackgroundColor: 'black',
           inactiveBackgroundColor: 'black',
           activeTintColor: 'yellow',
@@ -159,6 +167,7 @@ const HomeStack = () => {
           style: {
             borderTopWidth: 0,
           },
+         
         }}
         screenOptions={({route}) => ({
           tabBarIcon: ({focused}) => {

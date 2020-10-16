@@ -1,9 +1,14 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
+import {View, StyleSheet, FlatList, Image} from 'react-native';
 import posts_services from '../services/posts_services';
 import {FeedContext} from '../navigation/FeedContext';
 import Publication from './Publication';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {
+  ScrollView,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 
 export default function HomeScreen({navigation}) {
   const {posts, setPosts} = useContext(FeedContext);
@@ -25,6 +30,17 @@ export default function HomeScreen({navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.row_header}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('MyConversations')}>
+          <Image
+            source={require('../assets/sobre_amarillo.png')}
+            style={styles.sobre_amarillo}
+            resizeMode={'contain'}
+          />
+        </TouchableOpacity>
+      </View>
+
       <FlatList
         data={posts}
         renderItem={({item}) => {
@@ -45,5 +61,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'stretch',
     backgroundColor: 'black',
+  },
+  row_header: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    backgroundColor: '#242424',
+
+    marginBottom: 10,
+    marginRight: 5,
+  },
+  sobre_amarillo: {
+    width: 42,
+    height: 42,
   },
 });

@@ -33,7 +33,7 @@ const MyChat = ({navigation, route}) => {
   }, []);
 
   const go_back = () => {
-    navigation.navigate('MyConversations');
+    navigation.goBack(null);
   };
 
   const iSendIt = (message) => message.from === user.id;

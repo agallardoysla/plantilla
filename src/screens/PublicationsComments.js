@@ -108,7 +108,7 @@ export default function PublicationsComments({
             style={styles.senderContainer}
             onPress={() =>
               navigation.navigate('OtherProfile', {
-                user_id: comment.user_owner,
+                user_id: comment.user_owner.user_id,
                 navigation,
               })
             }>

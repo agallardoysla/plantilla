@@ -163,12 +163,14 @@ export default function CommentInput({
           ))}
         </View>
       ) : null}
+
       <TextInput
         style={[styles.newComment, style]}
         onChangeText={setNewComment}
         onSubmitEditing={saveComment}
         placeholder={placeholder}
         placeholderTextColor={'white'}>
+
         <CommentFormatter
           comment={newComment}
           isInput={true}
