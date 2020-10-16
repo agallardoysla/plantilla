@@ -63,7 +63,7 @@ export default function Gallery({
     } else {
       init();
     }
-  }, [images, video, assetType]);
+  }, []);
 
   const loadAssets = () => {
     loadAssetsParams(hasNextPage, assetType, endCursor, assetsGallery);
@@ -79,7 +79,7 @@ export default function Gallery({
     if (_hasNextPage) {
       CameraRoll.getPhotos({
         first: pageSize,
-        // after: _endCursor,
+        after: _endCursor,
         assetType: _assetType,
       }).then((res) => {
         let assetsPaginated = [];
