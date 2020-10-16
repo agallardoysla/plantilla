@@ -25,6 +25,8 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const [usersPosts, setUsersPosts] = useState([]);
   const [followers, setFollowers] = useState(localUser.followers_with_details);
   const [followeds, setFolloweds] = useState(localUser.following_with_details);
+  const [profileFollowLoggedUser, setProfileFollowLoggedUser] = useState(localUser.following_with_details.filter((u) => u.user_id === user.id).length > 0);
+  const [loggedUserFollowProfile, setLoggedUserFollowProfile] = useState(user.following_with_details.filter((u) => u.user_id === localUser.id).length > 0);
   const [showFollowMenu, setShowFollowMenu] = useState(false);
 
   useEffect(() => {
@@ -51,9 +53,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     navigation.navigate('Followers', {profile: localUser});
   };
 
-  const profileFollowLoggedUser = () => localUser.following_with_details.filter((u) => u.user_id === user.id).length > 0;
 
-  const loggedUserFollowProfile = () => user.following_with_details.filter((u) => u.user_id === localUser.id).length > 0;
 
   const MyProfileView = () => {
     return (
@@ -121,30 +121,32 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           textStyle={styles.patreonContent}
         />
         <View style={styles.followInfo}>
-          {profileFollowLoggedUser() ? (
+          {profileFollowLoggedUser ? (
             <Text style={styles.textFollowed}>Te sigue</Text>
-          ) : null}
+          ) : (
+            <Text style={styles.textFollowed} /> // funciona de placeholder
+          )}
           <Menu
             opened={showFollowMenu}
             onBackdropPress={() => setShowFollowMenu(false)}>
             <MenuTrigger
-              style={styles.followButton}
+              style={[styles.followButton, loggedUserFollowProfile ? styles.followedButton : {}]}
               onPress={() => setShowFollowMenu(true)}>
               <Text
                 style={[
-                  styles.menuFollowText,
-                  loggedUserFollowProfile() ? {color: 'black'} : {color: 'white'},
+                  styles.followText,
+                  loggedUserFollowProfile ? {color: 'black'} : {color: 'white'},
                 ]}>
-                {loggedUserFollowProfile() ? 'Seguido' : 'Seguir'}
+                {loggedUserFollowProfile ? 'Seguido' : 'Seguir'}
               </Text>
               <Icon
                 style={styles.menuFollowIcon}
-                name={'play-arrow'}
-                color={loggedUserFollowProfile() ? 'black' : 'white'}
+                source={'play_arrow'}
+                color={loggedUserFollowProfile ? 'black' : 'white'}
                 size={24}
               />
             </MenuTrigger>
-            {loggedUserFollowProfile() ? (
+            {loggedUserFollowProfile ? (
               <MenuOptions customStyles={menuOptions}>
                 <MenuOption onSelect={doFollow} text="Dejar de seguir" />
                 <MenuOption onSelect={doFollow} text="Añadir a VIP" />
@@ -428,7 +430,7 @@ const styles = StyleSheet.create({
   challengeButton: {
     marginTop: 22,
     width: 110,
-    height: 'auto',
+    height: 35,
     padding: 8,
   },
   challengeContent: {
@@ -440,10 +442,11 @@ const styles = StyleSheet.create({
     marginLeft: 11,
   },
   followInfo: {
+    alignSelf: 'flex-end',
+    bottom: 7,
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    marginRight: 5,
     width: 120,
     height: 50,
   },
@@ -453,7 +456,6 @@ const styles = StyleSheet.create({
   textFollowed: {
     color: StylesConfiguration.color,
     fontFamily: StylesConfiguration.fontFamily,
-    marginTop: -13,
   },
   followButton: {
     flexDirection: 'row',
@@ -465,10 +467,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     marginTop: 3,
+    height: 35,
   },
-  menuFollowText: {
+  followText: {
     fontSize: 15,
     marginRight: 10,
+  },
+  followedButton: {
+    backgroundColor: StylesConfiguration.color,
+  },
+  followedText: {
+    color: 'black',
   },
   menuFollowIcon: {
     transform: [{rotate: '90deg'}],
