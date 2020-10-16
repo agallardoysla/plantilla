@@ -1,12 +1,16 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import FormButton from '../../components/FormButton';
+import { AuthContext } from '../../navigation/AuthProvider';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 
 
 const Follower = ({follower, navigation}) => {
-  const [userFollowProfile, setUserFollowProfile] = useState(false);
+  const {user} = useContext(AuthContext);
+  const [userFollowProfile, setUserFollowProfile] = useState(
+    user.following_with_details.filter((u) => u.user_id === follower.user_id).length > 0,
+  );
 
   const goToProfile = () => {
     navigation.navigate('HomeGroup', {
@@ -21,7 +25,7 @@ const Follower = ({follower, navigation}) => {
   const goToMyChat = () => {
     navigation.navigate('MyChat', {
       receiver: {
-        user_id: follower.id,
+        user_id: follower.user_id,
         display_name: follower.display_name,
       },
     });
@@ -50,8 +54,8 @@ const Follower = ({follower, navigation}) => {
         </TouchableOpacity>
         <FormButton
           buttonTitle={userFollowProfile ? 'Seguido' : 'Seguir'}
-          style={styles.followButton}
-          textStyle={styles.followButtonText}
+          style={[styles.followButton, userFollowProfile ? styles.followedButton : {}]}
+          textStyle={[styles.followButtonText, userFollowProfile ? styles.followedButtonText: {}]}
         />
         <FormButton
           buttonTitle={'...'}
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: StylesConfiguration.fontFamily,
     fontSize: 15,
-    width: 120,
+    width: 115,
     marginLeft: 5,
     overflow: 'hidden',
   },
@@ -95,15 +99,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   followButton: {
-    width: 50,
+    width: 55,
     marginTop: 0,
-    padding: 5,
+    padding: 2,
     marginHorizontal: 5,
-    height: 30,
+    height: 26,
     borderRadius: 5,
   },
   followButtonText: {
     fontSize: 10,
+    color: StylesConfiguration.color,
+  },
+  followedButton: {
+    backgroundColor: StylesConfiguration.color,
+  },
+  followedButtonText: {
+    color: 'black',
   },
   sobre_amarillo: {
     width: 42,
