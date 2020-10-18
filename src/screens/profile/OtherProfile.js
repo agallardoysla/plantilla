@@ -25,14 +25,16 @@ export default function OtherProfile({route}) {
         isLoggedUser={false}
         navigation={navigation}
       />
-    ) : <View style={styles.container}></View>
+    ) : (
+      <View style={styles.container} />
+    )
   ) : (
     <GenericProfile
       localUser={user}
       isLoggedUser={true}
       navigation={navigation}
-    />)
-
+    />
+  );
 }
 
 const styles = StyleSheet.create({
