@@ -14,7 +14,7 @@ export default function Preferences({navigation}) {
         source={require('../../assets/tuerca_blanca_grande.png')}
       />
       <Text style={styles.text}>PREFERENCIAS</Text>
-      <FormButton buttonTitle="Editar perfil" style={styles.action} onPress={() => Alert.alert("editar perfil")} />
+      <FormButton buttonTitle="Editar perfil" style={styles.action} onPress={() => navigation.navigate('ProfileEdition')} />
       <FormButton buttonTitle="Mi cuenta" style={styles.action} onPress={() => Alert.alert("mi cuenta")} />
       <FormButton buttonTitle="Privacidad" style={styles.action} onPress={() => Alert.alert("privacidad")} />
       <FormButton buttonTitle="Seguridad" style={styles.action} onPress={() => Alert.alert("seguridad")} />

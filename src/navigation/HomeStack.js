@@ -21,6 +21,7 @@ import Preferences from '../screens/profile/Preferences';
 import PublicationDetails from '../screens/PublicationDetails';
 import ListConversation from '../screens/Conversations/ListConversation';
 import MyChat from '../screens/Conversations/MyChat';
+import ProfileEdition from '../screens/profile/ProfileEdition';
 
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
@@ -74,6 +75,7 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="ListConversation" component={ListConversation} />
       <Stack.Screen name="MyChat" component={MyChat} />
+      <Stack.Screen name="ProfileEdition" component={ProfileEdition} />
     </Stack.Navigator>
   );
 };
