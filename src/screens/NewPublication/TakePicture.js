@@ -9,6 +9,7 @@ import {
   Platform,
   Alert,
   Dimensions,
+  Pressable,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
 import Icon from '../../components/Icon';
@@ -212,90 +213,103 @@ export default function TakePicture({
           {({camera, status, recordAudioPermissionStatus}) => {
             if (status !== 'READY') return <PendingView />;
             return (
-              <View style={styles.actionsBar}>
-                <View style={styles.actionsBarBottom}>
-                  {images.length > 0 ? (
-                    <Text style={styles.imagesCounter}>
-                      {images.length} / {maxImages}
-                    </Text>
-                  ) : isRecording ? (
-                    <Text style={styles.imagesCounter}>
-                      {twoDigits(0)}:{twoDigits(timeCounter)}
-                    </Text>
-                  ) : (
+              <View style={styles.previewContainer}>
+                <View style={{padding: 10}}>
+                  <Icon
+                    onPress={() => navigation.goBack()}
+                    source={'boton_volver_atras'}
+                  />
+                </View>
+                <View style={styles.actionsBar}>
+                  <View style={styles.actionsBarBottom}>
+                    {images.length > 0 ? (
+                      <Text style={styles.imagesCounter}>
+                        {images.length} / {maxImages}
+                      </Text>
+                    ) : isRecording ? (
+                      <Text style={styles.imagesCounter}>
+                        {twoDigits(0)}:{twoDigits(timeCounter)}
+                      </Text>
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => recordVideo(camera)}
+                        style={styles.takeVideo}>
+                        <Image
+                          style={styles.boton_takeVideo}
+                          source={require('../../assets/temporizador_15_seg.png')}
+                        />
+                      </TouchableOpacity>
+                    )}
                     <TouchableOpacity
-                      onPress={() => recordVideo(camera)}
-                      style={styles.takeVideo}>
+                      onPress={() =>
+                        navigation.navigate('PublishPublication', {
+                          images: images,
+                          setImages: setImages,
+                          video: video,
+                          setVideo: setVideo,
+                          navigation: navigation,
+                        })
+                      }
+                      style={styles.editPicture}
+                      disabled={!canPublish()}>
+                      <Icon
+                        showSecondIcon={!canPublish()}
+                        source={'done_all'}
+                        secondIcon={'done'}
+                        color={
+                          canPublish() ? StylesConfiguration.color : 'grey'
+                        }
+                        size={iconSize}
+                        style={styles.action}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.actionsBarTop}>
+                    <View style={styles.imagesContainer}>
+                      {images.map((image, i) => (
+                        <TouchableOpacity
+                          style={styles.miniImage}
+                          onPress={() =>
+                            navigation.navigate('ViewNewImage', {
+                              uri: image,
+                              images: images,
+                              setImages: setImages,
+                              navigation: navigation,
+                            })
+                          }
+                          key={i}>
+                          <Image
+                            style={styles.miniImage}
+                            source={{uri: image}}
+                          />
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                    <View style={styles.cameraControls}>
+                      <GetSwitchCameraIcon />
+                      <GetFlashIcon />
+                    </View>
+                  </View>
+                  {isRecording ? (
+                    <TouchableOpacity
+                      onPress={() => stopRecording(camera)}
+                      style={styles.takePicture}>
                       <Image
-                        style={styles.boton_takeVideo}
+                        style={styles.boton_takePicture}
                         source={require('../../assets/temporizador_15_seg.png')}
                       />
                     </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => takePicture(camera)}
+                      style={styles.takePicture}>
+                      <Image
+                        style={styles.boton_takePicture}
+                        source={require('../../assets/boton_ya.png')}
+                      />
+                    </TouchableOpacity>
                   )}
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('PublishPublication', {
-                        images: images,
-                        setImages: setImages,
-                        video: video,
-                        setVideo: setVideo,
-                        navigation: navigation,
-                      })
-                    }
-                    style={styles.editPicture}
-                    disabled={!canPublish()}>
-                    <Icon
-                      showSecondIcon={!canPublish()}
-                      source={'done_all'}
-                      secondIcon={'done'}
-                      color={canPublish() ? StylesConfiguration.color : 'grey'}
-                      size={iconSize}
-                      style={styles.action}
-                    />
-                  </TouchableOpacity>
                 </View>
-                <View style={styles.actionsBarTop}>
-                  <View style={styles.imagesContainer}>
-                    {images.map((image, i) => (
-                      <TouchableOpacity
-                        style={styles.miniImage}
-                        onPress={() =>
-                          navigation.navigate('ViewNewImage', {
-                            uri: image,
-                            images: images,
-                            setImages: setImages,
-                            navigation: navigation,
-                          })
-                        }
-                        key={i}>
-                        <Image style={styles.miniImage} source={{uri: image}} />
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                  <View style={styles.cameraControls}>
-                    <GetSwitchCameraIcon />
-                    <GetFlashIcon />
-                  </View>
-                </View>
-                {isRecording ? (
-                  <TouchableOpacity
-                    onPress={() => stopRecording(camera)}
-                    style={styles.takePicture}>
-                    <Image
-                      style={styles.boton_takePicture}
-                      source={require('../../assets/temporizador_15_seg.png')}
-                    />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => takePicture(camera)}
-                    style={styles.takePicture}>
-                    <Image
-                      style={styles.boton_takePicture}
-                      source={require('../../assets/boton_ya.png')}
-                    />
-                  </TouchableOpacity>
-                )}
               </View>
             );
           }}
@@ -334,20 +348,24 @@ export default function TakePicture({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
+    // flexDirection: 'column',
     backgroundColor: 'black',
-    alignItems: 'stretch',
+    // alignItems: 'stretch',
   },
   preview: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    // justifyContent: 'flex-end',
+    // alignItems: 'center',
+  },
+  previewContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
   },
   actionsBar: {
     height: 160,
     flexDirection: 'column-reverse',
-    alignSelf: 'stretch',
-    alignItems: 'stretch',
+    // alignSelf: 'stretch',
+    // alignItems: 'stretch',
   },
   actionsBarTop: {
     height: 86,

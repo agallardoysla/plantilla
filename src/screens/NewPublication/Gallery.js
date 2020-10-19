@@ -37,7 +37,7 @@ export default function Gallery({
 }) {
   const [assetsGallery, setAssetsGallery] = useState([]);
   const numColumns = 3;
-  const pageSize = 12;
+  const pageSize = 30;
   const [endCursor, setEndCursor] = useState('0');
   const [hasNextPage, setHasNextPage] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
@@ -79,7 +79,7 @@ export default function Gallery({
     if (_hasNextPage) {
       CameraRoll.getPhotos({
         first: pageSize,
-        after: _endCursor,
+        // after: _endCursor,
         assetType: _assetType,
       }).then((res) => {
         let assetsPaginated = [];
@@ -146,6 +146,10 @@ export default function Gallery({
   return (
     <View style={styles.container}>
       <View style={styles.actionsBarTop}>
+        <Icon
+          onPress={() => navigation.goBack()}
+          source={'boton_volver_atras'}
+        />
         <Menu opened={showMenu} onBackdropPress={() => setShowMenu(false)}>
           <MenuTrigger
             text={assetType === 'Photos' ? 'Fotos' : 'Videos'}
@@ -238,9 +242,6 @@ export default function Gallery({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'black',
-    alignItems: 'stretch',
     justifyContent: 'space-between',
   },
   gallery: {
@@ -286,10 +287,11 @@ const styles = StyleSheet.create({
   },
   actionsBarTop: {
     height: 50,
-    flexDirection: 'column',
-    alignSelf: 'stretch',
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: 'black',
+    marginHorizontal: 10,
   },
   menu: {
     marginTop: 10,

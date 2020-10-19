@@ -22,7 +22,6 @@ import PublicationDetails from '../screens/PublicationDetails';
 import ListConversation from '../screens/Conversations/ListConversation';
 import MyChat from '../screens/Conversations/MyChat';
 
-
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
 const Stack = createStackNavigator();
@@ -43,13 +42,16 @@ const HomeGroup = ({navigation}) => {
       <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="PostComments" component={PostComments} />
       <Stack.Screen name="PostLikes" component={PostLikes} />
-      <Stack.Screen name="OtherProfile" component={OtherProfile}  screenOptions={{
-        backgroundColor: 'red',
-      }}  />
+      <Stack.Screen
+        name="OtherProfile"
+        component={OtherProfile}
+        screenOptions={{
+          backgroundColor: 'red',
+        }}
+      />
       <Stack.Screen name="MyChat" component={MyChat} />
       <Stack.Screen name="MyConversations" component={MyConversations} />
       <Stack.Screen name="ListConversation" component={ListConversation} />
-
     </Stack.Navigator>
   );
 };
@@ -62,7 +64,7 @@ const ProfileGroup = ({navigation}) => {
         headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
         headerShown: false,
-        backgroundColor:'black'
+        backgroundColor: 'black',
       }}>
       <Stack.Screen name="Profile" component={MyProfileScreen} />
       <Stack.Screen name="Followeds" component={Followeds} />
@@ -164,7 +166,6 @@ const HomeStack = () => {
           style: {
             borderTopWidth: 0,
           },
-         
         }}
         screenOptions={({route}) => ({
           tabBarIcon: ({focused}) => {
@@ -235,7 +236,7 @@ const HomeStack = () => {
           component={NewPublicationGroup}
           options={({route}) => ({
             title: '',
-            // tabBarVisible: route.name === 'NewPublicationGroup',
+            tabBarVisible: route.name !== 'NewPublicationGroup',
           })}
         />
       </Tab.Navigator>
