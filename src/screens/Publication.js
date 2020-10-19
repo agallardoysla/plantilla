@@ -98,17 +98,15 @@ export default function Publication({post, navigation, showSharePost}) {
     try {
       //si contiene algo lo elimino si no lo agrego
       if (iLiked) {
-        posts_services.deleteReaction(post.id).then((_) => {
-          console.log('like eliminado');
-          setLikesCounter(likesCounter - 1);
-          setILiked(false);
-        });
+        setLikesCounter(likesCounter - 1);
+        post.reactionscount.REACTION_TYPE_PRUEBA = post.reactionscount.REACTION_TYPE_PRUEBA - 1;
+        setILiked(false);
+        posts_services.deleteReaction(post.id);
       } else {
-        posts_services.addReaction(post.id, 1).then((res) => {
-          console.log('like agregado');
-          setLikesCounter(likesCounter + 1);
-          setILiked(true);
-        });
+        setLikesCounter(likesCounter + 1);
+        post.reactionscount.REACTION_TYPE_PRUEBA = post.reactionscount.REACTION_TYPE_PRUEBA + 1;
+        setILiked(true);
+        posts_services.addReaction(post.id, 1);
       }
     } catch (error) {
       console.log('Error de agregar like' + error);
