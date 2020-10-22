@@ -200,6 +200,7 @@ export default function Publication({post, navigation, showSharePost}) {
               flexDirection: 'row',
               justifyContent: 'center',
             }}>
+              
             <TouchableOpacity onPress={AddLike}>
               <Image
                 source={
@@ -209,6 +210,7 @@ export default function Publication({post, navigation, showSharePost}) {
                 }
               />
             </TouchableOpacity>
+
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('PostLikes', post.user_owner.display_name)

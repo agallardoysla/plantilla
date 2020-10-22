@@ -7,18 +7,21 @@ import {
   Image,
   FlatList,
   Alert,
+  Dimensions
 } from 'react-native';
 
 import FormButton from '../../components/FormButton';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import users_services from '../../services/users_services';
+import profileLikes from '../../services/profiles_services';
 import {AuthContext} from '../../navigation/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
+import { Menu, MenuOption, MenuOptions, MenuProvider, MenuTrigger } from 'react-native-popup-menu';
 import Icon from '../../components/Icon';
 
 const numColumns = 3; //para el flatList
+const windowWidth = Dimensions.get('window').width;
 
 export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const {user, followUser, unfollowUser} = useContext(AuthContext);
@@ -28,6 +31,8 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const [profileFollowLoggedUser, setProfileFollowLoggedUser] = useState(localUser.following_with_details.filter((u) => u.user_id === user.id).length > 0);
   const [loggedUserFollowProfile, setLoggedUserFollowProfile] = useState(user.following_with_details.filter((u) => u.user_id === localUser.id).length > 0);
   const [showFollowMenu, setShowFollowMenu] = useState(false);
+
+  const [iLiked, setILiked] = useState(profileLikes.getReactions().then((res) => res.data.filter((item)=> item.user === localUser.id).length >= 1));
 
   useEffect(() => {
     users_services.listPosts(localUser.id).then((res) => {
@@ -83,7 +88,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
 
   const OtherProfileView = () => {
 
-    const doFollow = () => {
+  const doFollow = () => {
       if (loggedUserFollowProfile) {
         users_services.cancelFollow(localUser.id);
         const newFollowers = followers.filter((f) => f.user_id !== user.id);
@@ -98,7 +103,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
         followUser({user_id: localUser.id, display_name: localUser.display_name});
       }
       setLoggedUserFollowProfile(!loggedUserFollowProfile);
-    };
+  };
 
     return (
       <View View style={[styles.profileDataColumn, styles.columnRight]}>
@@ -127,6 +132,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           <Menu
             opened={showFollowMenu}
             onBackdropPress={() => setShowFollowMenu(false)}>
+
             <MenuTrigger
               style={[styles.followButton, loggedUserFollowProfile ? styles.followedButton : {}]}
               onPress={() => setShowFollowMenu(true)}>
@@ -160,6 +166,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
             )}
           </Menu>
         </View>
+
         {/* {followed ? (
           <FormButton
             buttonTitle="Pendiente"
@@ -209,8 +216,33 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     </View>
   );
 
+  const addReactions = ()=>{
+
+    try {
+      //si contiene algo lo elimino si no lo agrego
+      if (iLiked) {
+        profileLikes.deleteReactions(localUser.id).then((res) => {
+          console.log('like eliminado');
+          // setLikesCounter(likesCounter + 1);
+          setILiked(false);
+        });
+      } else {
+        profileLikes.addReactions(localUser.id, 2).then((res) => {
+          console.log('like agregado');
+          // setLikesCounter(likesCounter + 1);
+          setILiked(true);
+        });
+      }
+    } catch (error) {
+      console.log('Error de agregar like' + error);
+    }
+
+   
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
+    <MenuProvider>
+      <SafeAreaView style={styles.container}>
       <View style={styles.profileData}>
         <View style={[styles.profileDataColumn, styles.columnLeft]}>
           <Text style={styles.text_profile}>Publicaciones</Text>
@@ -259,10 +291,14 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
             )}
             <Text style={styles.name_user}>@{localUser.display_name}</Text>
           </View>
+          <TouchableOpacity onPress={addReactions}>
           <View style={styles.folowersInfo}>
-            <Image source={require('../../assets/corazon_gris.png')} />
-            <Text style={styles.icon_numbers}>{8}k</Text>
+              <Image source={iLiked
+                    ? require('../../assets/corazon_limon.png')
+                    : require('../../assets/corazon_gris.png')} />
+              <Text style={styles.icon_numbers}>{8}k</Text>
           </View>
+          </TouchableOpacity>
 
           <TouchableOpacity onPress={goConversations}>
             <Image
@@ -291,6 +327,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
         />
       </View>
     </SafeAreaView>
+    </MenuProvider>
   );
 }
 
@@ -442,7 +479,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     bottom: -22,
   },
-  followInfo: {
+  followInfo: {  
     alignSelf: 'flex-end',
     bottom: -7,
     flexDirection: 'column',
@@ -450,6 +487,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     width: 120,
     height: 50,
+   
   },
   vipContent: {
     fontSize: 24,
@@ -531,7 +569,7 @@ const styles = StyleSheet.create({
 const menuOptions = {
   optionsContainer: {
     backgroundColor: '#898A8D',
-    padding: 5,
+    // padding: 5,
     borderColor: StylesConfiguration.color,
     borderWidth: 1.5,
     borderRadius: 10,
