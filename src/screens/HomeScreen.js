@@ -151,7 +151,7 @@ export default function HomeScreen({navigation}) {
       <FlatList
         data={posts}
         renderItem={PublicationItem}
-        onEndReachedThreshold={0.8}
+        onEndReachedThreshold={300}
         onEndReached={loadPost}
         bouncesZoom={true}
         keyExtractor={(item, index) => index.toString()}

@@ -31,8 +31,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const [profileFollowLoggedUser, setProfileFollowLoggedUser] = useState(localUser.following_with_details.filter((u) => u.user_id === user.id).length > 0);
   const [loggedUserFollowProfile, setLoggedUserFollowProfile] = useState(user.following_with_details.filter((u) => u.user_id === localUser.id).length > 0);
   const [showFollowMenu, setShowFollowMenu] = useState(false);
-
-  const [iLiked, setILiked] = useState(profileLikes.getReactions().then((res) => res.data.filter((item)=> item.user === localUser.id).length >= 1));
+  const [iLiked, setILiked] = useState(false);
 
   useEffect(() => {
     users_services.listPosts(localUser.id).then((res) => {
@@ -48,6 +47,13 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
       });
       setUsersPosts(postsPaginated);
     });
+    profileLikes
+      .getReactions()
+      .then((res) =>
+        setILiked(
+          res.data.filter((item) => item.user === localUser.id).length >= 1,
+        ),
+      );
   }, []);
 
   const go_to_followed = () => {
@@ -216,28 +222,24 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     </View>
   );
 
-  const addReactions = ()=>{
-
+  const addReactions = () => {
     try {
       //si contiene algo lo elimino si no lo agrego
       if (iLiked) {
         profileLikes.deleteReactions(localUser.id).then((res) => {
           console.log('like eliminado');
           // setLikesCounter(likesCounter + 1);
-          setILiked(false);
         });
       } else {
         profileLikes.addReactions(localUser.id, 2).then((res) => {
           console.log('like agregado');
           // setLikesCounter(likesCounter + 1);
-          setILiked(true);
         });
       }
+      setILiked(!iLiked);
     } catch (error) {
       console.log('Error de agregar like' + error);
-    }
-
-   
+    }   
   }
 
   return (
