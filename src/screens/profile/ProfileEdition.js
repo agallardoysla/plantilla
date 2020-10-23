@@ -10,6 +10,7 @@ import MatInput from '../../components/MatInput';
 import Icon from '../../components/Icon';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import files_services from '../../services/files_services';
+import NewPostInput from '../NewPublication/NewPostInput';
 
 export default function Preferences({navigation}) {
   const {user, setUser} = useContext(AuthContext);
@@ -97,7 +98,24 @@ export default function Preferences({navigation}) {
         </>
       )}
       {editingDescription ? (
-          null
+        <View style={styles.row}>
+          <NewPostInput
+            newComment={newBio}
+            setNewComment={setNewBio}
+            style={styles.inputBio}
+          />
+          <TouchableOpacity
+            onPress={submitProfile}
+            style={styles.editPicture}
+            disabled={!canPublish()}>
+            <Icon
+              source={'done'}
+              color={canPublish() ? StylesConfiguration.color : 'grey'}
+              size={32}
+              style={styles.action}
+            />
+          </TouchableOpacity>
+        </View>
       ) : (
         <>
           <Text style={styles.userDescription}>{newBio}</Text>
@@ -169,5 +187,15 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 250,
+  },
+  inputBio: {
+    width: 250,
+    height: 80,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    paddingTop: -10,
+    borderWidth: 2,
+    borderStyle: 'solid',
+    borderColor: 'white',
   },
 });

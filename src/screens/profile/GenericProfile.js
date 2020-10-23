@@ -280,7 +280,9 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
       </View>
 
       <Text style={styles.container_description}>
-        BullDog frances que vive en burzaco me gusta dormir y comer
+        {localUser.profile.bio === '__profile__bio__'
+          ? 'BullDog frances que vive en burzaco me gusta dormir y comer'
+          : localUser.profile.bio}
       </Text>
 
       <View style={styles.profilePublications}>
