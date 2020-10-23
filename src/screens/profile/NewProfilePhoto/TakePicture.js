@@ -11,8 +11,8 @@ import {
   Dimensions,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
-import Icon from '../../components/Icon';
-import StylesConfiguration from '../../utils/StylesConfiguration';
+import Icon from '../../../components/Icon';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 import CameraRoll from '@react-native-community/cameraroll';
 import Video from 'react-native-video-player';
 
@@ -41,6 +41,7 @@ export default function TakePicture({
   canPublish,
   assetType,
   setAssetType,
+  callback,
 }) {
   const [isRecording, setIsRecording] = useState(false);
   const [timeCounter, setTimeCounter] = useState(maxDuration);
@@ -216,7 +217,7 @@ export default function TakePicture({
                 <View style={styles.actionsBarBottom}>
                   {images.length > 0 ? (
                     <Text style={styles.imagesCounter}>
-                      {images.length} / {maxImages}
+                      {/* {images.length} / {maxImages} */}
                     </Text>
                   ) : isRecording ? (
                     <Text style={styles.imagesCounter}>
@@ -226,22 +227,14 @@ export default function TakePicture({
                     <TouchableOpacity
                       onPress={() => recordVideo(camera)}
                       style={styles.takeVideo}>
-                      <Image
+                      {/* <Image
                         style={styles.boton_takeVideo}
                         source={require('../../assets/temporizador_15_seg.png')}
-                      />
+                      /> */}
                     </TouchableOpacity>
                   )}
                   <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate('PublishPublication', {
-                        images: images,
-                        setImages: setImages,
-                        video: video,
-                        setVideo: setVideo,
-                        navigation: navigation,
-                      })
-                    }
+                    onPress={() => callback(images)}
                     style={styles.editPicture}
                     disabled={!canPublish()}>
                     <Icon
@@ -283,7 +276,7 @@ export default function TakePicture({
                     style={styles.takePicture}>
                     <Image
                       style={styles.boton_takePicture}
-                      source={require('../../assets/temporizador_15_seg.png')}
+                      source={require('../../../assets/temporizador_15_seg.png')}
                     />
                   </TouchableOpacity>
                 ) : (
@@ -292,7 +285,7 @@ export default function TakePicture({
                     style={styles.takePicture}>
                     <Image
                       style={styles.boton_takePicture}
-                      source={require('../../assets/boton_ya.png')}
+                      source={require('../../../assets/boton_ya.png')}
                     />
                   </TouchableOpacity>
                 )}

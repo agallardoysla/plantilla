@@ -13,15 +13,15 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native-gesture-handler';
-import Icon from '../../components/Icon';
-import StylesConfiguration from '../../utils/StylesConfiguration';
+import Icon from '../../../components/Icon';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 import {
   Menu,
   MenuOptions,
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import FormButton from '../../components/FormButton';
+import FormButton from '../../../components/FormButton';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function Gallery({
@@ -29,9 +29,12 @@ export default function Gallery({
   images,
   setImages,
   navigation,
+  video,
+  setVideo,
   canPublish,
   assetType,
   setAssetType,
+  callback,
 }) {
   const [assetsGallery, setAssetsGallery] = useState([]);
   const numColumns = 3;
@@ -186,7 +189,7 @@ export default function Gallery({
       <View style={styles.actionsBarBottom}>
         {video === '' ? (
           <Text style={styles.imagesCounter}>
-            {images.length} / {maxImages}
+            {/* {images.length} / {maxImages} */}
           </Text>
         ) : null}
         <View style={styles.imagesContainer}>
@@ -207,15 +210,7 @@ export default function Gallery({
           ))}
         </View>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('PublishPublication', {
-              images: images,
-              setImages: setImages,
-              video: video,
-              setVideo: setVideo,
-              navigation: navigation,
-            })
-          }
+          onPress={() => callback(images)}
           style={styles.editPicture}
           disabled={!canPublish()}>
           <Icon
