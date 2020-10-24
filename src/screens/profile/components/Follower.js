@@ -1,10 +1,10 @@
 import React, {useContext, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import FormButton from '../../components/FormButton';
-import { AuthContext } from '../../navigation/AuthProvider';
-import users_services from '../../services/users_services';
-import StylesConfiguration from '../../utils/StylesConfiguration';
+import FormButton from '../../../components/FormButton';
+import { AuthContext } from '../../../navigation/AuthProvider';
+import users_services from '../../../services/users_services';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 
 const Follower = ({follower, navigation}) => {
@@ -47,7 +47,7 @@ const Follower = ({follower, navigation}) => {
     <View style={styles.row}>
       <TouchableOpacity onPress={goToProfile} style={styles.user}>
         <Image
-          source={require('../../assets/pride-dog_1.png')}
+          source={require('../../../assets/pride-dog_1.png')}
           resizeMode="contain"
           style={styles.image}
         />
@@ -58,7 +58,7 @@ const Follower = ({follower, navigation}) => {
       <View style={styles.actions}>
         <TouchableOpacity style={styles.sobre_amarillo} onPress={goToMyChat}>
           <Image
-            source={require('../../assets/sobre_amarillo.png')}
+            source={require('../../../assets/sobre_amarillo.png')}
             style={styles.sobre_amarillo}
           />
         </TouchableOpacity>

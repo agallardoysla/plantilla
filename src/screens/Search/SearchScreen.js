@@ -2,8 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import posts_services from '../../services/posts_services';
 import FormSearchInput from '../../components/FormSearchInput';
-import PostSearched from './PostSearched';
-import ProfileSearched from './ProfileSearched';
+import PostSearched from './components/PostSearched';
+import ProfileSearched from './components/ProfileSearched';
 import search_services from '../../services/search_services';
 import GoBackButton from '../../components/GoBackButton';
 

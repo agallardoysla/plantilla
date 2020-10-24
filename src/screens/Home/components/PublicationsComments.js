@@ -9,17 +9,17 @@ import {
   View,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import CommentFormatter from '../utils/CommentFormatter';
-import CommentInput from '../utils/CommentInput';
-import StylesConfiguration from '../utils/StylesConfiguration';
+import CommentFormatter from '../../../utils/CommentFormatter';
+import CommentInput from '../../../utils/CommentInput';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 import {
   Menu,
   MenuOptions,
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import {AuthContext} from '../navigation/AuthProvider';
-import comments_services from '../services/comments_services';
+import {AuthContext} from '../../../navigation/AuthProvider';
+import comments_services from '../../../services/comments_services';
 
 export default function PublicationsComments({
   post,
@@ -113,7 +113,7 @@ export default function PublicationsComments({
               })
             }>
             <Image
-              source={require('../assets/foto.png')}
+              source={require('../../../assets/foto.png')}
               style={styles.icon_profile}
             />
           </TouchableOpacity>
@@ -170,7 +170,7 @@ export default function PublicationsComments({
               underlayColor={StylesConfiguration.colorSelection}>
               <View style={[styles.comment, styles.answer]}>
                 <Image
-                  source={require('../assets/foto.png')}
+                  source={require('../../../assets/foto.png')}
                   style={styles.icon_profile}
                 />
                 {editingAnswer[i] ? (

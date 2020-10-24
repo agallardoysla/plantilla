@@ -11,12 +11,12 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Video from 'react-native-video-player';
-import FormButton from '../../components/FormButton';
-import MatInput from '../../components/MatInput';
-import {FeedContext} from '../../navigation/FeedContext';
-import files_services from '../../services/files_services';
-import posts_services from '../../services/posts_services';
-import StylesConfiguration from '../../utils/StylesConfiguration';
+import FormButton from '../../../components/FormButton';
+import MatInput from '../../../components/MatInput';
+import {FeedContext} from '../../../navigation/FeedContext';
+import files_services from '../../../services/files_services';
+import posts_services from '../../../services/posts_services';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 import NewPostInput from './NewPostInput';
 
 let window = Dimensions.get('window');

@@ -10,6 +10,8 @@ import moment from 'moment';
 import {AuthContext} from '../../navigation/AuthProvider';
 import profiles_services from '../../services/profiles_services';
 import users_services from '../../services/users_services';
+
+
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function CreateProfile({navigation}) {

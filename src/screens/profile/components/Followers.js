@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Dimensions, FlatList} from 'react-native';
-import StylesConfiguration from '../../utils/StylesConfiguration';
-import GoBackButton from '../../components/GoBackButton';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
+import GoBackButton from '../../../components/GoBackButton';
 import Follower from './Follower';
-import FormSearchInput from '../../components/FormSearchInput';
-import utils from '../../utils/utils.js';
+import FormSearchInput from '../../../components/FormSearchInput';
+import utils from '../../../utils/utils.js';
 
 const Followers = ({navigation, route}) => {
   const [filteredFollowers, setFilteredFollowers] = useState(route.params.profile.followers_with_details);

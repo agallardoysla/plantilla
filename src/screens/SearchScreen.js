@@ -14,12 +14,18 @@ import {AuthContext} from '../navigation/AuthProvider';
 import posts_services from '../services/posts_services';
 import {FeedContext} from '../navigation/FeedContext';
 import FormSearchInput from '../components/FormSearchInput';
-import ImagePostSearch from '../screens/ImagePostSearch';
+
+//import ImagePostSearch from '../screens/ImagePostSearch';
+
+import ImagePostSearch from '../screens/Search/components/PostSearched'
+
 import ProfileSearch from '../screens/ProfileSearch';
 import users_services from '../services/users_services';
 import {set} from 'react-native-reanimated';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
+
+import f from '../screens/Home/'
 
 export default function SearchScreen({navigation}) {
   const {user, logout} = useContext(AuthContext);

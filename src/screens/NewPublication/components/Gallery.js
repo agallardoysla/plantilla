@@ -13,15 +13,18 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native-gesture-handler';
-import Icon from '../../components/Icon';
-import StylesConfiguration from '../../utils/StylesConfiguration';
+
+import Icon from '../../../components/Icon';
+
+import StylesConfiguration from '../../../utils/StylesConfiguration';
+
 import {
   Menu,
   MenuOptions,
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import FormButton from '../../components/FormButton';
+import FormButton from '../../../components/FormButton';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function Gallery({

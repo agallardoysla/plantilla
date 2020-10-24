@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
-import users_services from '../../services/users_services';
-import CommentFormatter from '../../utils/CommentFormatter';
+import users_services from '../../../services/users_services';
+import CommentFormatter from '../../../utils/CommentFormatter';
 
 export default function NewPostInput({
   newComment,
@@ -63,7 +63,7 @@ export default function NewPostInput({
       activeOpacity={0.4}
       style={styles.sugestionContainer}>
       <Image
-        source={require('../../assets/foto.png')}
+        source={require('../../../assets/foto.png')}
         style={styles.icon_profile}
       />
       <Text style={styles.sugestion}>@{sugestion.display_name}</Text>

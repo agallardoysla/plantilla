@@ -8,8 +8,8 @@ import {
   ScrollView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import FormButton from '../components/FormButton';
-import {AuthContext} from '../navigation/AuthProvider';
+import FormButton from '../../components/FormButton';
+import {AuthContext} from '../../navigation/AuthProvider';
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function NotificationScreen() {
@@ -21,7 +21,7 @@ export default function NotificationScreen() {
       <ScrollView>
         <View style={styles.imageRow}>
           <Image
-            source={require('../assets/pride-dog_1.png')}
+            source={require('../../assets/pride-dog_1.png')}
             resizeMode="contain"
             style={styles.image}
           />
@@ -29,7 +29,7 @@ export default function NotificationScreen() {
           <Text style={styles.username}>@username</Text>
           <Text style={styles.leGuastaTuFoto}> Le guasta tu foto</Text>
           <Image
-            source={require('../assets/foto.png')}
+            source={require('../../assets/foto.png')}
             resizeMode="contain"
             style={styles.image6}
           />
@@ -37,7 +37,7 @@ export default function NotificationScreen() {
 
         <View style={styles.imageRow}>
           <Image
-            source={require('../assets/pride-dog_1.png')}
+            source={require('../../assets/pride-dog_1.png')}
             resizeMode="contain"
             style={styles.image}
           />
@@ -45,7 +45,7 @@ export default function NotificationScreen() {
           <Text style={styles.username}>@username</Text>
           <Text style={styles.teEnvioUnMensaje}> Te envio un mensaje </Text>
           <Image
-            source={require('../assets/sobre_amarillo_1.png')}
+            source={require('../../assets/sobre_amarillo_1.png')}
             resizeMode="contain"
             style={styles.image}
           />
@@ -53,7 +53,7 @@ export default function NotificationScreen() {
 
         <View style={styles.imageRow}>
           <Image
-            source={require('../assets/pride-dog_1.png')}
+            source={require('../../assets/pride-dog_1.png')}
             resizeMode="contain"
             style={styles.image}
           />
@@ -67,7 +67,7 @@ export default function NotificationScreen() {
 
         <View style={styles.imageRow}>
           <Image
-            source={require('../assets/pride-dog_1.png')}
+            source={require('../../assets/pride-dog_1.png')}
             resizeMode="contain"
             style={styles.image}
           />
@@ -77,11 +77,11 @@ export default function NotificationScreen() {
           <Text style={styles.leGuastaTuFoto2}> Le guasta tu video</Text>
 
           <ImageBackground
-            source={require('../assets/foto.png')}
+            source={require('../../assets/foto.png')}
             resizeMode="contain"
             style={styles.image6}>
             <Image
-              source={require('../assets/boton_play_1.png')}
+              source={require('../../assets/boton_play_1.png')}
               resizeMode="contain"
               style={{left: 3, top: 3}}
             />

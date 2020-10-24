@@ -4,6 +4,7 @@ import {Alert, StyleSheet} from 'react-native';
 import ParsedText from 'react-native-parsed-text';
 import StylesConfiguration from './StylesConfiguration';
 
+
 export default function CommentFormatter({comment, isInput, setShowSugestions, setSugestionsInput, style, navigation}) {
   const hashtagPattern = /#(\w+)/;                      // #nombre
   const postOwnerPattern = /\(([^:]+):([^)]+)\)/i;      // (nombre:id)

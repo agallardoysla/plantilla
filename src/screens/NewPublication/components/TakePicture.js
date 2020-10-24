@@ -11,8 +11,8 @@ import {
   Dimensions,
 } from 'react-native';
 import {RNCamera} from 'react-native-camera';
-import Icon from '../../components/Icon';
-import StylesConfiguration from '../../utils/StylesConfiguration';
+import Icon from '../../../components/Icon';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 import CameraRoll from '@react-native-community/cameraroll';
 import Video from 'react-native-video-player';
 
@@ -228,7 +228,7 @@ export default function TakePicture({
                       style={styles.takeVideo}>
                       <Image
                         style={styles.boton_takeVideo}
-                        source={require('../../assets/temporizador_15_seg.png')}
+                        source={require('../../../assets/temporizador_15_seg.png')}
                       />
                     </TouchableOpacity>
                   )}
@@ -283,7 +283,7 @@ export default function TakePicture({
                     style={styles.takePicture}>
                     <Image
                       style={styles.boton_takePicture}
-                      source={require('../../assets/temporizador_15_seg.png')}
+                      source={require('../../../assets/temporizador_15_seg.png')}
                     />
                   </TouchableOpacity>
                 ) : (
@@ -292,7 +292,7 @@ export default function TakePicture({
                     style={styles.takePicture}>
                     <Image
                       style={styles.boton_takePicture}
-                      source={require('../../assets/boton_ya.png')}
+                      source={require('../../../assets/boton_ya.png')}
                     />
                   </TouchableOpacity>
                 )}

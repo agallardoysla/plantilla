@@ -14,6 +14,7 @@ import MatInput from '../../components/MatInput';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
+
 export default function SignupScreen({navigation}) {
   const {register, loginFacebook, loginGoogle} = useContext(AuthContext);
   const [email, setEmail] = useState('');

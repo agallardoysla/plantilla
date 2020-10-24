@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import FormButton_small from '../components/FormButton_small';
-import FormSearchInput from '../components/FormSearchInput';
-import StylesConfiguration from '../utils/StylesConfiguration';
-import Icon from '../components/Icon';
+import FormButton_small from '../../../components/FormButton_small';
+import FormSearchInput from '../../../components/FormSearchInput';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
+import Icon from '../../../components/Icon';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -80,7 +80,7 @@ const PostLikes = ({navigation, route}) => {
         <TouchableOpacity onPress={showPublication}>
           <Image
             style={styles.boton_back}
-            source={require('../assets/boton_volver_atras.png')}
+            source={require('../../../assets/boton_volver_atras.png')}
           />
         </TouchableOpacity>
       </View>
@@ -122,7 +122,7 @@ const PostLikes = ({navigation, route}) => {
           </View>
 
           <View style={styles.sub_colummn}>
-            <Image source={require('../assets/dog.png')} />
+            <Image source={require('../../../assets/dog.png')} />
           </View>
         </View>
 
@@ -138,7 +138,7 @@ const PostLikes = ({navigation, route}) => {
                 <View style={styles.row}>
                   <View style={styles.contentViewIcon}>
                     <Image
-                      source={require('../assets/pride-dog_1.png')}
+                      source={require('../../../assets/pride-dog_1.png')}
                       resizeMode="contain"
                       style={styles.image}
                     />
@@ -165,7 +165,7 @@ const PostLikes = ({navigation, route}) => {
 
                   <View style={styles.contentViewAction}>
                     <Image
-                      source={require('../assets/icono_home.png')}
+                      source={require('../../../assets/icono_home.png')}
                       resizeMode="contain"
                       style={styles.image_icon}
                     />

@@ -2,8 +2,8 @@ import React, {useContext, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import Gallery from './Gallery';
-import TakePicture from './TakePicture';
+import Gallery from './components/Gallery';
+import TakePicture from './components/TakePicture';
 
 const {width} = Dimensions.get('window');
 
