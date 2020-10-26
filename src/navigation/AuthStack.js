@@ -1,11 +1,11 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import LandingScreen from '../screens/auth/LandingScreen';
-import SignupScreen from '../screens/auth/SignupScreen';
-import LoginScreen from '../screens/auth/LoginScreen';
+import LandingScreen from '../screens/Auth/LandingScreen';
+import SignupScreen from '../screens/Auth/SignupScreen';
+import LoginScreen from '../screens/Auth/LoginScreen';
 import TermsAndConditions from '../screens/TermsAndConditions';
-import CreateProfile from '../screens/auth/CreateProfileScreen';
-import Wellcoming from '../screens/auth/WellcomingScreen';
+import CreateProfile from '../screens/Auth/CreateProfileScreen';
+import Wellcoming from '../screens/Auth/WellcomingScreen';
 
 const Stack = createStackNavigator();
 

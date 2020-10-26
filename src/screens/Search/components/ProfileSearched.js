@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import FormButton from '../../components/FormButton';
-import {AuthContext} from '../../navigation/AuthProvider';
-import users_services from '../../services/users_services';
-import StylesConfiguration from '../../utils/StylesConfiguration';
+import FormButton from '../../../components/FormButton';
+import {AuthContext} from '../../../navigation/AuthProvider';
+import users_services from '../../../services/users_services';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 
-const ProfileSearch = ({profile, navigation}) => {
+const ProfileSearched = ({profile, navigation}) => {
   const {user, followUser, unfollowUser} = useContext(AuthContext);
   const [userFollowProfile, setUserFollowProfile] = useState(
     user.following_with_details.filter((u) => u.user_id === profile.id).length > 0,
@@ -21,9 +21,9 @@ const ProfileSearch = ({profile, navigation}) => {
     });
   };
 
-  const goToMyChat = () => {
+  const goToChat = () => {
     navigation.navigate('HomeGroup', {
-      screen: 'MyChat',
+      screen: 'Chat',
       params: {
         receiver: {
           user_id: profile.id,
@@ -48,7 +48,7 @@ const ProfileSearch = ({profile, navigation}) => {
     <View style={styles.row}>
       <TouchableOpacity onPress={goToProfile} style={styles.user}>
         <Image
-          source={require('../../assets/pride-dog_1.png')}
+          source={require('../../../assets/pride-dog_1.png')}
           resizeMode="contain"
           style={styles.image}
         />
@@ -62,9 +62,9 @@ const ProfileSearch = ({profile, navigation}) => {
           </Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.sobre_amarillo} onPress={goToMyChat}>
+      <TouchableOpacity style={styles.sobre_amarillo} onPress={goToChat}>
         <Image
-          source={require('../../assets/sobre_amarillo.png')}
+          source={require('../../../assets/sobre_amarillo.png')}
           style={styles.sobre_amarillo}
         />
       </TouchableOpacity>
@@ -136,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileSearch;
+export default ProfileSearched;

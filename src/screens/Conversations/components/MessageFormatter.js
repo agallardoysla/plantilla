@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {Alert, Image, StyleSheet, Text, View} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ParsedText from 'react-native-parsed-text';
-import posts_services from '../../services/posts_services';
-import CommentFormatter from '../../utils/CommentFormatter';
-import StylesConfiguration from '../../utils/StylesConfiguration';
+import posts_services from '../../../services/posts_services';
+import CommentFormatter from '../../../utils/CommentFormatter';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 export default function MessageFormatter({message, navigation, style}) {
   const postPattern = /\[post:([^\]]+)\]/;   // [post:id]

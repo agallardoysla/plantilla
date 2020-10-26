@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import { AuthContext } from '../../navigation/AuthProvider';
-import StylesConfiguration from '../../utils/StylesConfiguration';
+import { AuthContext } from '../../../navigation/AuthProvider';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 const ListConversation = ({conversation, navigation}) => {
   const {user} = useContext(AuthContext);
-  //MyConversations > ListConversation(FlatList) > MyChat
-  const goMyChat = () => {
-    navigation.navigate('MyChat', {conversation});
+  //MyConversations > ListConversation(FlatList) > Chat
+  const goChat = () => {
+    navigation.navigate('Chat', {conversation});
   };
 
   const getOther = () => {
@@ -37,11 +37,11 @@ const ListConversation = ({conversation, navigation}) => {
   return (
     <View style={styles.row}>
       <Image
-        source={require('../../assets/pride-dog_1.png')}
+        source={require('../../../assets/pride-dog_1.png')}
         resizeMode="contain"
         style={styles.image}
       />
-      <TouchableOpacity onPress={goMyChat}>
+      <TouchableOpacity onPress={goChat}>
         <View style={styles.description}>
           <Text style={styles.text_title_profile} numberOfLines={1}>
             @{getProfileName()}

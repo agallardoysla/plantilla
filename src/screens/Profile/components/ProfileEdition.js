@@ -1,16 +1,16 @@
 import React, {useContext, useState} from 'react';
-import StylesConfiguration from '../../utils/StylesConfiguration';
-import FormButton from '../../components/FormButton';
-import GenericPreferenceView from './GenericPreferenceView';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
+import FormButton from '../../../components/FormButton';
+import GenericPreferenceView from '../GenericPreferenceView';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {AuthContext} from '../../navigation/AuthProvider';
-import profiles_services from '../../services/profiles_services';
-import users_services from '../../services/users_services';
-import MatInput from '../../components/MatInput';
-import Icon from '../../components/Icon';
+import {AuthContext} from '../../../navigation/AuthProvider';
+import profiles_services from '../../../services/profiles_services';
+import users_services from '../../../services/users_services';
+import MatInput from '../../../components/MatInput';
+import Icon from '../../../components/Icon';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import files_services from '../../services/files_services';
-import NewPostInput from '../NewPublication/NewPostInput';
+import files_services from '../../../services/files_services';
+import NewPostInput from '../../NewPublication/components/NewPostInput';
 
 export default function Preferences({navigation}) {
   const {user, setUser} = useContext(AuthContext);
@@ -56,7 +56,7 @@ export default function Preferences({navigation}) {
       navigation={navigation}
       title={'EDITAR PERFIL'}>
       <Image
-        source={require('../../assets/foto_perfil_superior.png')}
+        source={require('../../../assets/foto_perfil_superior.png')}
         style={styles.circle_image}
       />
       <FormButton

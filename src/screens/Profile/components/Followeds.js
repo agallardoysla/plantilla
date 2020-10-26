@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
-import StylesConfiguration from '../../utils/StylesConfiguration';
-import GoBackButton from '../../components/GoBackButton';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
+import GoBackButton from '../../../components/GoBackButton';
 import Followed from './Followed';
-import FormSearchInput from '../../components/FormSearchInput';
-import utils from '../../utils/utils.js';
+import FormSearchInput from '../../../components/FormSearchInput';
+import utils from '../../../utils/utils.js';
 
 
 const Followeds = ({navigation, route}) => {

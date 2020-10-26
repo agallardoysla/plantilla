@@ -1,11 +1,17 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import FormButton from '../../components/FormButton';
-import StylesConfiguration from '../../utils/StylesConfiguration';
+import FormButton from '../../../components/FormButton';
+import { AuthContext } from '../../../navigation/AuthProvider';
+import users_services from '../../../services/users_services';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 
-const Followed = ({follower, navigation}) => {
+const Follower = ({follower, navigation}) => {
+  const {user, followUser, unfollowUser} = useContext(AuthContext);
+  const [userFollowProfile, setUserFollowProfile] = useState(
+    user.following_with_details.filter((u) => u.user_id === follower.user_id).length > 0,
+  );
 
   const goToProfile = () => {
     navigation.navigate('HomeGroup', {
@@ -17,8 +23,8 @@ const Followed = ({follower, navigation}) => {
     });
   };
 
-  const goToMyChat = () => {
-    navigation.navigate('MyChat', {
+  const goToChat = () => {
+    navigation.navigate('Chat', {
       receiver: {
         user_id: follower.user_id,
         display_name: follower.display_name,
@@ -26,11 +32,22 @@ const Followed = ({follower, navigation}) => {
     });
   };
 
+  const doFollow = () => {
+    if (userFollowProfile) {
+      users_services.cancelFollow(follower.user_id);
+      unfollowUser(follower);
+    } else {
+      users_services.follow(follower.user_id);
+      followUser(follower);
+    }
+    setUserFollowProfile(!userFollowProfile);
+  };
+
   return (
     <View style={styles.row}>
       <TouchableOpacity onPress={goToProfile} style={styles.user}>
         <Image
-          source={require('../../assets/pride-dog_1.png')}
+          source={require('../../../assets/pride-dog_1.png')}
           resizeMode="contain"
           style={styles.image}
         />
@@ -39,19 +56,20 @@ const Followed = ({follower, navigation}) => {
         </Text>
       </TouchableOpacity>
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.sobre_amarillo} onPress={goToMyChat}>
+        <TouchableOpacity style={styles.sobre_amarillo} onPress={goToChat}>
           <Image
-            source={require('../../assets/sobre_amarillo.png')}
+            source={require('../../../assets/sobre_amarillo.png')}
             style={styles.sobre_amarillo}
           />
         </TouchableOpacity>
         <FormButton
-          buttonTitle={'Borrar'}
-          style={styles.followButton}
-          textStyle={styles.followButtonText}
+          buttonTitle={userFollowProfile ? 'Seguido' : 'Seguir'}
+          style={[styles.followButton, userFollowProfile ? styles.followedButton : {}]}
+          textStyle={[styles.followButtonText, userFollowProfile ? styles.followedButtonText: {}]}
+          onPress={doFollow}
         />
         <FormButton
-          buttonTitle={'Bloquear'}
+          buttonTitle={'...'}
           style={styles.followButton}
           textStyle={styles.followButtonText}
         />
@@ -102,10 +120,16 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: StylesConfiguration.color,
   },
+  followedButton: {
+    backgroundColor: StylesConfiguration.color,
+  },
+  followedButtonText: {
+    color: 'black',
+  },
   sobre_amarillo: {
     width: 42,
     height: 42,
   },
 });
 
-export default Followed;
+export default Follower;

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Alert, Dimensions, Image, StyleSheet, Text, View} from 'react-native';
-import Icon from '../../components/Icon';
+import Icon from '../../../components/Icon';
 
 const height = Dimensions.get('window').height;
 const iconSize = 40;

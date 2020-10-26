@@ -6,10 +6,10 @@ import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
 import { AuthContext } from '../../navigation/AuthProvider';
 import chats_services from '../../services/chats_services';
-import MessageFormatter from './MessageFormatter';
+import MessageFormatter from './components/MessageFormatter';
 import websocket_client from '../../services/websocket_client';
 
-const MyChat = ({navigation, route}) => {
+const Chat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
   const [newMessage, setNewMessage] = useState('');
   const [conversation, setConversation] = useState({});
@@ -70,6 +70,31 @@ const MyChat = ({navigation, route}) => {
       });
   };
 
+  const MessageItem = ({item}) =>
+    iSendIt(item) ? (
+      <View style={styles.row_chat_me}>
+        <MessageFormatter
+          style={styles.text_chat}
+          message={item.text}
+          navigation={navigation}
+        />
+        <Image
+          source={require('../../assets/pride-dog_1.png')}
+          resizeMode="contain"
+          style={styles.image}
+        />
+      </View>
+    ) : (
+      <View style={styles.row_chat_third}>
+        <Image
+          source={require('../../assets/pride-dog_1.png')}
+          resizeMode="contain"
+          style={styles.image}
+        />
+        <Text style={styles.text_chat}>{item.text}</Text>
+      </View>
+    );
+
   return (
     <>
       <View style={styles.container}>
@@ -102,31 +127,8 @@ const MyChat = ({navigation, route}) => {
           data={conversation.messages}
           inverted={true}
           style={styles.chat}
-          renderItem={({item}) =>
-            iSendIt(item) ? (
-              <View style={styles.row_chat_me}>
-                <MessageFormatter
-                  style={styles.text_chat}
-                  message={item.text}
-                  navigation={navigation}
-                />
-                <Image
-                  source={require('../../assets/pride-dog_1.png')}
-                  resizeMode="contain"
-                  style={styles.image}
-                />
-              </View>
-            ) : (
-              <View style={styles.row_chat_third}>
-                <Image
-                  source={require('../../assets/pride-dog_1.png')}
-                  resizeMode="contain"
-                  style={styles.image}
-                />
-                <Text style={styles.text_chat}>{item.text}</Text>
-              </View>
-            )
-          }
+          renderItem={MessageItem}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
 
@@ -226,4 +228,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyChat;
+export default Chat;

@@ -1,29 +1,39 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {Image, StatusBar, View} from 'react-native';
-import HomeScreen from '../screens/HomeScreen';
-import NotificationScreen from '../screens/NotificationScreen';
-import SearchScreen from '../screens/Search/SearchScreen';
-import PostComments from '../screens/PostComments';
+
+//import a from '../screens/Auth'
+//import b from '../screens/Conversations'
+//import c from '../screens/Home
+//import d from '../screens/NewPublication'
+//import e from '../screens/Notifications'
+//import f from '../screens/Profile'
+//import g from '../screens/Search'
+
+
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
-import PostLikes from '../screens/PostLikes';
-import Publication from '../screens/Publication';
-import ViewNewImage from '../screens/NewPublication/ViewNewImage';
-import NewPublicationContainer from '../screens/NewPublication/NewPublicationContainer';
-import PublishPublication from '../screens/NewPublication/PublishPublication';
-import MyConversations from '../screens/Conversations/MyConversations';
-import OtherProfile from '../screens/profile/OtherProfile';
-import Followeds from '../screens/profile/Followeds';
-import Followers from '../screens/profile/Followers';
-import MyProfileScreen from '../screens/profile/MyProfileScreen';
-import Preferences from '../screens/profile/Preferences';
-import PublicationDetails from '../screens/PublicationDetails';
-import ListConversation from '../screens/Conversations/ListConversation';
-import MyChat from '../screens/Conversations/MyChat';
-import ProfileEdition from '../screens/profile/ProfileEdition';
-import NewProfilePhotoContainer from '../screens/profile/NewProfilePhoto/NewProfilePhotoContainer';
 
+import HomeScreen from '../screens/Home/HomeScreen';
+import PostComments from '../screens/Home/components/PostComments';
+import PostLikes from '../screens/Home/components/PostLikes';
+import Publication from '../screens/Home/components/Publication';
+import NotificationScreen from '../screens/Notifications/NotificationScreen';
+import SearchScreen from '../screens/Search/SearchScreen';
+import ViewNewImage from '../screens/NewPublication/components/ViewNewImage';
+import NewPublicationContainer from '../screens/NewPublication/NewPublicationContainer';
+import PublishPublication from '../screens/NewPublication/components/PublishPublication';
+import MyConversations from '../screens/Conversations/MyConversations';
+import OtherProfile from '../screens/Profile/components/OtherProfile';
+import Followeds from '../screens/Profile/components/Followeds';
+import Followers from '../screens/Profile/components/Followers';
+import MyProfileScreen from '../screens/Profile/components/MyProfileScreen';
+import Preferences from '../screens/Profile/Preferences';
+import PublicationDetails from '../screens/Home/components/PublicationDetails';
+import ListConversation from '../screens/Conversations/components/ListConversation';
+import Chat from '../screens/Conversations/Chat';
+import ProfileEdition from '../screens/Profile/components/ProfileEdition';
+import NewProfilePhotoContainer from '../screens/Profile/NewProfilePhoto/NewProfilePhotoContainer';
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
@@ -50,7 +60,7 @@ const HomeGroup = ({navigation}) => {
       }}  />
       <Stack.Screen name="Followeds" component={Followeds} />
       <Stack.Screen name="Followers" component={Followers} />
-      <Stack.Screen name="MyChat" component={MyChat} />
+      <Stack.Screen name="Chat" component={Chat} />
       <Stack.Screen name="MyConversations" component={MyConversations} />
       <Stack.Screen name="ListConversation" component={ListConversation} />
 
@@ -75,7 +85,7 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen name="Preferences" component={Preferences} />
       <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="ListConversation" component={ListConversation} />
-      <Stack.Screen name="MyChat" component={MyChat} />
+      <Stack.Screen name="Chat" component={Chat} />
       <Stack.Screen name="ProfileEdition" component={ProfileEdition} />
       <Stack.Screen name="NewProfilePhoto" component={NewProfilePhotoContainer} />
       <Stack.Screen name="ViewNewImage" component={ViewNewImage} />

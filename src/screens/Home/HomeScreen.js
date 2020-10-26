@@ -1,14 +1,17 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {View, StyleSheet, FlatList, Image, Text} from 'react-native';
-import posts_services from '../services/posts_services';
-import {FeedContext} from '../navigation/FeedContext';
-import Publication from './Publication';
+import posts_services from '../../services/posts_services';
+import {FeedContext} from '../../navigation/FeedContext';
+import Publication from './components/Publication';
 import Modal from 'react-native-modal';
-import FormSearchInput from '../components/FormSearchInput';
-import users_services from '../services/users_services';
-import StylesConfiguration from '../utils/StylesConfiguration';
-import chats_services from '../services/chats_services';
+import FormSearchInput from '../../components/FormSearchInput';
+import users_services from '../../services/users_services';
+import StylesConfiguration from '../../utils/StylesConfiguration';
+import chats_services from '../../services/chats_services';
+
+
 import {SafeAreaView} from 'react-native-safe-area-context';
+
 import {
   ScrollView,
   TouchableOpacity,
@@ -117,7 +120,7 @@ export default function HomeScreen({navigation}) {
     return (
       <View style={styles.user}>
         <Image
-          source={require('../assets/pride-dog_1.png')}
+          source={require('../../assets/pride-dog_1.png')}
           resizeMode="contain"
           style={styles.image}
         />
@@ -126,7 +129,7 @@ export default function HomeScreen({navigation}) {
           style={styles.sendMessage}
           onPress={() => shareSelectedPost(item.id)}>
           <Image
-            source={require('../assets/sobre_amarillo_1.png')}
+            source={require('../../assets/sobre_amarillo_1.png')}
             resizeMode="contain"
             style={styles.image}
           />
@@ -141,7 +144,7 @@ export default function HomeScreen({navigation}) {
         <TouchableOpacity
           onPress={() => navigation.navigate('MyConversations')}>
           <Image
-            source={require('../assets/sobre_amarillo.png')}
+            source={require('../../assets/sobre_amarillo.png')}
             style={styles.sobre_amarillo}
             resizeMode={'contain'}
           />

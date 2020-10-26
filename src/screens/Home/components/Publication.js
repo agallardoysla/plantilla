@@ -14,13 +14,12 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native-gesture-handler';
 import Video from 'react-native-video-player';
-import StylesConfiguration from '../utils/StylesConfiguration';
-import posts_services from '../services/posts_services';
-import PublicationsComments from './PublicationsComments';
-import CommentInput from '../utils/CommentInput';
-import {AuthContext} from '../navigation/AuthProvider';
-import CommentFormatter from '../utils/CommentFormatter';
-
+import StylesConfiguration from '../../../utils/StylesConfiguration';
+import posts_services from '../../../services/posts_services';
+import PublicationsComments from '../../Home/components/PublicationsComments';
+import CommentInput from '../../../utils/CommentInput';
+import {AuthContext} from '../../../navigation/AuthProvider';
+import CommentFormatter from '../../../utils/CommentFormatter';
 let window = Dimensions.get('window');
 
 export default function Publication({post, navigation, showSharePost}) {
@@ -136,7 +135,7 @@ export default function Publication({post, navigation, showSharePost}) {
                   alignItems: 'flex-end',
                   justifyContent: 'center',
                 }}>
-                <Image source={require('../assets/tilde.png')} />
+                <Image source={require('../../../assets/tilde.png')} />
               </View>
             ) : null}
 
@@ -155,7 +154,7 @@ export default function Publication({post, navigation, showSharePost}) {
 
             <View style={{flexDirection: 'column'}}>
               <Image
-                source={require('../assets/pride-dog_1.png')}
+                source={require('../../../assets/pride-dog_1.png')}
                 resizeMode="contain"
                 style={styles.image_profile}
               />
@@ -186,7 +185,7 @@ export default function Publication({post, navigation, showSharePost}) {
               justifyContent: 'center',
             }}>
             <Image
-              source={require('../assets/ojo_vista.png')}
+              source={require('../../../assets/ojo_vista.png')}
               style={[styles.icon_post, styles.icon_ojo]}
             />
             <Text style={styles.icon_numbers_view}>{post.views_count}</Text>
@@ -203,8 +202,8 @@ export default function Publication({post, navigation, showSharePost}) {
               <Image
                 source={
                   iLiked
-                    ? require('../assets/corazon_limon.png')
-                    : require('../assets/corazon_gris.png')
+                    ? require('../../../assets/corazon_limon.png')
+                    : require('../../../assets/corazon_gris.png')
                 }
               />
             </TouchableOpacity>
@@ -225,7 +224,7 @@ export default function Publication({post, navigation, showSharePost}) {
             }}>
             <TouchableOpacity onPress={getAndSetShowComments}>
               <Image
-                source={require('../assets/comentario.png')}
+                source={require('../../../assets/comentario.png')}
                 style={[styles.icon_post, styles.icon_comentario]}
               />
             </TouchableOpacity>
@@ -241,7 +240,7 @@ export default function Publication({post, navigation, showSharePost}) {
               justifyContent: 'center',
             }}>
             <Image
-              source={require('../assets/compartir.png')}
+              source={require('../../../assets/compartir.png')}
               style={[styles.icon_post, styles.icon_compartir]}
             />
           </TouchableOpacity>
@@ -253,7 +252,7 @@ export default function Publication({post, navigation, showSharePost}) {
               justifyContent: 'center',
             }}>
             <Image
-              source={require('../assets/menu_desbordamiento.png')}
+              source={require('../../../assets/menu_desbordamiento.png')}
               style={[styles.icon_post, styles.icon_mostrarMas]}
             />
           </View>
