@@ -31,7 +31,7 @@ import MyProfileScreen from '../screens/Profile/components/MyProfileScreen';
 import Preferences from '../screens/Profile/Preferences';
 import PublicationDetails from '../screens/Home/components/PublicationDetails';
 import ListConversation from '../screens/Conversations/components/ListConversation';
-import MyChat from '../screens/Conversations/components/MyChat';
+import Chat from '../screens/Conversations/components/Chat';
 import ProfileEdition from '../screens/Profile/components/ProfileEdition';
 import NewProfilePhotoContainer from '../screens/Profile/NewProfilePhoto/NewProfilePhotoContainer';
 
@@ -60,7 +60,7 @@ const HomeGroup = ({navigation}) => {
       }}  />
       <Stack.Screen name="Followeds" component={Followeds} />
       <Stack.Screen name="Followers" component={Followers} />
-      <Stack.Screen name="MyChat" component={MyChat} />
+      <Stack.Screen name="Chat" component={Chat} />
       <Stack.Screen name="MyConversations" component={MyConversations} />
       <Stack.Screen name="ListConversation" component={ListConversation} />
 
@@ -85,7 +85,7 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen name="Preferences" component={Preferences} />
       <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="ListConversation" component={ListConversation} />
-      <Stack.Screen name="MyChat" component={MyChat} />
+      <Stack.Screen name="Chat" component={Chat} />
       <Stack.Screen name="ProfileEdition" component={ProfileEdition} />
       <Stack.Screen name="NewProfilePhoto" component={NewProfilePhotoContainer} />
       <Stack.Screen name="ViewNewImage" component={ViewNewImage} />

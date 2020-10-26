@@ -23,8 +23,8 @@ const Follower = ({follower, navigation}) => {
     });
   };
 
-  const goToMyChat = () => {
-    navigation.navigate('MyChat', {
+  const goToChat = () => {
+    navigation.navigate('Chat', {
       receiver: {
         user_id: follower.user_id,
         display_name: follower.display_name,
@@ -56,7 +56,7 @@ const Follower = ({follower, navigation}) => {
         </Text>
       </TouchableOpacity>
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.sobre_amarillo} onPress={goToMyChat}>
+        <TouchableOpacity style={styles.sobre_amarillo} onPress={goToChat}>
           <Image
             source={require('../../../assets/sobre_amarillo.png')}
             style={styles.sobre_amarillo}

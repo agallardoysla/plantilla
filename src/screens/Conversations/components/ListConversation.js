@@ -6,9 +6,9 @@ import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 const ListConversation = ({conversation, navigation}) => {
   const {user} = useContext(AuthContext);
-  //MyConversations > ListConversation(FlatList) > MyChat
-  const goMyChat = () => {
-    navigation.navigate('MyChat', {conversation});
+  //MyConversations > ListConversation(FlatList) > Chat
+  const goChat = () => {
+    navigation.navigate('Chat', {conversation});
   };
 
   const getOther = () => {
@@ -41,7 +41,7 @@ const ListConversation = ({conversation, navigation}) => {
         resizeMode="contain"
         style={styles.image}
       />
-      <TouchableOpacity onPress={goMyChat}>
+      <TouchableOpacity onPress={goChat}>
         <View style={styles.description}>
           <Text style={styles.text_title_profile} numberOfLines={1}>
             @{getProfileName()}

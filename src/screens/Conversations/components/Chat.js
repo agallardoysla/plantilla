@@ -9,7 +9,7 @@ import chats_services from '../../../services/chats_services';
 import MessageFormatter from './MessageFormatter';
 import websocket_client from '../../../services/websocket_client';
 
-const MyChat = ({navigation, route}) => {
+const Chat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
   const [newMessage, setNewMessage] = useState('');
   const [conversation, setConversation] = useState({});
@@ -226,4 +226,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyChat;
+export default Chat;

@@ -21,9 +21,9 @@ const ProfileSearch = ({profile, navigation}) => {
     });
   };
 
-  const goToMyChat = () => {
+  const goToChat = () => {
     navigation.navigate('HomeGroup', {
-      screen: 'MyChat',
+      screen: 'Chat',
       params: {
         receiver: {
           user_id: profile.id,
@@ -62,7 +62,7 @@ const ProfileSearch = ({profile, navigation}) => {
           </Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.sobre_amarillo} onPress={goToMyChat}>
+      <TouchableOpacity style={styles.sobre_amarillo} onPress={goToChat}>
         <Image
           source={require('../../../assets/sobre_amarillo.png')}
           style={styles.sobre_amarillo}
