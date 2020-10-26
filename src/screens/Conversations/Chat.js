@@ -1,13 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
-import StylesConfiguration from '../../../utils/StylesConfiguration';
+import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import FormInputChat from '../../../components/FormInputChat';
-import FormButton_small from '../../../components/FormButton_small';
-import { AuthContext } from '../../../navigation/AuthProvider';
-import chats_services from '../../../services/chats_services';
-import MessageFormatter from './MessageFormatter';
-import websocket_client from '../../../services/websocket_client';
+import FormInputChat from '../../components/FormInputChat';
+import FormButton_small from '../../components/FormButton_small';
+import { AuthContext } from '../../navigation/AuthProvider';
+import chats_services from '../../services/chats_services';
+import MessageFormatter from './components/MessageFormatter';
+import websocket_client from '../../services/websocket_client';
 
 const Chat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
@@ -70,6 +70,31 @@ const Chat = ({navigation, route}) => {
       });
   };
 
+  const MessageItem = ({item}) =>
+    iSendIt(item) ? (
+      <View style={styles.row_chat_me}>
+        <MessageFormatter
+          style={styles.text_chat}
+          message={item.text}
+          navigation={navigation}
+        />
+        <Image
+          source={require('../../assets/pride-dog_1.png')}
+          resizeMode="contain"
+          style={styles.image}
+        />
+      </View>
+    ) : (
+      <View style={styles.row_chat_third}>
+        <Image
+          source={require('../../assets/pride-dog_1.png')}
+          resizeMode="contain"
+          style={styles.image}
+        />
+        <Text style={styles.text_chat}>{item.text}</Text>
+      </View>
+    );
+
   return (
     <>
       <View style={styles.container}>
@@ -83,7 +108,7 @@ const Chat = ({navigation, route}) => {
             <TouchableOpacity onPress={go_back}>
               <Image
                 style={styles.boton_back}
-                source={require('../../../assets/boton_volver_atras.png')}
+                source={require('../../assets/boton_volver_atras.png')}
               />
             </TouchableOpacity>
           </View>
@@ -102,37 +127,14 @@ const Chat = ({navigation, route}) => {
           data={conversation.messages}
           inverted={true}
           style={styles.chat}
-          renderItem={({item}) =>
-            iSendIt(item) ? (
-              <View style={styles.row_chat_me}>
-                <MessageFormatter
-                  style={styles.text_chat}
-                  message={item.text}
-                  navigation={navigation}
-                />
-                <Image
-                  source={require('../../../assets/pride-dog_1.png')}
-                  resizeMode="contain"
-                  style={styles.image}
-                />
-              </View>
-            ) : (
-              <View style={styles.row_chat_third}>
-                <Image
-                  source={require('../../../assets/pride-dog_1.png')}
-                  resizeMode="contain"
-                  style={styles.image}
-                />
-                <Text style={styles.text_chat}>{item.text}</Text>
-              </View>
-            )
-          }
+          renderItem={MessageItem}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
 
       <View style={styles.bottomBar}>
         <Image
-          source={require('../../../assets/camara.png')}
+          source={require('../../assets/camara.png')}
        
           style={{marginLeft: 10, marginRight: 10, width: 36, height: 36}}
         />

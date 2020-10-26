@@ -31,7 +31,7 @@ import MyProfileScreen from '../screens/Profile/components/MyProfileScreen';
 import Preferences from '../screens/Profile/Preferences';
 import PublicationDetails from '../screens/Home/components/PublicationDetails';
 import ListConversation from '../screens/Conversations/components/ListConversation';
-import Chat from '../screens/Conversations/components/Chat';
+import Chat from '../screens/Conversations/Chat';
 import ProfileEdition from '../screens/Profile/components/ProfileEdition';
 import NewProfilePhotoContainer from '../screens/Profile/NewProfilePhoto/NewProfilePhotoContainer';
 
