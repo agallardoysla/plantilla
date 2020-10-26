@@ -5,7 +5,7 @@ import {AuthContext} from '../../../navigation/AuthProvider';
 import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
-const ProfileSearch = ({profile, navigation}) => {
+const ProfileSearched = ({profile, navigation}) => {
   const {user, followUser, unfollowUser} = useContext(AuthContext);
   const [userFollowProfile, setUserFollowProfile] = useState(
     user.following_with_details.filter((u) => u.user_id === profile.id).length > 0,
@@ -136,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileSearch;
+export default ProfileSearched;
