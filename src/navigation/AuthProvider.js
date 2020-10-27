@@ -17,17 +17,14 @@ GoogleSignin.configure({
 });
 
 export const AuthProvider = ({children}) => {
-  const [user, setUser] = useState(null);
   const [existProfile, setExistProfile] = useState(false);
 
   return (
     <AuthContext.Provider
       value={{
-        user,
-        setUser,
         existProfile,
         setExistProfile,
-        login: async (email, password, callback) => {
+        loginEmail: async (email, password, callback) => {
           try {
             return auth().signInWithEmailAndPassword(email, password);
           } catch (e) {
@@ -41,14 +38,6 @@ export const AuthProvider = ({children}) => {
           } catch (e) {
             console.log(e);
             callback(e.message);
-          }
-        },
-        logout: async () => {
-          try {
-            await auth().signOut();
-          } catch (e) {
-            console.error(e);
-            Alert.alert(e.message);
           }
         },
         loginFacebook: async (callback) => {
@@ -99,17 +88,13 @@ export const AuthProvider = ({children}) => {
             callback(e.message);
           }
         },
-        followUser: (newFollowed) => {
-          user.following_with_details.push(newFollowed);
-          setUser(user);
-        },
-        unfollowUser: (followed) => {
-          console.log(user.following_with_details);
-          user.following_with_details = user.following_with_details.filter(
-            (f) => f.user_id !== followed.user_id,
-          );
-          console.log(user.following_with_details);
-          setUser(user);
+        logout: async () => {
+          try {
+            await auth().signOut();
+          } catch (e) {
+            console.error(e);
+            Alert.alert(e.message);
+          }
         },
       }}>
       {children}
