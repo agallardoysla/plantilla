@@ -6,25 +6,29 @@ import HomeStack from './HomeStack';
 import {AuthContext} from './AuthProvider';
 import Loading from '../components/Loading';
 import users_services from '../services/users_services';
-
+import {login, logout, getUser} from '../reducers/user';
+import {useSelector, useDispatch} from 'react-redux';
 
 export default function Routes() {
-  const {user, setUser, existProfile, setExistProfile} = useContext(AuthContext);
+  const {existProfile, setExistProfile} = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
+  const user = useSelector(getUser);
+  const dispatch = useDispatch();
 
   /* Funcion para manejar cambios de estado del usuario. Acá verifico si el
    ususario está autenticado o no luego ejecutar el useEffect*/
 
-  async function onAuthStateChanged(loggedUser) {
-    // setUser(loggedUser);
-    if (loggedUser) {
+  async function onAuthStateChanged(isUserLogged) {
+    // setUser(isUserLogged);
+    if (isUserLogged) {
       if (!user) {
         const backendUser = await users_services.me();
-        setUser(backendUser.data);
+        dispatch(login(backendUser.data));
         setExistProfile(backendUser.data.profile.is_ready);
       }
     } else {
-      setUser(null);
+      // setUser(null);
+      dispatch(logout());
       setExistProfile(false);
     }
     setLoading(false);

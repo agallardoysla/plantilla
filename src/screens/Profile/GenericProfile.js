@@ -1,13 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   Image,
   FlatList,
-  Alert,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 
 import FormButton from '../../components/FormButton';
@@ -15,16 +13,24 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import users_services from '../../services/users_services';
 import profileLikes from '../../services/profiles_services';
-import {AuthContext} from '../../navigation/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { Menu, MenuOption, MenuOptions, MenuProvider, MenuTrigger } from 'react-native-popup-menu';
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuProvider,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 import Icon from '../../components/Icon';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUser} from '../../reducers/user';
+import {followUser, unfollowUser} from '../reducers/user';
 
 const numColumns = 3; //para el flatList
 const windowWidth = Dimensions.get('window').width;
 
 export default function GenericProfile({navigation, localUser, isLoggedUser}) {
-  const {user, followUser, unfollowUser} = useContext(AuthContext);
+  const user = useSelector(getUser);
   const [usersPosts, setUsersPosts] = useState([]);
   const [followers, setFollowers] = useState(localUser.followers_with_details);
   const [followeds, setFolloweds] = useState(localUser.following_with_details);
@@ -32,6 +38,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const [loggedUserFollowProfile, setLoggedUserFollowProfile] = useState(user.following_with_details.filter((u) => u.user_id === localUser.id).length > 0);
   const [showFollowMenu, setShowFollowMenu] = useState(false);
   const [iLiked, setILiked] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     users_services.listPosts(localUser.id).then((res) => {
@@ -100,13 +107,13 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
         const newFollowers = followers.filter((f) => f.user_id !== user.id);
         setFollowers(newFollowers);
         localUser.followers_with_details = newFollowers;
-        unfollowUser({user_id: localUser.id});
+        dispatch(unfollowUser({user_id: localUser.id}));
       } else {
         users_services.follow(localUser.id);
         const newFollowers = [...followers, {user_id: user.id, display_name: user.display_name}];
         setFollowers(newFollowers);
         localUser.followers_with_details = newFollowers;
-        followUser({user_id: localUser.id, display_name: localUser.display_name});
+        dispatch(followUser({user_id: localUser.id, display_name: localUser.display_name}));
       }
       setLoggedUserFollowProfile(!loggedUserFollowProfile);
   };

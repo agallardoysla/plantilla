@@ -1,9 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import FormButton from '../../../components/FormButton';
 import GenericPreferenceView from '../GenericPreferenceView';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {AuthContext} from '../../../navigation/AuthProvider';
 import profiles_services from '../../../services/profiles_services';
 import users_services from '../../../services/users_services';
 import MatInput from '../../../components/MatInput';
@@ -11,9 +10,12 @@ import Icon from '../../../components/Icon';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import files_services from '../../../services/files_services';
 import NewPostInput from '../../NewPublication/components/NewPostInput';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUser, update} from '../../../reducers/user';
 
 export default function Preferences({navigation}) {
-  const {user, setUser} = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const user = useSelector(getUser);
   const [editingNickname, setEditingNickname] = useState(false);
   const [editingDescription, setEditingDescription] = useState(false);
   const [newNickname, setNewNickname] = useState(user.display_name);
@@ -26,7 +28,7 @@ export default function Preferences({navigation}) {
     setEditingNickname(false);
     setEditingDescription(false);
     user.display_name = newNickname;
-    setUser(user);
+    dispatch(update(user));
   };
 
   const canPublish = () => {

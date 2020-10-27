@@ -11,6 +11,9 @@ export const userSlice = createSlice({
     logout: (user) => {
       user = null;
     },
+    update: (user, action) => {
+      user = action.payload;
+    },
     followUser: (user, action) => {
       user.following_with_details.push(action.payload);
     },
@@ -22,7 +25,13 @@ export const userSlice = createSlice({
   },
 });
 
-export const {login, logout, followUser, unfollowUser} = userSlice.actions;
+export const {
+  login,
+  logout,
+  update,
+  followUser,
+  unfollowUser,
+} = userSlice.actions;
 
 export const getUser = (state) => state.user;
 

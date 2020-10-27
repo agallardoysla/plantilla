@@ -1,14 +1,17 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useDispatch, useSelector} from 'react-redux';
 import FormButton from '../../../components/FormButton';
-import { AuthContext } from '../../../navigation/AuthProvider';
+import {getUser} from '../../../reducers/user';
 import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
+import {followUser, unfollowUser} from '../reducers/user';
 
 
 const Follower = ({follower, navigation}) => {
-  const {user, followUser, unfollowUser} = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const user = useSelector(getUser);
   const [userFollowProfile, setUserFollowProfile] = useState(
     user.following_with_details.filter((u) => u.user_id === follower.user_id).length > 0,
   );
@@ -35,10 +38,10 @@ const Follower = ({follower, navigation}) => {
   const doFollow = () => {
     if (userFollowProfile) {
       users_services.cancelFollow(follower.user_id);
-      unfollowUser(follower);
+      dispatch(unfollowUser(follower));
     } else {
       users_services.follow(follower.user_id);
-      followUser(follower);
+      dispatch(followUser(follower));
     }
     setUserFollowProfile(!userFollowProfile);
   };

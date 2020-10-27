@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -18,8 +18,9 @@ import StylesConfiguration from '../../../utils/StylesConfiguration';
 import posts_services from '../../../services/posts_services';
 import PublicationsComments from '../../Home/components/PublicationsComments';
 import CommentInput from '../../../utils/CommentInput';
-import {AuthContext} from '../../../navigation/AuthProvider';
 import CommentFormatter from '../../../utils/CommentFormatter';
+import {useSelector} from 'react-redux';
+import {getUser} from '../../../reducers/user';
 let window = Dimensions.get('window');
 
 export default function Publication({post, navigation, showSharePost}) {
@@ -30,7 +31,7 @@ export default function Publication({post, navigation, showSharePost}) {
   );
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
-  const {user} = useContext(AuthContext);
+  const user = useSelector(getUser);
   const [likesCounter, setLikesCounter] = useState(
     post.reactionscount.REACTION_TYPE_PRUEBA,
   );

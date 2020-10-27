@@ -1,7 +1,6 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Image,
   StyleSheet,
   Text,
@@ -18,8 +17,9 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import {AuthContext} from '../../../navigation/AuthProvider';
 import comments_services from '../../../services/comments_services';
+import {useSelector} from 'react-redux';
+import {getUser} from '../../../reducers/user';
 
 export default function PublicationsComments({
   post,
@@ -40,7 +40,7 @@ export default function PublicationsComments({
     answers.map(() => false),
   );
   const [editingAnswer, setEditingAnswer] = useState(answers.map(() => false));
-  const {user} = useContext(AuthContext);
+  const user = useSelector(getUser);
 
   const showMenuForAnswer = (index) => {
     console.log(index);

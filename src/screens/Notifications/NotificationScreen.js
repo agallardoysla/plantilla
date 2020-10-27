@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,12 +8,9 @@ import {
   ScrollView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import FormButton from '../../components/FormButton';
-import {AuthContext} from '../../navigation/AuthProvider';
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function NotificationScreen() {
-  const {user, logout} = useContext(AuthContext);
 
   return (
     <SafeAreaView style={styles.container}>
