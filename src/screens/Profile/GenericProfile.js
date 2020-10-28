@@ -7,18 +7,30 @@ import {
   Image,
   FlatList,
   Alert,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 
+import FormButtonPatreon from '../../components/FormButtonPatreon';
+import FormButtonVip from '../../components/FormButtonVip';
 import FormButton from '../../components/FormButton';
+import FormButtonCount from '../../components/FormButtonCount';
+import FormImageIcon from '../../components/FormImageIcon';
+
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import users_services from '../../services/users_services';
 import profileLikes from '../../services/profiles_services';
 import {AuthContext} from '../../navigation/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { Menu, MenuOption, MenuOptions, MenuProvider, MenuTrigger } from 'react-native-popup-menu';
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuProvider,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 import Icon from '../../components/Icon';
+import FormLike from '../../components/FormLike';
 
 const numColumns = 3; //para el flatList
 const windowWidth = Dimensions.get('window').width;
@@ -28,8 +40,14 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const [usersPosts, setUsersPosts] = useState([]);
   const [followers, setFollowers] = useState(localUser.followers_with_details);
   const [followeds, setFolloweds] = useState(localUser.following_with_details);
-  const [profileFollowLoggedUser, setProfileFollowLoggedUser] = useState(localUser.following_with_details.filter((u) => u.user_id === user.id).length > 0);
-  const [loggedUserFollowProfile, setLoggedUserFollowProfile] = useState(user.following_with_details.filter((u) => u.user_id === localUser.id).length > 0);
+  const [profileFollowLoggedUser, setProfileFollowLoggedUser] = useState(
+    localUser.following_with_details.filter((u) => u.user_id === user.id)
+      .length > 0,
+  );
+  const [loggedUserFollowProfile, setLoggedUserFollowProfile] = useState(
+    user.following_with_details.filter((u) => u.user_id === localUser.id)
+      .length > 0,
+  );
   const [showFollowMenu, setShowFollowMenu] = useState(false);
   const [iLiked, setILiked] = useState(false);
 
@@ -64,37 +82,36 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     navigation.navigate('Followers', {profile: localUser});
   };
 
+  const dataPatreon = [
+    {
+      id: 1,
+      name: '@Doggi',
+    },
+    {
+      id: 2,
+      name: '@Dogchow',
+    },
+    {
+      id: 3,
+      name: '@Pedigree',
+    },
+  ];
+
   const MyProfileView = () => {
     return (
       <View View style={[styles.profileDataColumn, styles.columnRight]}>
-        <Text style={styles.text_profile}>Patrocinado por:</Text>
-        <FormButton
-          buttonTitle="@Doggi"
-          style={styles.patreon}
-          textStyle={styles.patreonContent}
-        />
-        <FormButton
-          buttonTitle="@Dogchow"
-          style={styles.patreon}
-          textStyle={styles.patreonContent}
-        />
-        <FormButton
-          buttonTitle="@Pedigree"
-          style={styles.patreon}
-          textStyle={styles.patreonContent}
-        />
-        <FormButton
-          buttonTitle="V.I.P."
-          style={styles.vipButton}
-          textStyle={styles.vipContent}
-        />
+        <Text style={styles.textPatreon}>Patrocinado por:</Text>
+
+        {dataPatreon.map((item, key) => {
+          return <FormButtonPatreon buttonTitle={item.name} />;
+        })}
+        <FormButtonVip buttonTitle="V.I.P." />
       </View>
     );
   };
 
   const OtherProfileView = () => {
-
-  const doFollow = () => {
+    const doFollow = () => {
       if (loggedUserFollowProfile) {
         users_services.cancelFollow(localUser.id);
         const newFollowers = followers.filter((f) => f.user_id !== user.id);
@@ -103,32 +120,28 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
         unfollowUser({user_id: localUser.id});
       } else {
         users_services.follow(localUser.id);
-        const newFollowers = [...followers, {user_id: user.id, display_name: user.display_name}];
+        const newFollowers = [
+          ...followers,
+          {user_id: user.id, display_name: user.display_name},
+        ];
         setFollowers(newFollowers);
         localUser.followers_with_details = newFollowers;
-        followUser({user_id: localUser.id, display_name: localUser.display_name});
+        followUser({
+          user_id: localUser.id,
+          display_name: localUser.display_name,
+        });
       }
       setLoggedUserFollowProfile(!loggedUserFollowProfile);
-  };
+    };
 
     return (
       <View View style={[styles.profileDataColumn, styles.columnRight]}>
-        <Text style={styles.text_profile}>Patrocinado por:</Text>
-        <FormButton
-          buttonTitle="@Doggi"
-          style={styles.patreon}
-          textStyle={styles.patreonContent}
-        />
-        <FormButton
-          buttonTitle="@Dogchow"
-          style={styles.patreon}
-          textStyle={styles.patreonContent}
-        />
-        <FormButton
-          buttonTitle="@Pedigree"
-          style={styles.patreon}
-          textStyle={styles.patreonContent}
-        />
+        <Text style={styles.textPatreon}>Patrocinado por:</Text>
+
+        {dataPatreon.map((item, key) => {
+          return <FormButtonPatreon buttonTitle={item.name} />;
+        })}
+
         <View style={styles.followInfo}>
           {profileFollowLoggedUser ? (
             <Text style={styles.textFollowed}>Te sigue</Text>
@@ -138,9 +151,11 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           <Menu
             opened={showFollowMenu}
             onBackdropPress={() => setShowFollowMenu(false)}>
-
             <MenuTrigger
-              style={[styles.followButton, loggedUserFollowProfile ? styles.followedButton : {}]}
+              style={[
+                styles.followButton,
+                loggedUserFollowProfile ? styles.followedButton : {},
+              ]}
               onPress={() => setShowFollowMenu(true)}>
               <Text
                 style={[
@@ -239,98 +254,96 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
       setILiked(!iLiked);
     } catch (error) {
       console.log('Error de agregar like' + error);
-    }   
-  }
+    }
+  };
 
   return (
     <MenuProvider>
       <SafeAreaView style={styles.container}>
-      <View style={styles.profileData}>
-        <View style={[styles.profileDataColumn, styles.columnLeft]}>
-          <Text style={styles.text_profile}>Publicaciones</Text>
-          <FormButton
-            buttonTitle={localUser.posts_count.POST_TYPE_PRUEBA}
-            style={styles.counter}
-          />
-          <Text style={styles.text_profile}>Seguidos</Text>
-          <FormButton
-            buttonTitle={followeds.length}
-            style={styles.counter}
-            onPress={go_to_followed}
-          />
-          <Text style={styles.text_profile}>Seguidores</Text>
-          <FormButton
-            buttonTitle={followers.length}
-            style={styles.counter}
-            onPress={go_to_followers}
-          />
-          <FormButton
-            buttonTitle="CHALLENGE"
-            style={styles.challengeButton}
-            textStyle={styles.challengeContent}
-          />
-        </View>
-        <View style={[styles.profileDataColumn, styles.columnCenter]}>
-          <View style={styles.profleFoto}>
-            <Image
-              source={require('../../assets/foto_perfil_superior.png')}
-              style={styles.circle_image}
+        <View style={styles.profileData}>
+          <View style={[styles.profileDataColumn, styles.columnLeft]}>
+            <Text style={styles.text_profile}>Publicaciones</Text>
+            <FormButtonCount
+              buttonTitle={localUser.posts_count.POST_TYPE_PRUEBA}
+            />
+            <Text style={styles.text_profile}>Seguidos</Text>
+            <FormButtonCount
+              buttonTitle={followeds.length}
+              onPress={go_to_followed}
+            />
+            <Text style={styles.text_profile}>Seguidores</Text>
+            <FormButtonCount
+              buttonTitle={followers.length}
+              onPress={go_to_followers}
+            />
+
+            <FormButton
+              buttonTitle="CHALLENGE"
+              style={styles.challengeButton}
+              textStyle={styles.challengeContent}
             />
           </View>
-          <View style={styles.infoContainer}>
-            {isLoggedUser ? (
-              <TouchableOpacity
-                style={styles.tuerca_blanca_container}
-                onPress={() => navigation.navigate('Preferences')}>
-                <Image
-                  source={require('../../assets/tuerca_blanca.png')}
-                  style={styles.tuerca_blanca}
-                  resizeMode={'center'}
-                />
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.tuerca_blanca_container} />
-            )}
-            <Text style={styles.name_user}>@{localUser.display_name}</Text>
-          </View>
-          <TouchableOpacity onPress={addReactions}>
-          <View style={styles.folowersInfo}>
-              <Image source={iLiked
-                    ? require('../../assets/corazon_limon.png')
-                    : require('../../assets/corazon_gris.png')} />
-              <Text style={styles.icon_numbers}>{8}k</Text>
-          </View>
-          </TouchableOpacity>
+          <View style={[styles.profileDataColumn, styles.columnCenter]}>
+            <View style={styles.profleFoto}>
+              <FormImageIcon
+                size={24}
+                source={require('../../assets/foto_perfil_superior.png')}
+              />
+            </View>
 
-          <TouchableOpacity onPress={goConversations}>
-            <Image
-              source={require('../../assets/sobre_amarillo.png')}
-              style={styles.sobre_amarillo}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
+            <View style={styles.infoContainer}>
+              {isLoggedUser ? (
+                <TouchableOpacity
+                  style={styles.tuerca_blanca_container}
+                  onPress={() => navigation.navigate('Preferences')}>
+                  <Image
+                    source={require('../../assets/tuerca_blanca.png')}
+                    style={styles.tuerca_blanca}
+                    resizeMode={'center'}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <View style={styles.tuerca_blanca_container} />
+              )}
+              <Text style={styles.name_user}>@{localUser.display_name}</Text>
+            </View>
+
+            <TouchableOpacity onPress={addReactions}>
+              <View style={styles.folowersInfo}>
+                <FormLike iLiked={iLiked} />
+                <Text style={styles.icon_numbers}>{8}k</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={goConversations}>
+              <Image
+                source={require('../../assets/sobre_amarillo.png')}
+                style={styles.sobre_amarillo}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+          </View>
+          {
+            //si isLoggedUser es verdadero mostrar columna con boton amigos, te siguen, CHALLENGE, y icono de sobre amarillo
+            //si isLoggedUser es falso mostrar boton CHALLENGE, icono de sobre amarillo, boton seguido
+            isLoggedUser ? <MyProfileView /> : <OtherProfileView />
+          }
         </View>
-        {
-          //si isLoggedUser es verdadero mostrar columna con boton amigos, te siguen, CHALLENGE, y icono de sobre amarillo
-          //si isLoggedUser es falso mostrar boton CHALLENGE, icono de sobre amarillo, boton seguido
-          isLoggedUser ? <MyProfileView /> : <OtherProfileView />
-        }
-      </View>
 
-      <Text style={styles.container_description}>
-        {localUser.profile.bio === '__profile__bio__'
-          ? 'BullDog frances que vive en burzaco me gusta dormir y comer'
-          : localUser.profile.bio}
-      </Text>
+        <Text style={styles.container_description}>
+          {localUser.profile.bio === '__profile__bio__'
+            ? 'BullDog frances que vive en burzaco me gusta dormir y comer'
+            : localUser.profile.bio}
+        </Text>
 
-      <View style={styles.profilePublications}>
-        <FlatList
-          data={usersPosts}
-          renderItem={UserPostItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </View>
-    </SafeAreaView>
+        <View style={styles.profilePublications}>
+          <FlatList
+            data={usersPosts}
+            renderItem={UserPostItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+      </SafeAreaView>
     </MenuProvider>
   );
 }
@@ -384,13 +397,12 @@ const styles = StyleSheet.create({
   //columnas dentro de profileData
 
   profileDataColumn: {
-    flexDirection: 'column',
     justifyContent: 'flex-start',
   },
   columnLeft: {
     flex: columns[0],
     alignItems: 'flex-start',
-    // backgroundColor: 'red',
+    // // backgroundColor: 'red',
   },
   columnCenter: {
     flex: columns[1],
@@ -408,38 +420,14 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     color: 'white',
-    marginTop: 3,
-    marginBottom: 2,
     minWidth: 100,
   },
-  counter: {
-    marginTop: 0,
-    marginBottom: 0,
-    width: 'auto',
-    minWidth: 75,
-    borderWidth: 0.5,
-    padding: 9,
-    height: 32,
-  },
-  patreon: {
-    marginTop: -14,
-    marginBottom: 21,
-    height: 32,
-    width: 105,
-    borderWidth: 0.8,
-    padding: 9,
-  },
-  patreonContent: {
-    // fontFamily: 'Roboto',
-  },
+
   profleFoto: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'yellow',
-  },
-  circle_image: {
-    // top: -30,
   },
   tuerca_blanca_container: {
     marginRight: 3,
@@ -476,14 +464,7 @@ const styles = StyleSheet.create({
   challengeContent: {
     fontSize: 12,
   },
-  vipButton: {
-    marginTop: 0,
-    width: 90,
-    marginLeft: 11,
-    alignSelf: 'flex-end',
-    bottom: -22,
-  },
-  followInfo: {  
+  followInfo: {
     alignSelf: 'flex-end',
     bottom: -7,
     flexDirection: 'column',
@@ -491,14 +472,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     width: 120,
     height: 50,
-   
-  },
-  vipContent: {
-    fontSize: 24,
   },
   textFollowed: {
     color: StylesConfiguration.color,
     fontFamily: StylesConfiguration.fontFamily,
+  },
+  textPatreon: {
+    color: 'white',
   },
   followButton: {
     flexDirection: 'row',
@@ -559,14 +539,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 1.5,
     marginVertical: 1.5,
   },
+  icon_numbers: {
+    marginLeft: 4,
+    color: 'white',
+  },
   folowersInfo: {
     alignSelf: 'center',
     flexDirection: 'row',
     marginTop: 10,
   },
-  icon_numbers: {
-    marginLeft: 4,
+  textPatreon: {
+    fontWeight: '400',
+    fontSize: 12,
     color: 'white',
+    minWidth: 100,
+    fontWeight: 'bold',
   },
 });
 
