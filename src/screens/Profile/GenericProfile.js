@@ -18,13 +18,11 @@ import {
   Menu,
   MenuOption,
   MenuOptions,
-  MenuProvider,
   MenuTrigger,
 } from 'react-native-popup-menu';
 import Icon from '../../components/Icon';
 import {useDispatch, useSelector} from 'react-redux';
-import {getUser} from '../../reducers/user';
-import {followUser, unfollowUser} from '../reducers/user';
+import {getUser, followUser, unfollowUser} from '../../reducers/user';
 
 const numColumns = 3; //para el flatList
 const windowWidth = Dimensions.get('window').width;
@@ -54,13 +52,15 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
       });
       setUsersPosts(postsPaginated);
     });
-    profileLikes
-      .getReactions()
-      .then((res) =>
-        setILiked(
-          res.data.filter((item) => item.user === localUser.id).length >= 1,
-        ),
-      );
+    if (!isLoggedUser) {
+      profileLikes
+        .getReactions(localUser.id)
+        .then((res) =>
+          setILiked(
+            res.data.filter((item) => item.user === localUser.id).length >= 1,
+          ),
+        );
+    }
   }, []);
 
   const go_to_followed = () => {
@@ -250,8 +250,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   }
 
   return (
-    <MenuProvider>
-      <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.profileData}>
         <View style={[styles.profileDataColumn, styles.columnLeft]}>
           <Text style={styles.text_profile}>Publicaciones</Text>
@@ -338,7 +337,6 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
         />
       </View>
     </SafeAreaView>
-    </MenuProvider>
   );
 }
 

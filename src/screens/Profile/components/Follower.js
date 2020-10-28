@@ -3,10 +3,9 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
 import FormButton from '../../../components/FormButton';
-import {getUser} from '../../../reducers/user';
+import {getUser, followUser, unfollowUser} from '../../../reducers/user';
 import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
-import {followUser, unfollowUser} from '../reducers/user';
 
 
 const Follower = ({follower, navigation}) => {
