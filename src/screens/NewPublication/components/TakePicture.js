@@ -236,7 +236,7 @@ export default function TakePicture({
                             style={styles.takeVideo}>
                             <Image
                               style={styles.boton_takeVideo}
-                              source={require('../../assets/temporizador_15_seg.png')}
+                              source={require('../../../assets/temporizador_15_seg.png')}
                             />
                           </TouchableOpacity>
                         )}
@@ -305,12 +305,12 @@ export default function TakePicture({
                         style={styles.takePicture}>
                         <Image
                           style={styles.boton_takePicture}
-                          source={require('../../assets/boton_ya.png')}
+                          source={require('../../../assets/boton_ya.png')}
                         />
                       </TouchableOpacity>
                     )}
                 </View>
-                <View style={styles.actionsBarTop}>
+                {/* <View style={styles.actionsBarTop}>
                   <View style={styles.imagesContainer}>
                     {images.map((image, i) => (
                       <TouchableOpacity
@@ -351,7 +351,7 @@ export default function TakePicture({
                         source={require('../../../assets/boton_ya.png')}
                       />
                     </TouchableOpacity>
-                  )}
+                  )} */}
               </View>
             );
           }}
