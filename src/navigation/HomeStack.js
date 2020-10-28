@@ -1,38 +1,51 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {Image, StatusBar, View} from 'react-native';
-import HomeScreen from '../screens/HomeScreen';
-import NotificationScreen from '../screens/NotificationScreen';
+import { Image, StatusBar, View } from 'react-native';
+
+//import a from '../screens/Auth'
+//import b from '../screens/Conversations'
+//import c from '../screens/Home
+//import d from '../screens/NewPublication'
+//import e from '../screens/Notifications'
+//import f from '../screens/Profile'
+//import g from '../screens/Search'
+
+
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import HomeScreen from '../screens/Home/HomeScreen';
+import PostComments from '../screens/Home/components/PostComments';
+import PostLikes from '../screens/Home/components/PostLikes';
+import Publication from '../screens/Home/components/Publication';
+import NotificationScreen from '../screens/Notifications/NotificationScreen';
 import SearchScreen from '../screens/Search/SearchScreen';
-import PostComments from '../screens/PostComments';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createStackNavigator} from '@react-navigation/stack';
-import PostLikes from '../screens/PostLikes';
-import Publication from '../screens/Publication';
-import ViewNewImage from '../screens/NewPublication/ViewNewImage';
+import ViewNewImage from '../screens/NewPublication/components/ViewNewImage';
 import NewPublicationContainer from '../screens/NewPublication/NewPublicationContainer';
-import PublishPublication from '../screens/NewPublication/PublishPublication';
+import PublishPublication from '../screens/NewPublication/components/PublishPublication';
 import MyConversations from '../screens/Conversations/MyConversations';
-import OtherProfile from '../screens/profile/OtherProfile';
-import Followeds from '../screens/profile/Followeds';
-import Followers from '../screens/profile/Followers';
-import MyProfileScreen from '../screens/profile/MyProfileScreen';
-import Preferences from '../screens/profile/Preferences';
-import PublicationDetails from '../screens/PublicationDetails';
-import ListConversation from '../screens/Conversations/ListConversation';
-import MyChat from '../screens/Conversations/MyChat';
+import OtherProfile from '../screens/Profile/components/OtherProfile';
+import Followeds from '../screens/Profile/components/Followeds';
+import Followers from '../screens/Profile/components/Followers';
+import MyProfileScreen from '../screens/Profile/components/MyProfileScreen';
+import Preferences from '../screens/Profile/Preferences';
+import PublicationDetails from '../screens/Home/components/PublicationDetails';
+import ListConversation from '../screens/Conversations/components/ListConversation';
+import Chat from '../screens/Conversations/Chat';
+import ProfileEdition from '../screens/Profile/components/ProfileEdition';
+import NewProfilePhotoContainer from '../screens/Profile/NewProfilePhoto/NewProfilePhotoContainer';
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const HomeGroup = ({navigation}) => {
+const HomeGroup = ({ navigation }) => {
   return (
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
-        headerStyle: {backgroundColor: '#242424'},
+        headerStyle: { backgroundColor: '#242424' },
         headerTintColor: '#242424', //color del titulo
         //oculto el header
         headerShown: false,
@@ -42,26 +55,24 @@ const HomeGroup = ({navigation}) => {
       <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="PostComments" component={PostComments} />
       <Stack.Screen name="PostLikes" component={PostLikes} />
-      <Stack.Screen
-        name="OtherProfile"
-        component={OtherProfile}
-        screenOptions={{
-          backgroundColor: 'red',
-        }}
-      />
-      <Stack.Screen name="MyChat" component={MyChat} />
+      <Stack.Screen name="OtherProfile" component={OtherProfile} screenOptions={{
+        backgroundColor: 'red',
+      }} />
+      <Stack.Screen name="Followeds" component={Followeds} />
+      <Stack.Screen name="Followers" component={Followers} />
+      <Stack.Screen name="Chat" component={Chat} />
       <Stack.Screen name="MyConversations" component={MyConversations} />
       <Stack.Screen name="ListConversation" component={ListConversation} />
     </Stack.Navigator>
   );
 };
 
-const ProfileGroup = ({navigation}) => {
+const ProfileGroup = ({ navigation }) => {
   return (
     <Stack.Navigator
       initialRouteName="Profile"
       screenOptions={{
-        headerStyle: {backgroundColor: 'black'},
+        headerStyle: { backgroundColor: 'black' },
         headerTintColor: 'black',
         headerShown: false,
         backgroundColor: 'black',
@@ -73,17 +84,20 @@ const ProfileGroup = ({navigation}) => {
       <Stack.Screen name="Preferences" component={Preferences} />
       <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="ListConversation" component={ListConversation} />
-      <Stack.Screen name="MyChat" component={MyChat} />
+      <Stack.Screen name="Chat" component={Chat} />
+      <Stack.Screen name="ProfileEdition" component={ProfileEdition} />
+      <Stack.Screen name="NewProfilePhoto" component={NewProfilePhotoContainer} />
+      <Stack.Screen name="ViewNewImage" component={ViewNewImage} />
     </Stack.Navigator>
   );
 };
 
-const NotificationGroup = ({navigation}) => {
+const NotificationGroup = ({ navigation }) => {
   return (
     <Stack.Navigator
       initialRouteName="Notification"
       screenOptions={{
-        headerStyle: {backgroundColor: 'black'},
+        headerStyle: { backgroundColor: 'black' },
         headerTintColor: 'black',
         headerShown: false,
       }}>
@@ -92,12 +106,12 @@ const NotificationGroup = ({navigation}) => {
   );
 };
 
-const SearchGroup = ({navigation}) => {
+const SearchGroup = ({ navigation }) => {
   return (
     <Stack.Navigator
       initialRouteName="Search"
       screenOptions={{
-        headerStyle: {backgroundColor: 'black'},
+        headerStyle: { backgroundColor: 'black' },
         headerTintColor: 'black',
         headerShown: false,
       }}>
@@ -107,29 +121,29 @@ const SearchGroup = ({navigation}) => {
   );
 };
 
-const NewPublicationGroup = ({navigation}) => {
+const NewPublicationGroup = ({ navigation }) => {
   return (
     <Stack.Navigator
       initialRouteName="NewPublication"
       screenOptions={{
-        headerStyle: {backgroundColor: 'black'},
+        headerStyle: { backgroundColor: 'black' },
         headerTintColor: 'black',
         headerShown: false,
       }}>
       <Stack.Screen
         name="NewPublication"
         component={NewPublicationContainer}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ViewNewImage"
         component={ViewNewImage}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="PublishPublication"
         component={PublishPublication}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
@@ -167,8 +181,8 @@ const HomeStack = () => {
             borderTopWidth: 0,
           },
         }}
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused}) => {
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => {
             let iconName;
             let size;
             switch (route.name) {
@@ -206,7 +220,7 @@ const HomeStack = () => {
             return (
               <Image
                 source={iconName}
-                style={{width: size, height: size, marginTop: 18}}
+                style={{ width: size, height: size, marginTop: 18 }}
               />
             );
           },
@@ -214,27 +228,27 @@ const HomeStack = () => {
         <Tab.Screen
           name="ProfileGroup"
           component={ProfileGroup}
-          options={{title: ''}}
+          options={{ title: '' }}
         />
         <Tab.Screen
           name="NotificationGroup"
           component={NotificationGroup}
-          options={{title: '', tabBarBadge: 20}}
+          options={{ title: '', tabBarBadge: 20 }}
         />
         <Tab.Screen
           name="HomeGroup"
           component={HomeGroup}
-          options={{title: ''}}
+          options={{ title: '' }}
         />
         <Tab.Screen
           name="SearchGroup"
           component={SearchGroup}
-          options={{title: ''}}
+          options={{ title: '' }}
         />
         <Tab.Screen
           name="NewPublicationGroup"
           component={NewPublicationGroup}
-          options={({route}) => ({
+          options={({ route }) => ({
             title: '',
             tabBarVisible: route.name !== 'NewPublicationGroup',
           })}

@@ -2,13 +2,13 @@ import React, {useContext, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import Gallery from './components/Gallery';
-import TakePicture from './components/TakePicture';
+import Gallery from './Gallery';
+import TakePicture from './TakePicture';
 
 const {width} = Dimensions.get('window');
 
-export default function NewPublicationContainer({navigation}) {
-  const maxImages = 5;
+export default function NewPublicationContainer({navigation, route}) {
+  const maxImages = 1;
   const maxDuration = 5;
   const [images, setImages] = useState([]);
   const [video, setVideo] = useState('');
@@ -49,6 +49,7 @@ export default function NewPublicationContainer({navigation}) {
           canPublish={canPublish}
           assetType={assetType}
           setAssetType={setAssetType}
+          callback={route.params.callback}
         />
         <Gallery
           style={styles.view}
@@ -61,6 +62,7 @@ export default function NewPublicationContainer({navigation}) {
           canPublish={canPublish}
           assetType={assetType}
           setAssetType={setAssetType}
+          callback={route.params.callback}
         />
       </Swiper>
     </SafeAreaView>

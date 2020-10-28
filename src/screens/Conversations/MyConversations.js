@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import FormSearchInput from '../../components/FormSearchInput';
 import StylesConfiguration from '../../utils/StylesConfiguration';
-import ListConversation from './ListConversation';
+import ListConversation from './components/ListConversation';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import chats_services from '../../services/chats_services';
+
 
 const MyConversations = ({navigation}) => {
   const [conversations, setConversations] = useState([]);
@@ -38,7 +39,7 @@ const MyConversations = ({navigation}) => {
         </View>
         <View style={styles.header}>
           <Image
-            source={require('../../assets/sobre_amarillo.png')}
+            source={require('../../assets//sobre_amarillo.png')}
             style={styles.sobre_amarillo}
             resizeMode={'contain'}
           />

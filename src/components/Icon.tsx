@@ -71,6 +71,7 @@ const Icon = ({
     icono_camara_activo: require(`../assets/icono_camara_activo.png`),
     icono_camara: require(`../assets/icono_camara.png`),
     icono_home_activo: require(`../assets/icono_home_activo.png`),
+    play_arrow: require(`../assets/play_arrow.png`),
     // visibility: require(`../assets/visibility.png`),
     // visibility: require(`../assets/visibility.png`),
     // visibility: require(`../assets/visibility.png`),
