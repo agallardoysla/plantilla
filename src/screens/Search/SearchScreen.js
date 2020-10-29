@@ -63,7 +63,7 @@ export default function SearchScreen({navigation}) {
       data={searchedProfiles}
       renderItem={ProfileSearchItem}
       bouncesZoom={true}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item, index) => index.toString()}
       numColumns={1}
     />
   );
@@ -73,7 +73,7 @@ export default function SearchScreen({navigation}) {
       data={searchedPosts}
       renderItem={PostSearchItem}
       bouncesZoom={true}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item, index) => index.toString()}
       numColumns={3}
     />
   );

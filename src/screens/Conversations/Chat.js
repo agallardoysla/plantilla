@@ -8,7 +8,7 @@ import chats_services from '../../services/chats_services';
 import MessageFormatter from './components/MessageFormatter';
 import {useSelector} from 'react-redux';
 import {getUser} from '../../reducers/user';
-import {WebSocketContext} from '../../navigation/AuthProvider';
+import {WebSocketContext} from '../../navigation/WebSocketProvider';
 
 const Chat = ({navigation, route}) => {
   const user = useSelector(getUser);
