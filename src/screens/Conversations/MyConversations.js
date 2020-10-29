@@ -3,7 +3,6 @@ import {View, StyleSheet, Image, FlatList} from 'react-native';
 import FormSearchInput from '../../components/FormSearchInput';
 import ListConversation from './components/ListConversation';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import chats_services from '../../services/chats_services';
 import {getConversations} from '../../reducers/conversations';
 import {useSelector} from 'react-redux';
 
