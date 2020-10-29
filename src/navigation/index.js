@@ -3,19 +3,18 @@ import {AuthProvider} from './AuthProvider';
 import Routes from './Routes';
 import {FeedProvider} from './FeedContext';
 import {MenuProvider} from 'react-native-popup-menu';
-// import websocket_client from '../services/websocket_client';
-
+import {WebSocketProvider} from './WebSocketProvider';
 
 export default function Providers() {
-  // websocket_client.init();
-
   return (
-    <MenuProvider>
-      <AuthProvider>
-        <FeedProvider>
-          <Routes />
-        </FeedProvider>
-      </AuthProvider>
-    </MenuProvider>
+    <WebSocketProvider>
+      <MenuProvider>
+        <AuthProvider>
+          <FeedProvider>
+            <Routes />
+          </FeedProvider>
+        </AuthProvider>
+      </MenuProvider>
+    </WebSocketProvider>
   );
 }
