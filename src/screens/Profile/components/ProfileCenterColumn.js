@@ -11,7 +11,7 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
 
   useEffect(() => {
     profileLikes
-      .getReactions()
+      .getReactions(user.id)
       .then((res) =>
         setILiked(res.data.filter((item) => item.user === user.id).length >= 1),
       );

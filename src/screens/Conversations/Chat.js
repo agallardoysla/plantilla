@@ -7,14 +7,17 @@ import FormButton_small from '../../components/FormButton_small';
 import {AuthContext} from '../../navigation/AuthProvider';
 import chats_services from '../../services/chats_services';
 import MessageFormatter from './components/MessageFormatter';
+import {WebSocketContext} from '../../navigation/AuthProvider';
 
 const Chat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
   const [newMessage, setNewMessage] = useState('');
   const [conversation, setConversation] = useState({});
   const [other, setOther] = useState({});
+  const {addSubscriber} = useContext(WebSocketContext);
 
   useEffect(() => {
+    addSubscriber(receiveMessage);
     if (route.params.conversation) {
       setConversation(route.params.conversation);
       setOther(getOther(route.params.conversation));
