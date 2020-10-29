@@ -37,6 +37,9 @@ import NewProfilePhotoContainer from '../screens/Profile/NewProfilePhoto/NewProf
 import {useDispatch} from 'react-redux';
 import posts_services from '../services/posts_services';
 import {addPosts} from '../reducers/posts';
+import search_services from '../services/search_services';
+import { addSearchedPosts } from '../reducers/searchedPosts';
+import { addSearchedProfiles } from '../reducers/searchedProfiles';
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
@@ -163,7 +166,14 @@ const HomeStack = () => {
       dispatch(addPosts(res.data));
     });
     // Cargar los posts de Busqueda
+    search_services.search({search_in: 'posts'}).then((res) => {
+      dispatch(addSearchedPosts(res.data.posts));
+    });
     // Cargar los perfiles de Busqueda
+    search_services.search({search_in: 'users'}).then((res) => {
+      dispatch(addSearchedProfiles(res.data.users));
+    });
+    // Cargar los perfiles para compartir publicacion
     // Cargar notificaciones
     // Cargar chats
   }, []);
@@ -189,6 +199,7 @@ const HomeStack = () => {
 
       <Tab.Navigator
         initialRouteName="HomeGroup"
+        lazy={false}
         tabBarOptions={{
           keyboardHidesTabBar: true,
           activeBackgroundColor: 'black',

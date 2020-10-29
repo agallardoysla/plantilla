@@ -6,21 +6,25 @@ export const userSlice = createSlice({
   reducers: {
     login: (user, action) => {
       user = action.payload;
-      return user; // al ser initialState === null es necesario devolver el valor del nuevo estado en el 'init' (este es el unico metodo de inicio)
+      return user;
     },
     logout: (user) => {
       user = null;
+      return user;
     },
     update: (user, action) => {
       user = action.payload;
+      return user;
     },
     followUser: (user, action) => {
       user.following_with_details.push(action.payload);
+      return user;
     },
     unfollowUser: (user, action) => {
       user.following_with_details = user.following_with_details.filter(
         (f) => f.user_id !== action.payload.user_id,
       );
+      return user;
     },
   },
 });

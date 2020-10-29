@@ -6,17 +6,18 @@ export const postsSlice = createSlice({
   reducers: {
     addPosts: (posts, action) => {
       posts = [...posts, ...action.payload];
-      return posts; // al ser initialState === [] es necesario devolver el valor del nuevo estado en el 'init' (este es el unico metodo de inicio)
+      return posts;
     },
-    reset: (posts) => {
+    resetPosts: (posts) => {
       posts = [];
+      return posts;
     },
   },
 });
 
 export const {
   addPosts,
-  reset,
+  resetPosts,
 } = postsSlice.actions;
 
 export const getPosts = (state) => state.posts;
