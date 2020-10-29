@@ -4,10 +4,9 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
-import { AuthContext } from '../../navigation/AuthProvider';
+import {AuthContext} from '../../navigation/AuthProvider';
 import chats_services from '../../services/chats_services';
 import MessageFormatter from './components/MessageFormatter';
-import websocket_client from '../../services/websocket_client';
 
 const Chat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
@@ -16,7 +15,6 @@ const Chat = ({navigation, route}) => {
   const [other, setOther] = useState({});
 
   useEffect(() => {
-    websocket_client.subscribe(receiveMessage);
     if (route.params.conversation) {
       setConversation(route.params.conversation);
       setOther(getOther(route.params.conversation));
