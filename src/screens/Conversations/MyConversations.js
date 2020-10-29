@@ -1,25 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, Image, FlatList} from 'react-native';
 import FormSearchInput from '../../components/FormSearchInput';
-import StylesConfiguration from '../../utils/StylesConfiguration';
 import ListConversation from './components/ListConversation';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import chats_services from '../../services/chats_services';
+import {getConversations} from '../../reducers/conversations';
+import {useSelector} from 'react-redux';
 
 
 const MyConversations = ({navigation}) => {
-  const [conversations, setConversations] = useState([]);
   const [filteredConversations, setFilteredConversations] = useState([]);
+  const conversations = useSelector(getConversations);
 
   useEffect(() => {
-    chats_services.list().then((res) => {
-      // console.log(res.data);
-      // console.log(res.data[0].messages);
-      // console.log(res.data[0].users);
-      const newConversations = res.data.filter(c => c.is_active);
-      setConversations(newConversations);
-      setFilteredConversations(newConversations);
-    });
+    setFilteredConversations(conversations);
   }, []);
 
   const ListConversationItem = ({item}) => (

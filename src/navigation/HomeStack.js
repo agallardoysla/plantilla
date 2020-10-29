@@ -43,6 +43,8 @@ import {addSearchedProfiles} from '../reducers/searchedProfiles';
 import users_services from '../services/users_services';
 import {setNotifications} from '../reducers/notifications';
 import {WebSocketContext} from './WebSocketProvider';
+import { setConversations } from '../reducers/conversations';
+import chats_services from '../services/chats_services';
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
@@ -182,14 +184,16 @@ const HomeStack = () => {
     users_services.getNotifications().then((res) => {
       dispatch(setNotifications(res.data));
       addSubscriber({
-        eventType: 'follow_request_received',
+        eventType: 'follow_request_received', // creo que hay mas tipos de notificaciones pero no se si todas generan mensajes de WS
         action: (message) => {
           // hacer lo necesario
         },
       });
-      // creo que hay mas tipos de notificaciones pero no se si todas generan mensajes de WS
     });
-    // Cargar chats
+    // Cargar conversaciones
+    chats_services.list().then((res) => {
+      dispatch(setConversations(res.data));
+    });
   }, []);
 
   const icons = {
