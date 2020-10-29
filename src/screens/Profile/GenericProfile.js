@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,23 +7,9 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import FormButtonPatreon from '../../components/FormButtonPatreon';
-import FormButtonVip from '../../components/FormButtonVip';
-import FormImageIcon from '../../components/FormImageIcon';
-import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import users_services from '../../services/users_services';
-import profileLikes from '../../services/profiles_services';
-import {AuthContext} from '../../navigation/AuthProvider';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {
-  Menu,
-  MenuOption,
-  MenuOptions,
-  MenuTrigger,
-} from 'react-native-popup-menu';
-import Icon from '../../components/Icon';
-import FormLike from '../../components/FormLike';
 import ProfileLeftColumn from './components/ProfileLeftColumn';
 import ProfileRightColumn from './components/ProfileRightColumn';
 import ProfileCenterColumn from './components/ProfileCenterColumn';
@@ -32,7 +18,6 @@ const numColumns = 3; //para el flatList
 const windowWidth = Dimensions.get('window').width;
 
 export default function GenericProfile({navigation, localUser, isLoggedUser}) {
-  const {user, followUser, unfollowUser} = useContext(AuthContext);
   const [usersPosts, setUsersPosts] = useState([]);
   const [followers, setFollowers] = useState(localUser.followers_with_details);
   const [followeds, setFolloweds] = useState(localUser.following_with_details);
@@ -130,7 +115,6 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     marginBottom: 5,
   },
-
   profileDescription: {
     flex: 1,
     padding: 5,
@@ -149,16 +133,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     minHeight: 40,
   },
-
   profilePublications: {
     flex: 1,
     // minHeight: 400,
     alignContent: 'center',
     alignItems: 'stretch',
   },
-
   //columnas dentro de profileData
-
   profileDataColumn: {
     justifyContent: 'flex-start',
   },
@@ -177,16 +158,6 @@ const styles = StyleSheet.create({
     flex: columns[0],
     alignItems: 'flex-end',
     // backgroundColor: 'blue',
-  },
-  infoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  profileButton: {
-    marginTop: 3,
-    marginBottom: 5,
-    width: 115,
   },
   itemContainer: {
     flexDirection: 'row',

@@ -93,6 +93,11 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
 };
 
 const styles = StyleSheet.create({
+  infoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   profleFoto: {
     flexDirection: 'column',
     justifyContent: 'center',
