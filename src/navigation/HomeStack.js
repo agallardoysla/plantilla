@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Image, StatusBar, View} from 'react-native';
 
 //import a from '../screens/Auth'
@@ -38,8 +38,11 @@ import {useDispatch} from 'react-redux';
 import posts_services from '../services/posts_services';
 import {addPosts} from '../reducers/posts';
 import search_services from '../services/search_services';
-import { addSearchedPosts } from '../reducers/searchedPosts';
-import { addSearchedProfiles } from '../reducers/searchedProfiles';
+import {addSearchedPosts} from '../reducers/searchedPosts';
+import {addSearchedProfiles} from '../reducers/searchedProfiles';
+import users_services from '../services/users_services';
+import {setNotifications} from '../reducers/notifications';
+import {WebSocketContext} from './WebSocketProvider';
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
@@ -158,6 +161,7 @@ const NewPublicationGroup = ({navigation}) => {
 
 const HomeStack = () => {
   const dispatch = useDispatch();
+  const {addSubscriber} = useContext(WebSocketContext);
 
   useEffect(() => {
     // Cargar los posts de Home
@@ -175,6 +179,16 @@ const HomeStack = () => {
     });
     // Cargar los perfiles para compartir publicacion
     // Cargar notificaciones
+    users_services.getNotifications().then((res) => {
+      dispatch(setNotifications(res.data));
+      addSubscriber({
+        eventType: 'follow_request_received',
+        action: (message) => {
+          // hacer lo necesario
+        },
+      });
+      // creo que hay mas tipos de notificaciones pero no se si todas generan mensajes de WS
+    });
     // Cargar chats
   }, []);
 

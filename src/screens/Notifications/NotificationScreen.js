@@ -8,9 +8,12 @@ import {
   ScrollView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useSelector} from 'react-redux';
+import {getNotifications} from '../../reducers/notifications';
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function NotificationScreen() {
+  const notifications = useSelector(getNotifications);
 
   return (
     <SafeAreaView style={styles.container}>
