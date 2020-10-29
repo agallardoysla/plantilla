@@ -23,7 +23,7 @@ import {useSelector} from 'react-redux';
 import {getUser} from '../../../reducers/user';
 let window = Dimensions.get('window');
 
-export default function Publication({post, navigation, showSharePost}) {
+export default function Publication({post, navigation, showSharePost, showFullContent}) {
   const [showComments, setShowComments] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
   const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
@@ -51,7 +51,7 @@ export default function Publication({post, navigation, showSharePost}) {
       <ScrollView horizontal={true} indicatorStyle="white">
         {files.map((file, i) => (
           <Image
-            source={{uri: file.url}}
+            source={{uri: showFullContent ? file.url : file.url_half}}
             style={[styles.image_post, i >= 1 ? {marginLeft: 10} : {}]}
             key={i}
             resizeMode="contain"
