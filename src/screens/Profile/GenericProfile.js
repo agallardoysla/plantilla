@@ -26,6 +26,7 @@ import Icon from '../../components/Icon';
 import FormLike from '../../components/FormLike';
 import ProfileLeftColumn from './components/ProfileLeftColumn';
 import ProfileRightColumn from './components/ProfileRightColumn';
+import ProfileCenterColumn from './components/ProfileCenterColumn';
 
 const numColumns = 3; //para el flatList
 const windowWidth = Dimensions.get('window').width;
@@ -35,7 +36,6 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const [usersPosts, setUsersPosts] = useState([]);
   const [followers, setFollowers] = useState(localUser.followers_with_details);
   const [followeds, setFolloweds] = useState(localUser.following_with_details);
-  const [iLiked, setILiked] = useState(false);
 
   useEffect(() => {
     users_services.listPosts(localUser.id).then((res) => {
@@ -51,25 +51,8 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
       });
       setUsersPosts(postsPaginated);
     });
-    profileLikes
-      .getReactions()
-      .then((res) =>
-        setILiked(
-          res.data.filter((item) => item.user === localUser.id).length >= 1,
-        ),
-      );
   }, []);
 
-  const goConversations = () => {
-    if (isLoggedUser) {
-      navigation.navigate('MyConversations');
-    } else {
-      console.log('otro');
-      navigation.navigate('Chat', {
-        receiver: {user_id: localUser.id, display_name: localUser.display_name},
-      });
-    }
-  };
 
   const UserPostItem = ({item}) => (
     <View style={styles.itemContainer}>
@@ -90,26 +73,6 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
     </View>
   );
 
-  const addReactions = () => {
-    try {
-      //si contiene algo lo elimino si no lo agrego
-      if (iLiked) {
-        profileLikes.deleteReactions(localUser.id).then((res) => {
-          console.log('like eliminado');
-          // setLikesCounter(likesCounter + 1);
-        });
-      } else {
-        profileLikes.addReactions(localUser.id, 2).then((res) => {
-          console.log('like agregado');
-          // setLikesCounter(likesCounter + 1);
-        });
-      }
-      setILiked(!iLiked);
-    } catch (error) {
-      console.log('Error de agregar like' + error);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileData}>
@@ -118,46 +81,12 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           user={localUser}
           navigation={navigation}
         />
-        <View style={[styles.profileDataColumn, styles.columnCenter]}>
-          <View style={styles.profleFoto}>
-            <FormImageIcon
-              size={24}
-              source={require('../../assets/foto_perfil_superior.png')}
-            />
-          </View>
-
-          <View style={styles.infoContainer}>
-            {isLoggedUser ? (
-              <TouchableOpacity
-                style={styles.tuerca_blanca_container}
-                onPress={() => navigation.navigate('Preferences')}>
-                <Image
-                  source={require('../../assets/tuerca_blanca.png')}
-                  style={styles.tuerca_blanca}
-                  resizeMode={'center'}
-                />
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.tuerca_blanca_container} />
-            )}
-            <Text style={styles.name_user}>@{localUser.display_name}</Text>
-          </View>
-
-          <TouchableOpacity onPress={addReactions}>
-            <View style={styles.folowersInfo}>
-              <FormLike iLiked={iLiked} />
-              <Text style={styles.icon_numbers}>{8}k</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={goConversations}>
-            <Image
-              source={require('../../assets/sobre_amarillo.png')}
-              style={styles.sobre_amarillo}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-        </View>
+        <ProfileCenterColumn
+          style={[styles.profileDataColumn, styles.columnCenter]}
+          user={localUser}
+          navigation={navigation}
+          isLoggedUser={isLoggedUser}
+        />
         <ProfileRightColumn
           style={[styles.profileDataColumn, styles.columnRight]}
           user={localUser}
@@ -249,37 +178,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     // backgroundColor: 'blue',
   },
-  profleFoto: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: 'yellow',
-  },
-  tuerca_blanca_container: {
-    marginRight: 3,
-    width: 20,
-    height: 20,
-  },
-  tuerca_blanca: {
-    width: 20,
-    height: 20,
-    borderRadius: 15,
-  },
   infoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  name_user: {
-    fontFamily: StylesConfiguration.fontFamily,
-    fontSize: 14,
-    textAlign: 'center',
-    color: StylesConfiguration.color,
-  },
-  sobre_amarillo: {
-    alignSelf: 'center',
-    width: 55,
-    height: 55,
   },
   profileButton: {
     marginTop: 3,
@@ -311,14 +213,5 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 1.5,
     marginVertical: 1.5,
-  },
-  icon_numbers: {
-    marginLeft: 4,
-    color: 'white',
-  },
-  folowersInfo: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    marginTop: 10,
   },
 });
