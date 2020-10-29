@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Image, StatusBar, View} from 'react-native';
 
 //import a from '../screens/Auth'
@@ -34,6 +34,9 @@ import ListConversation from '../screens/Conversations/components/ListConversati
 import Chat from '../screens/Conversations/Chat';
 import ProfileEdition from '../screens/Profile/components/ProfileEdition';
 import NewProfilePhotoContainer from '../screens/Profile/NewProfilePhoto/NewProfilePhotoContainer';
+import {useDispatch} from 'react-redux';
+import posts_services from '../services/posts_services';
+import {addPosts} from '../reducers/posts';
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
@@ -151,6 +154,20 @@ const NewPublicationGroup = ({navigation}) => {
 };
 
 const HomeStack = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Cargar los posts de Home
+    const initHomePostsCount = 10;
+    posts_services.list(initHomePostsCount, 0).then((res) => {
+      dispatch(addPosts(res.data));
+    });
+    // Cargar los posts de Busqueda
+    // Cargar los perfiles de Busqueda
+    // Cargar notificaciones
+    // Cargar chats
+  }, []);
+
   const icons = {
     icon_profile: require('../assets/foto_perfil.png'),
 
