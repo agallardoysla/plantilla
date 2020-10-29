@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -6,18 +6,19 @@ import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
 import chats_services from '../../services/chats_services';
 import MessageFormatter from './components/MessageFormatter';
-import websocket_client from '../../services/websocket_client';
 import {useSelector} from 'react-redux';
 import {getUser} from '../../reducers/user';
+import {WebSocketContext} from '../../navigation/AuthProvider';
 
 const Chat = ({navigation, route}) => {
   const user = useSelector(getUser);
   const [newMessage, setNewMessage] = useState('');
   const [conversation, setConversation] = useState({});
   const [other, setOther] = useState({});
+  const {addSubscriber} = useContext(WebSocketContext);
 
   useEffect(() => {
-    websocket_client.subscribe(receiveMessage);
+    addSubscriber(receiveMessage);
     if (route.params.conversation) {
       setConversation(route.params.conversation);
       setOther(getOther(route.params.conversation));
