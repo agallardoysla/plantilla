@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
-import React, {useContext, useEffect} from 'react';
-import {Image, StatusBar, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Image, StatusBar} from 'react-native';
 
 //import a from '../screens/Auth'
 //import b from '../screens/Conversations'
@@ -42,8 +42,7 @@ import {addSearchedPosts} from '../reducers/searchedPosts';
 import {addSearchedProfiles} from '../reducers/searchedProfiles';
 import users_services from '../services/users_services';
 import {setNotifications} from '../reducers/notifications';
-import {WebSocketContext} from './WebSocketProvider';
-import { setConversations } from '../reducers/conversations';
+import {setConversations} from '../reducers/conversations';
 import chats_services from '../services/chats_services';
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
@@ -163,7 +162,6 @@ const NewPublicationGroup = ({navigation}) => {
 
 const HomeStack = () => {
   const dispatch = useDispatch();
-  const {addSubscriber} = useContext(WebSocketContext);
 
   useEffect(() => {
     // Cargar los posts de Home
@@ -183,12 +181,6 @@ const HomeStack = () => {
     // Cargar notificaciones
     users_services.getNotifications().then((res) => {
       dispatch(setNotifications(res.data));
-      addSubscriber({
-        eventType: 'follow_request_received', // creo que hay mas tipos de notificaciones pero no se si todas generan mensajes de WS
-        action: (message) => {
-          // hacer lo necesario
-        },
-      });
     });
     // Cargar conversaciones
     chats_services.list().then((res) => {
