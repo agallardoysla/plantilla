@@ -24,7 +24,7 @@ export default {
     try {
       res = await axios.get(url, config);
     } catch (e) {
-      console.log('Error GET ' + e);
+      console.log(`Error GET ${url}: ${e}`);
     }
     return res;
   },
@@ -35,7 +35,7 @@ export default {
     try {
       res = await axios.post(url, data, config);
     } catch (e) {
-      console.log('Error POST' + e);
+      console.log(`Error POST ${url}: ${e}`);
     }
     return res;
   },
@@ -46,7 +46,7 @@ export default {
     try {
       res = await axios.put(url, data, config);
     } catch (e) {
-      console.log('Error PUT' + e);
+      console.log(`Error PUT ${url}: ${e}`);
     }
     return res;
   },
@@ -57,7 +57,7 @@ export default {
     try {
       res = await axios.delete(url, config);
     } catch (e) {
-      console.log('Error DELETE' + e);
+      console.log(`Error DELETE ${url}: ${e}`);
     }
     return res;
   },
