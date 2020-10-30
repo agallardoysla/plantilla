@@ -8,15 +8,9 @@ import FormSearchInput from '../../components/FormSearchInput';
 import users_services from '../../services/users_services';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import chats_services from '../../services/chats_services';
-import FormGoConversations from '../../components/IconMessage'
-
+import IconMessage from '../../components/IconMessage';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
-import {
-  ScrollView,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export default function HomeScreen({navigation}) {
   const {posts, setPosts} = useContext(FeedContext);
@@ -126,17 +120,10 @@ export default function HomeScreen({navigation}) {
         />
         <Text style={styles.userName}>{showUserInfo(item)}</Text>
 
-        <FormGoConversations onPress={() => shareSelectedPost(item.id)} />
-
-        <TouchableOpacity
+        <IconMessage
           style={styles.sendMessage}
-          onPress={() => shareSelectedPost(item.id)}>
-          <Image
-            source={require('../../assets/sobre_amarillo_1.png')}
-            resizeMode="contain"
-            style={styles.image}
-          />
-        </TouchableOpacity>
+          onPress={() => shareSelectedPost(item.id)}
+        />
       </View>
     );
   };

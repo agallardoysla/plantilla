@@ -6,7 +6,7 @@ import ListConversation from './components/ListConversation';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import chats_services from '../../services/chats_services';
 import FormGoBack from '../../components/GoBackButton'
-import FormGoConversations from '../../components/IconMessage'
+import IconMessage from '../../components/IconMessage'
 
 const MyConversations = ({navigation}) => {
   const [conversations, setConversations] = useState([]);
@@ -30,13 +30,9 @@ const MyConversations = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <View style={styles.header}>
-          <FormGoBack navigation={navigation}/>
-        </View>
-
-        <View style={styles.header}>
-          <FormGoConversations/>
-        </View>
+        <FormGoBack navigation={navigation}/>
+        <IconMessage />
+        <View />
       </View>
 
       <View style={styles.row}>
@@ -58,17 +54,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     flexDirection: 'column',
   },
-  header: {
-    flex: 1,
-    flexDirection: 'column',
-  },
   row: {
     flexDirection: 'row',
-    backgroundColor: 'black',
+    justifyContent: 'space-between',
     marginBottom: 10,
   },
- 
- 
 });
 
 export default MyConversations;
