@@ -16,7 +16,7 @@ const MyConversations = ({navigation}) => {
   }, []);
 
   const ListConversationItem = ({item}) => (
-    <ListConversation conversation={item} navigation={navigation} />
+    <ListConversation conversationId={item.id} navigation={navigation} />
   );
 
   return (
@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
   },
- 
 });
 
 export default MyConversations;

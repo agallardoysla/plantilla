@@ -43,7 +43,10 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
     } else {
       console.log('otro');
       navigation.navigate('Chat', {
-        receiver: {user_id: user.id, display_name: user.display_name},
+        receiver: {
+          user_id: user.id,
+          display_name: user.display_name,
+        },
       });
     }
   };
