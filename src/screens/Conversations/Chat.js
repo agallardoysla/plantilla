@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -6,47 +6,38 @@ import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
 import chats_services from '../../services/chats_services';
 import MessageFormatter from './components/MessageFormatter';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getUser} from '../../reducers/user';
-import {WebSocketContext} from '../../navigation/WebSocketProvider';
+import {addConversation, getConversationByParams, pushMessage} from '../../reducers/conversations';
 
 const Chat = ({navigation, route}) => {
   const user = useSelector(getUser);
   const [newMessage, setNewMessage] = useState('');
-  const [conversation, setConversation] = useState({});
   const [other, setOther] = useState({});
-  const {addSubscriber} = useContext(WebSocketContext);
+  const dispatch = useDispatch();
+  const conversation = useSelector(
+    getConversationByParams(
+      route.params.conversationId,
+      route.params.receiver ? route.params.receiver.user_id : null,
+    ),
+  );
 
   useEffect(() => {
-    addSubscriber(receiveMessage);
-    if (route.params.conversation) {
-      setConversation(route.params.conversation);
-      setOther(getOther(route.params.conversation));
+    if (route.params.conversationId) {
+      setOther(getOther(conversation));
     } else {
-      chats_services.list().then(res => {
-        let localConversation = res.data.filter((c) =>
-          c.users.filter((u) => u.user_id === route.params.receiver.user_id).length > 0,
-        );
-        if (localConversation.length > 0) {
-          localConversation = localConversation[0];
-          setConversation(localConversation);
-          setOther(getOther(localConversation));
-        } else {
-          localConversation = {
-            messages: [],
-            users: [route.params.receiver, user], // tiene que estar en este orden por si es una conversacion nueva
-          };
-          setConversation(localConversation);
-          setOther(getOther(localConversation));
-        }
-      });
+      if (conversation) {
+        setOther(getOther(conversation));
+      } else {
+        const localConversation = {
+          messages: [],
+          users: [route.params.receiver, user], // tiene que estar en este orden por si es una conversacion nueva
+        };
+        dispatch(addConversation(localConversation));
+        setOther(getOther(localConversation));
+      }
     }
   }, []);
-
-  const receiveMessage = {
-    eventType: 'message_received',
-    action: (message) => conversation.messages.unshift(message),
-  };
 
   const go_back = () => {
     navigation.goBack(null);
@@ -61,14 +52,12 @@ const Chat = ({navigation, route}) => {
     return _other[0] ? _other[0] : conv.users[0];
   };
 
-  const sendNewMessage = async () => {
-    console.log('conversation', conversation);
+  const sendNewMessage = () => {
+    setNewMessage('');
     chats_services
       .sendMessage(other.user_id, {text: newMessage})
       .then((res) => {
-        setNewMessage('');
-        console.log(res.data);
-        conversation.messages.unshift(res.data);
+        dispatch(pushMessage(res.data));
       });
   };
 
@@ -137,7 +126,6 @@ const Chat = ({navigation, route}) => {
       <View style={styles.bottomBar}>
         <Image
           source={require('../../assets/camara.png')}
-       
           style={{marginLeft: 10, marginRight: 10, width: 36, height: 36}}
         />
 
