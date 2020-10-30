@@ -57,13 +57,16 @@ export const getConversations = (state) => state.conversations;
 export const getConversationByParams = (conversationId, userId) => {
   console.log(conversationId, userId);
   if (conversationId) {
-    return (state) => state.conversations.filter((c) => c.id === conversationId)[0];
+    return (state) => {
+      const query = state.conversations.filter((c) => c.id === conversationId);
+      return query.length > 0 ? query[0] : {messages: []};
+    };
   } else if (userId) {
     return (state) => {
-      console.log('corriendo');
-      return state.conversations.filter((c) =>
+      const query = state.conversations.filter((c) =>
         c.active_users.reduce((r, au) => r || au === userId, false),
-      )[0];
+      );
+      return query.length > 0 ? query[0] : {messages: []};
     };
   }
 };

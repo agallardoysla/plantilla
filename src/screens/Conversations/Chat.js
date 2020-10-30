@@ -33,7 +33,7 @@ const Chat = ({navigation, route}) => {
     if (route.params.conversationId) {
       setOther(getOther(conversation));
     } else {
-      if (conversation) {
+      if (conversation.messages.length > 0) { // no hay conversaciones sin mensajes
         setOther(getOther(conversation));
       } else {
         const localConversation = {
@@ -64,9 +64,9 @@ const Chat = ({navigation, route}) => {
       .then((res) => {
         console.log(res.data);
         dispatch(pushMessage(res.data));
-        if (!conversation) {
+        if (!conversation.messages.length > 0) {
           chats_services.list().then((_res) => {
-            dispatch(setNewConversation(_res.data));
+            dispatch(setNewConversation(_res.data[0]));
           });
         }
       });
