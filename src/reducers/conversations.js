@@ -5,6 +5,7 @@ export const conversationsSlice = createSlice({
   initialState: [],
   reducers: {
     setConversations: (conversations, action) => {
+      console.log('new conversations!', action.payload);
       conversations = action.payload;
       return conversations;
     },
@@ -13,7 +14,16 @@ export const conversationsSlice = createSlice({
       return conversations;
     },
     addConversation: (conversations, action) => {
-      conversations = [...conversations, action.payload];
+      return [...conversations, action.payload];
+    },
+    setNewConversation: (conversations, action) => {
+      conversations = conversations.map((c) => {
+        if (c.id === -1) {
+          return action.payload;
+        } else {
+          return c;
+        }
+      });
     },
     pushMessage: (conversations, action) => {
       conversations = conversations.map((conversation) => {
@@ -37,6 +47,7 @@ export const conversationsSlice = createSlice({
 export const {
   setConversations,
   addConversation,
+  setNewConversation,
   pushMessage,
   resetConversations,
 } = conversationsSlice.actions;
@@ -44,14 +55,16 @@ export const {
 export const getConversations = (state) => state.conversations;
 
 export const getConversationByParams = (conversationId, userId) => {
+  console.log(conversationId, userId);
   if (conversationId) {
     return (state) => state.conversations.filter((c) => c.id === conversationId)[0];
-  }
-  if (userId) {
-    return (state) =>
-      state.conversations.filter((c) =>
-        c.active_users.reduce((r, au) => r || au === userId, false)[0],
-      );
+  } else if (userId) {
+    return (state) => {
+      console.log('corriendo');
+      return state.conversations.filter((c) =>
+        c.active_users.reduce((r, au) => r || au === userId, false),
+      )[0];
+    };
   }
 };
 

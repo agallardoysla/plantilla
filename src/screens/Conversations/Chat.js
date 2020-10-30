@@ -5,24 +5,31 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
 import chats_services from '../../services/chats_services';
-import MessageFormatter from './components/MessageFormatter';
-import {useDispatch, useSelector} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {getUser} from '../../reducers/user';
-import {addConversation, getConversationByParams, pushMessage} from '../../reducers/conversations';
+import {
+  addConversation,
+  getConversationByParams,
+  pushMessage,
+  setNewConversation,
+} from '../../reducers/conversations';
+import Message from './components/Message';
 
 const Chat = ({navigation, route}) => {
   const user = useSelector(getUser);
   const [newMessage, setNewMessage] = useState('');
   const [other, setOther] = useState({});
   const dispatch = useDispatch();
+  const receiver = route.params.receiver
+    ? route.params.receiver.user_id
+    : undefined;
   const conversation = useSelector(
-    getConversationByParams(
-      route.params.conversationId,
-      route.params.receiver ? route.params.receiver.user_id : null,
-    ),
+    getConversationByParams(route.params.conversationId, receiver),
+    shallowEqual,
   );
 
   useEffect(() => {
+    console.log('conversation', conversation);
     if (route.params.conversationId) {
       setOther(getOther(conversation));
     } else {
@@ -30,8 +37,10 @@ const Chat = ({navigation, route}) => {
         setOther(getOther(conversation));
       } else {
         const localConversation = {
+          id: -1,
           messages: [],
           users: [route.params.receiver, user], // tiene que estar en este orden por si es una conversacion nueva
+          active_users: [route.params.receiver.user_id, user.id], // tiene que estar en este orden por si es una conversacion nueva
         };
         dispatch(addConversation(localConversation));
         setOther(getOther(localConversation));
@@ -43,10 +52,6 @@ const Chat = ({navigation, route}) => {
     navigation.goBack(null);
   };
 
-  const iSendIt = (message) =>
-    message.from === user.id ||
-    (message.from.user_id && message.from.user_id === user.id); // hablar con Alberto por este problema
-
   const getOther = (conv) => {
     const _other = conv.users.filter(u => u.user_id !== user.id);
     return _other[0] ? _other[0] : conv.users[0];
@@ -57,34 +62,19 @@ const Chat = ({navigation, route}) => {
     chats_services
       .sendMessage(other.user_id, {text: newMessage})
       .then((res) => {
+        console.log(res.data);
         dispatch(pushMessage(res.data));
+        if (!conversation) {
+          chats_services.list().then((_res) => {
+            dispatch(setNewConversation(_res.data));
+          });
+        }
       });
   };
 
-  const MessageItem = ({item}) =>
-    iSendIt(item) ? (
-      <View style={styles.row_chat_me}>
-        <MessageFormatter
-          style={styles.text_chat}
-          message={item.text}
-          navigation={navigation}
-        />
-        <Image
-          source={require('../../assets/pride-dog_1.png')}
-          resizeMode="contain"
-          style={styles.image}
-        />
-      </View>
-    ) : (
-      <View style={styles.row_chat_third}>
-        <Image
-          source={require('../../assets/pride-dog_1.png')}
-          resizeMode="contain"
-          style={styles.image}
-        />
-        <Text style={styles.text_chat}>{item.text}</Text>
-      </View>
-    );
+  const MessageItem = ({item}) => (
+    <Message message={item} navigation={navigation} />
+  );
 
   return (
     <>
@@ -134,6 +124,7 @@ const Chat = ({navigation, route}) => {
           placeholderText="Escriba un mensaje..."
           value={newMessage}
           onChangeText={setNewMessage}
+          onEndEditing={sendNewMessage}
         />
 
         <FormButton_small
@@ -175,21 +166,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginBottom: 10,
   },
-  //tercero
-  row_chat_third: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    paddingVertical: 8,
-  },
 
-  //yo
-  row_chat_me: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-    paddingVertical: 8,
-  },
   text_title: {
     color: StylesConfiguration.color,
     // fontFamily: 'GothamBlack-Normal',
@@ -198,20 +175,6 @@ const styles = StyleSheet.create({
   boton_back: {
     marginHorizontal: 5,
     marginVertical: 5,
-  },
-  text_chat: {
-    // fontFamily: 'GothamBlack-Normal',
-    color: 'white',
-    top: 38,
-  },
-  image: {
-    width: 50,
-    height: 50,
-    marginBottom: 10,
-    borderRadius: 400 / 2,
-    top: 20,
-    marginRight: 10,
-    marginLeft: 10,
   },
   chat: {
     marginBottom: 15,
