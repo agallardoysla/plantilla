@@ -1,12 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import FormButton from '../../../components/FormButton';
-import {AuthContext} from '../../../navigation/AuthProvider';
 import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
+import {getUser, followUser, unfollowUser} from '../../../reducers/user';
 
 const ProfileSearched = ({profile, navigation}) => {
-  const {user, followUser, unfollowUser} = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const user = useSelector(getUser);
   const [userFollowProfile, setUserFollowProfile] = useState(
     user.following_with_details.filter((u) => u.user_id === profile.id).length > 0,
   );
@@ -36,10 +38,10 @@ const ProfileSearched = ({profile, navigation}) => {
   const doFollow = () => {
     if (userFollowProfile) {
       users_services.cancelFollow(profile.id);
-      unfollowUser({user_id: profile.id});
+      dispatch(unfollowUser({user_id: profile.id}));
     } else {
       users_services.follow(profile.id);
-      followUser({user_id: profile.id, display_name: profile.display_name});
+      dispatch(followUser({user_id: profile.id, display_name: profile.display_name}));
     }
     setUserFollowProfile(!userFollowProfile);
   };

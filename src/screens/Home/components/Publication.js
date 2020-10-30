@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -18,11 +18,12 @@ import StylesConfiguration from '../../../utils/StylesConfiguration';
 import posts_services from '../../../services/posts_services';
 import PublicationsComments from '../../Home/components/PublicationsComments';
 import CommentInput from '../../../utils/CommentInput';
-import {AuthContext} from '../../../navigation/AuthProvider';
 import CommentFormatter from '../../../utils/CommentFormatter';
+import {useSelector} from 'react-redux';
+import {getUser} from '../../../reducers/user';
 let window = Dimensions.get('window');
 
-export default function Publication({post, navigation, showSharePost}) {
+export default function Publication({post, navigation, showSharePost, showFullContent}) {
   const [showComments, setShowComments] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
   const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
@@ -30,7 +31,7 @@ export default function Publication({post, navigation, showSharePost}) {
   );
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
-  const {user} = useContext(AuthContext);
+  const user = useSelector(getUser);
   const [likesCounter, setLikesCounter] = useState(
     post.reactionscount.REACTION_TYPE_PRUEBA,
   );
@@ -50,7 +51,7 @@ export default function Publication({post, navigation, showSharePost}) {
       <ScrollView horizontal={true} indicatorStyle="white">
         {files.map((file, i) => (
           <Image
-            source={{uri: file.url}}
+            source={{uri: showFullContent ? file.url : file.url_half}}
             style={[styles.image_post, i >= 1 ? {marginLeft: 10} : {}]}
             key={i}
             resizeMode="contain"

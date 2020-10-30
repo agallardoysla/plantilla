@@ -1,101 +1,82 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
-import { AuthContext } from '../../navigation/AuthProvider';
 import chats_services from '../../services/chats_services';
-import MessageFormatter from './components/MessageFormatter';
-import websocket_client from '../../services/websocket_client';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
+import {getUser} from '../../reducers/user';
+import {
+  addConversation,
+  getConversationByParams,
+  pushMessage,
+  setNewConversation,
+} from '../../reducers/conversations';
+import Message from './components/Message';
 
 import FormGoBack from '../../components/GoBackButton'
 
 const Chat = ({navigation, route}) => {
-  const {user} = useContext(AuthContext);
+  const user = useSelector(getUser);
   const [newMessage, setNewMessage] = useState('');
-  const [conversation, setConversation] = useState({});
   const [other, setOther] = useState({});
+  const dispatch = useDispatch();
+  const receiver = route.params.receiver
+    ? route.params.receiver.user_id
+    : undefined;
+  const conversation = useSelector(
+    getConversationByParams(route.params.conversationId, receiver),
+    shallowEqual,
+  );
 
   useEffect(() => {
-    websocket_client.subscribe(receiveMessage);
-    if (route.params.conversation) {
-      setConversation(route.params.conversation);
-      setOther(getOther(route.params.conversation));
+    console.log('conversation', conversation);
+    if (route.params.conversationId) {
+      setOther(getOther(conversation));
     } else {
-      chats_services.list().then(res => {
-        let localConversation = res.data.filter((c) =>
-          c.users.filter((u) => u.user_id === route.params.receiver.user_id).length > 0,
-        );
-        if (localConversation.length > 0) {
-          localConversation = localConversation[0];
-          setConversation(localConversation);
-          setOther(getOther(localConversation));
-        } else {
-          localConversation = {
-            messages: [],
-            users: [route.params.receiver, user], // tiene que estar en este orden por si es una conversacion nueva
-          };
-          setConversation(localConversation);
-          setOther(getOther(localConversation));
-        }
-      });
+      if (conversation.messages.length > 0) { // no hay conversaciones sin mensajes
+        setOther(getOther(conversation));
+      } else {
+        const localConversation = {
+          id: -1,
+          messages: [],
+          users: [route.params.receiver, user], // tiene que estar en este orden por si es una conversacion nueva
+          active_users: [route.params.receiver.user_id, user.id], // tiene que estar en este orden por si es una conversacion nueva
+        };
+        dispatch(addConversation(localConversation));
+        setOther(getOther(localConversation));
+      }
     }
   }, []);
-
-  const receiveMessage = {
-    eventType: 'message_received',
-    action: (message) => conversation.messages.unshift(message),
-  };
 
   const go_back = () => {
     navigation.goBack(null);
   };
-
-  const iSendIt = (message) =>
-    message.from === user.id ||
-    (message.from.user_id && message.from.user_id === user.id); // hablar con Alberto por este problema
 
   const getOther = (conv) => {
     const _other = conv.users.filter(u => u.user_id !== user.id);
     return _other[0] ? _other[0] : conv.users[0];
   };
 
-  const sendNewMessage = async () => {
-    console.log('conversation', conversation);
+  const sendNewMessage = () => {
+    setNewMessage('');
     chats_services
       .sendMessage(other.user_id, {text: newMessage})
       .then((res) => {
-        setNewMessage('');
         console.log(res.data);
-        conversation.messages.unshift(res.data);
+        dispatch(pushMessage(res.data));
+        if (!conversation.messages.length > 0) {
+          chats_services.list().then((_res) => {
+            dispatch(setNewConversation(_res.data[0]));
+          });
+        }
       });
   };
 
-  const MessageItem = ({item}) =>
-    iSendIt(item) ? (
-      <View style={styles.row_chat_me}>
-        <MessageFormatter
-          style={styles.text_chat}
-          message={item.text}
-          navigation={navigation}
-        />
-        <Image
-          source={require('../../assets/pride-dog_1.png')}
-          resizeMode="contain"
-          style={styles.image}
-        />
-      </View>
-    ) : (
-      <View style={styles.row_chat_third}>
-        <Image
-          source={require('../../assets/pride-dog_1.png')}
-          resizeMode="contain"
-          style={styles.image}
-        />
-        <Text style={styles.text_chat}>{item.text}</Text>
-      </View>
-    );
+  const MessageItem = ({item}) => (
+    <Message message={item} navigation={navigation} />
+  );
 
   return (
     <>
@@ -134,7 +115,6 @@ const Chat = ({navigation, route}) => {
       <View style={styles.bottomBar}>
         <Image
           source={require('../../assets/camara.png')}
-       
           style={{marginLeft: 10, marginRight: 10, width: 36, height: 36}}
         />
 
@@ -143,6 +123,7 @@ const Chat = ({navigation, route}) => {
           placeholderText="Escriba un mensaje..."
           value={newMessage}
           onChangeText={setNewMessage}
+          onEndEditing={sendNewMessage}
         />
 
         <FormButton_small
@@ -184,21 +165,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginBottom: 10,
   },
-  //tercero
-  row_chat_third: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    paddingVertical: 8,
-  },
 
-  //yo
-  row_chat_me: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-    paddingVertical: 8,
-  },
   text_title: {
     color: StylesConfiguration.color,
     // fontFamily: 'GothamBlack-Normal',
@@ -207,20 +174,6 @@ const styles = StyleSheet.create({
   boton_back: {
     marginHorizontal: 5,
     marginVertical: 5,
-  },
-  text_chat: {
-    // fontFamily: 'GothamBlack-Normal',
-    color: 'white',
-    top: 38,
-  },
-  image: {
-    width: 50,
-    height: 50,
-    marginBottom: 10,
-    borderRadius: 400 / 2,
-    top: 20,
-    marginRight: 10,
-    marginLeft: 10,
   },
   chat: {
     marginBottom: 15,

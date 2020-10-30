@@ -8,7 +8,7 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default function LoginScreen({navigation}) {
-  const {login, loginFacebook, loginGoogle} = useContext(AuthContext);
+  const {loginEmail, loginFacebook, loginGoogle} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({
@@ -62,7 +62,7 @@ export default function LoginScreen({navigation}) {
 
   const loginMail = () => {
     if (canSubmit) {
-      doLogin(() => login(email, password))();
+      doLogin(() => loginEmail(email, password))();
     }
   };
 

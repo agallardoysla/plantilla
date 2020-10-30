@@ -7,7 +7,7 @@ export default function FormInput({
   value,
   placeholderText,
   textStyle,
-  ...rest
+  ...props
 }) {
   return (
     <TextInput
@@ -15,7 +15,7 @@ export default function FormInput({
       style={[styles.input, textStyle]}
       placeholder={placeholderText}
       placeholderTextColor="gray"
-      {...rest}
+      {...props}
     />
   );
 }

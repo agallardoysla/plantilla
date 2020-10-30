@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
-import React from 'react';
-import {Image, StatusBar, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Image, StatusBar} from 'react-native';
 
 //import a from '../screens/Auth'
 //import b from '../screens/Conversations'
@@ -34,6 +34,16 @@ import ListConversation from '../screens/Conversations/components/ListConversati
 import Chat from '../screens/Conversations/Chat';
 import ProfileEdition from '../screens/Profile/components/ProfileEdition';
 import NewProfilePhotoContainer from '../screens/Profile/NewProfilePhoto/NewProfilePhotoContainer';
+import {useDispatch} from 'react-redux';
+import posts_services from '../services/posts_services';
+import {addPosts} from '../reducers/posts';
+import search_services from '../services/search_services';
+import {addSearchedPosts} from '../reducers/searchedPosts';
+import {addSearchedProfiles} from '../reducers/searchedProfiles';
+import users_services from '../services/users_services';
+import {setNotifications} from '../reducers/notifications';
+import {setConversations} from '../reducers/conversations';
+import chats_services from '../services/chats_services';
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
@@ -151,6 +161,33 @@ const NewPublicationGroup = ({navigation}) => {
 };
 
 const HomeStack = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Cargar los posts de Home
+    const initHomePostsCount = 20;
+    posts_services.list(initHomePostsCount, 0).then((res) => {
+      dispatch(addPosts(res.data));
+    });
+    // Cargar los posts de Busqueda
+    search_services.search({search_in: 'posts'}).then((res) => {
+      dispatch(addSearchedPosts(res.data.posts));
+    });
+    // Cargar los perfiles de Busqueda
+    search_services.search({search_in: 'users'}).then((res) => {
+      dispatch(addSearchedProfiles(res.data.users));
+    });
+    // Cargar los perfiles para compartir publicacion
+    // Cargar notificaciones
+    users_services.getNotifications().then((res) => {
+      dispatch(setNotifications(res.data));
+    });
+    // Cargar conversaciones
+    chats_services.list().then((res) => {
+      dispatch(setConversations(res.data));
+    });
+  }, []);
+
   const icons = {
     icon_profile: require('../assets/foto_perfil.png'),
 
@@ -172,6 +209,7 @@ const HomeStack = () => {
 
       <Tab.Navigator
         initialRouteName="HomeGroup"
+        lazy={false}
         tabBarOptions={{
           keyboardHidesTabBar: true,
           activeBackgroundColor: 'black',

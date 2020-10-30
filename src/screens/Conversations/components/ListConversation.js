@@ -1,14 +1,17 @@
-import React, { useContext } from 'react';
-import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import { AuthContext } from '../../../navigation/AuthProvider';
+import React from 'react';
+import {View, Text, StyleSheet, Image} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useSelector} from 'react-redux';
+import {getConversationByParams} from '../../../reducers/conversations';
+import {getUser} from '../../../reducers/user';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
-const ListConversation = ({conversation, navigation}) => {
-  const {user} = useContext(AuthContext);
+const ListConversation = ({conversationId, navigation}) => {
+  const user = useSelector(getUser);
+  const conversation = useSelector(getConversationByParams(conversationId));
   //MyConversations > ListConversation(FlatList) > Chat
   const goChat = () => {
-    navigation.navigate('Chat', {conversation});
+    navigation.navigate('Chat', {conversationId});
   };
 
   const getOther = () => {

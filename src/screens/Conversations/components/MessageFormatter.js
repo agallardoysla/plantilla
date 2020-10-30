@@ -12,10 +12,9 @@ export default function MessageFormatter({message, navigation, style}) {
 
   useEffect(() => {
     const matches = message.match(postPattern);
-    console.log(matches);
     if (matches) {
       posts_services.get(matches[1]).then((res) => {
-        console.log('post a rederizar', res.data);
+        // console.log('post a rederizar', res.data);
         setPost(res.data);
       });
     }

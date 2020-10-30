@@ -3,19 +3,25 @@ import {AuthProvider} from './AuthProvider';
 import Routes from './Routes';
 import {FeedProvider} from './FeedContext';
 import {MenuProvider} from 'react-native-popup-menu';
-// import websocket_client from '../services/websocket_client';
-
+import {Provider} from 'react-redux';
+import configureStore from '../store';
+import {WebSocketProvider} from './WebSocketProvider';
 
 export default function Providers() {
   // websocket_client.init();
+  const store = configureStore();
 
   return (
-    <MenuProvider>
-      <AuthProvider>
-        <FeedProvider>
-          <Routes />
-        </FeedProvider>
-      </AuthProvider>
-    </MenuProvider>
+    <Provider store={store}>
+      <WebSocketProvider>
+        <MenuProvider>
+          <AuthProvider>
+            <FeedProvider>
+              <Routes />
+            </FeedProvider>
+          </AuthProvider>
+        </MenuProvider>
+      </WebSocketProvider>
+    </Provider>
   );
 }
