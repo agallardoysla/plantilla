@@ -41,7 +41,6 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
     if (isLoggedUser) {
       navigation.navigate('MyConversations');
     } else {
-      console.log('otro');
       navigation.navigate('Chat', {
         receiver: {
           user_id: user.id,

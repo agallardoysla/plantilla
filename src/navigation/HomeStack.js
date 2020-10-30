@@ -165,7 +165,7 @@ const HomeStack = () => {
 
   useEffect(() => {
     // Cargar los posts de Home
-    const initHomePostsCount = 10;
+    const initHomePostsCount = 20;
     posts_services.list(initHomePostsCount, 0).then((res) => {
       dispatch(addPosts(res.data));
     });

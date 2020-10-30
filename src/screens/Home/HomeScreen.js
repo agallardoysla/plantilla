@@ -19,7 +19,7 @@ export default function HomeScreen({navigation}) {
   const [originalUsersSearched, setOriginalUsersSearched] = useState([]);
   const [usersSearched, setUsersSearched] = useState([]);
   const [sharedPost, setSharedPost] = useState({});
-  const pages = [10, 10];
+  const pages = [20, 10];
   const posts = useSelector(getPosts);
   const dispatch = useDispatch();
 
