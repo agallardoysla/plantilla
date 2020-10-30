@@ -9,6 +9,8 @@ import chats_services from '../../services/chats_services';
 import MessageFormatter from './components/MessageFormatter';
 import websocket_client from '../../services/websocket_client';
 
+import FormGoBack from '../../components/GoBackButton'
+
 const Chat = ({navigation, route}) => {
   const {user} = useContext(AuthContext);
   const [newMessage, setNewMessage] = useState('');
@@ -105,12 +107,9 @@ const Chat = ({navigation, route}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <TouchableOpacity onPress={go_back}>
-              <Image
-                style={styles.boton_back}
-                source={require('../../assets/boton_volver_atras.png')}
-              />
-            </TouchableOpacity>
+
+            <FormGoBack navigation={navigation} />
+           
           </View>
 
           <View

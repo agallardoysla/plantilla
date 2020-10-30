@@ -5,7 +5,8 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import ListConversation from './components/ListConversation';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import chats_services from '../../services/chats_services';
-
+import FormGoBack from '../../components/GoBackButton'
+import FormGoConversations from '../../components/IconMessage'
 
 const MyConversations = ({navigation}) => {
   const [conversations, setConversations] = useState([]);
@@ -30,21 +31,14 @@ const MyConversations = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.row}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack(null)}>
-            <Image
-              style={styles.boton_back}
-              source={require('../../assets/boton_volver_atras.png')}
-            />
-          </TouchableOpacity>
+          <FormGoBack navigation={navigation}/>
         </View>
+
         <View style={styles.header}>
-          <Image
-            source={require('../../assets//sobre_amarillo.png')}
-            style={styles.sobre_amarillo}
-            resizeMode={'contain'}
-          />
+          <FormGoConversations/>
         </View>
       </View>
+
       <View style={styles.row}>
         <FormSearchInput />
       </View>
@@ -73,10 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     marginBottom: 10,
   },
-  sobre_amarillo: {
-    width: 42,
-    height: 42,
-  },
+ 
  
 });
 
