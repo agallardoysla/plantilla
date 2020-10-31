@@ -18,7 +18,7 @@ interface getGalleryProps {
   assetType?: 'Photos' | 'Video';
 }
 
-export const getGallery = async ({ quantity = 20, assetType = 'All' }: getGalleryProps) => {
+export const getGallery = async ({ quantity = 20, assetType = 'Photos' }: getGalleryProps) => {
   if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
     return;
   }
