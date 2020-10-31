@@ -11,7 +11,11 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import files_services from '../../../services/files_services';
 import NewPostInput from '../../NewPublication/components/NewPostInput';
 import {useDispatch, useSelector} from 'react-redux';
-import {getUser, update} from '../../../reducers/user';
+import {
+  getUser,
+  setNewDisplayName,
+  setNewProfileBio,
+} from '../../../reducers/user';
 
 export default function Preferences({navigation}) {
   const dispatch = useDispatch();
@@ -22,13 +26,12 @@ export default function Preferences({navigation}) {
   const [newBio, setNewBio] = useState(user.profile.bio);
 
   const submitProfile = () => {
-    user.profile.bio = newBio;
     profiles_services.edit(user.profile.id, user.profile);
     users_services.edit(user.id, {display_name: newNickname});
     setEditingNickname(false);
     setEditingDescription(false);
-    user.display_name = newNickname;
-    dispatch(update(user));
+    dispatch(setNewDisplayName(newNickname));
+    dispatch(setNewProfileBio(newBio));
   };
 
   const canPublish = () => {

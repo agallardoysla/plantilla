@@ -16,6 +16,14 @@ export const userSlice = createSlice({
       user = action.payload;
       return user;
     },
+    setNewDisplayName: (user, action) => {
+      user.display_name = action.payload;
+      return user;
+    },
+    setNewProfileBio: (user, action) => {
+      user.profile.bio = action.payload;
+      return user;
+    },
     followUser: (user, action) => {
       user.following_with_details.push(action.payload);
       return user;
@@ -33,6 +41,8 @@ export const {
   login,
   logout,
   update,
+  setNewDisplayName,
+  setNewProfileBio,
   followUser,
   unfollowUser,
 } = userSlice.actions;
