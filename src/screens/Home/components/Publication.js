@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -19,11 +19,11 @@ import posts_services from '../../../services/posts_services';
 import PublicationsComments from '../../Home/components/PublicationsComments';
 import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
-import {useSelector} from 'react-redux';
-import {getUser} from '../../../reducers/user';
+import { useSelector } from 'react-redux';
+import { getUser } from '../../../reducers/user';
 let window = Dimensions.get('window');
 
-export default function Publication({post, navigation, showSharePost, showFullContent}) {
+export default function Publication({ post, navigation, showSharePost, showFullContent }) {
   const [showComments, setShowComments] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
   const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
@@ -37,7 +37,7 @@ export default function Publication({post, navigation, showSharePost, showFullCo
   );
   const [iLiked, setILiked] = useState(
     post.reactions_details.filter((value) => value.user_id === user.id).length >
-      0,
+    0,
   );
   const [countComments, setCountComments] = useState(post.comments.length);
 
@@ -51,22 +51,22 @@ export default function Publication({post, navigation, showSharePost, showFullCo
       <ScrollView horizontal={true} indicatorStyle="white">
         {files.map((file, i) => (
           <Image
-            source={{uri: showFullContent ? file.url : file.url_half}}
-            style={[styles.image_post, i >= 1 ? {marginLeft: 10} : {}]}
+            source={{ uri: showFullContent ? file.url : file.url_half }}
+            style={[styles.image_post, i >= 1 ? { marginLeft: 10 } : {}]}
             key={i}
             resizeMode="contain"
           />
         ))}
       </ScrollView>
     ) : (
-      <Video
-        video={{uri: files[0].url}}
-        style={styles.image_post}
-        autoplay={true}
-        defaultMuted={true}
-        loop={true}
-      />
-    );
+        <Video
+          video={{ uri: files[0].url }}
+          style={styles.image_post}
+          autoplay={true}
+          defaultMuted={true}
+          loop={true}
+        />
+      );
   };
 
   const getAndSetShowComments = () => {
@@ -116,7 +116,7 @@ export default function Publication({post, navigation, showSharePost, showFullCo
   return (
     <>
       <View style={styles.container}>
-        
+
 
         {/*Inicia Nombre de usuario, foto, verificacion de cuenta*/}
 
@@ -127,11 +127,10 @@ export default function Publication({post, navigation, showSharePost, showFullCo
               navigation,
             })
           }>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             {post.user_owner.account_verified ? (
               <View
                 style={{
-                  flexDirection: 'column',
                   flex: 1,
                   alignItems: 'flex-end',
                   justifyContent: 'center',
@@ -153,7 +152,7 @@ export default function Publication({post, navigation, showSharePost, showFullCo
               </Text>
             </View>
 
-            <View style={{flexDirection: 'column'}}>
+            <View style={{ flexDirection: 'column' }}>
               <Image
                 source={require('../../../assets/pride-dog_1.png')}
                 resizeMode="contain"
@@ -170,7 +169,7 @@ export default function Publication({post, navigation, showSharePost, showFullCo
           <View style={styles.postImagesContainer}>
             <TouchableWithoutFeedback
               style={styles.postImagesContainerPresable}
-              onPress={() => navigation.navigate('PublicationDetails', {post})}>
+              onPress={() => navigation.navigate('PublicationDetails', { post })}>
               {toView(post.files_with_urls)}
             </TouchableWithoutFeedback>
           </View>
@@ -198,7 +197,7 @@ export default function Publication({post, navigation, showSharePost, showFullCo
               flexDirection: 'row',
               justifyContent: 'center',
             }}>
-              
+
             <TouchableOpacity onPress={AddLike}>
               <Image
                 source={
@@ -280,20 +279,20 @@ export default function Publication({post, navigation, showSharePost, showFullCo
           loadingComments ? (
             <ActivityIndicator color={StylesConfiguration.color} />
           ) : (
-            comments.map((comment, i) => (
-              <PublicationsComments
-                style={styles.publicationComments}
-                post={post}
-                comment={comment}
-                key={i}
-                comments={comments}
-                setComments={setComments}
-                navigation={navigation}
-                setCountComments={setCountComments}
-                countComments={countComments}
-              />
-            ))
-          )
+              comments.map((comment, i) => (
+                <PublicationsComments
+                  style={styles.publicationComments}
+                  post={post}
+                  comment={comment}
+                  key={i}
+                  comments={comments}
+                  setComments={setComments}
+                  navigation={navigation}
+                  setCountComments={setCountComments}
+                  countComments={countComments}
+                />
+              ))
+            )
         ) : null}
 
         {firstTimeLoadingComments && post.comments.length > 3 ? (
@@ -315,21 +314,21 @@ export default function Publication({post, navigation, showSharePost, showFullCo
         {savingComment ? (
           <ActivityIndicator color={StylesConfiguration.color} />
         ) : (
-      
 
-          <CommentInput
-            placeholder={'Escribir un nuevo comentario...'}
-            callback={newCommentCallback}
-            post={post}
-            comments={comments}
-            setSavingComment={setSavingComment}
-            style={styles.newComment}
-            initialText={''}
-            setCountComments={setCountComments}
-            countComments={countComments}
-          />
-   
-        )}
+
+            <CommentInput
+              placeholder={'Escribir un nuevo comentario...'}
+              callback={newCommentCallback}
+              post={post}
+              comments={comments}
+              setSavingComment={setSavingComment}
+              style={styles.newComment}
+              initialText={''}
+              setCountComments={setCountComments}
+              countComments={countComments}
+            />
+
+          )}
         {/*Fin de nuevo comentario hacia la publicaciòn */}
 
         {/*Inicia fecha*/}
@@ -394,15 +393,15 @@ const styles = StyleSheet.create({
     // backgroundColor: 'blue',
   },
   postImagesContainerPresable: {
-    height: 360,
+    // height: 360,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-start',
     // backgroundColor: 'red',
   },
   image_post: {
-    width: window.width - 10,
-    height: 360,
+    width: window.width,
+    minHeight: 360,
   },
   icon_container: {
     justifyContent: 'center',

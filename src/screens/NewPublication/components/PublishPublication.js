@@ -1,19 +1,17 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
   ScrollView,
-  TouchableOpacity,
   Image,
   ActivityIndicator,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Video from 'react-native-video-player';
 import FormButton from '../../../components/FormButton';
-import MatInput from '../../../components/MatInput';
-import {FeedContext} from '../../../navigation/FeedContext';
+import { FeedContext } from '../../../navigation/FeedContext';
 import files_services from '../../../services/files_services';
 import posts_services from '../../../services/posts_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
@@ -21,37 +19,37 @@ import NewPostInput from './NewPostInput';
 
 let window = Dimensions.get('window');
 
-export default function PublishPublication({route}) {
-  const {setPosts} = useContext(FeedContext);
+export default function PublishPublication({ route }) {
+  const { setPosts } = useContext(FeedContext);
   const [challengeText, setChallengeText] = useState('');
   const [publishing, setPublishing] = useState(false);
-  const {images, setImages, video, setVideo, navigation} = route.params;
+  const { images, setImages, video, setVideo, navigation } = route.params;
 
   useEffect(() => {
-    console.log('Cargado:', images, video);
+    console.log('[CARGANDO]:', images, video);
   });
 
   const doPubliish = async () => {
     setPublishing(true);
-    var re = /(?:\.([^.]+))?$/;
+    // var re = /(?:\.([^.]+))?$/;
     let paths = images.length > 0 ? images : [video];
     paths = paths.map((p) => {
-      return {
-        url: p,
-        ext: re.exec(p)[1],
-      };
+      return p;
+      // return {
+      //   url: p,
+      //   ext: re.exec(p)[1],
+      // };
     });
 
     const filesIds = await Promise.all(
       paths.map(async (file) => {
-        // const result = await files_services.create(file.url, file.ext);
-        const result = await files_services.createPost(file.url, file.ext);
-        console.warn('RESULT', result);
-        return await result.json().id;
+        const result = await files_services.create(file.uri, file.ext);
+        // const result = await files_services.createPost(file.uri, file.ext);
+        return result.json().id;
       }),
     );
 
-    console.log(filesIds);
+    // console.log(filesIds);
 
     if (filesIds.length > 0) {
       const newPost = {
@@ -67,7 +65,7 @@ export default function PublishPublication({route}) {
       await posts_services.create(newPost);
       posts_services.list(0).then((res) => {
         setImages([]);
-        setVideo('');
+        setVideo(null);
         setChallengeText('');
         setPublishing(false);
         setPosts(res.data);
@@ -81,24 +79,27 @@ export default function PublishPublication({route}) {
       {!publishing ? (
         <ScrollView>
           <View style={styles.container}>
-            {video === '' ? (
+            {/* {video === '' ? ( */}
+            {video === null ? (
               <View
                 style={
-                  images.length > 0 || video !== ''
+                  // images.length > 0 || video.uri !== ''
+                  images.length > 0 || video !== null
                     ? [styles.fullRow, styles.fullRowContinuous]
                     : styles.limitedScrollView
                 }>
                 <ScrollView horizontal={true} indicatorStyle="white">
                   {images.map((image, i) => (
-                    <Image source={{uri: image}} style={styles.image} key={i} />
+                    <Image source={{ uri: image }} style={styles.image} key={i} />
                   ))}
                 </ScrollView>
               </View>
             ) : null}
-            {video !== '' ? (
+            {/* {video !== '' ? ( */}
+            {video !== null ? (
               <View style={styles.fullRow}>
                 <Video
-                  video={{uri: video}}
+                  video={{ uri: video?.uri }}
                   style={styles.backgroundVideo}
                   autoplay={true}
                   defaultMuted={true}
@@ -116,19 +117,9 @@ export default function PublishPublication({route}) {
                 setNewComment={setChallengeText}
                 style={styles.input}
               />
-              {/* <MatInput
-                value={challengeText}
-                label=""
-                onChangeText={setChallengeText}
-                containerStyle={styles.input}
-                multiline={true}
-                textAlignVertical={true}
-                numberOfLines={4}
-                fontSize={18}
-                labelFontSize={18}
-              /> */}
             </View>
-            {images.length > 0 || video !== '' ? (
+            {/* {images.length > 0 || video !== '' ? ( */}
+            {images.length > 0 || video !== null ? (
               <View style={styles.fullRow}>
                 <FormButton
                   style={styles.publishButton}
@@ -140,11 +131,11 @@ export default function PublishPublication({route}) {
           </View>
         </ScrollView>
       ) : (
-        <View style={styles.container}>
-          <Text style={styles.publishing}>Publicando...</Text>
-          <ActivityIndicator size="large" color={StylesConfiguration.color} />
-        </View>
-      )}
+          <View style={styles.container}>
+            <Text style={styles.publishing}>Publicando...</Text>
+            <ActivityIndicator size="large" color={StylesConfiguration.color} />
+          </View>
+        )}
     </SafeAreaView>
   );
 }
