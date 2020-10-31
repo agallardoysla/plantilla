@@ -4,6 +4,10 @@ export const postsSlice = createSlice({
   name: 'posts',
   initialState: [],
   reducers: {
+    setPosts: (posts, action) => {
+      posts = action.payload;
+      return posts;
+    },
     addPosts: (posts, action) => {
       posts = [...posts, ...action.payload];
       return posts;
@@ -16,6 +20,7 @@ export const postsSlice = createSlice({
 });
 
 export const {
+  setPosts,
   addPosts,
   resetPosts,
 } = postsSlice.actions;
