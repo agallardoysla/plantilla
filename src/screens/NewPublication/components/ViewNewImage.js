@@ -6,7 +6,7 @@ const height = Dimensions.get('window').height;
 const iconSize = 40;
 
 export default function ViewNewImage({route}) {
-  const {uri, images, setImages, navigation} = route.params;
+  const {image, images, setImages, navigation} = route.params;
 
   const tryEdit = () => {
     Alert.alert('Editar imagen');
@@ -32,13 +32,13 @@ export default function ViewNewImage({route}) {
   };
 
   const doDelete = () => {
-    setImages(images.filter((image) => image !== uri));
+    setImages(images.filter((im) => im.uri !== image.uri));
     navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={{uri}} />
+      <Image style={styles.image} source={{uri: image.uri}} />
       <View style={styles.actionsContainer}>
         <Icon
           onPress={tryEdit}

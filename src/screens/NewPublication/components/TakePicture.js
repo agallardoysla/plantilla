@@ -68,7 +68,7 @@ export default function TakePicture({
       const options = { quality: 0.5 };
       const data = await camera.takePictureAsync(options);
       console.log(data.uri);
-      setImages([...images, data.uri]);
+      setImages([...images, data]);
       setVideo(null);
       if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
         return;
@@ -247,13 +247,13 @@ export default function TakePicture({
                       disabled={!canPublish()}> */}
                     <Icon
                       onPress={() =>
-                        // console.warn(video)
+                        // console.log(video)
                         navigation.navigate('PublishPublication', {
-                          images: images,
-                          setImages: setImages,
-                          video: video,
-                          setVideo: setVideo,
-                          navigation: navigation,
+                          images,
+                          setImages,
+                          video,
+                          setVideo,
+                          navigation,
                         })
                       }
                       showSecondIcon={!canPublish()}
@@ -274,7 +274,7 @@ export default function TakePicture({
                           style={styles.miniImage}
                           onPress={() =>
                             navigation.navigate('ViewNewImage', {
-                              uri: image,
+                              image: image,
                               images: images,
                               setImages: setImages,
                               navigation: navigation,

@@ -10,20 +10,21 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Video from 'react-native-video-player';
+import {useDispatch} from 'react-redux/lib/hooks/useDispatch';
 import FormButton from '../../../components/FormButton';
-import { FeedContext } from '../../../navigation/FeedContext';
 import files_services from '../../../services/files_services';
 import posts_services from '../../../services/posts_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import NewPostInput from './NewPostInput';
+import {setPosts} from '../../../reducers/posts';
 
 let window = Dimensions.get('window');
 
-export default function PublishPublication({ route }) {
-  const { setPosts } = useContext(FeedContext);
+export default function PublishPublication({route}) {
   const [challengeText, setChallengeText] = useState('');
   const [publishing, setPublishing] = useState(false);
-  const { images, setImages, video, setVideo, navigation } = route.params;
+  const {images, setImages, video, setVideo, navigation} = route.params;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('[CARGANDO]:', images, video);
@@ -41,15 +42,17 @@ export default function PublishPublication({ route }) {
       // };
     });
 
+    console.log(paths);
+
     const filesIds = await Promise.all(
       paths.map(async (file) => {
-        const result = await files_services.create(file.uri, file.ext);
-        // const result = await files_services.createPost(file.uri, file.ext);
+        // const result = await files_services.create(file.uri, file.ext);
+        const result = await files_services.createPost(file.uri, file.ext);
         return result.json().id;
       }),
     );
 
-    // console.log(filesIds);
+    console.log(filesIds);
 
     if (filesIds.length > 0) {
       const newPost = {
@@ -63,12 +66,12 @@ export default function PublishPublication({ route }) {
       }
 
       await posts_services.create(newPost);
-      posts_services.list(0).then((res) => {
+      posts_services.list(20, 0).then((res) => {
         setImages([]);
         setVideo(null);
         setChallengeText('');
         setPublishing(false);
-        setPosts(res.data);
+        dispatch(setPosts(res.data));
         navigation.navigate('HomeGroup');
       });
     }
@@ -90,7 +93,11 @@ export default function PublishPublication({ route }) {
                 }>
                 <ScrollView horizontal={true} indicatorStyle="white">
                   {images.map((image, i) => (
-                    <Image source={{ uri: image }} style={styles.image} key={i} />
+                    <Image
+                      source={{uri: image.uri}}
+                      style={styles.image}
+                      key={i}
+                    />
                   ))}
                 </ScrollView>
               </View>
@@ -99,7 +106,7 @@ export default function PublishPublication({ route }) {
             {video !== null ? (
               <View style={styles.fullRow}>
                 <Video
-                  video={{ uri: video?.uri }}
+                  video={{uri: video.uri}}
                   style={styles.backgroundVideo}
                   autoplay={true}
                   defaultMuted={true}
@@ -131,11 +138,11 @@ export default function PublishPublication({ route }) {
           </View>
         </ScrollView>
       ) : (
-          <View style={styles.container}>
-            <Text style={styles.publishing}>Publicando...</Text>
-            <ActivityIndicator size="large" color={StylesConfiguration.color} />
-          </View>
-        )}
+        <View style={styles.container}>
+          <Text style={styles.publishing}>Publicando...</Text>
+          <ActivityIndicator size="large" color={StylesConfiguration.color} />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
