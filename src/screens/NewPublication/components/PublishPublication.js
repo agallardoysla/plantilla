@@ -27,7 +27,7 @@ export default function PublishPublication({ route }) {
 
   useEffect(() => {
     console.log('[CARGANDO]:', images, video);
-  });
+  }, []);
 
   const doPubliish = async () => {
     setPublishing(true);
