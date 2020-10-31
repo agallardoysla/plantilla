@@ -27,7 +27,7 @@ export default function CreateProfile({navigation}) {
     );
     return maxDateObj;
   };
-  // console.warn(today, moment(today).subtract(14, 'years'));
+  // console.log(today, moment(today).subtract(14, 'years'));
   const [nickname, setNickname] = useState('');
   const [existNickname, setExistNickname] = useState(false);
   // const [birthday, setBirthday] = useState(today);

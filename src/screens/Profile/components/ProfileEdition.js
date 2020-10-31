@@ -46,7 +46,7 @@ export default function Preferences({navigation}) {
       };
 
       const result = await files_services.createPost(path.url, path.ext);
-      console.warn('RESULT', await result.json());
+      console.log('RESULT', await result.json());
       profiles_services.edit(user.profile.id, {photo: await result.json().id});
     };
     navigation.navigate('NewProfilePhoto', {callback});
