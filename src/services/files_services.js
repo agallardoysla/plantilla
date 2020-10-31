@@ -52,5 +52,5 @@ export default {
       ],
     );
   },
-  createPost: (file, ext) => createPost(file, ext),
+  createPost,
 };
