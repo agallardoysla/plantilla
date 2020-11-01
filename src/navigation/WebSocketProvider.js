@@ -1,16 +1,34 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useEffect} from 'react';
 import auth from '@react-native-firebase/auth';
 import api_config from '../services/api_config';
+import {useDispatch} from 'react-redux';
+import {pushMessage} from '../reducers/conversations';
 
 export const WebSocketContext = createContext({});
 
 export const WebSocketProvider = ({children}) => {
   const url = api_config.webSocketUrl;
-  const [subscribers, setSubscribers] = useState([]);
+  const dispatch = useDispatch();
+  const subscribers = [
+    {
+      event: 'follow_request_received', // creo que hay mas tipos de notificaciones pero no se si todas generan mensajes de WS
+      action: (message) => {
+        // hacer lo necesario
+        console.log('handling follow_request_received', message);
+      },
+    },
+    {
+      event: 'message_received',
+      action: (message) => {
+        // hacer lo necesario
+        console.log('handling message_received', message);
+        dispatch(pushMessage(message));
+      },
+    },
+  ];
 
   useEffect(() => {
     const init = async () => {
-      console.log('Init WS');
       const token = await auth().currentUser.getIdToken(true);
 
       const headers = {
@@ -20,7 +38,7 @@ export const WebSocketProvider = ({children}) => {
       const ws = new WebSocket(url, '', {headers: headers});
 
       ws.onopen = () => {
-        console.log('connected');
+        console.log('WS connected!');
       };
 
       // ws.on('close', function close() {
@@ -28,22 +46,24 @@ export const WebSocketProvider = ({children}) => {
       // });
 
       ws.onmessage = function incoming(message) {
-        console.log("message", message, subscribers);
-        subscribers.forEach(
-          (s) => s.eventType === message.event && s.action(message.data),
-        );
+        if (message.data.includes('Hi')) {
+          console.log(message.data);
+        } else {
+          const info = JSON.parse(message.data);
+          subscribers.forEach((s) => {
+            if (s.event === info.event) {
+              s.action(info.message);
+            }
+          });
+        }
       };
     };
     init();
   }, []);
 
-  const addSubscriber = (newSubscriber) => setSubscribers([...subscribers, newSubscriber]);
-
   return (
     <WebSocketContext.Provider
-      value={{
-        addSubscriber,
-      }}>
+      value={{}}>
       {children}
     </WebSocketContext.Provider>
   );

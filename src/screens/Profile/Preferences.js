@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import {View, Text, Image, StyleSheet, Alert} from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import FormButton from '../../components/FormButton';
-import { AuthContext } from '../../navigation/AuthProvider';
+import {AuthContext} from '../../navigation/AuthProvider';
 
 export default function Preferences({navigation}) {
   const {logout} = useContext(AuthContext);

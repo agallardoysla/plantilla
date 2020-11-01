@@ -1,38 +1,25 @@
-import React, {useContext, useState} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import { Dimensions, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import Gallery from './components/Gallery';
 import TakePicture from './components/TakePicture';
+const { width } = Dimensions.get('window');
 
-const {width} = Dimensions.get('window');
-
-export default function NewPublicationContainer({navigation}) {
+export default function NewPublicationContainer({ navigation }) {
   const maxImages = 5;
   const maxDuration = 5;
   const [images, setImages] = useState([]);
-  const [video, setVideo] = useState('');
-  const [challengeText, setChallengeText] = useState('');
-  const [publishing, setPublishing] = useState(false);
+  const [video, setVideo] = useState(null);
   const [assetType, setAssetType] = useState('Photos');
 
   const canPublish = () => {
-    return images.length > 0 || video !== '';
+    return images.length || video;
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Swiper 
-        style={styles.slider} 
-        showsButtons={true}
-        loop={true}
-        autoplay={false}
-        loadMinimal={true}
-        loadMinimalSize={1}
-        autoplayDirection={false}
-      > */}
       <Swiper
-        style={styles.slider}
         showsButtons={true}
         index={0}
         loop={false}
@@ -44,7 +31,7 @@ export default function NewPublicationContainer({navigation}) {
           maxImages={maxImages}
           images={images}
           setImages={setImages}
-          video={video}
+          video={null}
           setVideo={setVideo}
           canPublish={canPublish}
           assetType={assetType}
@@ -74,13 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     alignItems: 'stretch',
   },
-  slider: {},
   view: {
     width: width,
-  },
-  text: {
-    color: '#fff',
-    fontSize: 30,
-    fontWeight: 'bold',
   },
 });

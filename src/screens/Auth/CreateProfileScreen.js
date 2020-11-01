@@ -13,6 +13,8 @@ import users_services from '../../services/users_services';
 
 
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useSelector} from 'react-redux';
+import {getUser} from '../../reducers/user';
 
 export default function CreateProfile({navigation}) {
   const today = new Date();
@@ -25,7 +27,7 @@ export default function CreateProfile({navigation}) {
     );
     return maxDateObj;
   };
-  // console.warn(today, moment(today).subtract(14, 'years'));
+  // console.log(today, moment(today).subtract(14, 'years'));
   const [nickname, setNickname] = useState('');
   const [existNickname, setExistNickname] = useState(false);
   // const [birthday, setBirthday] = useState(today);
@@ -35,7 +37,8 @@ export default function CreateProfile({navigation}) {
   const [customGender, setCustomGender] = useState('');
   const [userPosibleLikes, setUserPosibleLikes] = useState([]);
   const [canSubmit, setCanSubmit] = useState(false);
-  const {user, existProfile} = useContext(AuthContext);
+  const {existProfile} = useContext(AuthContext);
+  const user = useSelector(getUser);
   const [verifyExistProfile, setVerifyExistProfile] = useState(false);
 
   useEffect(() => {

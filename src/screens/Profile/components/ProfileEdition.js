@@ -1,9 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import FormButton from '../../../components/FormButton';
 import GenericPreferenceView from '../GenericPreferenceView';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {AuthContext} from '../../../navigation/AuthProvider';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
 import profiles_services from '../../../services/profiles_services';
 import users_services from '../../../services/users_services';
 import MatInput from '../../../components/MatInput';
@@ -11,22 +10,28 @@ import Icon from '../../../components/Icon';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import files_services from '../../../services/files_services';
 import NewPostInput from '../../NewPublication/components/NewPostInput';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getUser,
+  setNewDisplayName,
+  setNewProfileBio,
+} from '../../../reducers/user';
 
 export default function Preferences({navigation}) {
-  const {user, setUser} = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const user = useSelector(getUser);
   const [editingNickname, setEditingNickname] = useState(false);
   const [editingDescription, setEditingDescription] = useState(false);
   const [newNickname, setNewNickname] = useState(user.display_name);
   const [newBio, setNewBio] = useState(user.profile.bio);
 
   const submitProfile = () => {
-    user.profile.bio = newBio;
     profiles_services.edit(user.profile.id, user.profile);
     users_services.edit(user.id, {display_name: newNickname});
     setEditingNickname(false);
     setEditingDescription(false);
-    user.display_name = newNickname;
-    setUser(user);
+    dispatch(setNewDisplayName(newNickname));
+    dispatch(setNewProfileBio(newBio));
   };
 
   const canPublish = () => {
@@ -34,20 +39,21 @@ export default function Preferences({navigation}) {
   };
 
   const takeNewProfilePhoto = () => {
-    const callback = async (images) => {
-      navigation.navigate('ProfileEdition');
-      console.log('nuevo perfil: ', images);
-      var re = /(?:\.([^.]+))?$/;
-      let path = {
-        url: images[0],
-        ext: re.exec(images[0])[1],
-      };
+    Alert.alert('no disponible');
+    // const callback = async (images) => {
+    //   navigation.navigate('ProfileEdition');
+    //   console.log('nuevo perfil: ', images);
+    //   var re = /(?:\.([^.]+))?$/;
+    //   let path = {
+    //     url: images[0],
+    //     ext: re.exec(images[0])[1],
+    //   };
 
-      const result = await files_services.createPost(path.url, path.ext);
-      console.warn('RESULT', await result.json());
-      profiles_services.edit(user.profile.id, {photo: await result.json().id});
-    };
-    navigation.navigate('NewProfilePhoto', {callback});
+    //   const result = await files_services.createPost(path.url, path.ext);
+    //   console.log('RESULT', await result.json());
+    //   profiles_services.edit(user.profile.id, {photo: await result.json().id});
+    // };
+    // navigation.navigate('NewProfilePhoto', {callback});
   };
 
   return (

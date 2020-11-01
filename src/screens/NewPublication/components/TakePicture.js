@@ -64,11 +64,12 @@ export default function TakePicture({
 
   const takePicture = async (camera) => {
     if (images.length < maxImages) {
-      const options = { base64: true };
+      // const options = { base64: true };
+      const options = { quality: 0.5 };
       const data = await camera.takePictureAsync(options);
       console.log(data.uri);
-      setImages([...images, data.uri]);
-      setVideo('');
+      setImages([...images, data]);
+      setVideo(null);
       if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
         return;
       }
@@ -187,12 +188,12 @@ export default function TakePicture({
   };
 
   const doDelete = () => {
-    setVideo('');
+    setVideo(null);
   };
 
   return (
     <View style={styles.container}>
-      {video === '' ? (
+      {video === null ? (
         <RNCamera
           style={styles.preview}
           flashMode={flashMode}
@@ -240,29 +241,31 @@ export default function TakePicture({
                             />
                           </TouchableOpacity>
                         )}
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
+                      
+                      style={styles.editPicture}
+                      disabled={!canPublish()}> */}
+                    <Icon
                       onPress={() =>
+                        // console.log(video)
                         navigation.navigate('PublishPublication', {
-                          images: images,
-                          setImages: setImages,
-                          video: video,
-                          setVideo: setVideo,
-                          navigation: navigation,
+                          images,
+                          setImages,
+                          video,
+                          setVideo,
+                          navigation,
                         })
                       }
-                      style={styles.editPicture}
-                      disabled={!canPublish()}>
-                      <Icon
-                        showSecondIcon={!canPublish()}
-                        source={'done_all'}
-                        secondIcon={'done'}
-                        color={
-                          canPublish() ? StylesConfiguration.color : 'grey'
-                        }
-                        size={iconSize}
-                        style={styles.action}
-                      />
-                    </TouchableOpacity>
+                      showSecondIcon={!canPublish()}
+                      source={'done_all'}
+                      secondIcon={'done'}
+                      color={
+                        canPublish() ? StylesConfiguration.color : 'grey'
+                      }
+                      size={iconSize}
+                      style={styles.action}
+                    />
+                    {/* </TouchableOpacity> */}
                   </View>
                   <View style={styles.actionsBarTop}>
                     <View style={styles.imagesContainer}>
@@ -271,7 +274,7 @@ export default function TakePicture({
                           style={styles.miniImage}
                           onPress={() =>
                             navigation.navigate('ViewNewImage', {
-                              uri: image,
+                              image: image,
                               images: images,
                               setImages: setImages,
                               navigation: navigation,
@@ -280,7 +283,7 @@ export default function TakePicture({
                           key={i}>
                           <Image
                             style={styles.miniImage}
-                            source={{ uri: image }}
+                            source={{ uri: image.uri }}
                           />
                         </TouchableOpacity>
                       ))}
@@ -295,7 +298,7 @@ export default function TakePicture({
                       onPress={() => stopRecording(camera)}
                       style={styles.takePicture}>
                       <Image
-                        style={styles.boton_takeVideo}
+                        style={styles.boton_takePicture}
                         source={require('../../../assets/temporizador_15_seg.png')}
                       />
                     </TouchableOpacity>
@@ -310,48 +313,6 @@ export default function TakePicture({
                       </TouchableOpacity>
                     )}
                 </View>
-                {/* <View style={styles.actionsBarTop}>
-                  <View style={styles.imagesContainer}>
-                    {images.map((image, i) => (
-                      <TouchableOpacity
-                        style={styles.miniImage}
-                        onPress={() =>
-                          navigation.navigate('ViewNewImage', {
-                            uri: image,
-                            images: images,
-                            setImages: setImages,
-                            navigation: navigation,
-                          })
-                        }
-                        key={i}>
-                        <Image style={styles.miniImage} source={{ uri: image }} />
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                  <View style={styles.cameraControls}>
-                    <GetSwitchCameraIcon />
-                    <GetFlashIcon />
-                  </View>
-                </View>
-                {isRecording ? (
-                  <TouchableOpacity
-                    onPress={() => stopRecording(camera)}
-                    style={styles.takePicture}>
-                    <Image
-                      style={styles.boton_takePicture}
-                      source={require('../../../assets/temporizador_15_seg.png')}
-                    />
-                  </TouchableOpacity>
-                ) : (
-                    <TouchableOpacity
-                      onPress={() => takePicture(camera)}
-                      style={styles.takePicture}>
-                      <Image
-                        style={styles.boton_takePicture}
-                        source={require('../../../assets/boton_ya.png')}
-                      />
-                    </TouchableOpacity>
-                  )} */}
               </View>
             );
           }}
@@ -359,7 +320,7 @@ export default function TakePicture({
       ) : (
           <View style={styles.container}>
             <Video
-              video={{ uri: video }}
+              video={{ uri: video.uri }}
               style={styles.backgroundVideo}
               autoplay={true}
               defaultMuted={true}

@@ -1,6 +1,6 @@
 /** Imports escenciales para la clase. */
 import React from 'react';
-import {StyleSheet, ImageSourcePropType, Pressable, Image} from 'react-native';
+import { StyleSheet, ImageSourcePropType, Pressable, Image } from 'react-native';
 
 /** Declaracion de las Props. */
 interface IconProps {
@@ -72,6 +72,7 @@ const Icon = ({
     icono_camara: require(`../assets/icono_camara.png`),
     icono_home_activo: require(`../assets/icono_home_activo.png`),
     play_arrow: require(`../assets/play_arrow.png`),
+    FC_Logo: require(`../assets/FC_Logo.png`),
     // visibility: require(`../assets/visibility.png`),
     // visibility: require(`../assets/visibility.png`),
     // visibility: require(`../assets/visibility.png`),
@@ -94,7 +95,7 @@ const Icon = ({
   const icon2 = typeof secondIcon === 'string' ? aux[secondIcon] : secondIcon;
 
   return (
-    <Pressable onPress={onPress} style={[style, {height: size, width: size}]}>
+    <Pressable onPress={onPress} style={[style, { height: size, width: size }]}>
       {secondIcon ? (
         <Image
           resizeMode={'contain'}
@@ -106,12 +107,12 @@ const Icon = ({
           source={showSecondIcon ? icon2 : icon}
         />
       ) : (
-        <Image
-          resizeMode={'contain'}
-          style={{height: size, width: size, tintColor: color}}
-          source={icon}
-        />
-      )}
+          <Image
+            resizeMode={'contain'}
+            style={{ height: size, width: size, tintColor: color }}
+            source={icon}
+          />
+        )}
     </Pressable>
   );
 };

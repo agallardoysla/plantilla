@@ -1,40 +1,23 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
-import posts_services from '../../services/posts_services';
 import FormSearchInput from '../../components/FormSearchInput';
 import PostSearched from './components/PostSearched';
 import ProfileSearched from './components/ProfileSearched';
 import search_services from '../../services/search_services';
 import GoBackButton from '../../components/GoBackButton';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setSearchedProfiles,
+  getSearchedProfiles,
+} from '../../reducers/searchedProfiles';
+import {getSearchedPosts} from '../../reducers/searchedPosts';
 
 export default function SearchScreen({navigation}) {
-  const [posts, setPosts] = useState([]);
-  const [page, setPage] = useState(0);
   const [showSearch, setShowSearch] = useState(false);
   const [searchString, setSearchString] = useState('');
-  const [users, setUsers] = useState([]);
-  const pageSize = 24;
-
-  useEffect(() => {
-    if (posts.length === 0) {
-      loadPost();
-    }
-    //promesa para traer valor de usuario solo una vez
-    search_services.search(buildUserSearch(searchString)).then((res) => {
-      console.log(res.data.users[0]);
-      setUsers(res.data.users);
-    });
-  }, []);
-
-  const getPageOffset = (_page) => pageSize * _page;
-
-  const loadPost = () => {
-    posts_services.list(pageSize, getPageOffset(page)).then((res) => {
-      console.log('nuevos posts', res.data.length);
-      setPosts([...posts, ...res.data]);
-      setPage(page + 1);
-    });
-  };
+  const dispatch = useDispatch();
+  const searchedPosts = useSelector(getSearchedPosts);
+  const searchedProfiles = useSelector(getSearchedProfiles);
 
   const buildUserSearch = (searchingString) => ({
     search: searchingString,
@@ -47,16 +30,23 @@ export default function SearchScreen({navigation}) {
     if (searchedString.length > 0) {
       if (searchedString.length > 3) {
         search_services.search(buildUserSearch(searchedString)).then((res) => {
-          console.log(res.data);
-          setUsers(res.data);
+          dispatch(setSearchedProfiles(res.data.users));
         });
       } else {
-        setUsers(
-          users.filter((u) =>
-            u.display_name.toLowerCase().includes(searchedString.toLowerCase()),
+        dispatch(
+          setSearchedProfiles(
+            searchedProfiles.filter((u) =>
+              u.display_name
+                .toLowerCase()
+                .includes(searchedString.toLowerCase()),
+            ),
           ),
         );
       }
+    } else {
+      search_services.search({search_in: 'users'}).then((res) => {
+        dispatch(setSearchedProfiles(res.data.users));
+      });
     }
   };
 
@@ -70,22 +60,20 @@ export default function SearchScreen({navigation}) {
 
   const SearchedUsers = () => (
     <FlatList
-      data={users}
+      data={searchedProfiles}
       renderItem={ProfileSearchItem}
       bouncesZoom={true}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item, index) => index.toString()}
       numColumns={1}
     />
   );
 
   const PostsFeed = () => (
     <FlatList
-      data={posts}
+      data={searchedPosts}
       renderItem={PostSearchItem}
-      onEndReachedThreshold={0.8}
-      onEndReached={(info) => loadPost()}
       bouncesZoom={true}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item, index) => index.toString()}
       numColumns={3}
     />
   );

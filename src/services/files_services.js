@@ -27,7 +27,7 @@ export const createPost = async (file, ext) => {
     },
     [{name: 'file', filename: `file.${ext}`, data: RNFetchBlob.wrap(realPath)}],
   ).catch((err) => {
-    console.warn('ERRROOOOOOOOOR!!!!!', err);
+    console.log('ERRROOOOOOOOOR!!!!!', err);
     return {error: err};
   });
 };
@@ -52,5 +52,5 @@ export default {
       ],
     );
   },
-  createPost: (file, ext) => createPost(file, ext),
+  createPost,
 };

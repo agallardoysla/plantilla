@@ -1,43 +1,36 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, FlatList, Image, Text} from 'react-native';
 import posts_services from '../../services/posts_services';
-import {FeedContext} from '../../navigation/FeedContext';
 import Publication from './components/Publication';
 import Modal from 'react-native-modal';
 import FormSearchInput from '../../components/FormSearchInput';
 import users_services from '../../services/users_services';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import chats_services from '../../services/chats_services';
-
-
+import IconMessage from '../../components/IconMessage';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
-import {
-  ScrollView,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {addPosts, getPosts} from '../../reducers/posts';
+import {useDispatch, useSelector} from 'react-redux';
 
 export default function HomeScreen({navigation}) {
-  const {posts, setPosts} = useContext(FeedContext);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [valueSearch, setValueSearch] = useState('');
   const [originalUsersSearched, setOriginalUsersSearched] = useState([]);
   const [usersSearched, setUsersSearched] = useState([]);
   const [sharedPost, setSharedPost] = useState({});
-  const pages = [5, 3, 4, 5, 6, 8, 10];
+  const pages = [20, 10];
+  const posts = useSelector(getPosts);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const init = async () => {
-      if (posts.length === 0) {
-        loadPost();
-      }
       const res = await users_services.getContext({
         search: '',
       });
       setUsersSearched(res.data);
-      setOriginalUsersSearched(res.data);
+      setOriginalUsersSearched(res.data); // mover esta logica a HomeStack
     };
     init();
   }, []);
@@ -55,7 +48,7 @@ export default function HomeScreen({navigation}) {
       .list(pages[Math.min(page, pages.length - 1)], getPageOffset(page))
       .then((res) => {
         console.log('nuevos posts', res.data.length);
-        setPosts([...posts, ...res.data]);
+        dispatch(addPosts(res.data));
         setPage(page + 1);
       });
   };
@@ -125,15 +118,11 @@ export default function HomeScreen({navigation}) {
           style={styles.image}
         />
         <Text style={styles.userName}>{showUserInfo(item)}</Text>
-        <TouchableOpacity
+
+        <IconMessage
           style={styles.sendMessage}
-          onPress={() => shareSelectedPost(item.id)}>
-          <Image
-            source={require('../../assets/sobre_amarillo_1.png')}
-            resizeMode="contain"
-            style={styles.image}
-          />
-        </TouchableOpacity>
+          onPress={() => shareSelectedPost(item.id)}
+        />
       </View>
     );
   };
