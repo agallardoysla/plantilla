@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Dimensions, FlatList} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Dimensions, FlatList } from 'react-native';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import GoBackButton from '../../../components/GoBackButton';
 import Follower from './Follower';
 import FormSearchInput from '../../../components/FormSearchInput';
 import utils from '../../../utils/utils.js';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Followers = ({navigation, route}) => {
+const Followers = ({ navigation, route }) => {
   const [filteredFollowers, setFilteredFollowers] = useState(route.params.profile.followers_with_details);
   const [searchString, setSearchString] = useState('');
 
@@ -25,12 +26,12 @@ const Followers = ({navigation, route}) => {
     }
   };
 
-  const FollowerItem = ({item}) => (
+  const FollowerItem = ({ item }) => (
     <Follower follower={item} navigation={navigation} />
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.row}>
         <GoBackButton navigation={navigation} />
         <Text style={styles.titulo}>SEGUIDORES</Text>
@@ -45,7 +46,7 @@ const Followers = ({navigation, route}) => {
         renderItem={FollowerItem}
         keyExtractor={(item, index) => index.toString()}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -1,18 +1,19 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, FlatList} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
 import FormSearchInput from '../../components/FormSearchInput';
 import PostSearched from './components/PostSearched';
 import ProfileSearched from './components/ProfileSearched';
 import search_services from '../../services/search_services';
 import GoBackButton from '../../components/GoBackButton';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   setSearchedProfiles,
   getSearchedProfiles,
 } from '../../reducers/searchedProfiles';
-import {getSearchedPosts} from '../../reducers/searchedPosts';
+import { getSearchedPosts } from '../../reducers/searchedPosts';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function SearchScreen({navigation}) {
+export default function SearchScreen({ navigation }) {
   const [showSearch, setShowSearch] = useState(false);
   const [searchString, setSearchString] = useState('');
   const dispatch = useDispatch();
@@ -44,17 +45,17 @@ export default function SearchScreen({navigation}) {
         );
       }
     } else {
-      search_services.search({search_in: 'users'}).then((res) => {
+      search_services.search({ search_in: 'users' }).then((res) => {
         dispatch(setSearchedProfiles(res.data.users));
       });
     }
   };
 
-  const ProfileSearchItem = ({item}) => {
+  const ProfileSearchItem = ({ item }) => {
     return <ProfileSearched profile={item} navigation={navigation} />;
   };
 
-  const PostSearchItem = ({item}) => {
+  const PostSearchItem = ({ item }) => {
     return <PostSearched post={item} navigation={navigation} />;
   };
 
@@ -79,7 +80,7 @@ export default function SearchScreen({navigation}) {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.row}>
         <GoBackButton navigation={navigation} />
         <FormSearchInput
@@ -88,7 +89,7 @@ export default function SearchScreen({navigation}) {
         />
       </View>
       {showSearch ? <SearchedUsers /> : <PostsFeed />}
-    </View>
+    </SafeAreaView>
   );
 }
 
