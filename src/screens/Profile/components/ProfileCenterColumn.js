@@ -7,14 +7,16 @@ import profileLikes from '../../../services/profiles_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 export default function ProfileCenterColumn({user, navigation, style, isLoggedUser}) {
-  const [iLiked, setILiked] = useState(false);
+  const [iLiked, setILiked] = useState(isLoggedUser);
 
   useEffect(() => {
-    profileLikes
-      .getReactions(user.id)
-      .then((res) =>
-        setILiked(res.data.filter((item) => item.user === user.id).length >= 1),
-      );
+    if (!isLoggedUser) {
+      profileLikes
+        .getReactions(user.id)
+        .then((res) =>
+          setILiked(res.data.filter((item) => item.user === user.id).length >= 1),
+        );
+    }
   }, []);
 
   const addReactions = () => {
@@ -67,16 +69,18 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
             <Image
               source={require('../../../assets/tuerca_blanca.png')}
               style={styles.tuerca_blanca}
-              resizeMode={'center'}
+              resizeMode={'cover'}
             />
           </TouchableOpacity>
         ) : (
           <View style={styles.tuerca_blanca_container} />
         )}
-        <Text style={styles.name_user}>@{user.display_name}</Text>
+        <Text style={styles.name_user} numberOfLines={1}>
+          @{user.display_name}
+        </Text>
       </View>
 
-      <TouchableOpacity onPress={addReactions}>
+      <TouchableOpacity onPress={addReactions} disabled={isLoggedUser}>
         <View style={styles.folowersInfo}>
           <FormLike iLiked={iLiked} />
           <Text style={styles.icon_numbers}>{8}k</Text>
@@ -97,8 +101,9 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
 const styles = StyleSheet.create({
   infoContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'white',
   },
   profleFoto: {
     flexDirection: 'column',
@@ -107,6 +112,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'yellow',
   },
   tuerca_blanca_container: {
+    marginLeft: 40,
     marginRight: 3,
     width: 20,
     height: 20,
@@ -119,8 +125,8 @@ const styles = StyleSheet.create({
   name_user: {
     fontFamily: StylesConfiguration.fontFamily,
     fontSize: 14,
-    textAlign: 'center',
     color: StylesConfiguration.color,
+    paddingRight: 45,
   },
   sobre_amarillo: {
     alignSelf: 'center',
