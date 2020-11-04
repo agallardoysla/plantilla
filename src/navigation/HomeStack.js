@@ -28,6 +28,7 @@ import OtherProfile from '../screens/Profile/components/OtherProfile';
 import Followeds from '../screens/Profile/components/Followeds';
 import Followers from '../screens/Profile/components/Followers';
 import MyProfileScreen from '../screens/Profile/components/MyProfileScreen';
+import Vip from '../screens/Profile/components/Vip';
 import Preferences from '../screens/Profile/Preferences';
 import PublicationDetails from '../screens/Home/components/PublicationDetails';
 import ListConversation from '../screens/Conversations/components/ListConversation';
@@ -102,6 +103,7 @@ const ProfileGroup = ({ navigation }) => {
       <Stack.Screen name="ProfileEdition" component={ProfileEdition} />
       <Stack.Screen name="NewProfilePhoto" component={NewProfilePhotoContainer} />
       <Stack.Screen name="ViewNewImage" component={ViewNewImage} />
+      <Stack.Screen name="Vip" component={Vip} />
     </Stack.Navigator>
   );
 };

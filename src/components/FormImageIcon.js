@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, Image} from 'react-native';
 
-const FormImageIcon = ({...props}) => {
+const FormImageIcon = ({_styles, ...props}) => {
   return (
     <Image
       {...props}
-      style={styles.image_profile}
+      style={[styles.image_profile, _styles]}
     />
   );
 };

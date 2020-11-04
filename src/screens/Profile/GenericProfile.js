@@ -75,6 +75,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           style={[styles.profileDataColumn, styles.columnRight]}
           user={localUser}
           isLoggedUser={isLoggedUser}
+          navigation={navigation}
         />
       </View>
 
