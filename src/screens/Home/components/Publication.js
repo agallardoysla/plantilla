@@ -55,6 +55,7 @@ export default function Publication({ post, navigation, showSharePost, showFullC
             style={[styles.image_post, i >= 1 ? { marginLeft: 10 } : {}]}
             key={i}
             resizeMode="contain"
+            fadeDuration={0}
           />
         ))}
       </ScrollView>
