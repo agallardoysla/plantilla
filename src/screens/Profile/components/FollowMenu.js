@@ -26,7 +26,6 @@ export default function FollowMenu({user, loggedUserFollowProfile}) {
       </MenuTrigger>
       {loggedUserFollowProfile ? (
         <MenuOptions customStyles={menuOptions(loggedUserFollowProfile)}>
-          <MenuOption onSelect={doAction} text="Dejar de seguir" />
           <MenuOption onSelect={doAction} text="Añadir a VIP" />
           <MenuOption onSelect={doAction} text="Bloquear" />
         </MenuOptions>
