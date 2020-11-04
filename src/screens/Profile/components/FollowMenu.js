@@ -17,7 +17,11 @@ export default function FollowMenu({user, loggedUserFollowProfile}) {
         style={styles.openMenuButton}
         onPress={() => setShowFollowMenu(true)}>
         <Icon
-          style={styles.menuFollowIcon}
+          style={
+            showFollowMenu
+              ? styles.menuFollowIconClose
+              : styles.menuFollowIconOpen
+          }
           source={'play_arrow'}
           color={loggedUserFollowProfile ? 'black' : 'white'}
           size={24}
@@ -47,8 +51,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  menuFollowIcon: {
+  menuFollowIconOpen: {
     transform: [{rotate: '90deg'}],
+  },
+  menuFollowIconClose: {
+    transform: [{rotate: '270deg'}],
   },
 });
 
