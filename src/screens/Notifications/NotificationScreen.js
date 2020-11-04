@@ -20,11 +20,13 @@ export default function NotificationScreen() {
     <SafeAreaView style={styles.container}>
       <Text style={{ color: '#E9FC64', marginTop: 10 }}>NOTIFICACIONES</Text>
       <ScrollView>
-        {
-          notifications.map((notification) =>
-            <Notification type={notification.event} notification={notification.from_user} />
-          )
-        }
+        {notifications.map((notification, i) => (
+          <Notification
+            type={notification.event}
+            notification={notification.from_user}
+            key={i}
+          />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );

@@ -29,11 +29,11 @@ interface NotificationProps {
 /** 
 *[Notification]: Componente para visualizar las notificaciones dentro de la pantalla dependiendo el tipo de notificaciones. 
 */
-const Notification = ({ type, notification, onPress, onAccept, onReject }: NotificationProps) => {
+const Notification = ({ type, notification, onPress, onAccept, onReject, ...props }: NotificationProps) => {
   switch (type) {
     case 'comment_comment_created' || 'post_comment_created':
       return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={styles.container} {...props}>
           <View style={styles.userImgContainer}>
             <Image style={styles.userImg} source={{ uri: notification?.photo || 'https://images.pexels.com/photos/5422694/pexels-photo-5422694.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' }} />
           </View>
@@ -47,7 +47,7 @@ const Notification = ({ type, notification, onPress, onAccept, onReject }: Notif
       )
     case 'follow_request_received':
       return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={styles.container} {...props}>
           <View style={styles.userImgContainer}>
             <Image style={styles.userImg} source={{ uri: notification?.photo || 'https://images.pexels.com/photos/5422694/pexels-photo-5422694.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' }} />
           </View>
@@ -62,7 +62,7 @@ const Notification = ({ type, notification, onPress, onAccept, onReject }: Notif
       )
     case 'follow_request_accepted':
       return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={styles.container} {...props}>
           <View style={styles.userImgContainer}>
             <Image style={styles.userImg} source={{ uri: notification?.photo || 'https://images.pexels.com/photos/5422694/pexels-photo-5422694.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' }} />
           </View>
@@ -76,7 +76,7 @@ const Notification = ({ type, notification, onPress, onAccept, onReject }: Notif
       )
     case 'post_reaction_created':
       return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={styles.container} {...props}>
           <View style={styles.userImgContainer}>
             <Image style={styles.userImg} source={{ uri: notification?.photo || 'https://images.pexels.com/photos/5422694/pexels-photo-5422694.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' }} />
           </View>
