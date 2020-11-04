@@ -169,7 +169,7 @@ const HomeStack = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 5 * 1000);
+    setTimeout(() => setLoading(false), 10 * 1000);
     // Cargar los posts de Home
     const initHomePostsCount = 20;
     posts_services.list(initHomePostsCount, 0).then((res) => {
