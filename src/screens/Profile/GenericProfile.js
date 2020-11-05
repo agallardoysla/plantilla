@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-  Dimensions,
-} from 'react-native';
+import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import users_services from '../../services/users_services';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -15,12 +8,9 @@ import ProfileRightColumn from './components/ProfileRightColumn';
 import ProfileCenterColumn from './components/ProfileCenterColumn';
 
 const numColumns = 3; //para el flatList
-const windowWidth = Dimensions.get('window').width;
 
 export default function GenericProfile({navigation, localUser, isLoggedUser}) {
   const [usersPosts, setUsersPosts] = useState([]);
-  const [followers, setFollowers] = useState(localUser.followers_with_details);
-  const [followeds, setFolloweds] = useState(localUser.following_with_details);
 
   useEffect(() => {
     users_services.listPosts(localUser.id).then((res) => {
