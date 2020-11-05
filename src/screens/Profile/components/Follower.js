@@ -36,16 +36,16 @@ const Follower = ({follower, navigation}) => {
   };
 
   const doFollow = () => {
-    setUserFollowProfile(!userFollowProfile);
     if (userFollowProfile) {
       dispatch(unfollowUser(follower));
-      dispatch(unfollowOtherUser({user_id: user.id, ...user}));
+      dispatch(unfollowOtherUser(user));
       users_services.cancelFollow(follower.user_id);
     } else {
       dispatch(followUser(follower));
-      dispatch(followOtherUser({user_id: user.id, ...user}));
+      dispatch(followOtherUser(user));
       users_services.follow(follower.user_id);
     }
+    setUserFollowProfile(!userFollowProfile);
   };
 
   return (

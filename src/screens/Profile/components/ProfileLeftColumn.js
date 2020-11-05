@@ -12,8 +12,8 @@ export default function ProfileLeftColumn({user, navigation, style, isLoggedUser
     : useSelector(getOtherUserFolloweds);
 
   const followers = isLoggedUser
-      ? useSelector(getUserFollowers)
-      : useSelector(getOtherUserFollowers);
+    ? useSelector(getUserFollowers)
+    : useSelector(getOtherUserFollowers);
 
   const goToFollowed = () => {
     navigation.navigate('Followeds', {isLoggedUser});

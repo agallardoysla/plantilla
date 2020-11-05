@@ -17,16 +17,16 @@ export default function OtherProfileRightColumn({user}) {
   const dispatch = useDispatch();
 
   const doFollow = () => {
-    setLoggedUserFollowProfile(!loggedUserFollowProfile);
     if (loggedUserFollowProfile) {
       dispatch(unfollowUser({user_id: user.id}));
-      dispatch(unfollowOtherUser({user_id: loggedUser.id, ...loggedUser}));
+      dispatch(unfollowOtherUser(loggedUser));
       users_services.cancelFollow(user.id);
     } else {
       dispatch(followUser({user_id: user.id}));
-      dispatch(followOtherUser({user_id: loggedUser.id, ...loggedUser}));
+      dispatch(followOtherUser(loggedUser));
       users_services.follow(user.id);
     }
+    setLoggedUserFollowProfile(!loggedUserFollowProfile);
   };
 
   return (

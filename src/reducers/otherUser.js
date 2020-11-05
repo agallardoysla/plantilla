@@ -9,12 +9,13 @@ export const otherUserSlice = createSlice({
       return otherUser;
     },
     followOtherUser: (otherUser, action) => {
-      otherUser.followers_with_details.push(action.payload);
+      const loggedUser = {user_id: action.payload.id, ...action.payload};
+      otherUser.followers_with_details.push(loggedUser);
       return otherUser;
     },
     unfollowOtherUser: (otherUser, action) => {
       otherUser.followers_with_details = otherUser.followers_with_details.filter(
-        (f) => f.user_id !== action.payload.user_id,
+        (f) => f.user_id !== action.payload.id,
       );
       return otherUser;
     },
