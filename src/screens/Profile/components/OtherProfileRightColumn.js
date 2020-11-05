@@ -3,37 +3,30 @@ import {StyleSheet, Text, View} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import FollowMenu from './FollowMenu';
-import {useSelector} from 'react-redux';
-import {getUser} from '../../../reducers/user';
+import {useDispatch, useSelector} from 'react-redux';
+import {followUser, getUser, unfollowUser} from '../../../reducers/user';
+import users_services from '../../../services/users_services';
+import { followOtherUser, unfollowOtherUser } from '../../../reducers/otherUser';
 
 export default function OtherProfileRightColumn({user}) {
   const loggedUser = useSelector(getUser);
   const profileFollowLoggedUser = user.following_with_details.filter((u) => u.user_id === loggedUser.id).length > 0;
   const [loggedUserFollowProfile, setLoggedUserFollowProfile] = useState(
-    user.following_with_details.filter((u) => u.user_id === user.id).length > 0,
+    loggedUser.following_with_details.filter((u) => u.user_id === user.id).length > 0,
   );
+  const dispatch = useDispatch();
 
   const doFollow = () => {
-    if (loggedUserFollowProfile) {
-    //   users_services.cancelFollow(user.id);
-    //   const newFollowers = followers.filter((f) => f.user_id !== user.id);
-    //   setFollowers(newFollowers);
-    //   user.followers_with_details = newFollowers;
-    //   unfollowUser({user_id: user.id});
-    // } else {
-    //   users_services.follow(user.id);
-    //   const newFollowers = [
-    //     ...followers,
-    //     {user_id: user.id, display_name: user.display_name},
-    //   ];
-    //   setFollowers(newFollowers);
-    //   user.followers_with_details = newFollowers;
-    //   followUser({
-    //     user_id: user.id,
-    //     display_name: user.display_name,
-    //   });
-    }
     setLoggedUserFollowProfile(!loggedUserFollowProfile);
+    if (loggedUserFollowProfile) {
+      dispatch(unfollowUser({user_id: user.id}));
+      dispatch(unfollowOtherUser({user_id: loggedUser.id, ...loggedUser}));
+      users_services.cancelFollow(user.id);
+    } else {
+      dispatch(followUser({user_id: user.id}));
+      dispatch(followOtherUser({user_id: loggedUser.id, ...loggedUser}));
+      users_services.follow(user.id);
+    }
   };
 
   return (

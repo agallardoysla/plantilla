@@ -9,12 +9,12 @@ export const otherUserSlice = createSlice({
       return otherUser;
     },
     followOtherUser: (otherUser, action) => {
-      otherUser.following_with_details.push(action.payload);
+      otherUser.followers_with_details.push(action.payload);
       return otherUser;
     },
     unfollowOtherUser: (otherUser, action) => {
-      otherUser.following_with_details = otherUser.following_with_details.filter(
-        (f) => f.otherUser_id !== action.payload.otherUser_id,
+      otherUser.followers_with_details = otherUser.followers_with_details.filter(
+        (f) => f.user_id !== action.payload.user_id,
       );
       return otherUser;
     },
@@ -29,8 +29,8 @@ export const {
 
 export const getOtherUser = (state) => state.otherUser;
 
-export const getOtherUserFollowers = (state) => state.user.followers_with_details;
+export const getOtherUserFollowers = (state) => state.otherUser.followers_with_details;
 
-export const getOtherUserFolloweds = (state) => state.user.following_with_details;
+export const getOtherUserFolloweds = (state) => state.otherUser.following_with_details;
 
 export default otherUserSlice.reducer;

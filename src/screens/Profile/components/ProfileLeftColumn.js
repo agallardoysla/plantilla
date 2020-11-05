@@ -1,15 +1,26 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import { useSelector } from 'react-redux';
 import FormButtonCount from '../../../components/FormButtonCount';
 import FormButton from '../../../components/FormButton_small';
+import { getOtherUserFolloweds, getOtherUserFollowers } from '../../../reducers/otherUser';
+import { getUserFolloweds, getUserFollowers } from '../../../reducers/user';
 
-export default function ProfileLeftColumn({user, navigation, style}) {
-  const go_to_followed = () => {
-    navigation.navigate('Followeds', {profile: user});
+export default function ProfileLeftColumn({user, navigation, style, isLoggedUser}) {
+  const followeds = isLoggedUser
+    ? useSelector(getUserFolloweds)
+    : useSelector(getOtherUserFolloweds);
+
+  const followers = isLoggedUser
+      ? useSelector(getUserFollowers)
+      : useSelector(getOtherUserFollowers);
+
+  const goToFollowed = () => {
+    navigation.navigate('Followeds', {isLoggedUser});
   };
 
-  const go_to_followers = () => {
-    navigation.navigate('Followers', {profile: user});
+  const goToFollowers = () => {
+    navigation.navigate('Followers', {isLoggedUser});
   };
 
   return (
@@ -17,15 +28,9 @@ export default function ProfileLeftColumn({user, navigation, style}) {
       <Text style={styles.text_profile}>Publicaciones</Text>
       <FormButtonCount buttonTitle={user.posts_count.POST_TYPE_PRUEBA} />
       <Text style={styles.text_profile}>Seguidos</Text>
-      <FormButtonCount
-        buttonTitle={user.following_with_details.length}
-        onPress={go_to_followed}
-      />
+      <FormButtonCount buttonTitle={followeds.length} onPress={goToFollowed} />
       <Text style={styles.text_profile}>Seguidores</Text>
-      <FormButtonCount
-        buttonTitle={user.followers_with_details.length}
-        onPress={go_to_followers}
-      />
+      <FormButtonCount buttonTitle={followers.length} onPress={goToFollowers} />
 
       <FormButton
         buttonTitle="CHALLENGE"

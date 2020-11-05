@@ -6,10 +6,16 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileLeftColumn from './components/ProfileLeftColumn';
 import ProfileRightColumn from './components/ProfileRightColumn';
 import ProfileCenterColumn from './components/ProfileCenterColumn';
+import {useSelector} from 'react-redux';
+import {getUser} from '../../reducers/user';
+import {getOtherUser} from '../../reducers/otherUser';
 
 const numColumns = 3; //para el flatList
 
-export default function GenericProfile({navigation, localUser, isLoggedUser}) {
+export default function GenericProfile({navigation, isLoggedUser}) {
+  const localUser = isLoggedUser
+    ? useSelector(getUser)
+    : useSelector(getOtherUser);
   const [usersPosts, setUsersPosts] = useState([]);
 
   useEffect(() => {
@@ -54,6 +60,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           style={[styles.profileDataColumn, styles.columnLeft]}
           user={localUser}
           navigation={navigation}
+          isLoggedUser={isLoggedUser}
         />
         <ProfileCenterColumn
           style={[styles.profileDataColumn, styles.columnCenter]}
