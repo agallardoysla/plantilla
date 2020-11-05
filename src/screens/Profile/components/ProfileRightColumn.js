@@ -4,7 +4,7 @@ import FormButtonPatreon from '../../../components/FormButtonPatreon';
 import MyProfileRightColumn from './MyProfileRightColumn';
 import OtherProfileRightColumn from './OtherProfileRightColumn';
 
-export default function ProfileRightColumn({user, isLoggedUser, style}) {
+export default function ProfileRightColumn({user, isLoggedUser, style, navigation}) {
   const dataPatreon = [
     {
       id: 1,
@@ -27,7 +27,7 @@ export default function ProfileRightColumn({user, isLoggedUser, style}) {
         <FormButtonPatreon buttonTitle={patreon.name} key={i} />
       ))}
       {isLoggedUser ? (
-        <MyProfileRightColumn />
+        <MyProfileRightColumn navigation={navigation} />
       ) : (
         <OtherProfileRightColumn user={user} />
       )}
