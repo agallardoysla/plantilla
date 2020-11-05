@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StatusBar } from 'react-native';
 
 //import a from '../screens/Auth'
@@ -45,7 +45,7 @@ import users_services from '../services/users_services';
 import { setNotifications } from '../reducers/notifications';
 import { setConversations } from '../reducers/conversations';
 import chats_services from '../services/chats_services';
-
+import Loading from '../components/Loading';
 import { useSelector } from 'react-redux';
 import { getNotifications } from '../reducers/notifications';
 
@@ -168,8 +168,10 @@ const NewPublicationGroup = ({ navigation }) => {
 const HomeStack = () => {
   const dispatch = useDispatch();
   const notifications = useSelector(getNotifications);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setTimeout(() => setLoading(false), 10 * 1000);
     // Cargar los posts de Home
     const initHomePostsCount = 20;
     posts_services.list(initHomePostsCount, 0).then((res) => {
@@ -208,6 +210,10 @@ const HomeStack = () => {
     icon_search_active: require('../assets/icono_buscar_activo.png'),
     icon_new_publication_active: require('../assets/icono_camara_activo.png'),
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
