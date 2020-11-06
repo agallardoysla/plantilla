@@ -49,4 +49,8 @@ export const {
 
 export const getUser = (state) => state.user;
 
+export const getUserFollowers = (state) => state.user.followers_with_details;
+
+export const getUserFolloweds = (state) => state.user.following_with_details;
+
 export default userSlice.reducer;

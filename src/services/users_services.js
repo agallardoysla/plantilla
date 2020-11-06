@@ -17,8 +17,8 @@ export default {
   removeFollower: (userId) => generic_service.doDelete(`${url}me/followers/${userId}/`),
   reportUser: (userId, cause) => generic_service.doPost(`${url}${userId}/report/`, cause),
   cancelReportUser: (userId) => generic_service.doDelete(`${url}${userId}/report/`),
-  blackUser: (userId) => generic_service.doGet(`${url}${userId}/block/`),
-  cancelBlackUser: (userId) => generic_service.doDelete(`${url}${userId}/block/`),
+  blockUser: (userId) => generic_service.doGet(`${url}${userId}/block/`),
+  cancelBlockUser: (userId) => generic_service.doDelete(`${url}${userId}/block/`),
   followerVip: (userId) => generic_service.doGet(`${url}${userId}/vip/`),
   removeFollowerVip: (userId) => generic_service.doDelete(`${url}${userId}/vip/`),
 };

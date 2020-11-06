@@ -5,24 +5,25 @@ import GoBackButton from '../../../components/GoBackButton';
 import Follower from './Follower';
 import FormSearchInput from '../../../components/FormSearchInput';
 import utils from '../../../utils/utils.js';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+import { getOtherUserFollowers } from '../../../reducers/otherUser';
+import { getUserFollowers } from '../../../reducers/user';
 
 const Followers = ({ navigation, route }) => {
-  const [filteredFollowers, setFilteredFollowers] = useState(route.params.profile.followers_with_details);
+  const followers = route.params.isLoggedUser
+    ? useSelector(getUserFollowers)
+    : useSelector(getOtherUserFollowers);
+  const [filteredFollowers, setFilteredFollowers] = useState(followers);
   const [searchString, setSearchString] = useState('');
 
   const searchFollowers = (searchedString) => {
     setSearchString(searchedString);
     if (searchedString.length > 0) {
       setFilteredFollowers(
-        utils.filterByString(
-          route.params.profile.followers_with_details,
-          (f) => f.display_name,
-          searchedString,
-        ),
+        utils.filterByString(followers, (f) => f.display_name, searchedString),
       );
     } else {
-      setFilteredFollowers(route.params.profile.followers_with_details);
+      setFilteredFollowers(followers);
     }
   };
 

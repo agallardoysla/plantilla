@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -19,11 +19,26 @@ import posts_services from '../../../services/posts_services';
 import PublicationsComments from '../../Home/components/PublicationsComments';
 import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
-import { useSelector } from 'react-redux';
-import { getUser } from '../../../reducers/user';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUser} from '../../../reducers/user';
+import {getPost, getPostLikes, likePost, unlikePost} from '../../../reducers/posts';
+import Counter from '../../../components/Counter';
 let window = Dimensions.get('window');
 
-export default function Publication({ post, navigation, showSharePost, showFullContent }) {
+export default function Publication({ postId, navigation, showSharePost, showFullContent }) {
+  const post = useSelector(getPost(postId));
+  const user = useSelector(getUser);
+
+  const getLikesCounter = () => {
+    return post.reactionscount.REACTION_TYPE_PRUEBA
+      ? post.reactionscount.REACTION_TYPE_PRUEBA
+      : 0;
+  };
+
+  const getILiked = () => {
+    return post.reactions_details.filter((value) => value.user_id === user.id).length > 0;
+  };
+
   const [showComments, setShowComments] = useState(true);
   const [loadingComments, setLoadingComments] = useState(false);
   const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
@@ -31,15 +46,10 @@ export default function Publication({ post, navigation, showSharePost, showFullC
   );
   const [comments, setComments] = useState(post.comments);
   const [savingComment, setSavingComment] = useState(false);
-  const user = useSelector(getUser);
-  const [likesCounter, setLikesCounter] = useState(
-    post.reactionscount.REACTION_TYPE_PRUEBA,
-  );
-  const [iLiked, setILiked] = useState(
-    post.reactions_details.filter((value) => value.user_id === user.id).length >
-    0,
-  );
+  // const [likesCounter, setLikesCounter] = useState(getLikesCounter());
+  // const [iLiked, setILiked] = useState(getILiked());
   const [countComments, setCountComments] = useState(post.comments.length);
+  const dispatch = useDispatch();
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
@@ -55,18 +65,19 @@ export default function Publication({ post, navigation, showSharePost, showFullC
             style={[styles.image_post, i >= 1 ? { marginLeft: 10 } : {}]}
             key={i}
             resizeMode="contain"
+            fadeDuration={0}
           />
         ))}
       </ScrollView>
     ) : (
-        <Video
-          video={{ uri: files[0].url }}
-          style={styles.image_post}
-          autoplay={true}
-          defaultMuted={true}
-          loop={true}
-        />
-      );
+      <Video
+        video={{uri: files[0].url}}
+        style={styles.image_post}
+        autoplay={true}
+        defaultMuted={true}
+        loop={true}
+      />
+    );
   };
 
   const getAndSetShowComments = () => {
@@ -95,22 +106,29 @@ export default function Publication({ post, navigation, showSharePost, showFullC
   };
 
   const AddLike = async () => {
-    try {
-      //si contiene algo lo elimino si no lo agrego
-      if (iLiked) {
-        setLikesCounter(likesCounter - 1);
-        post.reactionscount.REACTION_TYPE_PRUEBA = post.reactionscount.REACTION_TYPE_PRUEBA - 1;
-        setILiked(false);
-        posts_services.deleteReaction(post.id);
-      } else {
-        setLikesCounter(likesCounter + 1);
-        post.reactionscount.REACTION_TYPE_PRUEBA = post.reactionscount.REACTION_TYPE_PRUEBA + 1;
-        setILiked(true);
-        posts_services.addReaction(post.id, 1);
+    // console.log('likes', likesCounter);
+    // if (iLiked) {
+    //   setILiked(false);
+    //   setLikesCounter(likesCounter - 1);
+    // } else {
+    //   setILiked(true);
+    //   setLikesCounter(likesCounter + 1);
+    // }
+    setTimeout(() => {
+      try {
+        //si contiene algo lo elimino si no lo agrego
+        if (getILiked()) {
+          posts_services.deleteReaction(post.id);
+          dispatch(unlikePost({postId: post.id, userId: user.id}));
+        } else {
+          posts_services.addReaction(post.id, 2);
+          dispatch(likePost({postId: post.id, userId: user.id}));
+          // setLikesCounter(likesCounter + 1);
+        }
+      } catch (error) {
+        console.log('Error de agregar like' + error);
       }
-    } catch (error) {
-      console.log('Error de agregar like' + error);
-    }
+    }, 1);
   };
 
   return (
@@ -177,80 +195,59 @@ export default function Publication({ post, navigation, showSharePost, showFullC
         {/*Finaliza Foto de la publicaciòn*/}
 
         {/*Inicio de iconos de la publicaciòn*/}
-        <View style={styles.icon_container}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
+        <View style={styles.icons_container}>
+          <View style={styles.icon_container}>
             <Image
               source={require('../../../assets/ojo_vista.png')}
               style={[styles.icon_post, styles.icon_ojo]}
             />
-            <Text style={styles.icon_numbers_view}>{post.views_count}</Text>
+            <Counter
+              style={styles.icon_numbers_view}
+              value={post.views_count}
+            />
           </View>
 
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
+          <View style={styles.icon_container}>
 
             <TouchableOpacity onPress={AddLike}>
               <Image
                 source={
-                  iLiked
+                  getILiked()
                     ? require('../../../assets/corazon_limon.png')
                     : require('../../../assets/corazon_gris.png')
                 }
               />
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
+              style={styles.icon_numbers_view_container}
               onPress={() =>
                 navigation.navigate('PostLikes', post.user_owner.display_name)
-              }>
-              <Text style={styles.icon_numbers_like}>{likesCounter}</Text>
-            </TouchableOpacity>
+              }> */}
+              <Counter style={styles.icon_numbers_view} value={getLikesCounter()} />
+            {/* </TouchableOpacity> */}
           </View>
 
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
+          <View style={styles.icon_container}>
             <TouchableOpacity onPress={getAndSetShowComments}>
               <Image
                 source={require('../../../assets/comentario.png')}
                 style={[styles.icon_post, styles.icon_comentario]}
               />
             </TouchableOpacity>
-
-            <Text style={styles.icon_numbers_comment}>{countComments}</Text>
+            <Counter style={styles.icon_numbers_view} value={countComments} />
           </View>
 
           <TouchableOpacity
             onPress={() => showSharePost(true, post)}
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
+            style={styles.icon_container}>
             <Image
               source={require('../../../assets/compartir.png')}
               style={[styles.icon_post, styles.icon_compartir]}
             />
           </TouchableOpacity>
 
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
+          <View style={styles.icon_container}>
             <Image
               source={require('../../../assets/menu_desbordamiento.png')}
               style={[styles.icon_post, styles.icon_mostrarMas]}
@@ -279,20 +276,20 @@ export default function Publication({ post, navigation, showSharePost, showFullC
           loadingComments ? (
             <ActivityIndicator color={StylesConfiguration.color} />
           ) : (
-              comments.map((comment, i) => (
-                <PublicationsComments
-                  style={styles.publicationComments}
-                  post={post}
-                  comment={comment}
-                  key={i}
-                  comments={comments}
-                  setComments={setComments}
-                  navigation={navigation}
-                  setCountComments={setCountComments}
-                  countComments={countComments}
-                />
-              ))
-            )
+            comments.map((comment, i) => (
+              <PublicationsComments
+                style={styles.publicationComments}
+                post={post}
+                comment={comment}
+                key={i}
+                comments={comments}
+                setComments={setComments}
+                navigation={navigation}
+                setCountComments={setCountComments}
+                countComments={countComments}
+              />
+            ))
+          )
         ) : null}
 
         {firstTimeLoadingComments && post.comments.length > 3 ? (
@@ -403,13 +400,18 @@ const styles = StyleSheet.create({
     width: window.width,
     minHeight: 360,
   },
-  icon_container: {
+  icons_container: {
     justifyContent: 'center',
     // flex: 1,
     height: 44,
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,
+  },
+  icon_container: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   icon_post: {
     marginRight: 10,
@@ -434,11 +436,19 @@ const styles = StyleSheet.create({
     width: 33,
     height: 10,
   },
+  icon_numbers_view_container: {
+    top: 3,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    marginHorizontal: -5,
+    color: 'white',
+    minWidth: 30,
+  },
   icon_numbers_view: {
     color: 'white',
     fontSize: 14,
-    top: 3,
-    marginHorizontal: -5,
+    marginHorizontal: 5,
   },
   icon_numbers_like: {
     color: 'white',
