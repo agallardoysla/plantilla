@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import React, { useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import FormButton from '../../../components/FormButton';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 
-const Followed = ({follower, navigation}) => {
+const Followed = ({ follower, navigation }) => {
 
   const goToProfile = () => {
     navigation.navigate('HomeGroup', {

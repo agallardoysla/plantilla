@@ -13,20 +13,29 @@ import { getNotifications } from '../../reducers/notifications';
 import Notification from './Notification';
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
-export default function NotificationScreen() {
+export default function NotificationScreen({ navigation }) {
   const notifications = useSelector(getNotifications);
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={{ color: '#E9FC64', marginTop: 10 }}>NOTIFICACIONES</Text>
       <ScrollView>
-        {notifications.map((notification, i) => (
-          <Notification
-            type={notification.event}
-            notification={notification.from_user}
-            key={i}
-          />
-        ))}
+        {
+          notifications.map((notification, index) =>
+            <Notification
+              key={index}
+              type={notification.event}
+              notification={notification.from_user}
+              onProfile={() =>
+                navigation.navigate('OtherProfile', {
+                  user_id: notification.from_user.user_id,
+                  navigation,
+                })}
+              // onLike={() => navigation.navigate('PublicationDetails', { notification })}
+              date={notification.created_at}
+            />
+          )
+        }
       </ScrollView>
     </SafeAreaView>
   );

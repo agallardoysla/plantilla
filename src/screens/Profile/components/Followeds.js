@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import GoBackButton from '../../../components/GoBackButton';
 import Followed from './Followed';
@@ -10,7 +10,7 @@ import { getUserFolloweds } from '../../../reducers/user';
 import { getOtherUserFolloweds } from '../../../reducers/otherUser';
 
 
-const Followeds = ({navigation, route}) => {
+const Followeds = ({ navigation, route }) => {
   const followeds = route.params.isLoggedUser
     ? useSelector(getUserFolloweds)
     : useSelector(getOtherUserFolloweds);
@@ -28,12 +28,12 @@ const Followeds = ({navigation, route}) => {
     }
   };
 
-  const FollowedItem = ({item}) => (
+  const FollowedItem = ({ item }) => (
     <Followed follower={item} navigation={navigation} />
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.row}>
         <GoBackButton navigation={navigation} />
         <Text style={styles.titulo}>SEGUIDOS</Text>
@@ -48,7 +48,7 @@ const Followeds = ({navigation, route}) => {
         renderItem={FollowedItem}
         keyExtractor={(item, index) => index.toString()}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

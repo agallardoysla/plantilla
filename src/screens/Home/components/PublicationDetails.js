@@ -1,13 +1,21 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from '../../../components/Icon';
 import Publication from './Publication';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function PublicationDetails({navigation, route}) {
+export default function PublicationDetails({ navigation, route }) {
+
+  const { top } = useSafeAreaInsets();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Publication postId={route.params.post.id} navigation={navigation} showFullContent={true} />
-    </View>
+      <View style={{ position: 'absolute', margin: 10, paddingTop: top }}>
+        <Icon source={'boton_volver_atras'} onPress={() => navigation.goBack()} />
+      </View>
+    </SafeAreaView>
   );
 }
 

@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Dimensions, FlatList} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Dimensions, FlatList } from 'react-native';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import GoBackButton from '../../../components/GoBackButton';
 import Follower from './Follower';
 import FormSearchInput from '../../../components/FormSearchInput';
 import utils from '../../../utils/utils.js';
-import {useSelector} from 'react-redux';
-import {getOtherUserFollowers} from '../../../reducers/otherUser';
-import {getUserFollowers} from '../../../reducers/user';
+import { useSelector } from 'react-redux';
+import { getOtherUserFollowers } from '../../../reducers/otherUser';
+import { getUserFollowers } from '../../../reducers/user';
 
-const Followers = ({navigation, route}) => {
+const Followers = ({ navigation, route }) => {
   const followers = route.params.isLoggedUser
     ? useSelector(getUserFollowers)
     : useSelector(getOtherUserFollowers);
@@ -27,12 +27,12 @@ const Followers = ({navigation, route}) => {
     }
   };
 
-  const FollowerItem = ({item}) => (
+  const FollowerItem = ({ item }) => (
     <Follower follower={item} navigation={navigation} />
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.row}>
         <GoBackButton navigation={navigation} />
         <Text style={styles.titulo}>SEGUIDORES</Text>
@@ -47,7 +47,7 @@ const Followers = ({navigation, route}) => {
         renderItem={FollowerItem}
         keyExtractor={(item, index) => index.toString()}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

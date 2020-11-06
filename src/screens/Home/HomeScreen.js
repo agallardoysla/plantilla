@@ -1,19 +1,21 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, FlatList, Image, Text} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, FlatList, Image, Text } from 'react-native';
 import posts_services from '../../services/posts_services';
 import Publication from './components/Publication';
+import Admob from './components/Admob';
 import Modal from 'react-native-modal';
 import FormSearchInput from '../../components/FormSearchInput';
 import users_services from '../../services/users_services';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import chats_services from '../../services/chats_services';
 import IconMessage from '../../components/IconMessage';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {addPosts, getPosts} from '../../reducers/posts';
-import {useDispatch, useSelector} from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { addPosts, getPosts } from '../../reducers/posts';
+import { useDispatch, useSelector } from 'react-redux';
+import KBView from '../../components/KBView';
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({ navigation }) {
   const [page, setPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [valueSearch, setValueSearch] = useState('');
@@ -23,6 +25,7 @@ export default function HomeScreen({navigation}) {
   const pages = [20, 10];
   const posts = useSelector(getPosts);
   const dispatch = useDispatch();
+  const [reloading, setReloading] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -34,6 +37,14 @@ export default function HomeScreen({navigation}) {
     };
     init();
   }, []);
+
+  const reloadPosts = () => {
+    setReloading(true);
+    posts_services.list(20, 0).then((res) => {
+      dispatch(addPosts(res.data));
+      setReloading(false);
+    });
+  }
 
   const getPageOffset = (_page) => {
     let res = 0;
@@ -94,22 +105,29 @@ export default function HomeScreen({navigation}) {
   };
 
   const shareSelectedPost = (userId) => {
+    // console.warn(userId);
     console.log(userId, `[post:${sharedPost.id}]`);
-    chats_services.sendMessage(userId, {text: `[post:${sharedPost.id}]`});
+    chats_services.sendMessage(userId, { text: `[post:${sharedPost.id}]` });
     setShowModalAndContext(false);
   };
 
-  const PublicationItem = ({item}) => {
-    return (
-      <Publication
-        postId={item.id}
-        navigation={navigation}
-        showSharePost={setShowModalAndContext}
-      />
-    );
+  const PublicationItem = ({ item, index }) => {
+    if (index % 3 === 2) {
+      return (
+        <Admob />
+      )
+    } else {
+      return (
+        <Publication
+          postId={item.id}
+          navigation={navigation}
+          showSharePost={setShowModalAndContext}
+        />
+      );
+    }
   };
 
-  const SearchedProfileItem = ({item}) => {
+  const SearchedProfileItem = ({ item }) => {
     return (
       <View style={styles.user}>
         <Image
@@ -139,15 +157,19 @@ export default function HomeScreen({navigation}) {
           />
         </TouchableOpacity>
       </View>
-
-      <FlatList
-        data={posts}
-        renderItem={PublicationItem}
-        onEndReachedThreshold={300}
-        onEndReached={loadPost}
-        bouncesZoom={true}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      <KBView>
+        <FlatList
+          scrollEnabled={false}
+          data={posts}
+          onRefresh={() => reloadPosts()}
+          refreshing={reloading}
+          renderItem={PublicationItem}
+          onEndReachedThreshold={300}
+          onEndReached={loadPost}
+          bouncesZoom={true}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </KBView>
       <Modal
         isVisible={showModal}
         style={styles.shareModal}
