@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import Counter from '../../../components/Counter';
 import FormImageIcon from '../../../components/FormImageIcon';
 import FormLike from '../../../components/FormLike';
 import profileLikes from '../../../services/profiles_services';
@@ -8,14 +9,14 @@ import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 export default function ProfileCenterColumn({user, navigation, style, isLoggedUser}) {
   const [iLiked, setILiked] = useState(isLoggedUser);
+  const [likesCounter, setLikesCounter] = useState('');
 
   useEffect(() => {
     if (!isLoggedUser) {
-      profileLikes
-        .getReactions(user.id)
-        .then((res) =>
-          setILiked(res.data.filter((item) => item.user === user.id).length >= 1),
-        );
+      profileLikes.getReactions(user.id).then((res) => {
+        setILiked(res.data.filter((item) => item.user === user.id).length >= 1);
+        setLikesCounter(res.data.length);
+      });
     }
   }, []);
 
@@ -23,15 +24,11 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
     try {
       //si contiene algo lo elimino si no lo agrego
       if (iLiked) {
-        profileLikes.deleteReactions(user.id).then((res) => {
-          console.log('like eliminado');
-          // setLikesCounter(likesCounter + 1);
-        });
+        setLikesCounter(likesCounter - 1);
+        profileLikes.deleteReactions(user.id);
       } else {
-        profileLikes.addReactions(user.id, 2).then((res) => {
-          console.log('like agregado');
-          // setLikesCounter(likesCounter + 1);
-        });
+        setLikesCounter(likesCounter + 1);
+        profileLikes.addReactions(user.id);
       }
       setILiked(!iLiked);
     } catch (error) {
@@ -83,7 +80,7 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
       <TouchableOpacity onPress={addReactions} disabled={isLoggedUser}>
         <View style={styles.folowersInfo}>
           <FormLike iLiked={iLiked} />
-          <Text style={styles.icon_numbers}>{8}k</Text>
+          <Counter value={likesCounter} style={styles.icon_numbers} />
         </View>
       </TouchableOpacity>
 
