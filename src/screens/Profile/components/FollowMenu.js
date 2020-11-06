@@ -1,74 +1,61 @@
-import React, { useState } from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
+import React, {useState} from 'react';
+import {StyleSheet} from 'react-native';
+import {
+  Menu,
+  MenuOption,
+  MenuOptions,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 import Icon from '../../../components/Icon';
+import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
-export default function FollowMenu({user}) {
-  const [loggedUserFollowProfile, setLoggedUserFollowProfile] = useState(
-    user.following_with_details.filter((u) => u.user_id === user.id).length > 0,
-  );
+export default function FollowMenu({user, loggedUserFollowProfile}) {
   const [showFollowMenu, setShowFollowMenu] = useState(false);
 
-  const doFollow = () => {
-    if (loggedUserFollowProfile) {
-    //   users_services.cancelFollow(user.id);
-    //   const newFollowers = followers.filter((f) => f.user_id !== user.id);
-    //   setFollowers(newFollowers);
-    //   user.followers_with_details = newFollowers;
-    //   unfollowUser({user_id: user.id});
-    // } else {
-    //   users_services.follow(user.id);
-    //   const newFollowers = [
-    //     ...followers,
-    //     {user_id: user.id, display_name: user.display_name},
-    //   ];
-    //   setFollowers(newFollowers);
-    //   user.followers_with_details = newFollowers;
-    //   followUser({
-    //     user_id: user.id,
-    //     display_name: user.display_name,
-    //   });
-    }
-    setLoggedUserFollowProfile(!loggedUserFollowProfile);
+  const addToVip = () => {
+    users_services.followerVip(user.id);
+    setShowFollowMenu(false);
   };
+
+  const removeFromVip = () => {};
+
+  const blockUser = () => {
+    users_services.blockUser(user.id);
+    setShowFollowMenu(false);
+  };
+
+  const hidePublications = () => {};
 
   return (
     <Menu
       opened={showFollowMenu}
       onBackdropPress={() => setShowFollowMenu(false)}>
       <MenuTrigger
-        style={[
-          styles.followButton,
-          loggedUserFollowProfile ? styles.followedButton : {},
-        ]}
+        style={styles.openMenuButton}
         onPress={() => setShowFollowMenu(true)}>
-        <Text
-          style={[
-            styles.followText,
-            loggedUserFollowProfile ? {color: 'black'} : {color: 'white'},
-          ]}>
-          {loggedUserFollowProfile ? 'Seguido' : 'Seguir'}
-        </Text>
         <Icon
-          style={styles.menuFollowIcon}
+          style={
+            showFollowMenu
+              ? styles.menuFollowIconClose
+              : styles.menuFollowIconOpen
+          }
           source={'play_arrow'}
           color={loggedUserFollowProfile ? 'black' : 'white'}
           size={24}
+          onPress={() => setShowFollowMenu(true)}
         />
       </MenuTrigger>
       {loggedUserFollowProfile ? (
-        <MenuOptions customStyles={menuOptions}>
-          <MenuOption onSelect={doFollow} text="Dejar de seguir" />
-          <MenuOption onSelect={doFollow} text="Añadir a VIP" />
-          <MenuOption onSelect={doFollow} text="Bloquear" />
+        <MenuOptions customStyles={menuOptions(loggedUserFollowProfile)}>
+          <MenuOption onSelect={addToVip} text="Añadir a VIP" />
+          <MenuOption onSelect={blockUser} text="Bloquear" />
         </MenuOptions>
       ) : (
-        <MenuOptions customStyles={menuOptions}>
-          <MenuOption onSelect={doFollow} text="Seguir" />
-          <MenuOption onSelect={doFollow} text="Añadir a VIP" />
-          <MenuOption onSelect={doFollow} text="Bloquear" />
-          <MenuOption onSelect={doFollow} text="Ocultar publicaciones" />
+        <MenuOptions customStyles={menuOptions(loggedUserFollowProfile)}>
+          <MenuOption onSelect={addToVip} text="Añadir a VIP" />
+          <MenuOption onSelect={blockUser} text="Bloquear" />
+          <MenuOption onSelect={hidePublications} text="Ocultar publicaciones" />
         </MenuOptions>
       )}
     </Menu>
@@ -76,44 +63,41 @@ export default function FollowMenu({user}) {
 };
 
 const styles = StyleSheet.create({
-  followButton: {
-    flexDirection: 'row',
+  openMenuButton: {
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 110,
-    borderColor: StylesConfiguration.color,
-    padding: 5,
-    borderWidth: 1,
-    borderRadius: 10,
-    marginTop: 3,
-    height: 35,
   },
-  followText: {
-    fontSize: 15,
-    marginRight: 10,
-  },
-  followedButton: {
-    backgroundColor: StylesConfiguration.color,
-  },
-  followedText: {
-    color: 'black',
-  },
-  menuFollowIcon: {
+  menuFollowIconOpen: {
     transform: [{rotate: '90deg'}],
+  },
+  menuFollowIconClose: {
+    transform: [{rotate: '270deg'}],
   },
 });
 
-const menuOptions = {
-  optionsContainer: {
-    backgroundColor: '#898A8D',
-    // padding: 5,
-    borderColor: StylesConfiguration.color,
-    borderWidth: 1.5,
-    borderRadius: 10,
-    width: 110,
-    // left: 5,
-  },
-  optionText: {
-    color: 'black',
-  },
+const menuOptions = (loggedUserFollowProfile) => {
+  const borderWidth = 1.5;
+  const borderColor = StylesConfiguration.color;
+  return {
+    optionsContainer: {
+      backgroundColor: '#898A8D',
+      // padding: 5,
+      borderLeftColor: borderColor,
+      borderRightColor: borderColor,
+      borderBottomColor: borderColor,
+      borderLeftWidth: borderWidth,
+      borderRightWidth: borderWidth,
+      borderBottomWidth: borderWidth,
+      borderBottomLeftRadius: 10,
+      borderBottomRightRadius: 10,
+      width: 110,
+      marginLeft: loggedUserFollowProfile ? 2.5 : 8.5,
+      marginTop: 30,
+    },
+    optionText: {
+      color: 'black',
+    },
+  };
 };

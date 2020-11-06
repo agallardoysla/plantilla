@@ -1,18 +1,39 @@
 import React from 'react';
-import {View, ActivityIndicator, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, ActivityIndicator, Image} from 'react-native';
+import StylesConfiguration from '../utils/StylesConfiguration';
 
-export default function Loading() {
+//Una vez en el home, puedo acceder a los datos del usuario por medio del state user
+export default function LoadingScreen() {
   return (
-    <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color="#6646ee" />
+    <View style={styles.container}>
+      <Image
+        style={styles.logo}
+        source={require('../assets/logo-home.png')}
+        fadeDuration={0}
+      />
+      <Text style={styles.publishing}>Ingresando...</Text>
+      <ActivityIndicator size="large" color={StylesConfiguration.color} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
+  container: {
     flex: 1,
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  logo: {
+    width: 150,
+    height: 150,
+  },
+  publishing: {
+    color: StylesConfiguration.color,
+    fontFamily: StylesConfiguration.fontFamily,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 30,
   },
 });

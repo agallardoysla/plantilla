@@ -102,7 +102,7 @@ export default function HomeScreen({navigation}) {
   const PublicationItem = ({item}) => {
     return (
       <Publication
-        post={item}
+        postId={item.id}
         navigation={navigation}
         showSharePost={setShowModalAndContext}
       />

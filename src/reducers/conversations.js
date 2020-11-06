@@ -5,7 +5,6 @@ export const conversationsSlice = createSlice({
   initialState: [],
   reducers: {
     setConversations: (conversations, action) => {
-      console.log('new conversations!', action.payload);
       conversations = action.payload;
       return conversations;
     },

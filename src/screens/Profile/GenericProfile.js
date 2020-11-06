@@ -1,26 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-  Dimensions,
-} from 'react-native';
+import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import users_services from '../../services/users_services';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileLeftColumn from './components/ProfileLeftColumn';
 import ProfileRightColumn from './components/ProfileRightColumn';
 import ProfileCenterColumn from './components/ProfileCenterColumn';
+import {useSelector} from 'react-redux';
+import {getUser} from '../../reducers/user';
+import {getOtherUser} from '../../reducers/otherUser';
 
 const numColumns = 3; //para el flatList
-const windowWidth = Dimensions.get('window').width;
 
-export default function GenericProfile({navigation, localUser, isLoggedUser}) {
+export default function GenericProfile({navigation, isLoggedUser}) {
+  const localUser = isLoggedUser
+    ? useSelector(getUser)
+    : useSelector(getOtherUser);
   const [usersPosts, setUsersPosts] = useState([]);
-  const [followers, setFollowers] = useState(localUser.followers_with_details);
-  const [followeds, setFolloweds] = useState(localUser.following_with_details);
 
   useEffect(() => {
     users_services.listPosts(localUser.id).then((res) => {
@@ -64,6 +60,7 @@ export default function GenericProfile({navigation, localUser, isLoggedUser}) {
           style={[styles.profileDataColumn, styles.columnLeft]}
           user={localUser}
           navigation={navigation}
+          isLoggedUser={isLoggedUser}
         />
         <ProfileCenterColumn
           style={[styles.profileDataColumn, styles.columnCenter]}
