@@ -13,6 +13,6 @@ export default {
   //traer las reactions
   getReactions: (id) => generic_service.doGet(`${url}${id}/reactions/`),
   //agregar like
-  addReaction: (id, like_value) => generic_service.doPost(`${url}${id}/reactions/`, like_value),
+  addReaction: (id, like_value) => generic_service.doPost(`${url}${id}/reactions/`, {reaction_type: like_value}),
   deleteReaction:(id) => generic_service.doDelete(`${url}${id}/reactions/`),
 };

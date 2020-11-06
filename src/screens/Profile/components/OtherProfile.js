@@ -1,40 +1,36 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {useSelector} from 'react-redux';
+import {View, StyleSheet, ActivityIndicator} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {getUser} from '../../../reducers/user';
 import users_services from '../../../services/users_services';
 import GenericProfile from '../GenericProfile';
+import {updateOtherUser} from '../../../reducers/otherUser';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function OtherProfile({route}) {
   const user = useSelector(getUser);
-  const [otherUser, setOtherUser] = useState();
-  const [userId, setuserId] = useState(route.params.user_id);
+  const userId = route.params.user_id;
   const navigation = route.params.navigation;
+  const [loading, setLoading] = useState(userId !== user.id);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(route.params.user_id);
     if (userId !== user.id) {
-      users_services.get(userId).then((res) => setOtherUser(res.data));
+      users_services.get(userId).then((res) => {
+        dispatch(updateOtherUser(res.data));
+        setLoading(false);
+      });
     }
-  }, [userId]);
+  }, []);
 
-  return userId !== user.id ? (
-    otherUser ? (
-      <GenericProfile
-        localUser={otherUser}
-        isLoggedUser={false}
-        navigation={navigation}
-      />
-    ) : (
-      <View style={styles.container} />
-    )
+  return loading ? (
+    <SafeAreaView style={styles.container}>
+      <ActivityIndicator size="small" color={StylesConfiguration.color} />
+    </SafeAreaView>
   ) : (
-    <GenericProfile
-      localUser={user}
-      isLoggedUser={true}
-      navigation={navigation}
-    />
+    <GenericProfile isLoggedUser={userId === user.id} navigation={navigation} />
   );
 }
 
@@ -42,5 +38,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

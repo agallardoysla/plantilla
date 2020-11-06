@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-const IconMessage = ({ navigation, _styles, ...props }) => {
+const IconMessage = ({ navigation, ...props }) => {
   return (
     <TouchableOpacity {...props}>
       <Image

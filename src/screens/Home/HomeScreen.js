@@ -119,7 +119,7 @@ export default function HomeScreen({ navigation }) {
     } else {
       return (
         <Publication
-          post={item}
+          postId={item.id}
           navigation={navigation}
           showSharePost={setShowModalAndContext}
         />

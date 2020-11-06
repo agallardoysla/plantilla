@@ -40,7 +40,7 @@ const Notification = ({ type, notification, onPress, onProfile, onAccept, onLike
   switch (type) {
     case 'comment_comment_created':
       return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={styles.container} {...props}>
           <View style={styles.userImgContainer}>
             <Image style={styles.userImg} source={{ uri: notification?.photo || 'https://images.pexels.com/photos/5422694/pexels-photo-5422694.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' }} />
           </View>
@@ -57,7 +57,7 @@ const Notification = ({ type, notification, onPress, onProfile, onAccept, onLike
       )
     case 'follow_request_received':
       return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={styles.container} {...props}>
           <View style={styles.userImgContainer}>
             <Image style={styles.userImg} source={{ uri: notification?.photo || 'https://images.pexels.com/photos/5422694/pexels-photo-5422694.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' }} />
           </View>
@@ -73,7 +73,7 @@ const Notification = ({ type, notification, onPress, onProfile, onAccept, onLike
       )
     case 'follow_request_accepted':
       return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={styles.container} {...props}>
           <View style={styles.userImgContainer}>
             <Image style={styles.userImg} source={{ uri: notification?.photo || 'https://images.pexels.com/photos/5422694/pexels-photo-5422694.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500' }} />
           </View>

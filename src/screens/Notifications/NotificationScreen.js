@@ -23,6 +23,7 @@ export default function NotificationScreen({ navigation }) {
         {
           notifications.map((notification, index) =>
             <Notification
+              key={index}
               type={notification.event}
               notification={notification.from_user}
               onProfile={() =>
@@ -30,7 +31,7 @@ export default function NotificationScreen({ navigation }) {
                   user_id: notification.from_user.user_id,
                   navigation,
                 })}
-              onLike={() => navigation.navigate('PublicationDetails', { notification })}
+              // onLike={() => navigation.navigate('PublicationDetails', { notification })}
               date={notification.created_at}
             />
           )

@@ -5,25 +5,26 @@ import GoBackButton from '../../../components/GoBackButton';
 import Followed from './Followed';
 import FormSearchInput from '../../../components/FormSearchInput';
 import utils from '../../../utils/utils.js';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+import { getUserFolloweds } from '../../../reducers/user';
+import { getOtherUserFolloweds } from '../../../reducers/otherUser';
 
 
 const Followeds = ({ navigation, route }) => {
-  const [filteredFolloweds, setFilteredFolloweds] = useState(route.params.profile.following_with_details);
+  const followeds = route.params.isLoggedUser
+    ? useSelector(getUserFolloweds)
+    : useSelector(getOtherUserFolloweds);
+  const [filteredFolloweds, setFilteredFolloweds] = useState(followeds);
   const [searchString, setSearchString] = useState('');
 
   const searchFolloweds = (searchedString) => {
     setSearchString(searchedString);
     if (searchedString.length > 0) {
       setFilteredFolloweds(
-        utils.filterByString(
-          route.params.profile.following_with_details,
-          (f) => f.display_name,
-          searchedString,
-        ),
+        utils.filterByString(followeds, (f) => f.display_name, searchedString),
       );
     } else {
-      setFilteredFolloweds(route.params.profile.following_with_details);
+      setFilteredFolloweds(followeds);
     }
   };
 
