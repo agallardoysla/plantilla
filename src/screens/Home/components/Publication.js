@@ -19,9 +19,9 @@ import posts_services from '../../../services/posts_services';
 import PublicationsComments from '../../Home/components/PublicationsComments';
 import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUser } from '../../../reducers/user';
-import { getPost, getPostLikes, likePost, unlikePost } from '../../../reducers/posts';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUser} from '../../../reducers/user';
+import {getPost, getPostLikes, likePost, unlikePost} from '../../../reducers/posts';
 import Counter from '../../../components/Counter';
 let window = Dimensions.get('window');
 
@@ -51,12 +51,6 @@ export default function Publication({ postId, navigation, showSharePost, showFul
   const [countComments, setCountComments] = useState(post.comments.length);
   const dispatch = useDispatch();
 
-
-  // useEffect(() => {
-  //   setILiked(getILiked());
-  //   setLikesCounter(getLikesCounter());
-  // }, [post]);
-
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
@@ -76,14 +70,14 @@ export default function Publication({ postId, navigation, showSharePost, showFul
         ))}
       </ScrollView>
     ) : (
-        <Video
-          video={{ uri: files[0].url }}
-          style={styles.image_post}
-          autoplay={true}
-          defaultMuted={true}
-          loop={true}
-        />
-      );
+      <Video
+        video={{uri: files[0].url}}
+        style={styles.image_post}
+        autoplay={true}
+        defaultMuted={true}
+        loop={true}
+      />
+    );
   };
 
   const getAndSetShowComments = () => {
