@@ -34,6 +34,10 @@ export const userSlice = createSlice({
       );
       return user;
     },
+    otherUserFollowUser: (user, action) => {
+      user.followers_with_details.push(action.payload);
+      return user;
+    },
   },
 });
 
@@ -45,6 +49,7 @@ export const {
   setNewProfileBio,
   followUser,
   unfollowUser,
+  otherUserFollowUser,
 } = userSlice.actions;
 
 export const getUser = (state) => state.user;

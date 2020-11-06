@@ -3,26 +3,56 @@ import auth from '@react-native-firebase/auth';
 import api_config from '../services/api_config';
 import {useDispatch} from 'react-redux';
 import {pushMessage} from '../reducers/conversations';
+import { otherUserFollowUser } from '../reducers/user';
 
 export const WebSocketContext = createContext({});
 
 export const WebSocketProvider = ({children}) => {
   const url = api_config.webSocketUrl;
   const dispatch = useDispatch();
-  const subscribers = [
+  const handlers = [
     {
-      event: 'follow_request_received', // creo que hay mas tipos de notificaciones pero no se si todas generan mensajes de WS
-      action: (message) => {
-        // hacer lo necesario
-        console.log('handling follow_request_received', message);
+      event: 'follow_request_received',
+      action: (info) => {
+        console.log('handling follow_request_received', info);
+        dispatch(otherUserFollowUser(info.user));
+      },
+    },
+    {
+      event: 'post_reaction_created',
+      action: (info) => {
+        console.log('handling post_reaction_created', info);
+      },
+    },
+    {
+      event: 'post_comment_created',
+      action: (info) => {
+        console.log('handling post_comment_created', info);
+      },
+    },
+    {
+      event: 'comment_comment_created',
+      action: (info) => {
+        console.log('handling comment_comment_created', info);
+      },
+    },
+    {
+      event: 'profile_reaction_created',
+      action: (info) => {
+        console.log('handling profile_reaction_created', info);
+      },
+    },
+    {
+      event: 'comment_reaction_created',
+      action: (info) => {
+        console.log('handling comment_reaction_created', info);
       },
     },
     {
       event: 'message_received',
-      action: (message) => {
-        // hacer lo necesario
-        console.log('handling message_received', message);
-        dispatch(pushMessage(message));
+      action: (info) => {
+        console.log('handling message_received', info.data.message);
+        dispatch(pushMessage(info.data.message));
       },
     },
   ];
@@ -50,9 +80,10 @@ export const WebSocketProvider = ({children}) => {
           console.log(message.data);
         } else {
           const info = JSON.parse(message.data);
-          subscribers.forEach((s) => {
-            if (s.event === info.event) {
-              s.action(info.message);
+          console.log(info);
+          handlers.forEach((h) => {
+            if (h.event === info.event) {
+              h.action(info);
             }
           });
         }
