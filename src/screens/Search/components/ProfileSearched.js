@@ -41,7 +41,7 @@ const ProfileSearched = ({profile, navigation}) => {
       dispatch(unfollowUser({user_id: profile.id}));
     } else {
       users_services.follow(profile.id);
-      dispatch(followUser({user_id: profile.id, display_name: profile.display_name}));
+      dispatch(followUser({...profile, user_id: profile.id}));
     }
     setUserFollowProfile(!userFollowProfile);
   };

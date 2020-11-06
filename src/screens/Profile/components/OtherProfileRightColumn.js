@@ -22,7 +22,7 @@ export default function OtherProfileRightColumn({user}) {
       dispatch(unfollowOtherUser(loggedUser));
       users_services.cancelFollow(user.id);
     } else {
-      dispatch(followUser({user_id: user.id}));
+      dispatch(followUser({...user, user_id: user.id}));
       dispatch(followOtherUser(loggedUser));
       users_services.follow(user.id);
     }

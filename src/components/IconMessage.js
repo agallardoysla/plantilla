@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-const FormGoConversations = ({navigation, _styles, ...props}) => {
+const FormGoConversations = ({navigation, ...props}) => {
   return (
     <TouchableOpacity {...props}>
       <Image
