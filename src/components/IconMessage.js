@@ -1,8 +1,7 @@
 import React from 'react';
-import {Image, StyleSheet} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-const FormGoConversations = ({navigation, _styles, ...props}) => {
+const IconMessage = ({ navigation, _styles, ...props }) => {
   return (
     <TouchableOpacity {...props}>
       <Image
@@ -22,4 +21,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default FormGoConversations;
+export default IconMessage;

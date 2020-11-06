@@ -21,6 +21,7 @@ import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
 import { useSelector } from 'react-redux';
 import { getUser } from '../../../reducers/user';
+import DateFormatter from '../../../components/DateFormatter';
 let window = Dimensions.get('window');
 
 export default function Publication({ post, navigation, showSharePost, showFullContent }) {
@@ -332,7 +333,7 @@ export default function Publication({ post, navigation, showSharePost, showFullC
         {/*Fin de nuevo comentario hacia la publicaciòn */}
 
         {/*Inicia fecha*/}
-        <Text
+        {/* <Text
           style={{
             textAlign: 'right',
             color: 'gray',
@@ -340,7 +341,10 @@ export default function Publication({ post, navigation, showSharePost, showFullC
             right: 10,
           }}>
           Ayer a las 23:40
-        </Text>
+        </Text> */}
+        <View style={{ alignSelf: 'flex-end', marginHorizontal: 20, marginTop: 5 }}>
+          <DateFormatter date={post.created_at} />
+        </View>
         {/*Finaliza fecha */}
 
         {/*Inicia franja amarilla */}

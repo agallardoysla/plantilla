@@ -131,6 +131,7 @@ export default function Gallery({
                 selectAsset(item);
               }}>
               <Image
+                fadeDuration={0}
                 style={
                   assetIsSelected(item)
                     ? styles.imageSelected
@@ -169,14 +170,14 @@ export default function Gallery({
         </View>
         <Icon
           onPress={() =>
-            // console.log(video)
-            navigation.navigate('PublishPublication', {
-              images,
-              setImages,
-              video,
-              setVideo,
-              navigation,
-            })
+            canPublish() ?
+              navigation.navigate('PublishPublication', {
+                images,
+                setImages,
+                video,
+                setVideo,
+                navigation,
+              }) : null
           }
           showSecondIcon={!canPublish()}
           source={'done_all'}
