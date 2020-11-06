@@ -7,12 +7,25 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import Icon from '../../../components/Icon';
+import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 export default function FollowMenu({user, loggedUserFollowProfile}) {
   const [showFollowMenu, setShowFollowMenu] = useState(false);
 
-  const doAction = () => {};
+  const addToVip = () => {
+    users_services.followerVip(user.id);
+    setShowFollowMenu(false);
+  };
+
+  const removeFromVip = () => {};
+
+  const blockUser = () => {
+    users_services.blockUser(user.id);
+    setShowFollowMenu(false);
+  };
+
+  const hidePublications = () => {};
 
   return (
     <Menu
@@ -35,14 +48,14 @@ export default function FollowMenu({user, loggedUserFollowProfile}) {
       </MenuTrigger>
       {loggedUserFollowProfile ? (
         <MenuOptions customStyles={menuOptions(loggedUserFollowProfile)}>
-          <MenuOption onSelect={doAction} text="Añadir a VIP" />
-          <MenuOption onSelect={doAction} text="Bloquear" />
+          <MenuOption onSelect={addToVip} text="Añadir a VIP" />
+          <MenuOption onSelect={blockUser} text="Bloquear" />
         </MenuOptions>
       ) : (
         <MenuOptions customStyles={menuOptions(loggedUserFollowProfile)}>
-          <MenuOption onSelect={doAction} text="Añadir a VIP" />
-          <MenuOption onSelect={doAction} text="Bloquear" />
-          <MenuOption onSelect={doAction} text="Ocultar publicaciones" />
+          <MenuOption onSelect={addToVip} text="Añadir a VIP" />
+          <MenuOption onSelect={blockUser} text="Bloquear" />
+          <MenuOption onSelect={hidePublications} text="Ocultar publicaciones" />
         </MenuOptions>
       )}
     </Menu>
