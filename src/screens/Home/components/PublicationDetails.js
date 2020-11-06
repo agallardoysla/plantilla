@@ -6,7 +6,7 @@ export default function PublicationDetails({navigation, route}) {
 
   return (
     <View style={styles.container}>
-      <Publication post={route.params.post} navigation={navigation} showFullContent={true} />
+      <Publication postId={route.params.post.id} navigation={navigation} showFullContent={true} />
     </View>
   );
 }

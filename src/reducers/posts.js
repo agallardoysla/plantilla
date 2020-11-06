@@ -18,17 +18,29 @@ export const postsSlice = createSlice({
     },
     likePost: (posts, action) => {
       posts = posts.map((p) => {
-        if (p.id === action.payload.id) {
-          p.reactionscount.REACTION_TYPE_PRUEBA++;
+        if (p.id === action.payload.postId) {
+          if (p.reactionscount.REACTION_TYPE_PRUEBA) {
+            p.reactionscount.REACTION_TYPE_PRUEBA++;
+          } else {
+            p.reactionscount.REACTION_TYPE_PRUEBA = 1;
+          }
         }
+        p.reactions_details.push({user_id: action.payload.userId});
         return p;
       });
     },
     unlikePost: (posts, action) => {
       posts = posts.map((p) => {
-        if (p.id === action.payload.id) {
-          p.reactionscount.REACTION_TYPE_PRUEBA--;
+        if (p.id === action.payload.postId) {
+          if (p.reactionscount.REACTION_TYPE_PRUEBA) {
+            p.reactionscount.REACTION_TYPE_PRUEBA--;
+          } else {
+            p.reactionscount.REACTION_TYPE_PRUEBA = 0;
+          }
         }
+        p.reactions_details = p.reactions_details.filter(
+          (r) => r.user_id !== action.payload.userId,
+        );
         return p;
       });
     },
@@ -44,6 +56,8 @@ export const {
 } = postsSlice.actions;
 
 export const getPosts = (state) => state.posts;
+
+export const getPost = (id) => (state) => state.posts.filter(p => p.id === id)[0];
 
 export const getPostLikes = (post) => (state) => {
   const statePost = state.posts.filter((p) => p.id === post.id)[0];
