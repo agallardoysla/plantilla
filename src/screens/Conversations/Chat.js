@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
 import chats_services from '../../services/chats_services';
-import {shallowEqual, useDispatch, useSelector} from 'react-redux';
-import {getUser} from '../../reducers/user';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { getUser } from '../../reducers/user';
 import {
   addConversation,
   getConversationByParams,
@@ -16,8 +16,9 @@ import {
 import Message from './components/Message';
 
 import FormGoBack from '../../components/GoBackButton'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Chat = ({navigation, route}) => {
+const Chat = ({ navigation, route }) => {
   const user = useSelector(getUser);
   const [newMessage, setNewMessage] = useState('');
   const [other, setOther] = useState({});
@@ -62,7 +63,7 @@ const Chat = ({navigation, route}) => {
   const sendNewMessage = () => {
     setNewMessage('');
     chats_services
-      .sendMessage(other.user_id, {text: newMessage})
+      .sendMessage(other.user_id, { text: newMessage })
       .then((res) => {
         console.log(res.data);
         dispatch(pushMessage(res.data));
@@ -74,13 +75,13 @@ const Chat = ({navigation, route}) => {
       });
   };
 
-  const MessageItem = ({item}) => (
+  const MessageItem = ({ item }) => (
     <Message message={item} navigation={navigation} />
   );
 
   return (
     <>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.row_header}>
           <View
             style={{
@@ -90,7 +91,7 @@ const Chat = ({navigation, route}) => {
             }}>
 
             <FormGoBack navigation={navigation} />
-           
+
           </View>
 
           <View
@@ -110,16 +111,16 @@ const Chat = ({navigation, route}) => {
           renderItem={MessageItem}
           keyExtractor={(item, index) => index.toString()}
         />
-      </View>
+      </SafeAreaView>
 
       <View style={styles.bottomBar}>
         <Image
           source={require('../../assets/camara.png')}
-          style={{marginLeft: 10, marginRight: 10, width: 36, height: 36}}
+          style={{ marginLeft: 10, marginRight: 10, width: 36, height: 36 }}
         />
 
         <FormInputChat
-          textStyle={{color: 'white'}}
+          textStyle={{ color: 'white' }}
           placeholderText="Escriba un mensaje..."
           value={newMessage}
           onChangeText={setNewMessage}
@@ -136,7 +137,7 @@ const Chat = ({navigation, route}) => {
             marginLeft: 10,
             marginRight: 10,
           }}
-          textStyle={{color: 'black'}}
+          textStyle={{ color: 'black' }}
           onPress={sendNewMessage}
         />
       </View>

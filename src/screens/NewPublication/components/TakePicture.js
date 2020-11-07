@@ -68,7 +68,11 @@ export default function TakePicture({
       const options = { quality: 0.5 };
       const data = await camera.takePictureAsync(options);
       console.log(data.uri);
-      setImages([...images, data]);
+      const asset = {
+        uri: data.uri,
+        ext: data.uri.split('.')[1].toLowerCase(),
+      }
+      setImages([...images, asset]);
       setVideo(null);
       if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
         return;
@@ -237,7 +241,7 @@ export default function TakePicture({
                             style={styles.takeVideo}>
                             <Image
                               style={styles.boton_takeVideo}
-                              source={require('../../../assets/temporizador_15_seg.png')}
+                              source={require('../../../assets/videocamara.png')}
                             />
                           </TouchableOpacity>
                         )}
@@ -247,14 +251,16 @@ export default function TakePicture({
                       disabled={!canPublish()}> */}
                     <Icon
                       onPress={() =>
-                        // console.log(video)
-                        navigation.navigate('PublishPublication', {
-                          images,
-                          setImages,
-                          video,
-                          setVideo,
-                          navigation,
-                        })
+                        canPublish() ?
+                          navigation.navigate('PublishPublication', {
+                            images,
+                            setImages,
+                            video,
+                            setVideo,
+                            navigation,
+                          })
+                          :
+                          null
                       }
                       showSecondIcon={!canPublish()}
                       source={'done_all'}
@@ -299,7 +305,7 @@ export default function TakePicture({
                       style={styles.takePicture}>
                       <Image
                         style={styles.boton_takePicture}
-                        source={require('../../../assets/temporizador_15_seg.png')}
+                        source={require('../../../assets/videocamara.png')}
                       />
                     </TouchableOpacity>
                   ) : (

@@ -19,9 +19,10 @@ import posts_services from '../../../services/posts_services';
 import PublicationsComments from '../../Home/components/PublicationsComments';
 import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
-import {useDispatch, useSelector} from 'react-redux';
-import {getUser} from '../../../reducers/user';
-import {getPost, getPostLikes, likePost, unlikePost} from '../../../reducers/posts';
+import DateFormatter from '../../../components/DateFormatter';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser } from '../../../reducers/user';
+import { getPost, getPostLikes, likePost, unlikePost } from '../../../reducers/posts';
 import Counter from '../../../components/Counter';
 let window = Dimensions.get('window');
 
@@ -70,14 +71,14 @@ export default function Publication({ postId, navigation, showSharePost, showFul
         ))}
       </ScrollView>
     ) : (
-      <Video
-        video={{uri: files[0].url}}
-        style={styles.image_post}
-        autoplay={true}
-        defaultMuted={true}
-        loop={true}
-      />
-    );
+        <Video
+          video={{ uri: files[0].url }}
+          style={styles.image_post}
+          autoplay={true}
+          defaultMuted={true}
+          loop={true}
+        />
+      );
   };
 
   const getAndSetShowComments = () => {
@@ -119,10 +120,10 @@ export default function Publication({ postId, navigation, showSharePost, showFul
         //si contiene algo lo elimino si no lo agrego
         if (getILiked()) {
           posts_services.deleteReaction(post.id);
-          dispatch(unlikePost({postId: post.id, userId: user.id}));
+          dispatch(unlikePost({ postId: post.id, userId: user.id }));
         } else {
           posts_services.addReaction(post.id, 2);
-          dispatch(likePost({postId: post.id, userId: user.id}));
+          dispatch(likePost({ postId: post.id, userId: user.id }));
           // setLikesCounter(likesCounter + 1);
         }
       } catch (error) {
@@ -224,7 +225,7 @@ export default function Publication({ postId, navigation, showSharePost, showFul
               onPress={() =>
                 navigation.navigate('PostLikes', post.user_owner.display_name)
               }> */}
-              <Counter style={styles.icon_numbers_view} value={getLikesCounter()} />
+            <Counter style={styles.icon_numbers_view} value={getLikesCounter()} />
             {/* </TouchableOpacity> */}
           </View>
 
@@ -276,20 +277,20 @@ export default function Publication({ postId, navigation, showSharePost, showFul
           loadingComments ? (
             <ActivityIndicator color={StylesConfiguration.color} />
           ) : (
-            comments.map((comment, i) => (
-              <PublicationsComments
-                style={styles.publicationComments}
-                post={post}
-                comment={comment}
-                key={i}
-                comments={comments}
-                setComments={setComments}
-                navigation={navigation}
-                setCountComments={setCountComments}
-                countComments={countComments}
-              />
-            ))
-          )
+              comments.map((comment, i) => (
+                <PublicationsComments
+                  style={styles.publicationComments}
+                  post={post}
+                  comment={comment}
+                  key={i}
+                  comments={comments}
+                  setComments={setComments}
+                  navigation={navigation}
+                  setCountComments={setCountComments}
+                  countComments={countComments}
+                />
+              ))
+            )
         ) : null}
 
         {firstTimeLoadingComments && post.comments.length > 3 ? (
@@ -329,7 +330,7 @@ export default function Publication({ postId, navigation, showSharePost, showFul
         {/*Fin de nuevo comentario hacia la publicaciòn */}
 
         {/*Inicia fecha*/}
-        <Text
+        {/* <Text
           style={{
             textAlign: 'right',
             color: 'gray',
@@ -337,7 +338,10 @@ export default function Publication({ postId, navigation, showSharePost, showFul
             right: 10,
           }}>
           Ayer a las 23:40
-        </Text>
+        </Text> */}
+        <View style={{ alignSelf: 'flex-end', marginHorizontal: 20, marginTop: 5 }}>
+          <DateFormatter date={post.created_at} />
+        </View>
         {/*Finaliza fecha */}
 
         {/*Inicia franja amarilla */}

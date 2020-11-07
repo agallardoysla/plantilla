@@ -1,24 +1,37 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image, FlatList} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  FlatList,
+  Dimensions,
+  TouchableOpacity
+} from 'react-native';
 import users_services from '../../services/users_services';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileLeftColumn from './components/ProfileLeftColumn';
 import ProfileRightColumn from './components/ProfileRightColumn';
 import ProfileCenterColumn from './components/ProfileCenterColumn';
-import {useSelector} from 'react-redux';
-import {getUser} from '../../reducers/user';
-import {getOtherUser} from '../../reducers/otherUser';
+import { useSelector } from 'react-redux';
+import { getUser } from '../../reducers/user';
+import { getOtherUser } from '../../reducers/otherUser';
 
 const numColumns = 3; //para el flatList
 
-export default function GenericProfile({navigation, isLoggedUser}) {
+export default function GenericProfile({ navigation, isLoggedUser }) {
   const localUser = isLoggedUser
     ? useSelector(getUser)
     : useSelector(getOtherUser);
   const [usersPosts, setUsersPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    loadPost();
+  }, []);
+
+  const loadPost = () => {
+    setLoading(true)
     users_services.listPosts(localUser.id).then((res) => {
       let postsPaginated = [];
       // Se paginan los post de acuerdo a la cantidad de columnas
@@ -29,21 +42,22 @@ export default function GenericProfile({navigation, isLoggedUser}) {
         }
         // siempre se agregan los posts en la ultima fila que se agrego
         postsPaginated[postsPaginated.length - 1].push(p);
+        setLoading(false)
       });
       setUsersPosts(postsPaginated);
     });
-  }, []);
+  }
 
-  const UserPostItem = ({item}) => (
+  const UserPostItem = ({ item }) => (
     <View style={styles.itemContainer}>
       {item.map((post, i) => (
         <View style={styles.item} key={i}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('PublicationDetails', {post})}
+            onPress={() => navigation.navigate('PublicationDetails', { post })}
             style={styles.itemImageContainer}>
             <Image
               source={{
-                uri: post.files_with_urls[0] ? post.files_with_urls[0].url : '',
+                uri: post.files_with_urls[0].url_half ? post.files_with_urls[0].url_half : post.files_with_urls[0].url,
               }}
               style={styles.itemImage}
             />
@@ -84,6 +98,8 @@ export default function GenericProfile({navigation, isLoggedUser}) {
 
       <View style={styles.profilePublications}>
         <FlatList
+          onRefresh={loadPost}
+          refreshing={loading}
           data={usersPosts}
           renderItem={UserPostItem}
           keyExtractor={(item, index) => index.toString()}

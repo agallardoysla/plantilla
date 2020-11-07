@@ -77,7 +77,6 @@ const HomeGroup = ({ navigation }) => {
       <Stack.Screen name="Chat" component={Chat} />
       <Stack.Screen name="MyConversations" component={MyConversations} />
       <Stack.Screen name="ListConversation" component={ListConversation} />
-
     </Stack.Navigator>
   );
 };
@@ -231,7 +230,6 @@ const HomeStack = () => {
           style: {
             borderTopWidth: 0,
           },
-
         }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
@@ -303,7 +301,7 @@ const HomeStack = () => {
           component={NewPublicationGroup}
           options={({ route }) => ({
             title: '',
-            // tabBarVisible: route.name === 'NewPublicationGroup',
+            tabBarVisible: route.name !== 'NewPublicationGroup',
           })}
         />
       </Tab.Navigator>
