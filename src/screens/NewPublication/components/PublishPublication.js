@@ -121,7 +121,7 @@ export default function PublishPublication({ route }) {
             ) : null}
 
             <View style={styles.fullRow}>
-              <Text style={styles.text_description}>DESCRIPCIÓN DEL RETO</Text>
+              <Text style={styles.text_description}>DESCRIPCIÓN</Text>
             </View>
             <View style={styles.fullRow}>
               <NewPostInput
