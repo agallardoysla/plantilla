@@ -24,6 +24,7 @@ export default function GenericProfile({ navigation, isLoggedUser }) {
     ? useSelector(getUser)
     : useSelector(getOtherUser);
   const [usersPosts, setUsersPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadPost();

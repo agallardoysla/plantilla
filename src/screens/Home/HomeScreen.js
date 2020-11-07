@@ -40,11 +40,12 @@ export default function HomeScreen({ navigation }) {
 
   const reloadPosts = () => {
     setReloading(true);
-    posts_services.list(20, 0).then((res) => {
+    setPage(1);
+    posts_services.list(pages[0], 0).then((res) => {
       dispatch(addPosts(res.data));
       setReloading(false);
     });
-  }
+  };
 
   const getPageOffset = (_page) => {
     let res = 0;
@@ -54,13 +55,15 @@ export default function HomeScreen({ navigation }) {
     return res;
   };
 
-  const loadPost = () => {
+  const loadPosts = () => {
+    setReloading(true);
     posts_services
       .list(pages[Math.min(page, pages.length - 1)], getPageOffset(page))
       .then((res) => {
         console.log('nuevos posts', res.data.length);
         dispatch(addPosts(res.data));
         setPage(page + 1);
+        setReloading(false);
       });
   };
 
@@ -68,12 +71,6 @@ export default function HomeScreen({ navigation }) {
     setShowModal(newVal);
     if (newVal) {
       setSharedPost(post);
-      const res = await users_services.getContext({
-        search: '',
-      });
-      console.log(res.data.map((u) => u.display_name));
-      setUsersSearched(res.data);
-      setOriginalUsersSearched(res.data);
     } else {
       setUsersSearched(originalUsersSearched);
       setValueSearch('');
@@ -92,7 +89,6 @@ export default function HomeScreen({ navigation }) {
         const res = await users_services.getContext({
           search: seachedString,
         });
-        console.log(res.data.map((u) => u.display_name));
         setUsersSearched(res.data);
       }
     } else {
@@ -165,7 +161,7 @@ export default function HomeScreen({ navigation }) {
           refreshing={reloading}
           renderItem={PublicationItem}
           onEndReachedThreshold={300}
-          onEndReached={loadPost}
+          onEndReached={loadPosts}
           bouncesZoom={true}
           keyExtractor={(item, index) => index.toString()}
         />
