@@ -16,6 +16,14 @@ export const userSlice = createSlice({
       user = action.payload;
       return user;
     },
+    setReactions: (user, action) => {
+      user.reactions = action.payload;
+      return user;
+    },
+    addReaction: (user, action) => {
+      user.reactions = [user.reactions, action.payload];
+      return user;
+    },
     setNewDisplayName: (user, action) => {
       user.display_name = action.payload;
       return user;
@@ -45,6 +53,8 @@ export const {
   login,
   logout,
   update,
+  setReactions,
+  addReaction,
   setNewDisplayName,
   setNewProfileBio,
   followUser,
@@ -53,6 +63,8 @@ export const {
 } = userSlice.actions;
 
 export const getUser = (state) => state.user;
+
+export const getUserReactions = (state) => state.user.reactions;
 
 export const getUserFollowers = (state) => state.user.followers_with_details;
 
