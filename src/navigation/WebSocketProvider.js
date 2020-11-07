@@ -3,7 +3,8 @@ import auth from '@react-native-firebase/auth';
 import api_config from '../services/api_config';
 import {useDispatch} from 'react-redux';
 import {pushMessage} from '../reducers/conversations';
-import { otherUserFollowUser } from '../reducers/user';
+import { addReaction, otherUserFollowUser } from '../reducers/user';
+import { addNotification } from '../reducers/notifications';
 
 export const WebSocketContext = createContext({});
 
@@ -16,36 +17,53 @@ export const WebSocketProvider = ({children}) => {
       action: (info) => {
         console.log('handling follow_request_received', info);
         dispatch(otherUserFollowUser(info.user));
+        dispatch(addNotification(messageToNotification(info)));
       },
     },
     {
       event: 'post_reaction_created',
       action: (info) => {
         console.log('handling post_reaction_created', info);
+        dispatch(addNotification(messageToNotification(info)));
       },
     },
     {
       event: 'post_comment_created',
       action: (info) => {
         console.log('handling post_comment_created', info);
+        dispatch(addNotification(messageToNotification(info)));
       },
     },
     {
       event: 'comment_comment_created',
       action: (info) => {
         console.log('handling comment_comment_created', info);
+        dispatch(addNotification(messageToNotification(info)));
       },
     },
     {
       event: 'profile_reaction_created',
       action: (info) => {
         console.log('handling profile_reaction_created', info);
+        dispatch(addNotification(messageToNotification(info)));
+        dispatch(
+          addReaction({
+            id: info.id,
+            created_at: Date.now(),
+            updated_at: Date.now(),
+            is_show: true,
+            is_notificated: false,
+            // user: ?,
+            // reaction_type: null,
+          }),
+        );
       },
     },
     {
       event: 'comment_reaction_created',
       action: (info) => {
         console.log('handling comment_reaction_created', info);
+        dispatch(addNotification(messageToNotification(info)));
       },
     },
     {
@@ -56,6 +74,15 @@ export const WebSocketProvider = ({children}) => {
       },
     },
   ];
+
+  const messageToNotification = (message) => {
+    return {
+      ...message,
+      from_user: message.user,
+      created_at: Date.now(),
+      is_read: false,
+    };
+  };
 
   useEffect(() => {
     const init = async () => {
