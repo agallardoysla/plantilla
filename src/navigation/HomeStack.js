@@ -1,18 +1,8 @@
-import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react';
-import { Image, StatusBar } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, StatusBar} from 'react-native';
 
-//import a from '../screens/Auth'
-//import b from '../screens/Conversations'
-//import c from '../screens/Home
-//import d from '../screens/NewPublication'
-//import e from '../screens/Notifications'
-//import f from '../screens/Profile'
-//import g from '../screens/Search'
-
-
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from '../screens/Home/HomeScreen';
 import PostComments from '../screens/Home/components/PostComments';
@@ -35,31 +25,33 @@ import ListConversation from '../screens/Conversations/components/ListConversati
 import Chat from '../screens/Conversations/Chat';
 import ProfileEdition from '../screens/Profile/components/ProfileEdition';
 import NewProfilePhotoContainer from '../screens/Profile/NewProfilePhoto/NewProfilePhotoContainer';
-import { useDispatch } from 'react-redux';
+import {useDispatch} from 'react-redux';
 import posts_services from '../services/posts_services';
-import { addPosts } from '../reducers/posts';
+import {addPosts} from '../reducers/posts';
 import search_services from '../services/search_services';
-import { addSearchedPosts } from '../reducers/searchedPosts';
-import { addSearchedProfiles } from '../reducers/searchedProfiles';
+import {addSearchedPosts} from '../reducers/searchedPosts';
+import {addSearchedProfiles} from '../reducers/searchedProfiles';
 import users_services from '../services/users_services';
-import { setNotifications } from '../reducers/notifications';
-import { setConversations } from '../reducers/conversations';
+import {setNotifications} from '../reducers/notifications';
+import {setConversations} from '../reducers/conversations';
 import chats_services from '../services/chats_services';
 import Loading from '../components/Loading';
-import { useSelector } from 'react-redux';
-import { getNotifications } from '../reducers/notifications';
+import {useSelector} from 'react-redux';
+import {getNotifications} from '../reducers/notifications';
+import {getUser, setReactions} from '../reducers/user';
+import profiles_services from '../services/profiles_services';
 
 // import {Icon, Avatar, Badge, withBadge} from 'react-native-elements';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const HomeGroup = ({ navigation }) => {
+const HomeGroup = ({navigation}) => {
   return (
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
-        headerStyle: { backgroundColor: '#242424' },
+        headerStyle: {backgroundColor: '#242424'},
         headerTintColor: '#242424', //color del titulo
         //oculto el header
         headerShown: false,
@@ -81,12 +73,12 @@ const HomeGroup = ({ navigation }) => {
   );
 };
 
-const ProfileGroup = ({ navigation }) => {
+const ProfileGroup = ({navigation}) => {
   return (
     <Stack.Navigator
       initialRouteName="Profile"
       screenOptions={{
-        headerStyle: { backgroundColor: 'black' },
+        headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
         headerShown: false,
         backgroundColor: 'black'
@@ -107,12 +99,12 @@ const ProfileGroup = ({ navigation }) => {
   );
 };
 
-const NotificationGroup = ({ navigation }) => {
+const NotificationGroup = ({navigation}) => {
   return (
     <Stack.Navigator
       initialRouteName="Notification"
       screenOptions={{
-        headerStyle: { backgroundColor: 'black' },
+        headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
         headerShown: false,
       }}>
@@ -121,12 +113,12 @@ const NotificationGroup = ({ navigation }) => {
   );
 };
 
-const SearchGroup = ({ navigation }) => {
+const SearchGroup = ({navigation}) => {
   return (
     <Stack.Navigator
       initialRouteName="Search"
       screenOptions={{
-        headerStyle: { backgroundColor: 'black' },
+        headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
         headerShown: false,
       }}>
@@ -136,29 +128,29 @@ const SearchGroup = ({ navigation }) => {
   );
 };
 
-const NewPublicationGroup = ({ navigation }) => {
+const NewPublicationGroup = ({navigation}) => {
   return (
     <Stack.Navigator
       initialRouteName="NewPublication"
       screenOptions={{
-        headerStyle: { backgroundColor: 'black' },
+        headerStyle: {backgroundColor: 'black'},
         headerTintColor: 'black',
         headerShown: false,
       }}>
       <Stack.Screen
         name="NewPublication"
         component={NewPublicationContainer}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="ViewNewImage"
         component={ViewNewImage}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="PublishPublication"
         component={PublishPublication}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
@@ -166,6 +158,7 @@ const NewPublicationGroup = ({ navigation }) => {
 
 const HomeStack = () => {
   const dispatch = useDispatch();
+  const user = useSelector(getUser);
   const notifications = useSelector(getNotifications);
   const [loading, setLoading] = useState(true);
 
@@ -177,11 +170,11 @@ const HomeStack = () => {
       dispatch(addPosts(res.data));
     });
     // Cargar los posts de Busqueda
-    search_services.search({ search_in: 'posts' }).then((res) => {
+    search_services.search({search_in: 'posts'}).then((res) => {
       dispatch(addSearchedPosts(res.data.posts));
     });
     // Cargar los perfiles de Busqueda
-    search_services.search({ search_in: 'users' }).then((res) => {
+    search_services.search({search_in: 'users'}).then((res) => {
       dispatch(addSearchedProfiles(res.data.users));
     });
     // Cargar los perfiles para compartir publicacion
@@ -192,6 +185,10 @@ const HomeStack = () => {
     // Cargar conversaciones
     chats_services.list().then((res) => {
       dispatch(setConversations(res.data));
+    });
+    // Cargar reacciones al perfil propio
+    profiles_services.getReactions(user.id).then((res) => {
+      dispatch(setReactions(res.data));
     });
   }, []);
 
@@ -231,8 +228,8 @@ const HomeStack = () => {
             borderTopWidth: 0,
           },
         }}
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused }) => {
+        screenOptions={({route}) => ({
+          tabBarIcon: ({focused}) => {
             let iconName;
             let size;
             switch (route.name) {
@@ -270,7 +267,7 @@ const HomeStack = () => {
             return (
               <Image
                 source={iconName}
-                style={{ width: size, height: size, marginTop: 18 }}
+                style={{width: size, height: size, marginTop: 18}}
               />
             );
           },
@@ -278,28 +275,28 @@ const HomeStack = () => {
         <Tab.Screen
           name="ProfileGroup"
           component={ProfileGroup}
-          options={{ title: '' }}
+          options={{title: ''}}
         />
         <Tab.Screen
           name="NotificationGroup"
           component={NotificationGroup}
           // options={{title: '', tabBarBadge: 20}}
-          options={{ title: '', tabBarBadge: notifications.length }}
+          options={{title: '', tabBarBadge: notifications.length}}
         />
         <Tab.Screen
           name="HomeGroup"
           component={HomeGroup}
-          options={{ title: '' }}
+          options={{title: ''}}
         />
         <Tab.Screen
           name="SearchGroup"
           component={SearchGroup}
-          options={{ title: '' }}
+          options={{title: ''}}
         />
         <Tab.Screen
           name="NewPublicationGroup"
           component={NewPublicationGroup}
-          options={({ route }) => ({
+          options={({route}) => ({
             title: '',
             tabBarVisible: route.name !== 'NewPublicationGroup',
           })}
