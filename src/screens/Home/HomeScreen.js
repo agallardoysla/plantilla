@@ -58,7 +58,10 @@ export default function HomeScreen({ navigation }) {
   const loadPosts = () => {
     setReloading(true);
     posts_services
-      .list(pages[Math.min(page, pages.length - 1)], getPageOffset(page))
+      .list(
+        pages[Math.min(page, pages.length - 1)],
+        getPageOffset(Math.min(page, pages.length - 1)),
+      )
       .then((res) => {
         console.log('nuevos posts', res.data.length);
         dispatch(addPosts(res.data));

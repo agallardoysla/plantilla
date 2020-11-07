@@ -57,7 +57,7 @@ export default function GenericProfile({ navigation, isLoggedUser }) {
             style={styles.itemImageContainer}>
             <Image
               source={{
-                uri: post.files_with_urls[0].url_small ? post.files_with_urls[0].url_small : '',
+                uri: post.files_with_urls[0].url_half ? post.files_with_urls[0].url_half : post.files_with_urls[0].url,
               }}
               style={styles.itemImage}
             />
