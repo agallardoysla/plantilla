@@ -20,22 +20,21 @@ export default function NotificationScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <Text style={{ color: '#E9FC64', marginTop: 10 }}>NOTIFICACIONES</Text>
       <ScrollView>
-        {
-          notifications.map((notification, index) =>
-            <Notification
-              key={index}
-              type={notification.event}
-              notification={notification.from_user}
-              onProfile={() =>
-                navigation.navigate('OtherProfile', {
-                  user_id: notification.from_user.user_id,
-                  navigation,
-                })}
-              // onLike={() => navigation.navigate('PublicationDetails', { notification })}
-              date={notification.created_at}
-            />
-          )
-        }
+        {notifications.map((notification, index) => (
+          <Notification
+            key={index}
+            type={notification.event}
+            notification={notification.from_user}
+            onProfile={() =>
+              navigation.navigate('OtherProfile', {
+                user_id: notification.from_user.user_id,
+                navigation,
+              })
+            }
+            // onLike={() => navigation.navigate('PublicationDetails', { notification })}
+            date={notification.created_at}
+          />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );

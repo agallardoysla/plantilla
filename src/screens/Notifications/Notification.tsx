@@ -36,7 +36,7 @@ interface NotificationProps {
 /** 
 *[Notification]: Componente para visualizar las notificaciones dentro de la pantalla dependiendo el tipo de notificaciones. 
 */
-const Notification = ({ type, notification, onPress, onProfile, onAccept, onLike, onReject, date }: NotificationProps) => {
+const Notification = ({ type, notification, onPress, onProfile, onAccept, onLike, onReject, date, ...props }: NotificationProps) => {
   switch (type) {
     case 'comment_comment_created':
       return (

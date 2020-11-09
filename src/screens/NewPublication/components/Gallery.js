@@ -43,13 +43,13 @@ export default function Gallery({
   }, []);
 
   const assets = async (_assetType, _hasNextPage) => {
-    console.log('LLEGUE', hasNextPage);
+    // console.log('LLEGUE', hasNextPage);
     if (_hasNextPage) {
       const data = await getGallery({
         quantity: pageSize + 30,
         assetType: _assetType,
       });
-      console.log('LENG', data.gallery.length);
+      // console.log('LENG', data.gallery.length);
       setPagesize(pageSize + 30);
       setAssetsGallery(data.gallery);
       setHasNextPage(data.hasMore);
