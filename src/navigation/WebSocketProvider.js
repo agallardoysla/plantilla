@@ -17,35 +17,35 @@ export const WebSocketProvider = ({children}) => {
       action: (info) => {
         console.log('handling follow_request_received', info);
         dispatch(otherUserFollowUser(info.user));
-        dispatch(addNotification(messageToNotification(info)));
+        createNotification(info);
       },
     },
     {
       event: 'post_reaction_created',
       action: (info) => {
         console.log('handling post_reaction_created', info);
-        dispatch(addNotification(messageToNotification(info)));
+        createNotification(info);
       },
     },
     {
       event: 'post_comment_created',
       action: (info) => {
         console.log('handling post_comment_created', info);
-        dispatch(addNotification(messageToNotification(info)));
+        createNotification(info);
       },
     },
     {
       event: 'comment_comment_created',
       action: (info) => {
         console.log('handling comment_comment_created', info);
-        dispatch(addNotification(messageToNotification(info)));
+        createNotification(info);
       },
     },
     {
       event: 'profile_reaction_created',
       action: (info) => {
         console.log('handling profile_reaction_created', info);
-        dispatch(addNotification(messageToNotification(info)));
+        createNotification(info);
         dispatch(
           addReaction({
             id: info.id,
@@ -63,7 +63,7 @@ export const WebSocketProvider = ({children}) => {
       event: 'comment_reaction_created',
       action: (info) => {
         console.log('handling comment_reaction_created', info);
-        dispatch(addNotification(messageToNotification(info)));
+        createNotification(info);
       },
     },
     {
@@ -82,6 +82,10 @@ export const WebSocketProvider = ({children}) => {
       created_at: Date.now(),
       is_read: false,
     };
+  };
+
+  const createNotification = (info) => {
+    dispatch(addNotification(messageToNotification(info)));
   };
 
   useEffect(() => {

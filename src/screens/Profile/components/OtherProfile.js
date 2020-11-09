@@ -23,8 +23,8 @@ export default function OtherProfile({route}) {
         dispatch(updateOtherUser(res.data));
         profiles_services.getReactions(userId).then((_res) => {
           dispatch(setOtherUserReactions(_res.data));
+          setLoading(false);
         });
-        setLoading(false);
       });
     }
   }, []);

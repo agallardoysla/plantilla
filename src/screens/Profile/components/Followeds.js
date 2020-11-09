@@ -8,6 +8,7 @@ import utils from '../../../utils/utils.js';
 import { useSelector } from 'react-redux';
 import { getUserFolloweds } from '../../../reducers/user';
 import { getOtherUserFolloweds } from '../../../reducers/otherUser';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const Followeds = ({ navigation, route }) => {
