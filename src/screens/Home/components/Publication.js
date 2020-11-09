@@ -240,7 +240,7 @@ export default function Publication({ postId, navigation, showSharePost, showFul
           </View>
 
           <TouchableOpacity
-            onPress={() => showSharePost(true, post)}
+            onPress={() => showSharePost(post)}
             style={styles.icon_container}>
             <Image
               source={require('../../../assets/compartir.png')}
