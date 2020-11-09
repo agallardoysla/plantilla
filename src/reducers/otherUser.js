@@ -6,18 +6,19 @@ export const otherUserSlice = createSlice({
   reducers: {
     updateOtherUser: (otherUser, action) => {
       otherUser = action.payload;
+      otherUser.reactions = [];
       return otherUser;
     },
-    setReactions: (otherUser, action) => {
+    setOtherUserReactions: (otherUser, action) => {
       otherUser.reactions = action.payload;
       return otherUser;
     },
-    addReaction: (otherUser, action) => {
+    addOtherUserReaction: (otherUser, action) => {
       otherUser.reactions = [otherUser.reactions, action.payload];
       return otherUser;
     },
-    removeReaction: (otherUser, action) => {
-      otherUser.reactions = otherUser.reactions.slice(-1);
+    removeOtherUserReaction: (otherUser, action) => {
+      otherUser.reactions = otherUser.reactions.filter((r) => r.user !== action.payload.user);
       return otherUser;
     },
     followOtherUser: (otherUser, action) => {
@@ -36,14 +37,16 @@ export const otherUserSlice = createSlice({
 
 export const {
   updateOtherUser,
-  setReactions,
-  addReaction,
-  removeReaction,
+  setOtherUserReactions,
+  addOtherUserReaction,
+  removeOtherUserReaction,
   followOtherUser,
   unfollowOtherUser,
 } = otherUserSlice.actions;
 
 export const getOtherUser = (state) => state.otherUser;
+
+export const getOtherUserReactions = (state) => state.otherUser.reactions;
 
 export const getOtherUserFollowers = (state) => state.otherUser.followers_with_details;
 

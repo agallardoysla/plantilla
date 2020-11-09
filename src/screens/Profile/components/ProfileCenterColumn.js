@@ -1,36 +1,40 @@
 import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
 import Counter from '../../../components/Counter';
 import FormImageIcon from '../../../components/FormImageIcon';
 import FormLike from '../../../components/FormLike';
-import profileLikes from '../../../services/profiles_services';
+import { addOtherUserReaction, getOtherUserReactions, removeOtherUserReaction } from '../../../reducers/otherUser';
+import { getUser, getUserReactions } from '../../../reducers/user';
+import profiles_services from '../../../services/profiles_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 export default function ProfileCenterColumn({user, navigation, style, isLoggedUser}) {
-  const [iLiked, setILiked] = useState(isLoggedUser);
-  const [likesCounter, setLikesCounter] = useState('');
+  const userReactions = isLoggedUser
+    ? useSelector(getUserReactions)
+    : useSelector(getOtherUserReactions);
+  const loggedUser = useSelector(getUser);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (!isLoggedUser) {
-      profileLikes.getReactions(user.id).then((res) => {
-        setILiked(res.data.filter((item) => item.user === user.id).length >= 1);
-        setLikesCounter(res.data.length);
-      });
-    }
-  }, []);
+  const getILiked = () => {
+    console.log(isLoggedUser, userReactions);
+    return isLoggedUser || userReactions.filter((item) => item.user === loggedUser.id).length >= 1;
+  };
+
+  const getLikesCounter = () => {
+    return userReactions.length;
+  };
 
   const addReactions = () => {
     try {
-      //si contiene algo lo elimino si no lo agrego
-      if (iLiked) {
-        setLikesCounter(likesCounter - 1);
-        profileLikes.deleteReactions(user.id);
+      if (getILiked()) {
+        profiles_services.deleteReaction(user.id);
+        dispatch(removeOtherUserReaction({user: loggedUser.id}));
       } else {
-        setLikesCounter(likesCounter + 1);
-        profileLikes.addReactions(user.id);
+        profiles_services.addReaction(user.id, {reaction_type: 2});
+        dispatch(addOtherUserReaction({user: loggedUser.id}));
       }
-      setILiked(!iLiked);
     } catch (error) {
       console.log('Error de agregar like' + error);
     }
@@ -79,8 +83,8 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
 
       <TouchableOpacity onPress={addReactions} disabled={isLoggedUser}>
         <View style={styles.folowersInfo}>
-          <FormLike iLiked={iLiked} />
-          <Counter value={likesCounter} style={styles.icon_numbers} />
+          <FormLike iLiked={getILiked()} />
+          <Counter value={getLikesCounter()} style={styles.icon_numbers} />
         </View>
       </TouchableOpacity>
 
