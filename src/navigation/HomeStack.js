@@ -281,7 +281,7 @@ const HomeStack = () => {
           name="NotificationGroup"
           component={NotificationGroup}
           // options={{title: '', tabBarBadge: 20}}
-          options={{title: '', tabBarBadge: notifications.length}}
+          options={{title: '', tabBarBadge: user.unread_notifications}}
         />
         <Tab.Screen
           name="HomeGroup"
