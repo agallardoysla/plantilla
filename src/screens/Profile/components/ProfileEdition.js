@@ -10,7 +10,7 @@ import Icon from '../../../components/Icon';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import files_services from '../../../services/files_services';
 import NewPostInput from '../../NewPublication/components/NewPostInput';
-import {useDispatch, useSelector} from 'react-redux';
+import {batch, useDispatch, useSelector} from 'react-redux';
 import {
   getUser,
   setNewDisplayName,
@@ -30,8 +30,10 @@ export default function Preferences({navigation}) {
     users_services.edit(user.id, {display_name: newNickname});
     setEditingNickname(false);
     setEditingDescription(false);
-    dispatch(setNewDisplayName(newNickname));
-    dispatch(setNewProfileBio(newBio));
+    batch(() => {
+      dispatch(setNewDisplayName(newNickname));
+      dispatch(setNewProfileBio(newBio));
+    });
   };
 
   const canPublish = () => {

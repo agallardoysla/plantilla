@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import FollowMenu from './FollowMenu';
-import {useDispatch, useSelector} from 'react-redux';
+import {batch, useDispatch, useSelector} from 'react-redux';
 import {followUser, getUser, unfollowUser} from '../../../reducers/user';
 import users_services from '../../../services/users_services';
 import { followOtherUser, unfollowOtherUser } from '../../../reducers/otherUser';
@@ -18,12 +18,16 @@ export default function OtherProfileRightColumn({user}) {
 
   const doFollow = () => {
     if (loggedUserFollowProfile) {
-      dispatch(unfollowUser({user_id: user.id}));
-      dispatch(unfollowOtherUser(loggedUser));
+      batch(() => {
+        dispatch(unfollowUser({user_id: user.id}));
+        dispatch(unfollowOtherUser(loggedUser));
+      });
       users_services.cancelFollow(user.id);
     } else {
-      dispatch(followUser({...user, user_id: user.id}));
-      dispatch(followOtherUser(loggedUser));
+      batch(() => {
+        dispatch(followUser({...user, user_id: user.id}));
+        dispatch(followOtherUser(loggedUser));
+      });
       users_services.follow(user.id);
     }
     setLoggedUserFollowProfile(!loggedUserFollowProfile);

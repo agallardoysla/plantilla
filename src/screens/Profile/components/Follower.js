@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useDispatch, useSelector} from 'react-redux';
+import {batch, useDispatch, useSelector} from 'react-redux';
 import FormButton from '../../../components/FormButton';
 import { followOtherUser, unfollowOtherUser } from '../../../reducers/otherUser';
 import {getUser, followUser, unfollowUser} from '../../../reducers/user';
@@ -37,12 +37,16 @@ const Follower = ({follower, navigation}) => {
 
   const doFollow = () => {
     if (userFollowProfile) {
-      dispatch(unfollowUser(follower));
-      dispatch(unfollowOtherUser(user));
+      batch(() => {
+        dispatch(unfollowUser(follower));
+        // dispatch(unfollowOtherUser(user));
+      });
       users_services.cancelFollow(follower.user_id);
     } else {
-      dispatch(followUser(follower));
-      dispatch(followOtherUser(user));
+      batch(() => {
+        dispatch(followUser(follower));
+        // dispatch(followOtherUser(user));
+      });
       users_services.follow(follower.user_id);
     }
     setUserFollowProfile(!userFollowProfile);
