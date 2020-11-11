@@ -13,6 +13,7 @@
     "postinstall": "patch -p1 -i patches/react-native-material-textfield+0.16.1.patch"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.13.2",
     "@react-native-community/cameraroll": "^4.0.1",
     "@react-native-community/datetimepicker": "^3.0.3",
     "@react-native-community/google-signin": "^4.0.3",

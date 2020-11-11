@@ -8,6 +8,7 @@ import Loading from '../components/Loading';
 import users_services from '../services/users_services';
 import {login, logout, getUser} from '../reducers/user';
 import {useSelector, useDispatch} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Routes() {
   const {existProfile, setExistProfile} = useContext(AuthContext);
@@ -25,6 +26,7 @@ export default function Routes() {
         const backendUser = await users_services.me();
         dispatch(login(backendUser.data));
         setExistProfile(backendUser.data.profile.is_ready);
+        AsyncStorage.setItem('local_token', backendUser.data.local_token);
       }
     } else {
       // setUser(null);
