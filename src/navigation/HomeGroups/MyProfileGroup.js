@@ -12,6 +12,7 @@ import ViewNewImage from '../../screens/NewPublication/components/ViewNewImage';
 import Vip from '../../screens/Profile/components/Vip';
 import ProfileEdition from '../../screens/Profile/components/ProfileEdition';
 import NewProfilePhotoContainer from '../../screens/Profile/NewProfilePhoto/NewProfilePhotoContainer';
+import OtherProfileGroup from './OtherProfileGroup';
 
 export default function MyProfileGroup() {
   const Stack = createStackNavigator();
@@ -34,6 +35,7 @@ export default function MyProfileGroup() {
       <Stack.Screen name="NewProfilePhoto" component={NewProfilePhotoContainer} />
       <Stack.Screen name="ViewNewImage" component={ViewNewImage} />
       <Stack.Screen name="Vip" component={Vip} />
+      <Stack.Screen name="OtherProfileGroup" component={OtherProfileGroup} />
     </Stack.Navigator>
   );
 };

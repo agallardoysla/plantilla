@@ -26,9 +26,11 @@ export default function NotificationScreen({ navigation }) {
             type={notification.event}
             notification={notification.from_user}
             onProfile={() =>
-              navigation.navigate('OtherProfile', {
-                user_id: notification.from_user.user_id,
-                navigation,
+              navigation.navigate('OtherProfileGroup', {
+                screen: 'OtherProfile',
+                params: {
+                  user_id: notification.from_user.user_id,
+                },
               })
             }
             // onLike={() => navigation.navigate('PublicationDetails', { notification })}

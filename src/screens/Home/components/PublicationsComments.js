@@ -107,9 +107,11 @@ export default function PublicationsComments({
           <TouchableOpacity
             style={styles.senderContainer}
             onPress={() =>
-              navigation.navigate('OtherProfile', {
-                user_id: comment.user_owner.user_id,
-                navigation,
+              navigation.navigate('OtherProfileGroup', {
+                screen: 'OtherProfile',
+                params: {
+                  user_id: comment.user_owner.user_id,
+                },
               })
             }>
             <Image

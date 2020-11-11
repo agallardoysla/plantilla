@@ -4,15 +4,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import FormButton from '../../../components/FormButton';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
-
-const Followed = ({ follower, navigation }) => {
-
+const Followed = ({ followed, navigation }) => {
   const goToProfile = () => {
-    navigation.navigate('HomeGroup', {
+    navigation.navigate('OtherProfileGroup', {
       screen: 'OtherProfile',
       params: {
-        user_id: follower.user_id,
-        navigation,
+        user_id: followed.user_id,
       },
     });
   };
@@ -20,8 +17,8 @@ const Followed = ({ follower, navigation }) => {
   const goToChat = () => {
     navigation.navigate('Chat', {
       receiver: {
-        user_id: follower.user_id,
-        display_name: follower.display_name,
+        user_id: followed.user_id,
+        display_name: followed.display_name,
       },
     });
   };
@@ -35,7 +32,7 @@ const Followed = ({ follower, navigation }) => {
           style={styles.image}
         />
         <Text style={styles.profileName} numberOfLines={2}>
-          @{follower.display_name}
+          @{followed.display_name}
         </Text>
       </TouchableOpacity>
       <View style={styles.actions}>

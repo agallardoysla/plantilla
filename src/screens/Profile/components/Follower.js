@@ -17,11 +17,10 @@ const Follower = ({follower, navigation}) => {
   );
 
   const goToProfile = () => {
-    navigation.navigate('HomeGroup', {
+    navigation.navigate('OtherProfileGroup', {
       screen: 'OtherProfile',
       params: {
         user_id: follower.user_id,
-        navigation,
       },
     });
   };

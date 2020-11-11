@@ -74,6 +74,10 @@ const HomeStack = () => {
     icon_new_publication_active: require('../assets/icono_camara_activo.png'),
   };
 
+  const options = {
+    unmountOnBlur,
+  };
+
   const tabBarOptions = {
     keyboardHidesTabBar: true,
     activeBackgroundColor: 'black',
@@ -126,6 +130,8 @@ const HomeStack = () => {
     },
   });
 
+  const unmountOnBlur = false; // resetea el estado del stack
+
   if (loading) {
     return <Loading />;
   }
@@ -137,27 +143,32 @@ const HomeStack = () => {
       <Tab.Navigator
         initialRouteName="HomeGroup"
         lazy={false}
+        options={options}
         tabBarOptions={tabBarOptions}
         screenOptions={screenOptions}>
         <Tab.Screen
           name="ProfileGroup"
           component={MyProfileGroup}
-          options={{title: ''}}
+          options={{title: '', unmountOnBlur}}
         />
         <Tab.Screen
           name="NotificationGroup"
           component={NotificationsGroup}
-          options={{title: '', tabBarBadge: user.unread_notifications}}
+          options={{
+            title: '',
+            tabBarBadge: user.unread_notifications,
+            unmountOnBlur,
+          }}
         />
         <Tab.Screen
           name="HomeGroup"
           component={HomeGroup}
-          options={{title: ''}}
+          options={{title: '', unmountOnBlur}}
         />
         <Tab.Screen
           name="SearchGroup"
           component={SearchGroup}
-          options={{title: ''}}
+          options={{title: '', unmountOnBlur}}
         />
         <Tab.Screen
           name="NewPublicationGroup"
@@ -165,6 +176,7 @@ const HomeStack = () => {
           options={({route}) => ({
             title: '',
             tabBarVisible: route.name !== 'NewPublicationGroup',
+            unmountOnBlur,
           })}
         />
       </Tab.Navigator>

@@ -37,7 +37,12 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
     const test = /(\(|\{|\[)([^:]+):([^\]]+)(\)|\}|\])/i;
     const matches = code.match(test);
     console.log(matches);
-    navigation.navigate('OtherProfile', {user_id: matches[3], navigation});
+    navigation.navigate('OtherProfileGroup', {
+      screen: 'OtherProfile',
+      params: {
+        user_id: matches[3],
+      },
+    });
   };
 
   const renderPostOwner = (matchingString, matches) => {

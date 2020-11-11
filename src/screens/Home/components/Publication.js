@@ -141,9 +141,11 @@ export default function Publication({ postId, navigation, showSharePost, showFul
 
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('OtherProfile', {
-              user_id: post.user_owner.user_id,
-              navigation,
+            navigation.navigate('OtherProfileGroup', {
+              screen: 'OtherProfile',
+              params: {
+                user_id: post.user_owner.user_id,
+              },
             })
           }>
           <View style={{ flexDirection: 'row' }}>
