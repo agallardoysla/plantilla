@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, StatusBar, StyleSheet} from 'react-native';
+import {Image, StatusBar, StyleSheet, View} from 'react-native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useDispatch} from 'react-redux';
@@ -21,6 +21,8 @@ import MyProfileGroup from './HomeGroups/MyProfileGroup';
 import NotificationsGroup from './HomeGroups/NotificationsGroup';
 import SearchGroup from './HomeGroups/SearchGroup';
 import NewPublicationGroup from './HomeGroups/NewPublicationGroup';
+import OtherProfileGroup from './HomeGroups/OtherProfileGroup';
+import MyConversationsGroup from './HomeGroups/MyConversationsGroup';
 
 const Tab = createBottomTabNavigator();
 
@@ -72,10 +74,6 @@ const HomeStack = () => {
     icon_home_active: require('../assets/icono_home_activo.png'),
     icon_search_active: require('../assets/icono_buscar_activo.png'),
     icon_new_publication_active: require('../assets/icono_camara_activo.png'),
-  };
-
-  const options = {
-    unmountOnBlur,
   };
 
   const tabBarOptions = {
@@ -130,6 +128,8 @@ const HomeStack = () => {
     },
   });
 
+  const HiddenButton = ({pops}) => <View style={styles.empy} />;
+
   const unmountOnBlur = false; // resetea el estado del stack
 
   if (loading) {
@@ -143,7 +143,6 @@ const HomeStack = () => {
       <Tab.Navigator
         initialRouteName="HomeGroup"
         lazy={false}
-        options={options}
         tabBarOptions={tabBarOptions}
         screenOptions={screenOptions}>
         <Tab.Screen
@@ -179,6 +178,26 @@ const HomeStack = () => {
             unmountOnBlur,
           })}
         />
+
+        {/* Hidded screens */}
+
+        <Tab.Screen
+          name="OtherProfileGroup"
+          component={OtherProfileGroup}
+          options={() => ({
+            tabBarButton: HiddenButton,
+            unmountOnBlur: true,
+          })}
+        />
+
+        <Tab.Screen
+          name="MyConversationsGroup"
+          component={MyConversationsGroup}
+          options={() => ({
+            tabBarButton: HiddenButton,
+            unmountOnBlur: true,
+          })}
+        />
       </Tab.Navigator>
     </>
   );
@@ -195,6 +214,9 @@ const styles = StyleSheet.create({
   largeIcon: {
     width: 33,
     height: 33,
+  },
+  empy: {
+    // vacio
   },
 });
 
