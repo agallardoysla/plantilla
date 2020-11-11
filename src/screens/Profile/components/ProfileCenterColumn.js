@@ -44,10 +44,13 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
     if (isLoggedUser) {
       navigation.navigate('MyConversations');
     } else {
-      navigation.navigate('Chat', {
-        receiver: {
-          user_id: user.id,
-          display_name: user.display_name,
+      navigation.navigate('MyConversationsGroup', {
+        screen: 'Chat',
+        params: {
+          receiver: {
+            user_id: user.id,
+            display_name: user.display_name,
+          },
         },
       });
     }

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FormButton from '../../../components/FormButton';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 const Followed = ({ followed, navigation }) => {
+
   const goToProfile = () => {
     navigation.navigate('OtherProfileGroup', {
       screen: 'OtherProfile',
@@ -15,10 +16,13 @@ const Followed = ({ followed, navigation }) => {
   };
 
   const goToChat = () => {
-    navigation.navigate('Chat', {
-      receiver: {
-        user_id: followed.user_id,
-        display_name: followed.display_name,
+    navigation.navigate('MyConversationsGroup', {
+      screen: 'Chat',
+      params: {
+        receiver: {
+          user_id: followed.user_id,
+          display_name: followed.display_name,
+        },
       },
     });
   };

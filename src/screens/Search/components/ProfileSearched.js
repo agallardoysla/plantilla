@@ -23,7 +23,7 @@ const ProfileSearched = ({profile, navigation}) => {
   };
 
   const goToChat = () => {
-    navigation.navigate('HomeGroup', {
+    navigation.navigate('MyConversationsGroup', {
       screen: 'Chat',
       params: {
         receiver: {

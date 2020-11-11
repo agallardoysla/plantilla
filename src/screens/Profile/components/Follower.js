@@ -26,10 +26,13 @@ const Follower = ({follower, navigation}) => {
   };
 
   const goToChat = () => {
-    navigation.navigate('Chat', {
-      receiver: {
-        user_id: follower.user_id,
-        display_name: follower.display_name,
+    navigation.navigate('MyConversationsGroup', {
+      screen: 'Chat',
+      params: {
+        receiver: {
+          user_id: follower.user_id,
+          display_name: follower.display_name,
+        },
       },
     });
   };

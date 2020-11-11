@@ -30,7 +30,7 @@ const Followeds = ({ navigation, route }) => {
   };
 
   const FollowedItem = ({ item }) => (
-    <Followed follower={item} navigation={navigation} />
+    <Followed followed={item} navigation={navigation} />
   );
 
   return (
