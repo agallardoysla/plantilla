@@ -71,11 +71,16 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
+  const gotToMyConversations = () => {
+    navigation.navigate('MyConversationsGroup', {
+      screen: 'MyConversations',
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.row_header}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('MyConversations')}>
+        <TouchableOpacity onPress={gotToMyConversations}>
           <Image
             source={require('../../assets/sobre_amarillo.png')}
             style={styles.sobre_amarillo}

@@ -42,7 +42,9 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
 
   const goConversations = () => {
     if (isLoggedUser) {
-      navigation.navigate('MyConversations');
+      navigation.navigate('MyConversationsGroup', {
+        screen: 'MyConversations',
+      });
     } else {
       navigation.navigate('MyConversationsGroup', {
         screen: 'Chat',
