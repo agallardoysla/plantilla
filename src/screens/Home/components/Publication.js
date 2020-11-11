@@ -132,6 +132,15 @@ export default function Publication({ postId, navigation, showSharePost, showFul
     }, 1);
   };
 
+  const goToPost = () => {
+    navigation.navigate('PostGroup', {
+      screen: 'PublicationDetails',
+      params: {
+        post,
+      },
+    });
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -190,7 +199,7 @@ export default function Publication({ postId, navigation, showSharePost, showFul
           <View style={styles.postImagesContainer}>
             <TouchableWithoutFeedback
               style={styles.postImagesContainerPresable}
-              onPress={() => navigation.navigate('PublicationDetails', { post })}>
+              onPress={goToPost}>
               {toView(post.files_with_urls)}
             </TouchableWithoutFeedback>
           </View>

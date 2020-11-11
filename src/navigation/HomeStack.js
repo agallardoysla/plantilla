@@ -23,6 +23,7 @@ import SearchGroup from './HomeGroups/SearchGroup';
 import NewPublicationGroup from './HomeGroups/NewPublicationGroup';
 import OtherProfileGroup from './HomeGroups/OtherProfileGroup';
 import MyConversationsGroup from './HomeGroups/MyConversationsGroup';
+import postGroup from './HomeGroups/PostGroup';
 
 const Tab = createBottomTabNavigator();
 
@@ -189,10 +190,17 @@ const HomeStack = () => {
             unmountOnBlur: true,
           })}
         />
-
         <Tab.Screen
           name="MyConversationsGroup"
           component={MyConversationsGroup}
+          options={() => ({
+            tabBarButton: HiddenButton,
+            unmountOnBlur: true,
+          })}
+        />
+        <Tab.Screen
+          name="PostGroup"
+          component={postGroup}
           options={() => ({
             tabBarButton: HiddenButton,
             unmountOnBlur: true,

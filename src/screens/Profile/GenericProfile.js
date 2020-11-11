@@ -46,14 +46,23 @@ export default function GenericProfile({ navigation, isLoggedUser }) {
       });
       setUsersPosts(postsPaginated);
     });
-  }
+  };
+
+  const goToPost = (post) => () => {
+    navigation.navigate('PostGroup', {
+      screen: 'PublicationDetails',
+      params: {
+        post,
+      },
+    });
+  };
 
   const UserPostItem = ({ item }) => (
     <View style={styles.itemContainer}>
       {item.map((post, i) => (
         <View style={styles.item} key={i}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('PublicationDetails', { post })}
+            onPress={goToPost(post)}
             style={styles.itemImageContainer}>
             <Image
               source={{

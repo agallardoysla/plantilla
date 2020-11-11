@@ -23,7 +23,6 @@ export default function MyProfileGroup() {
       <Stack.Screen name="Followeds" component={Followeds} />
       <Stack.Screen name="Followers" component={Followers} />
       <Stack.Screen name="Preferences" component={Preferences} />
-      <Stack.Screen name="PublicationDetails" component={PublicationDetails} />
       <Stack.Screen name="ProfileEdition" component={ProfileEdition} />
       <Stack.Screen name="NewProfilePhoto" component={NewProfilePhotoContainer} />
       <Stack.Screen name="ViewNewImage" component={ViewNewImage} />

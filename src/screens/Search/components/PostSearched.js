@@ -15,7 +15,7 @@ export default function ImagePostSearch({post}) {
   const toView = (file) => {
     return isImage(file.url) ? (
       <Image
-        source={{uri: file.url_small}}
+        source={{uri: file.url_half}}
         style={loading ? {} : styles.itemImage}
         resizeMode="cover"
         // onLoadStart={() => setLoading(true)}

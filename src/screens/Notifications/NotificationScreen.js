@@ -16,6 +16,15 @@ import Notification from './Notification';
 export default function NotificationScreen({ navigation }) {
   const notifications = useSelector(getNotifications);
 
+  const goToPost = (post) => () => {
+    navigation.navigate('PostGroup', {
+      screen: 'PublicationDetails',
+      params: {
+        post,
+      },
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={{ color: '#E9FC64', marginTop: 10 }}>NOTIFICACIONES</Text>

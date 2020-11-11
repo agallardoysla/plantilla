@@ -35,11 +35,18 @@ export default function MessageFormatter({message, navigation, style}) {
     ) : null;
   };
 
+  const goToPost = () => {
+    navigation.navigate('PostGroup', {
+      screen: 'PublicationDetails',
+      params: {
+        post,
+      },
+    });
+  };
+
   const renderPost = (matchingString, matches) => {
     return post ? (
-      <TouchableOpacity
-        style={styles.postContainer}
-        onPress={() => navigation.navigate('PublicationDetails', {post})}>
+      <TouchableOpacity style={styles.postContainer} onPress={goToPost}>
         <View style={styles.postOwner}>
           <CommentFormatter
             style={styles.postOwner}
