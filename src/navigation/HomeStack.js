@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {Image, StatusBar, StyleSheet, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, StatusBar, StyleSheet, View } from 'react-native';
 
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useDispatch} from 'react-redux';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useDispatch } from 'react-redux';
 import posts_services from '../services/posts_services';
-import {addPosts} from '../reducers/posts';
+import { addPosts } from '../reducers/posts';
 import search_services from '../services/search_services';
-import {addSearchedPosts} from '../reducers/searchedPosts';
-import {addSearchedProfiles} from '../reducers/searchedProfiles';
+import { addSearchedPosts } from '../reducers/searchedPosts';
+import { addSearchedProfiles } from '../reducers/searchedProfiles';
 import users_services from '../services/users_services';
-import {setNotifications} from '../reducers/notifications';
-import {setConversations} from '../reducers/conversations';
+import { setNotifications } from '../reducers/notifications';
+import { setConversations } from '../reducers/conversations';
 import chats_services from '../services/chats_services';
 import Loading from '../components/Loading';
-import {useSelector} from 'react-redux';
-import {getUser, setReactions} from '../reducers/user';
+import { useSelector } from 'react-redux';
+import { getUser, setReactions } from '../reducers/user';
 import profiles_services from '../services/profiles_services';
 import HomeGroup from './HomeGroups/HomeGroup';
 import MyProfileGroup from './HomeGroups/MyProfileGroup';
@@ -24,6 +24,14 @@ import NewPublicationGroup from './HomeGroups/NewPublicationGroup';
 import OtherProfileGroup from './HomeGroups/OtherProfileGroup';
 import MyConversationsGroup from './HomeGroups/MyConversationsGroup';
 import postGroup from './HomeGroups/PostGroup';
+import { addComments } from "../reducers/comments";
+import { addPostReactions } from "../reducers/post_reactions";
+import { addPostToFiles } from "../reducers/posts_to_files";
+import { addPostToMentions } from "../reducers/post_to_mentions";
+import { addPostToSponsors } from "../reducers/post_to_sponsors";
+import { addUsers } from "../reducers/users";
+import { addProfiles } from "../reducers/profiles";
+import { addFiles } from "../reducers/files";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,14 +45,22 @@ const HomeStack = () => {
     // Cargar los posts de Home
     const initHomePostsCount = 20;
     posts_services.list(initHomePostsCount, 0).then((res) => {
-      dispatch(addPosts(res.data));
+      dispatch(addPosts(res.data.posts));
+      dispatch(addComments(res.data.comments));
+      dispatch(addPostReactions(res.data.posts_reactions));
+      dispatch(addPostToFiles(res.data.posts_to_files));
+      dispatch(addPostToMentions(res.data.posts_to_mentions));
+      dispatch(addPostToSponsors(res.data.posts_to_sponsors));
+      dispatch(addUsers(res.data.users));
+      dispatch(addProfiles(res.data.profiles));
+      dispatch(addFiles(res.data.files));
     });
     // Cargar los posts de Busqueda
-    search_services.search({search_in: 'posts'}).then((res) => {
+    search_services.search({ search_in: 'posts' }).then((res) => {
       dispatch(addSearchedPosts(res.data.posts));
     });
     // Cargar los perfiles de Busqueda
-    search_services.search({search_in: 'users'}).then((res) => {
+    search_services.search({ search_in: 'users' }).then((res) => {
       dispatch(addSearchedProfiles(res.data.users));
     });
     // Cargar los perfiles para compartir publicacion
@@ -90,8 +106,8 @@ const HomeStack = () => {
 
   const isLargeIcon = (routeName) => routeName === 'HomeGroup';
 
-  const screenOptions = ({route}) => ({
-    tabBarIcon: ({focused}) => {
+  const screenOptions = ({ route }) => ({
+    tabBarIcon: ({ focused }) => {
       let iconName;
       switch (route.name) {
         case 'HomeGroup':
@@ -129,7 +145,7 @@ const HomeStack = () => {
     },
   });
 
-  const HiddenButton = ({pops}) => <View style={styles.empy} />;
+  const HiddenButton = ({ pops }) => <View style={styles.empy} />;
 
   const unmountOnBlur = false; // resetea el estado del stack
 
@@ -149,7 +165,7 @@ const HomeStack = () => {
         <Tab.Screen
           name="ProfileGroup"
           component={MyProfileGroup}
-          options={{title: '', unmountOnBlur}}
+          options={{ title: '', unmountOnBlur }}
         />
         <Tab.Screen
           name="NotificationGroup"
@@ -163,17 +179,17 @@ const HomeStack = () => {
         <Tab.Screen
           name="HomeGroup"
           component={HomeGroup}
-          options={{title: '', unmountOnBlur}}
+          options={{ title: '', unmountOnBlur }}
         />
         <Tab.Screen
           name="SearchGroup"
           component={SearchGroup}
-          options={{title: '', unmountOnBlur}}
+          options={{ title: '', unmountOnBlur }}
         />
         <Tab.Screen
           name="NewPublicationGroup"
           component={NewPublicationGroup}
-          options={({route}) => ({
+          options={({ route }) => ({
             title: '',
             tabBarVisible: route.name !== 'NewPublicationGroup',
             unmountOnBlur,
