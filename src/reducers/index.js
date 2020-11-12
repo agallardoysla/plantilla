@@ -7,6 +7,7 @@ import searchedProfiles from './searchedProfiles';
 import notifications from './notifications';
 import conversations from './conversations';
 import otherUser from './otherUser';
+import accounts from './accounts';
 
 const rootReducer = combineReducers({
   user,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   notifications,
   conversations,
   otherUser,
+  accounts,
 });
 
 export default rootReducer;

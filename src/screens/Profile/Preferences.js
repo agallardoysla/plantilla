@@ -1,11 +1,35 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {View, Text, Image, StyleSheet, Alert} from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import FormButton from '../../components/FormButton';
-import {AuthContext} from '../../navigation/AuthProvider';
 
 export default function Preferences({navigation}) {
-  const {logout} = useContext(AuthContext);
+  const options = [
+    {
+      label: 'Editar perfil',
+      action: () => navigation.navigate('ProfileEdition'),
+    },
+    {
+      label: 'Mi cuenta',
+      action: () => navigation.navigate('MyAccount'),
+    },
+    {
+      label: 'Privacidad',
+      action: () => Alert.alert("Privacidad"),
+    },
+    {
+      label: 'Seguridad',
+      action: () => Alert.alert("Seguridad"),
+    },
+    {
+      label: 'Condiciones y política de uso',
+      action: () => Alert.alert("CyP"),
+    },
+    {
+      label: 'Eliminar cuenta',
+      action: () => Alert.alert("Eliminar cuenta"),
+    },
+  ];
 
   return (
     <View style={styles.container}>
@@ -14,13 +38,14 @@ export default function Preferences({navigation}) {
         source={require('../../assets/tuerca_blanca_grande.png')}
       />
       <Text style={styles.text}>PREFERENCIAS</Text>
-      <FormButton buttonTitle="Editar perfil" style={styles.action} onPress={() => navigation.navigate('ProfileEdition')} />
-      <FormButton buttonTitle="Mi cuenta" style={styles.action} onPress={() => Alert.alert("mi cuenta")} />
-      <FormButton buttonTitle="Privacidad" style={styles.action} onPress={() => Alert.alert("privacidad")} />
-      <FormButton buttonTitle="Seguridad" style={styles.action} onPress={() => Alert.alert("seguridad")} />
-      <FormButton buttonTitle="Condiciones y política de uso" style={styles.action} onPress={() => Alert.alert("condiciones")} />
-      <FormButton buttonTitle="Logout" style={styles.action} onPress={logout} />
-      <FormButton buttonTitle="Eliminar cuenta" style={styles.action} onPress={() => Alert.alert("eliminar cuenta")} />
+      {options.map((option, i) => (
+        <FormButton
+          buttonTitle={option.label}
+          style={styles.action}
+          onPress={option.action}
+          key={i}
+        />
+      ))}
     </View>
   );
 }
