@@ -58,17 +58,16 @@ export default function HomeScreen({ navigation }) {
   };
 
   const PublicationItem = ({ item, index }) => {
-    if (index % 3 === 2) {
-      return <Admob />;
-    } else {
-      return (
+    return (
+      <View style={styles.publication}>
         <Publication
           postId={item.id}
           navigation={navigation}
           showSharePost={showSharePost}
         />
-      );
-    }
+        {index % 2 === 1 ? <Admob /> : null}
+      </View>
+    );
   };
 
   const gotToMyConversations = () => {
@@ -97,6 +96,7 @@ export default function HomeScreen({ navigation }) {
         onEndReached={loadPosts}
         bouncesZoom={true}
         keyExtractor={(item, index) => index.toString()}
+        style={styles.publications}
       />
       <SharePost
         showModal={showModal}
@@ -118,12 +118,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     backgroundColor: '#242424',
-
     marginBottom: 10,
     marginRight: 5,
   },
   sobre_amarillo: {
     width: 42,
     height: 42,
+  },
+  publications: {
+    height: 2600,
   },
 });

@@ -20,13 +20,17 @@ export default function Routes() {
    ususario está autenticado o no luego ejecutar el useEffect*/
 
   async function onAuthStateChanged(isUserLogged) {
+    await AsyncStorage.removeItem('local_token');
     // setUser(isUserLogged);
     if (isUserLogged) {
-      if (!user) {
+      await AsyncStorage.setItem('account', 'main');
+      if (user) {
+        await AsyncStorage.setItem('local_token', user.local_token);
+      } else {
         const backendUser = await users_services.me();
+        await AsyncStorage.setItem('local_token', backendUser.data.local_token);
         dispatch(login(backendUser.data));
         setExistProfile(backendUser.data.profile.is_ready);
-        AsyncStorage.setItem('local_token', backendUser.data.local_token);
       }
     } else {
       // setUser(null);

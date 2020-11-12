@@ -5,11 +5,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /* Todo este modulo se usa solo cuando el usuario ya esta logueado con Firebase */
 
-const getConfig = async () => {
+export const getToken = async () => {
   let token;
+  let account;
   let isLocalToken = false;
+
   try {
     const _token = await AsyncStorage.getItem('local_token');
+    account = await AsyncStorage.getItem('account');
     if (_token !== null) {
       token = _token;
       isLocalToken = true;
@@ -17,14 +20,20 @@ const getConfig = async () => {
     } else {
       token = await auth().currentUser.getIdToken(true);
       console.log('using firebase token');
+      token = `${token}@${account}`;
     }
   } catch (e) {}
+
+  return `${isLocalToken ? 'LJWT' : 'JWT'} ${token}`;
+};
+
+const getConfig = async () => {
   return {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       // 'Access-Control-Allow-Origin': '*',
-      'Authorization': `${isLocalToken ? 'LJWT' : 'JWT'} ${token}`,
+      'Authorization': await getToken(),
     },
   };
 };
