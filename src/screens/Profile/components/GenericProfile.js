@@ -8,14 +8,14 @@ import {
   Dimensions,
   TouchableOpacity
 } from 'react-native';
-import users_services from '../../services/users_services';
+import users_services from '../../../services/users_services';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ProfileLeftColumn from './components/ProfileLeftColumn';
-import ProfileRightColumn from './components/ProfileRightColumn';
-import ProfileCenterColumn from './components/ProfileCenterColumn';
+import ProfileLeftColumn from './ProfileLeftColumn';
+import ProfileRightColumn from './ProfileRightColumn';
+import ProfileCenterColumn from './ProfileCenterColumn';
 import { useSelector } from 'react-redux';
-import { getUser } from '../../reducers/user';
-import { getOtherUser } from '../../reducers/otherUser';
+import { getUser } from '../../../reducers/user';
+import { getOtherUser } from '../../../reducers/otherUser';
 
 const numColumns = 3; //para el flatList
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import OtherProfile from '../../screens/Profile/components/OtherProfile';
-import Followeds from '../../screens/Profile/components/Followeds';
-import Followers from '../../screens/Profile/components/Followers';
+import OtherProfile from '../../screens/Profile/OtherProfile';
+import Followeds from '../../screens/Profile/SubScreens/Followeds';
+import Followers from '../../screens/Profile/SubScreens/Followers';
 import { View } from 'react-native';
 
 export default function OtherProfileGroup() {

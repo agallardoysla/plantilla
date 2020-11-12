@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, ActivityIndicator} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {getUser} from '../../../reducers/user';
-import users_services from '../../../services/users_services';
-import GenericProfile from '../GenericProfile';
-import {setOtherUserReactions, updateOtherUser} from '../../../reducers/otherUser';
-import StylesConfiguration from '../../../utils/StylesConfiguration';
+import {getUser} from '../../reducers/user';
+import users_services from '../../services/users_services';
+import GenericProfile from './components/GenericProfile';
+import {setOtherUserReactions, updateOtherUser} from '../../reducers/otherUser';
+import StylesConfiguration from '../../utils/StylesConfiguration';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import profiles_services from '../../../services/profiles_services';
+import profiles_services from '../../services/profiles_services';
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function OtherProfile({navigation, route}) {

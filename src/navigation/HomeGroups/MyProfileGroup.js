@@ -1,13 +1,12 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import MyProfileScreen from '../../screens/Profile/components/MyProfileScreen';
-import Followeds from '../../screens/Profile/components/Followeds';
-import Followers from '../../screens/Profile/components/Followers';
+import MyProfileScreen from '../../screens/Profile/MyProfileScreen';
+import Followeds from '../../screens/Profile/SubScreens/Followeds';
+import Followers from '../../screens/Profile/SubScreens/Followers';
 import Preferences from '../../screens/Profile/Preferences';
-import PublicationDetails from '../../screens/Home/components/PublicationDetails';
 import ViewNewImage from '../../screens/NewPublication/components/ViewNewImage';
-import Vip from '../../screens/Profile/components/Vip';
-import ProfileEdition from '../../screens/Profile/components/ProfileEdition';
+import Vip from '../../screens/Profile/SubScreens/Vip';
+import ProfileEdition from '../../screens/Profile/SubScreens/ProfileEdition';
 import NewProfilePhotoContainer from '../../screens/Profile/NewProfilePhoto/NewProfilePhotoContainer';
 
 export default function MyProfileGroup() {
@@ -15,11 +14,11 @@ export default function MyProfileGroup() {
 
   return (
     <Stack.Navigator
-      initialRouteName="Profile"
+      initialRouteName="MyProfile"
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Profile" component={MyProfileScreen} />
+      <Stack.Screen name="MyProfile" component={MyProfileScreen} />
       <Stack.Screen name="Followeds" component={Followeds} />
       <Stack.Screen name="Followers" component={Followers} />
       <Stack.Screen name="Preferences" component={Preferences} />

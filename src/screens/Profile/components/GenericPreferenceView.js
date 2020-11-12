@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
-import StylesConfiguration from '../../utils/StylesConfiguration';
-import GoBackButton from '../../components/GoBackButton';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
+import GoBackButton from '../../../components/GoBackButton';
 
 export default function GenericPreferenceView({title, children, style, navigation}) {
 
@@ -14,7 +14,7 @@ export default function GenericPreferenceView({title, children, style, navigatio
         <Text style={styles.title}>{title}</Text>
         <Image
           style={styles.tuercaBlanca}
-          source={require('../../assets/tuerca_blanca_grande.png')}
+          source={require('../../../assets/tuerca_blanca_grande.png')}
         />
       </View>
       <View style={[styles.container, style]}>{children}</View>

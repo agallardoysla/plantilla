@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import FormButton from '../../../components/FormButton';
-import GenericPreferenceView from '../GenericPreferenceView';
+import GenericPreferenceView from '../components/GenericPreferenceView';
 import {Alert, Image, StyleSheet, Text, View} from 'react-native';
 import profiles_services from '../../../services/profiles_services';
 import users_services from '../../../services/users_services';
