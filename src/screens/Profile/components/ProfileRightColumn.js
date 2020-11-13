@@ -37,6 +37,9 @@ export default function ProfileRightColumn({user, isLoggedUser, style, navigatio
 
 const styles = StyleSheet.create({
   textPatreon: {
+    fontWeight: '400',
+    fontSize: 12,
     color: 'white',
+    minWidth: 100,
   },
 });

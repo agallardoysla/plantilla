@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import Counter from '../../../components/Counter';
-import FormImageIcon from '../../../components/FormImageIcon';
 import FormLike from '../../../components/FormLike';
 import { addOtherUserReaction, getOtherUserReactions, removeOtherUserReaction } from '../../../reducers/otherUser';
 import { getUser, getUserReactions } from '../../../reducers/user';
@@ -61,9 +60,13 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
   return (
     <View style={style}>
       <View style={styles.profleFoto}>
-        <FormImageIcon
-          size={24}
-          source={require('../../../assets/foto_perfil_superior.png')}
+        <Image
+          source={
+            user.profile.photo
+              ? {uri: user.profile.photo}
+              : require('../../../assets/foto_perfil_superior.png')
+          }
+          style={styles.circle_image}
         />
       </View>
 
@@ -116,6 +119,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'yellow',
+  },
+  circle_image: {
+    height: 110,
+    width: 110,
+    borderRadius: 55,
   },
   tuerca_blanca_container: {
     marginLeft: 40,
