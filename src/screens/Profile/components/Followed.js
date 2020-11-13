@@ -31,9 +31,14 @@ const Followed = ({ followed, navigation }) => {
     <View style={styles.row}>
       <TouchableOpacity onPress={goToProfile} style={styles.user}>
         <Image
-          source={require('../../../assets/pride-dog_1.png')}
-          resizeMode="contain"
+          source={
+            followed.profile.photo
+              ? {uri: followed.profile.photo}
+              : require('../../../assets/foto_perfil_superior.png')
+          }
           style={styles.image}
+          resizeMode="cover"
+          fadeDuration={0}
         />
         <Text style={styles.profileName} numberOfLines={2}>
           @{followed.display_name}
@@ -77,6 +82,7 @@ const styles = StyleSheet.create({
   image: {
     width: 60,
     height: 60,
+    borderRadius: 30,
   },
   profileName: {
     color: 'white',
