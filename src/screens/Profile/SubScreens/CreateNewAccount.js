@@ -4,9 +4,9 @@ import moment from 'moment';
 
 
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { AuthContext } from '../../../navigation/AuthProvider';
-import { getUser } from '../../../reducers/user';
+import { getUser, login } from '../../../reducers/user';
 import profiles_services from '../../../services/profiles_services';
 import users_services from '../../../services/users_services';
 import CheckBox from '../../../components/CheckBox';
@@ -44,6 +44,9 @@ export default function CreateNewAccount({navigation}) {
   const user = useSelector(getUser);
   const [verifyExistProfile, setVerifyExistProfile] = useState(false);
   const accounts = useSelector(getAccounts);
+  const dispatch = useDispatch();
+  const [submitting, setSubmitting] = useState(false);
+  const {createNewAccount} = useContext(AuthContext);
 
   useEffect(() => {
     if (userPosibleLikes.length === 0) {
@@ -131,21 +134,23 @@ export default function CreateNewAccount({navigation}) {
   };
 
   const submitProfile = async () => {
-    const profile = {...user.profile};
-
-    const twoDigits = (n) => (n < 10 ? '0' + n : n);
-    profile.birth_date = `${birthday.getFullYear()}-${twoDigits(
-      birthday.getMonth() + 1,
-    )}-${twoDigits(birthday.getDate())}`;
-    profile.gender = gender === 'UNDEFINED2' ? 'UNDEFINED' : gender;
-    profile.is_ready = true;
-
-    console.log(user);
+    setSubmitting(true);
     await AsyncStorage.setItem('account', getNextAccountName(accounts));
-    await profiles_services.edit(profile.id, profile);
-    await users_services.edit(user.id, {display_name: nickname});
-
-    navigation.navigate('Wellcoming');
+    let newUser = await users_services.me();
+    await AsyncStorage.setItem('local_token', newUser.data.local_token);
+    setTimeout(async () => {
+      newUser = await users_services.me(); // hay que repetir para que genere el profile
+      const twoDigits = (n) => (n < 10 ? '0' + n : n);
+      const newProfile = {
+        ...newUser.data.profile,
+        birth_date: `${birthday.getFullYear()}-${twoDigits(
+          birthday.getMonth() + 1,
+        )}-${twoDigits(birthday.getDate())}`,
+        gender: gender === 'UNDEFINED2' ? 'UNDEFINED' : gender,
+        is_ready: true,
+      };
+      createNewAccount(newUser.data, newProfile, nickname, navigation);
+    }, 1000);
   };
 
   const GenderSelectionCheckbox = (props) => (

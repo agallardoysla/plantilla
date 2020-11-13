@@ -4,6 +4,10 @@ export const searchedPostsSlice = createSlice({
   name: 'searchedPosts',
   initialState: [],
   reducers: {
+    setSearchedPosts: (searchedPosts, action) => {
+      searchedPosts = action.payload;
+      return searchedPosts;
+    },
     addSearchedPosts: (searchedPosts, action) => {
       searchedPosts = [...searchedPosts, ...action.payload];
       return searchedPosts;
@@ -16,6 +20,7 @@ export const searchedPostsSlice = createSlice({
 });
 
 export const {
+  setSearchedPosts,
   addSearchedPosts,
   resetSearchedPosts,
 } = searchedPostsSlice.actions;

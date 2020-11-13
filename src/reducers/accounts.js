@@ -5,12 +5,10 @@ export const accountsSlice = createSlice({
   initialState: [],
   reducers: {
     addAccount: (accounts, action) => {
-      console.log('accounts: ', action.payload);
       accounts = [...accounts, action.payload];
       return accounts;
     },
     setAccounts: (accounts, action) => {
-      console.log('accounts: ', action.payload);
       accounts = action.payload;
       return accounts;
     },

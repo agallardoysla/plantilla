@@ -4,17 +4,17 @@ import {Image, StatusBar, StyleSheet, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useDispatch} from 'react-redux';
 import posts_services from '../services/posts_services';
-import {addPosts} from '../reducers/posts';
+import {setPosts} from '../reducers/posts';
 import search_services from '../services/search_services';
-import {addSearchedPosts} from '../reducers/searchedPosts';
-import {addSearchedProfiles} from '../reducers/searchedProfiles';
+import {setSearchedPosts} from '../reducers/searchedPosts';
+import {setSearchedProfiles} from '../reducers/searchedProfiles';
 import users_services from '../services/users_services';
 import {setNotifications} from '../reducers/notifications';
 import {setConversations} from '../reducers/conversations';
 import chats_services from '../services/chats_services';
 import Loading from '../components/Loading';
 import {useSelector} from 'react-redux';
-import {getUser, setReactions} from '../reducers/user';
+import {getUser, login, setReactions} from '../reducers/user';
 import profiles_services from '../services/profiles_services';
 import HomeGroup from './HomeGroups/HomeGroup';
 import MyProfileGroup from './HomeGroups/MyProfileGroup';
@@ -24,6 +24,9 @@ import NewPublicationGroup from './HomeGroups/NewPublicationGroup';
 import OtherProfileGroup from './HomeGroups/OtherProfileGroup';
 import MyConversationsGroup from './HomeGroups/MyConversationsGroup';
 import postGroup from './HomeGroups/PostGroup';
+import { getLoadingProfile, setLoadingProfile } from '../reducers/loadingProfile';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getLoadingOtherProfile } from '../reducers/loadingOtherProfile';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,36 +34,63 @@ const HomeStack = () => {
   const dispatch = useDispatch();
   const user = useSelector(getUser);
   const [loading, setLoading] = useState(true);
+  const loadingProfile = useSelector(getLoadingProfile);
+  const loadingOtherProfile = useSelector(getLoadingOtherProfile);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 13 * 1000);
-    // Cargar los posts de Home
-    const initHomePostsCount = 20;
-    posts_services.list(initHomePostsCount, 0).then((res) => {
-      dispatch(addPosts(res.data));
-    });
-    // Cargar los posts de Busqueda
-    search_services.search({search_in: 'posts'}).then((res) => {
-      dispatch(addSearchedPosts(res.data.posts));
-    });
-    // Cargar los perfiles de Busqueda
-    search_services.search({search_in: 'users'}).then((res) => {
-      dispatch(addSearchedProfiles(res.data.users));
-    });
-    // Cargar los perfiles para compartir publicacion
-    // Cargar notificaciones
-    users_services.getNotifications().then((res) => {
-      dispatch(setNotifications(res.data));
-    });
-    // Cargar conversaciones
-    chats_services.list().then((res) => {
-      dispatch(setConversations(res.data));
-    });
-    // Cargar reacciones al perfil propio
-    profiles_services.getReactions(user.id).then((res) => {
-      dispatch(setReactions(res.data));
-    });
+    dispatch(setLoadingProfile(true));
   }, []);
+
+  useEffect(() => {
+    const init = async () => {
+      if (loadingProfile) {
+        setLoading(true);
+        let userId = user.id;
+        if (loadingOtherProfile) {
+          const backendUser = await users_services.me();
+          await AsyncStorage.setItem('local_token', backendUser.data.local_token);
+          dispatch(login(backendUser.data));
+          userId = backendUser.data.id;
+        }
+        setTimeout(() => {
+          setLoading(false);
+          dispatch(setLoadingProfile(false));
+        }, 17 * 1000);
+        // Cargar los posts de Home
+        const initHomePostsCount = 20;
+        posts_services.list(initHomePostsCount, 0).then((res) => {
+          dispatch(setPosts(res.data));
+        });
+        // Cargar los posts de Busqueda
+        search_services.search({search_in: 'posts'}).then((res) => {
+          dispatch(setSearchedPosts(res.data.posts));
+        });
+        // Cargar los perfiles de Busqueda
+        search_services.search({search_in: 'users'}).then((res) => {
+          dispatch(setSearchedProfiles(res.data.users));
+        });
+        // Cargar los perfiles para compartir publicacion
+        // Cargar notificaciones
+        users_services.getNotifications().then((res) => {
+          dispatch(setNotifications(res.data));
+        });
+        // Cargar conversaciones
+        chats_services.list().then((res) => {
+          dispatch(setConversations(res.data));
+        });
+
+        try {
+          // Cargar reacciones al perfil propio
+          profiles_services.getReactions(userId).then((res) => {
+            dispatch(setReactions(res.data));
+          });
+        } catch (e) {
+          dispatch(setReactions([]));
+        }
+      }
+    };
+    init();
+  }, [loadingProfile]);
 
   const icons = {
     icon_profile: require('../assets/foto_perfil.png'),
@@ -133,11 +163,7 @@ const HomeStack = () => {
 
   const unmountOnBlur = false; // resetea el estado del stack
 
-  if (loading) {
-    return <Loading />;
-  }
-
-  return (
+  return !loading && !loadingProfile ? (
     <>
       <StatusBar backgroundColor="black" />
 
@@ -208,6 +234,8 @@ const HomeStack = () => {
         />
       </Tab.Navigator>
     </>
+  ) : (
+    <Loading />
   );
 };
 

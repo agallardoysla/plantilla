@@ -8,6 +8,8 @@ import notifications from './notifications';
 import conversations from './conversations';
 import otherUser from './otherUser';
 import accounts from './accounts';
+import loadingProfile from './loadingProfile';
+import loadingOtherProfile from './loadingOtherProfile';
 
 const rootReducer = combineReducers({
   user,
@@ -18,6 +20,8 @@ const rootReducer = combineReducers({
   conversations,
   otherUser,
   accounts,
+  loadingProfile,
+  loadingOtherProfile,
 });
 
 export default rootReducer;

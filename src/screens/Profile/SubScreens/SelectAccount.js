@@ -1,48 +1,41 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import FormButton from '../../../components/FormButton';
 import GenericPreferenceView from '../components/GenericPreferenceView';
 import { StyleSheet } from 'react-native';
-import { useDispatch } from 'react-redux';
-import users_services from '../../../services/users_services';
-import { setAccounts } from '../../../reducers/accounts';
-import { AuthContext } from '../../../navigation/AuthProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAccounts, setAccounts } from '../../../reducers/accounts';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setLoadingProfile } from '../../../reducers/loadingProfile';
+import { setLoadingOtherProfile } from '../../../reducers/loadingOtherProfile';
 
-export default function MyAccount({navigation}) {
-  const {logout} = useContext(AuthContext);
+export default function SelectAccount({navigation}) {
   const dispatch = useDispatch();
+  const accounts = useSelector(getAccounts);
 
-  useEffect(() => {
-    users_services.getAccounts().then((res) => {
-      console.log('my account', res.data);
-      dispatch(setAccounts(res.data));
-    });
-  }, []);
+  const selectAccount = (account) => async () => {
+    await AsyncStorage.setItem('account', account.account);
+    dispatch(setLoadingOtherProfile(true));
+    navigation.navigate('HomeGroup');
+    dispatch(setLoadingProfile(true));
+  };
 
   const options = [
+    ...accounts.map((account) => ({
+      label: account.display_name,
+      action: selectAccount(account),
+    })),
     {
-      label: 'Iniciar con una cuenta diferente',
-      action: () => navigation.navigate('SelectAccount'),
+      label: 'Crear nueva cuenta',
+      action: () => navigation.navigate('CreateNewAccount'),
     },
-    {
-      label: 'Multicuenta',
-      action: () => {},
-    },
-    {
-      label: 'Verificar',
-      action: () => {},
-    },
-    {
-      label: 'Cerrar sesión',
-      action: logout,
-    },
-  ];
+  ].slice(0, 5);
 
   return (
     <GenericPreferenceView
       style={styles.container}
       navigation={navigation}
-      title={'MI CUENTA'}>
+      title={'SELECCIONAR CUENTA'}>
       {options.map((option, i) => (
         <FormButton
           buttonTitle={option.label}

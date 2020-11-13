@@ -10,6 +10,7 @@ import ProfileEdition from '../../screens/Profile/SubScreens/ProfileEdition';
 import NewProfilePhotoContainer from '../../screens/Profile/NewProfilePhoto/NewProfilePhotoContainer';
 import MyAccount from '../../screens/Profile/SubScreens/MyAccount';
 import CreateNewAccount from '../../screens/Profile/SubScreens/CreateNewAccount';
+import SelectAccount from '../../screens/Profile/SubScreens/SelectAccount';
 
 export default function MyProfileGroup() {
   const Stack = createStackNavigator();
@@ -29,6 +30,7 @@ export default function MyProfileGroup() {
       <Stack.Screen name="NewProfilePhoto" component={NewProfilePhotoContainer} />
       <Stack.Screen name="ViewNewImage" component={ViewNewImage} />
       <Stack.Screen name="MyAccount" component={MyAccount} />
+      <Stack.Screen name="SelectAccount" component={SelectAccount} />
       <Stack.Screen name="CreateNewAccount" component={CreateNewAccount} />
     </Stack.Navigator>
   );

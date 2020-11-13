@@ -3,6 +3,11 @@ import auth from '@react-native-firebase/auth';
 import {LoginManager, AccessToken} from 'react-native-fbsdk';
 import {GoogleSignin} from '@react-native-community/google-signin';
 import {Alert} from 'react-native';
+import profiles_services from '../services/profiles_services';
+import users_services from '../services/users_services';
+import { useDispatch } from 'react-redux';
+import { setLoadingProfile } from '../reducers/loadingProfile';
+import { login } from '../reducers/user';
 
 /**
  * Proveedor creado para acceder
@@ -18,6 +23,7 @@ GoogleSignin.configure({
 
 export const AuthProvider = ({children}) => {
   const [existProfile, setExistProfile] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <AuthContext.Provider
@@ -95,6 +101,14 @@ export const AuthProvider = ({children}) => {
             console.error(e);
             Alert.alert(e.message);
           }
+        },
+        createNewAccount: async (newUser, newProfile, nickname, navigation) => {
+          await profiles_services.edit(newProfile.id, newProfile);
+          const newUserModified = await users_services.edit(newUser.id, {display_name: nickname});
+
+          dispatch(setLoadingProfile(true));
+          dispatch(login(newUserModified.data));
+          navigation.navigate('HomeGroup');
         },
       }}>
       {children}
