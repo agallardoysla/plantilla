@@ -93,7 +93,9 @@ const HomeStack = () => {
   }, [loadingProfile]);
 
   const icons = {
-    icon_profile: require('../assets/foto_perfil.png'),
+    icon_profile: user.profile.photo
+      ? {uri: user.profile.photo}
+      : require('../assets/foto_perfil.png'),
 
     icon_notification: require('../assets/icono_notificacion.png'),
     icon_home: require('../assets/icono_home.png'),
@@ -153,7 +155,9 @@ const HomeStack = () => {
           style={[
             styles.icon,
             isLargeIcon(route.name) ? styles.largeIcon : styles.standardIcon,
+            route.name === 'ProfileGroup' ? styles.profileImage : null,
           ]}
+          fadeDuration={0}
         />
       );
     },
@@ -250,6 +254,9 @@ const styles = StyleSheet.create({
   largeIcon: {
     width: 33,
     height: 33,
+  },
+  profileImage: {
+    borderRadius: 12.5,
   },
   empy: {
     // vacio
