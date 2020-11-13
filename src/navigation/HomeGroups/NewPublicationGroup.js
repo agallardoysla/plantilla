@@ -1,8 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import NewPublicationContainer from '../../screens/NewPublication/NewPublicationContainer';
-import ViewNewImage from '../../screens/NewPublication/components/ViewNewImage';
+import NewPublication from '../../screens/NewPublication/NewPublication';
 import PublishPublication from '../../screens/NewPublication/components/PublishPublication';
+import ViewNewImage from '../../screens/Camera/ViewNewImage';
 
 export default function NewPublicationGroup() {
   const Stack = createStackNavigator();
@@ -17,7 +17,7 @@ export default function NewPublicationGroup() {
       }}>
       <Stack.Screen
         name="NewPublication"
-        component={NewPublicationContainer}
+        component={NewPublication}
         options={{headerShown: false}}
       />
       <Stack.Screen
