@@ -26,7 +26,7 @@ export default function ProfileLeftColumn({user, navigation, style, isLoggedUser
   return (
     <View style={style}>
       <Text style={styles.text_profile}>Publicaciones</Text>
-      <FormButtonCount buttonTitle={user.posts_count.POST_TYPE_PRUEBA} />
+      <FormButtonCount buttonTitle={user.posts_count ? user.posts_count.POST_TYPE_PRUEBA : 0} />
       <Text style={styles.text_profile}>Seguidos</Text>
       <FormButtonCount buttonTitle={followeds.length} onPress={goToFollowed} />
       <Text style={styles.text_profile}>Seguidores</Text>
