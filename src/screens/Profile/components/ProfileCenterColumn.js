@@ -23,7 +23,7 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
   };
 
   const getLikesCounter = () => {
-    return userReactions.length;
+    return userReactions ? userReactions.length : 0;
   };
 
   const addReactions = () => {
