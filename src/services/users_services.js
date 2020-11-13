@@ -4,12 +4,12 @@ const url = 'users/';
 
 export default {
   list: () => generic_service.doGet(url),
-  me: () => generic_service.doGet(url + 'me/'),
+  me: () => generic_service.doGet(url + 'me/', true),
   getAccounts: () => generic_service.doGet(`${url}me/accounts/`),
   getContext: (query) => generic_service.doPut(`${url}me/context/`, query),
   getNotifications: () => generic_service.doGet(`${url}me/notifications/`),
   get: (userId) => generic_service.doGet(`${url}${userId}/`),
-  edit: (userId, edition) => generic_service.doPut(`${url}${userId}/`, edition),
+  edit: (userId, edition) => generic_service.doPut(`${url}${userId}/`, edition, true),
   listPosts: (userId) => generic_service.doGet(`${url}${userId}/posts/`),
   follow: (userId) => generic_service.doGet(`${url}${userId}/follow/`),
   cancelFollow: (userId) => generic_service.doDelete(`${url}${userId}/follow/`),
