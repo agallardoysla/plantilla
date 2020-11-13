@@ -57,16 +57,19 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
     }
   };
 
+  const getProfilePhoto = () => {
+    return user.profile.photo
+      ? {uri: user.profile.photo}
+      : require('../../../assets/foto_perfil_superior.png');
+  };
+
   return (
     <View style={style}>
       <View style={styles.profleFoto}>
         <Image
-          source={
-            user.profile.photo
-              ? {uri: user.profile.photo}
-              : require('../../../assets/foto_perfil_superior.png')
-          }
+          source={getProfilePhoto()}
           style={styles.circle_image}
+          fadeDuration={0}
         />
       </View>
 

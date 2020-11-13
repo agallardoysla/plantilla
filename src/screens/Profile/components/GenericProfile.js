@@ -69,6 +69,7 @@ export default function GenericProfile({ navigation, isLoggedUser }) {
                 uri: post.files_with_urls[0].url_half ? post.files_with_urls[0].url_half : post.files_with_urls[0].url,
               }}
               style={styles.itemImage}
+              fadeDuration={0}
             />
           </TouchableOpacity>
         </View>

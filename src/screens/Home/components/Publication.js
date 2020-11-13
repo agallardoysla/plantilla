@@ -184,9 +184,14 @@ export default function Publication({ postId, navigation, showSharePost, showFul
 
             <View style={{ flexDirection: 'column' }}>
               <Image
-                source={require('../../../assets/pride-dog_1.png')}
-                resizeMode="contain"
+                source={
+                  post.user_owner.photo
+                    ? {uri: post.user_owner.photo}
+                    : require('../../../assets/pride-dog_1.png')
+                }
+                resizeMode="cover"
                 style={styles.image_profile}
+                fadeDuration={0}
               />
             </View>
           </View>
@@ -508,7 +513,7 @@ const styles = StyleSheet.create({
   image_profile: {
     width: 40,
     height: 40,
-    borderRadius: 400 / 2,
+    borderRadius: 20,
     marginRight: 14,
     marginBottom: 5,
   },
