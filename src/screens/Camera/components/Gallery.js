@@ -108,17 +108,19 @@ export default function Gallery({
           onPress={() => navigation.goBack()}
           source={'boton_volver_atras'}
         />
-        <Menu opened={showMenu} onBackdropPress={() => setShowMenu(false)}>
-          <MenuTrigger
-            text={type === 'Photos' ? 'Fotos' : 'Videos'}
-            customStyles={triggerStyles}
-            onPress={() => setShowMenu(true)}
-          />
-          <MenuOptions customStyles={menuOption}>
-            <MenuOption onSelect={() => changeTo('Photos')} text="Fotos" />
-            <MenuOption onSelect={() => changeTo('Videos')} text="Videos" />
-          </MenuOptions>
-        </Menu>
+        {canGetVideo ? (
+          <Menu opened={showMenu} onBackdropPress={() => setShowMenu(false)}>
+            <MenuTrigger
+              text={type === 'Photos' ? 'Fotos' : 'Videos'}
+              customStyles={triggerStyles}
+              onPress={() => setShowMenu(true)}
+            />
+            <MenuOptions customStyles={menuOption}>
+              <MenuOption onSelect={() => changeTo('Photos')} text="Fotos" />
+              <MenuOption onSelect={() => changeTo('Videos')} text="Videos" />
+            </MenuOptions>
+          </Menu>
+        ) : null}
       </View>
       <View style={styles.gallery}>
         <FlatList

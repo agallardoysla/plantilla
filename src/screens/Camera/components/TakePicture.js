@@ -72,7 +72,7 @@ export default function TakePicture({
       console.log(data.uri);
       const asset = {
         uri: data.uri,
-        ext: data.uri.split('.')[1].toLowerCase(),
+        ext: data.uri.slice(-5).split('.')[1].toLowerCase(),
       }
       setImages([...images, asset]);
       setVideo(null);
@@ -229,28 +229,6 @@ export default function TakePicture({
                 </View>
                 <View style={styles.actionsBar}>
                   <View style={styles.actionsBarBottom}>
-                    {images.length > 0 ? (
-                      <Text style={styles.imagesCounter}>
-                        {images.length} / {maxImages}
-                      </Text>
-                    ) : isRecording ? (
-                      <Text style={styles.imagesCounter}>
-                        {twoDigits(0)}:{twoDigits(timeCounter)}
-                      </Text>
-                    ) : (
-                          <TouchableOpacity
-                            onPress={() => recordVideo(camera)}
-                            style={styles.takeVideo}>
-                            <Image
-                              style={styles.boton_takeVideo}
-                              source={require('../../../assets/videocamara.png')}
-                            />
-                          </TouchableOpacity>
-                        )}
-                    {/* <TouchableOpacity
-                      
-                      style={styles.editPicture}
-                      disabled={!canPublish()}> */}
                     <Icon
                       onPress={() =>
                         canPublish()
@@ -266,13 +244,28 @@ export default function TakePicture({
                       showSecondIcon={!canPublish()}
                       source={'done_all'}
                       secondIcon={'done'}
-                      color={
-                        canPublish() ? StylesConfiguration.color : 'grey'
-                      }
+                      color={canPublish() ? StylesConfiguration.color : 'grey'}
                       size={iconSize}
                       style={styles.action}
                     />
-                    {/* </TouchableOpacity> */}
+                    {images.length > 0 ? (
+                      <Text style={styles.imagesCounter}>
+                        {images.length} / {maxImages}
+                      </Text>
+                    ) : isRecording ? (
+                      <Text style={styles.imagesCounter}>
+                        {twoDigits(0)}:{twoDigits(timeCounter)}
+                      </Text>
+                    ) : canGetVideo ? (
+                      <TouchableOpacity
+                        onPress={() => recordVideo(camera)}
+                        style={styles.takeVideo}>
+                        <Image
+                          style={styles.boton_takeVideo}
+                          source={require('../../../assets/videocamara.png')}
+                        />
+                      </TouchableOpacity>
+                    ) : null}
                   </View>
                   <View style={styles.actionsBarTop}>
                     <View style={styles.imagesContainer}>
@@ -403,7 +396,7 @@ const styles = StyleSheet.create({
   actionsBarBottom: {
     height: 74,
     backgroundColor: 'black',
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 15,

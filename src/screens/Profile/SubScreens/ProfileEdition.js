@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import FormButton from '../../../components/FormButton';
 import GenericPreferenceView from '../components/GenericPreferenceView';
@@ -8,7 +8,6 @@ import users_services from '../../../services/users_services';
 import MatInput from '../../../components/MatInput';
 import Icon from '../../../components/Icon';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import files_services from '../../../services/files_services';
 import NewPostInput from '../../NewPublication/components/NewPostInput';
 import {batch, useDispatch, useSelector} from 'react-redux';
 import {
@@ -41,21 +40,7 @@ export default function Preferences({navigation}) {
   };
 
   const takeNewProfilePhoto = () => {
-    Alert.alert('no disponible');
-    // const callback = async (images) => {
-    //   navigation.navigate('ProfileEdition');
-    //   console.log('nuevo perfil: ', images);
-    //   var re = /(?:\.([^.]+))?$/;
-    //   let path = {
-    //     url: images[0],
-    //     ext: re.exec(images[0])[1],
-    //   };
-
-    //   const result = await files_services.createPost(path.url, path.ext);
-    //   console.log('RESULT', await result.json());
-    //   profiles_services.edit(user.profile.id, {photo: await result.json().id});
-    // };
-    // navigation.navigate('NewProfilePhoto', {callback});
+    navigation.navigate('NewProfilePhoto');
   };
 
   return (
@@ -64,7 +49,11 @@ export default function Preferences({navigation}) {
       navigation={navigation}
       title={'EDITAR PERFIL'}>
       <Image
-        source={require('../../../assets/foto_perfil_superior.png')}
+        source={
+          user.profile.photo
+            ? {uri: user.profile.photo}
+            : require('../../../assets/foto_perfil_superior.png')
+        }
         style={styles.circle_image}
       />
       <FormButton

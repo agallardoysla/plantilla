@@ -29,7 +29,7 @@ export const getGallery = async ({ quantity = 20, assetType = 'Photos' }: getGal
     .then((r) => {
       const gallery = Array.from(r.edges, asset => {
         const image = asset.node.image;
-        const ext = Platform.OS === 'ios' ? image.filename.split('.')[1].toLowerCase() : image.uri.split('.')[1].toLowerCase();
+        const ext = Platform.OS === 'ios' ? image.filename.slice(-5).split('.')[1].toLowerCase() : image.uri.slice(-5).split('.')[1].toLowerCase();
         if (image.uri.startsWith('ph://')) {
           const appleId = image.uri.substring(5, 41);
           image.uri = `assets-library://asset/asset.${ext}?id=${appleId}&ext=${ext}`;
