@@ -28,10 +28,10 @@ import { getLoadingProfile, setLoadingProfile } from '../reducers/loadingProfile
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLoadingOtherProfile } from '../reducers/loadingOtherProfile';
 import { setComments } from '../reducers/comments';
-import { setPostReactions } from '../reducers/post_reactions';
-import { setPostToFiles } from '../reducers/posts_to_files';
-import { setPostToMentions } from '../reducers/post_to_mentions';
-import { setPostToSponsors } from '../reducers/post_to_sponsors';
+import { setPostReactions } from '../reducers/postReactions';
+import { setPostToFiles } from '../reducers/postsToFiles';
+import { setPostToMentions } from '../reducers/postToMentions';
+import { setPostToSponsors } from '../reducers/postToSponsors';
 import { setUsers } from '../reducers/users';
 import { setProfiles } from '../reducers/profiles';
 import { setFiles } from '../reducers/files';
