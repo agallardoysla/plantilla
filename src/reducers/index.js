@@ -10,6 +10,14 @@ import otherUser from './otherUser';
 import accounts from './accounts';
 import loadingProfile from './loadingProfile';
 import loadingOtherProfile from './loadingOtherProfile';
+import comments from './comments';
+import files from './files';
+import post_reactions from './post_reactions';
+import post_to_mentions from './post_to_mentions';
+import post_to_sponsors from './post_to_sponsors';
+import post_to_files from './posts_to_files';
+import profiles from './profiles';
+import list_users from './users';
 
 const rootReducer = combineReducers({
   user,
@@ -22,6 +30,14 @@ const rootReducer = combineReducers({
   accounts,
   loadingProfile,
   loadingOtherProfile,
+  comments,
+  files,
+  post_reactions,
+  post_to_mentions,
+  post_to_sponsors,
+  post_to_files,
+  profiles,
+  list_users
 });
 
 export default rootReducer;
