@@ -1,5 +1,5 @@
 import auth from '@react-native-firebase/auth';
-import axios from './axios_config';
+import {axios_v1} from './axios_config';
 import api_config from './api_config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -43,7 +43,7 @@ const genericMethodWithData = (method) => async (url, data, forceJWT) => {
   console.log(method, api_config.baseURL, url, data, config);
   let res;
   try {
-    res = await axios[method.toLowerCase()](url, data, config);
+    res = await axios_v1[method.toLowerCase()](url, data, config);
   } catch (e) {
     console.log(`Error ${method} ${url}: ${e}`);
   }
@@ -55,7 +55,7 @@ const genericMethodNoData = (method) => async (url, forceJWT) => {
   console.log(method, api_config.baseURL, url, config);
   let res;
   try {
-    res = await axios[method.toLowerCase()](url, config);
+    res = await axios_v1[method.toLowerCase()](url, config);
   } catch (e) {
     console.log(`Error ${method} ${url}: ${e}`);
   }

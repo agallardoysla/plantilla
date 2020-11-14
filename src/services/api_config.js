@@ -3,6 +3,7 @@ export default {
   https: true,
   baseURL: 'https://friendschallenge.webredirect.org/api/v1/',
   webSocketUrl: 'wss://friendschallenge.webredirect.org/push/',
+  normalizedBaseURL: 'https://new.friendschallenge.webredirect.org/',
 
   // Desarrollo
   // https: false,
