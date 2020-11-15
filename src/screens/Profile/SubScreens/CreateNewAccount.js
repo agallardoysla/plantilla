@@ -6,7 +6,7 @@ import moment from 'moment';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import { AuthContext } from '../../../navigation/AuthProvider';
-import { getUser, login } from '../../../reducers/user';
+import { getLoggedUser, login } from '../../../reducers/loggedUser';
 import profiles_services from '../../../services/profiles_services';
 import users_services from '../../../services/users_services';
 import CheckBox from '../../../components/CheckBox';
@@ -41,7 +41,7 @@ export default function CreateNewAccount({navigation}) {
   const [userPosibleLikes, setUserPosibleLikes] = useState([]);
   const [canSubmit, setCanSubmit] = useState(false);
   const {existProfile} = useContext(AuthContext);
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const [verifyExistProfile, setVerifyExistProfile] = useState(false);
   const accounts = useSelector(getAccounts);
   const dispatch = useDispatch();

@@ -5,15 +5,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import Counter from '../../../components/Counter';
 import FormLike from '../../../components/FormLike';
 import { addOtherUserReaction, getOtherUserReactions, removeOtherUserReaction } from '../../../reducers/otherUser';
-import { getUser, getUserReactions } from '../../../reducers/user';
+import { getLoggedUser, getLoggedUserReactions } from '../../../reducers/loggedUser';
 import profiles_services from '../../../services/profiles_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 export default function ProfileCenterColumn({user, navigation, style, isLoggedUser}) {
   const userReactions = isLoggedUser
-    ? useSelector(getUserReactions)
+    ? useSelector(getLoggedUserReactions)
     : useSelector(getOtherUserReactions);
-  const loggedUser = useSelector(getUser);
+  const loggedUser = useSelector(getLoggedUser);
   const dispatch = useDispatch();
 
   const getILiked = () => {

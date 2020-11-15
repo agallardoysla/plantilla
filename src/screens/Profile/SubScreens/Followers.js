@@ -7,12 +7,12 @@ import FormSearchInput from '../../../components/FormSearchInput';
 import utils from '../../../utils/utils.js';
 import { useSelector } from 'react-redux';
 import { getOtherUserFollowers } from '../../../reducers/otherUser';
-import { getUserFollowers } from '../../../reducers/user';
+import { getLoggedUserFollowers } from '../../../reducers/loggedUser';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Followers = ({ navigation, route }) => {
   const followers = route.params.isLoggedUser
-    ? useSelector(getUserFollowers)
+    ? useSelector(getLoggedUserFollowers)
     : useSelector(getOtherUserFollowers);
   const [filteredFollowers, setFilteredFollowers] = useState(followers);
   const [searchString, setSearchString] = useState('');

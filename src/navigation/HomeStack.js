@@ -14,7 +14,7 @@ import { setConversations } from '../reducers/conversations';
 import chats_services from '../services/chats_services';
 import Loading from '../components/Loading';
 import {useSelector} from 'react-redux';
-import {getUser, login, setReactions} from '../reducers/user';
+import {getLoggedUser, login, setReactions} from '../reducers/loggedUser';
 import profiles_services from '../services/profiles_services';
 import HomeGroup from './HomeGroups/HomeGroup';
 import MyProfileGroup from './HomeGroups/MyProfileGroup';
@@ -40,10 +40,11 @@ const Tab = createBottomTabNavigator();
 
 const HomeStack = () => {
   const dispatch = useDispatch();
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const [loading, setLoading] = useState(true);
   const loadingProfile = useSelector(getLoadingProfile);
   const loadingOtherProfile = useSelector(getLoadingOtherProfile);
+  const waitingLoadingTime = 0; // 17
 
   useEffect(() => {
     dispatch(setLoadingProfile(true));
@@ -63,7 +64,7 @@ const HomeStack = () => {
         setTimeout(() => {
           setLoading(false);
           dispatch(setLoadingProfile(false));
-        }, 17 * 1000);
+        }, waitingLoadingTime * 1000);
         // Cargar los posts de Home
         const initHomePostsCount = 20;
         posts_services.list(initHomePostsCount, 0).then((res) => {

@@ -1,14 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, login } from '../../../reducers/user';
+import { getLoggedUser, login } from '../../../reducers/loggedUser';
 import files_services from '../../../services/files_services';
 import profiles_services from '../../../services/profiles_services';
 import users_services from '../../../services/users_services';
 import Camera from '../../Camera/Camera';
 
 export default function NewProfilePhoto({navigation}) {
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const dispatch = useDispatch();
 
   const callback = async (params) => {

@@ -4,12 +4,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import FollowMenu from './FollowMenu';
 import {batch, useDispatch, useSelector} from 'react-redux';
-import {followUser, getUser, unfollowUser} from '../../../reducers/user';
+import {followUser, getLoggedUser, unfollowUser} from '../../../reducers/loggedUser';
 import users_services from '../../../services/users_services';
 import { followOtherUser, unfollowOtherUser } from '../../../reducers/otherUser';
 
 export default function OtherProfileRightColumn({user}) {
-  const loggedUser = useSelector(getUser);
+  const loggedUser = useSelector(getLoggedUser);
   const profileFollowLoggedUser = user.following_with_details.filter((u) => u.user_id === loggedUser.id).length > 0;
   const [loggedUserFollowProfile, setLoggedUserFollowProfile] = useState(
     loggedUser.following_with_details.filter((u) => u.user_id === user.id).length > 0,

@@ -1,11 +1,11 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
-import {getUser} from '../../../reducers/user';
+import {getLoggedUser} from '../../../reducers/loggedUser';
 import MessageFormatter from './MessageFormatter';
 
 export default function Message({message, navigation}) {
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
 
   const iSendIt = (_message) =>
     _message.from === user.id ||

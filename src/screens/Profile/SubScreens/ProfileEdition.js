@@ -11,14 +11,14 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import NewPostInput from '../../NewPublication/components/NewPostInput';
 import {batch, useDispatch, useSelector} from 'react-redux';
 import {
-  getUser,
+  getLoggedUser,
   setNewDisplayName,
   setNewProfileBio,
-} from '../../../reducers/user';
+} from '../../../reducers/loggedUser';
 
 export default function Preferences({navigation}) {
   const dispatch = useDispatch();
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const [editingNickname, setEditingNickname] = useState(false);
   const [editingDescription, setEditingDescription] = useState(false);
   const [newNickname, setNewNickname] = useState(user.display_name);

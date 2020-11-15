@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
-import {getUser} from '../reducers/user';
+import {getLoggedUser} from '../reducers/loggedUser';
 import comments_services from '../services/comments_services';
 import users_services from '../services/users_services';
 import CommentFormatter from './CommentFormatter';
@@ -23,7 +23,7 @@ export default function CommentInput({
   const [newComment, setNewComment] = useState(initialText);
   const [showSugestions, setShowSugestions] = useState(false);
   const [sugestionsInput, setSugestionsInput] = useState('');
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const [sugestionsAsync, setSugestionsAsync] = useState([]);
   const maxSugestions = 5;
 

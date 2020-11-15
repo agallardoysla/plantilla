@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 
-import user from './user';
+import loggedUser from './loggedUser';
 import posts from './posts';
 import searchedPosts from './searchedPosts';
 import searchedProfiles from './searchedProfiles';
@@ -20,7 +20,7 @@ import profiles from './profiles';
 import users from './users';
 
 const rootReducer = combineReducers({
-  user,
+  loggedUser,
   posts,
   searchedPosts,
   searchedProfiles,

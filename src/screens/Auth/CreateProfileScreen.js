@@ -14,7 +14,7 @@ import users_services from '../../services/users_services';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
-import {getUser} from '../../reducers/user';
+import {getLoggedUser} from '../../reducers/loggedUser';
 
 export default function CreateProfile({navigation}) {
   const today = new Date();
@@ -38,7 +38,7 @@ export default function CreateProfile({navigation}) {
   const [userPosibleLikes, setUserPosibleLikes] = useState([]);
   const [canSubmit, setCanSubmit] = useState(false);
   const {existProfile} = useContext(AuthContext);
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const [verifyExistProfile, setVerifyExistProfile] = useState(false);
 
   useEffect(() => {

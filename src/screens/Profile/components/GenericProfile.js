@@ -14,14 +14,14 @@ import ProfileLeftColumn from './ProfileLeftColumn';
 import ProfileRightColumn from './ProfileRightColumn';
 import ProfileCenterColumn from './ProfileCenterColumn';
 import { useSelector } from 'react-redux';
-import { getUser } from '../../../reducers/user';
+import { getLoggedUser } from '../../../reducers/loggedUser';
 import { getOtherUser } from '../../../reducers/otherUser';
 
 const numColumns = 3; //para el flatList
 
 export default function GenericProfile({ navigation, isLoggedUser }) {
   const localUser = isLoggedUser
-    ? useSelector(getUser)
+    ? useSelector(getLoggedUser)
     : useSelector(getOtherUser);
   const [usersPosts, setUsersPosts] = useState([]);
   const [loading, setLoading] = useState(false);

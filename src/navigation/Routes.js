@@ -6,14 +6,14 @@ import HomeStack from './HomeStack';
 import {AuthContext} from './AuthProvider';
 import Loading from '../components/Loading';
 import users_services from '../services/users_services';
-import {login, logout, getUser} from '../reducers/user';
+import {login, logout, getLoggedUser} from '../reducers/loggedUser';
 import {useSelector, useDispatch} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Routes() {
   const {existProfile, setExistProfile} = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const dispatch = useDispatch();
 
   /* Funcion para manejar cambios de estado del usuario. Acá verifico si el
