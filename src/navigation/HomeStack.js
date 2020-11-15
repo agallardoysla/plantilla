@@ -38,6 +38,7 @@ const HomeStack = () => {
   const loadingProfile = useSelector(getLoadingProfile);
   const loadingOtherProfile = useSelector(getLoadingOtherProfile);
   const waitingLoadingTime = 10; // 17
+  const initHomePostsCount = 10;
 
   useEffect(() => {
     dispatch(setLoadingProfile(true));
@@ -59,7 +60,6 @@ const HomeStack = () => {
           dispatch(setLoadingProfile(false));
         }, waitingLoadingTime * 1000);
         // Cargar los posts de Home
-        const initHomePostsCount = 1;
         posts_services.list(initHomePostsCount, 0).then((res) => {
           batch(doSetPosts(res.data, dispatch));
         });
@@ -175,7 +175,7 @@ const HomeStack = () => {
 
       <Tab.Navigator
         initialRouteName="HomeGroup"
-        lazy={true}
+        lazy={false}
         tabBarOptions={tabBarOptions}
         screenOptions={screenOptions}>
         <Tab.Screen
