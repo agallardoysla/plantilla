@@ -1,31 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { adapt } from '../utils/normalizedDataAdaptator';
 
-export const listUsersSlice = createSlice({
-    name: "list_users",
-    initialState: [],
-    reducers: {
-        setUsers: (users, action) => {
-            users = action.payload
-            return users
-        },
-        addUsers: (users, action) => {
-            users = [...users, ...action.payload]
-            return users
-        },
-        resetUsers: (users) => {
-            users = []
-            return users
-        }
-    }
-})
+const initialState = {
+  byId: {},
+  allIds: [],
+};
 
-export const {
-    setUsers,
-    addUsers,
-    resetUsers
-} = listUsersSlice.actions
+export const usersSlice = createSlice({
+  name: 'users',
+  initialState: initialState,
+  reducers: {
+    setUsers: (users, action) => {
+      users = adapt(action.payload);
+      return users;
+    },
+    addUsers: (users, action) => {
+      const newUsers = adapt(action.payload);
+      users.byId = {...users.byId, ...newUsers.byId};
+      users.allIds = [...users.allIds, ...newUsers.allIds];
+      return users;
+    },
+    resetUsers: (users) => {
+      users = initialState;
+      return users;
+    },
+  },
+});
 
-export const getListUsers = state => state.users
-export const getListUser = id => state => state.users.filter(u => u.id === id)[0]
+export const {setUsers, addUsers, resetUsers} = usersSlice.actions;
 
-export default listUsersSlice.reducer
+export const getUsers = (state) => state.users.allIds;
+export const getUser = (id) => (state) => state.users.byId[id.toString()];
+
+export default usersSlice.reducer;

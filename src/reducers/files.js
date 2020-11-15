@@ -1,31 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { adapt } from '../utils/normalizedDataAdaptator';
+
+const initialState = {
+  byId: {},
+  allIds: [],
+};
 
 export const filesSlice = createSlice({
-    name: "files",
-    initialState: [],
-    reducers: {
-        setFiles: (files, action) => {
-            files = action.payload
-            return files
-        },
-        addFiles: (files, action) => {
-            files = [...files, ...action.payload]
-            return files
-        },
-        resetFiles: (files) => {
-            files = []
-            return files
-        }
-    }
-})
+  name: 'files',
+  initialState: initialState,
+  reducers: {
+    setFiles: (files, action) => {
+      files = adapt(action.payload);
+      return files;
+    },
+    addFiles: (files, action) => {
+      const newFiles = adapt(action.payload);
+      files.byId = {...files.byId, ...newFiles.byId};
+      files.allIds = [...files.allIds, ...newFiles.allIds];
+      return files;
+    },
+    resetFiles: (files) => {
+      files = initialState;
+      return files;
+    },
+  },
+});
 
-export const {
-    setFiles,
-    addFiles,
-    resetFiles
-} = filesSlice.actions
+export const {setFiles, addFiles, resetFiles} = filesSlice.actions;
 
-export const getFiles = state => state.files
-export const getFile = id => state => state.files.filter(f => f.id === id)[0]
+export const getFiles = (state) => state.files.allIds;
+export const getFile = (id) => (state) => state.files.byId[id.toString()];
 
-export default filesSlice.reducer
+export default filesSlice.reducer;

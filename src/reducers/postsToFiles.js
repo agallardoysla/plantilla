@@ -1,31 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { adapt } from '../utils/normalizedDataAdaptator';
+
+const initialState = {
+  byId: {},
+  allIds: [],
+};
 
 export const postToFilesSlice = createSlice({
-    name: "post_to_files",
-    initialState: [],
-    reducers: {
-        setPostToFiles: (postToFiles, action) => {
-            postToFiles = action.payload
-            return postToFiles
-        },
-        addPostToFiles: (postToFiles, action) => {
-            postToFiles = [...postToFiles, ...action.payload]
-            return postToFiles
-        },
-        resetPostToFiles: (postToFiles) => {
-            postToFiles = []
-            return postToFiles
-        }
-    }
-})
+  name: 'postToFiles',
+  initialState: initialState,
+  reducers: {
+    setPostToFiles: (postToFiles, action) => {
+      postToFiles = adapt(action.payload);
+      return postToFiles;
+    },
+    addPostToFiles: (postToFiles, action) => {
+      const newPostToFiles = adapt(action.payload);
+      postToFiles.byId = {...postToFiles.byId, ...newPostToFiles.byId};
+      postToFiles.allIds = [...postToFiles.allIds, ...newPostToFiles.allIds];
+      return postToFiles;
+    },
+    resetPostToFiles: (postToFiles) => {
+      postToFiles = initialState;
+      return postToFiles;
+    },
+  },
+});
 
-export const {
-    setPostToFiles,
-    addPostToFiles,
-    resetPostToFiles
-} = postToFilesSlice.actions
+export const {setPostToFiles, addPostToFiles, resetPostToFiles} = postToFilesSlice.actions;
 
-export const getPostToFiles = state => state.postToFiles
-export const getPostToFile = id => state => state.postToFiles.filter(p => p.id === id)[0]
+export const getPostToFiles = (state) => state.postToFiles.allIds;
+export const getPostToFile = (id) => (state) => state.postToFiles.byId[id.toString()];
 
-export default postToFilesSlice.reducer
+export default postToFilesSlice.reducer;

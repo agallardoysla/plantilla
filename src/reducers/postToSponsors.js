@@ -1,31 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { adapt } from '../utils/normalizedDataAdaptator';
 
-export const PostToSponsorsSlice = createSlice({
-    name: "post_to_sponsors",
-    initialState: [],
-    reducers: {
-        setPostToSponsors: (postToSponsors, action) => {
-            postToSponsors = action.payload
-            return postToSponsors
-        },
-        addPostToSponsors: (postToSponsors, action) => {
-            postToSponsors = [...postToSponsors, ...action.payload]
-            return postToSponsors
-        },
-        resetPostToSponsors: (postToSponsors) => {
-            postToSponsors = []
-            return postToSponsors
-        }
-    }
-})
+const initialState = {
+  byId: {},
+  allIds: [],
+};
 
-export const {
-    setPostToSponsors,
-    addPostToSponsors,
-    resetPostToSponsors
-} = PostToSponsorsSlice.actions
+export const postToSponsorsSlice = createSlice({
+  name: 'postToSponsors',
+  initialState: initialState,
+  reducers: {
+    setPostToSponsors: (postToSponsors, action) => {
+      postToSponsors = adapt(action.payload);
+      return postToSponsors;
+    },
+    addPostToSponsors: (postToSponsors, action) => {
+      const newPostToSponsors = adapt(action.payload);
+      postToSponsors.byId = {...postToSponsors.byId, ...newPostToSponsors.byId};
+      postToSponsors.allIds = [...postToSponsors.allIds, ...newPostToSponsors.allIds];
+      return postToSponsors;
+    },
+    resetPostToSponsors: (postToSponsors) => {
+      postToSponsors = initialState;
+      return postToSponsors;
+    },
+  },
+});
 
-export const getPostToSponsors = state => state.postToSponsors
-export const getPostToSponsor = id => state => state.postToSponsors.filter(p => p.id === id)[0]
+export const {setPostToSponsors, addPostToSponsors, resetPostToSponsors} = postToSponsorsSlice.actions;
 
-export default PostToSponsorsSlice.reducer
+export const getPostToSponsors = (state) => state.postToSponsors.allIds;
+export const getPostToSponsor = (id) => (state) => state.postToSponsors.byId[id.toString()];
+
+export default postToSponsorsSlice.reducer;

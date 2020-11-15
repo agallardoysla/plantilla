@@ -1,31 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { adapt } from '../utils/normalizedDataAdaptator';
 
-export const postsReactionsSlice = createSlice({
-    name: "post_reactions",
-    initialState: [],
-    reducers: {
-        setPostReactions: (postReactions, action) => {
-            postReactions = action.payload
-            return postReactions
-        },
-        addPostReactions: (postReactions, action) => {
-            postReactions = [...postReactions, ...action.payload]
-            return postReactions
-        },
-        resetPostReactions: (postReactions) => {
-            postReactions = []
-            return postReactions
-        }
-    }
-})
+const initialState = {
+  byId: {},
+  allIds: [],
+};
 
-export const {
-    setPostReactions,
-    addPostReactions,
-    resetPostReactions
-} = postsReactionsSlice.actions
+export const postReactionsSlice = createSlice({
+  name: 'postReactions',
+  initialState: initialState,
+  reducers: {
+    setPostReactions: (postReactions, action) => {
+      postReactions = adapt(action.payload);
+      return postReactions;
+    },
+    addPostReactions: (postReactions, action) => {
+      const newPostReactions = adapt(action.payload);
+      postReactions.byId = {...postReactions.byId, ...newPostReactions.byId};
+      postReactions.allIds = [...postReactions.allIds, ...newPostReactions.allIds];
+      return postReactions;
+    },
+    resetPostReactions: (postReactions) => {
+      postReactions = initialState;
+      return postReactions;
+    },
+  },
+});
 
-export const getPostReactions = state => state.postReactions
-export const getPostReaction = id => state => state.postReactions.filter(r => r.id === id)[0]
+export const {setPostReactions, addPostReactions, resetPostReactions} = postReactionsSlice.actions;
 
-export default postsReactionsSlice.reducer
+export const getPostReactions = (state) => state.postReactions.allIds;
+export const getPostReaction = (id) => (state) => state.postReactions.byId[id.toString()];
+
+export default postReactionsSlice.reducer;
