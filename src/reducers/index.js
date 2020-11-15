@@ -12,12 +12,12 @@ import loadingProfile from './loadingProfile';
 import loadingOtherProfile from './loadingOtherProfile';
 import comments from './comments';
 import files from './files';
-import post_reactions from './post_reactions';
-import post_to_mentions from './post_to_mentions';
-import post_to_sponsors from './post_to_sponsors';
-import post_to_files from './posts_to_files';
+import postReactions from './postReactions';
+import postToMentions from './postToMentions';
+import postToSponsors from './postToSponsors';
+import postToFiles from './postsToFiles';
 import profiles from './profiles';
-import list_users from './users';
+import users from './users';
 
 const rootReducer = combineReducers({
   user,
@@ -32,12 +32,12 @@ const rootReducer = combineReducers({
   loadingOtherProfile,
   comments,
   files,
-  post_reactions,
-  post_to_mentions,
-  post_to_sponsors,
-  post_to_files,
+  postReactions,
+  postToMentions,
+  postToSponsors,
+  postToFiles,
   profiles,
-  list_users
+  users,
 });
 
 export default rootReducer;
