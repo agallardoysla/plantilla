@@ -5,9 +5,10 @@ import Publication from './components/Publication';
 import Admob from './components/Admob';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { addPosts, getPosts } from '../../reducers/posts';
+import { getPosts } from '../../reducers/posts';
 import { useDispatch, useSelector } from 'react-redux';
 import SharePost from './components/SharePost';
+import { doAddPosts } from '../../utils/reduxLoader';
 
 export default function HomeScreen({ navigation }) {
   const [page, setPage] = useState(1);
@@ -44,8 +45,8 @@ export default function HomeScreen({ navigation }) {
         getPageOffset(Math.min(page, pages.length - 1)),
       )
       .then((res) => {
-        console.log('nuevos posts', res.data.length);
-        dispatch(addPosts(res.data));
+        console.log('nuevos posts', res.data.posts.length);
+        dispatch(doAddPosts(res.data, dispatch));
         setPage(page + 1);
         // setReloading(false);
       });

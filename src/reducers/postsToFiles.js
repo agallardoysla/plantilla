@@ -31,5 +31,6 @@ export const {setPostToFiles, addPostToFiles, resetPostToFiles} = postToFilesSli
 
 export const getPostToFiles = (state) => state.postToFiles.allIds;
 export const getPostToFile = (id) => (state) => state.postToFiles.byId[id.toString()];
+export const getPostToFilesByPost = (postId) => (state) => Object.values(state.files.byId).filter(c => c.post_id === postId);
 
 export default postToFilesSlice.reducer;
