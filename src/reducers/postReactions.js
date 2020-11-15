@@ -29,7 +29,8 @@ export const postReactionsSlice = createSlice({
 
 export const {setPostReactions, addPostReactions, resetPostReactions} = postReactionsSlice.actions;
 
-export const getPostReactions = (state) => state.postReactions.allIds;
+// Solo se pueden obtener las reacciones asociadas a un Post
+export const getPostReactions = (postId) => (state) => Object.values(state.postReactions.byId).filter(c => c.post_id === postId);
 export const getPostReaction = (id) => (state) => state.postReactions.byId[id.toString()];
 
 export default postReactionsSlice.reducer;

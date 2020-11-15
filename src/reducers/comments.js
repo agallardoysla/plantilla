@@ -31,5 +31,6 @@ export const {setComments, addComments, resetComments} = commentsSlice.actions;
 
 export const getComments = (state) => state.comments.allIds;
 export const getComment = (id) => (state) => state.comments.byId[id.toString()];
+export const getPostComments = (postId) => (state) => Object.values(state.comments.byId).filter(c => c.post_id === postId);
 
 export default commentsSlice.reducer;
