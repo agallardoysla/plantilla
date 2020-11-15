@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, StyleSheet, FlatList, Image, Text } from 'react-native';
 import posts_services from '../../services/posts_services';
 import Publication from './components/Publication';
-import KBView from '../../components/KBView';
 import Admob from './components/Admob';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -61,7 +60,7 @@ export default function HomeScreen({ navigation }) {
     return (
       <View style={styles.publication}>
         <Publication
-          postId={item.id}
+          postId={item}
           navigation={navigation}
           showSharePost={showSharePost}
         />

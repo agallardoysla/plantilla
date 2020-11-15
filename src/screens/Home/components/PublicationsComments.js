@@ -19,7 +19,7 @@ import {
 } from 'react-native-popup-menu';
 import comments_services from '../../../services/comments_services';
 import {useSelector} from 'react-redux';
-import {getUser} from '../../../reducers/user';
+import {getLoggedUser} from '../../../reducers/loggedUser';
 
 export default function PublicationsComments({
   post,
@@ -40,7 +40,7 @@ export default function PublicationsComments({
     answers.map(() => false),
   );
   const [editingAnswer, setEditingAnswer] = useState(answers.map(() => false));
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
 
   const showMenuForAnswer = (index) => {
     console.log(index);
