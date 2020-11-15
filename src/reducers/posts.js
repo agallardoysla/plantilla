@@ -64,7 +64,7 @@ export const {
 } = postsSlice.actions;
 
 export const getPosts = (state) => state.posts.allIds;
-export const getPost = (id) => (state) => state.files.byId[id.toString()];
+export const getPost = (id) => (state) => state.posts.byId[id.toString()];
 
 export const getPostLikes = (post) => (state) => {
   const statePost = state.posts.filter((p) => p.id === post.id)[0];
