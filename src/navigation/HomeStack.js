@@ -67,17 +67,17 @@ const HomeStack = () => {
         // Cargar los posts de Home
         const initHomePostsCount = 20;
         posts_services.list(initHomePostsCount, 0).then((res) => {
-          batch(
-            dispatch(setPosts(res.data.posts)),
-            dispatch(setComments(res.data.comments)),
-            dispatch(setPostReactions(res.data.posts_reactions)),
-            dispatch(setPostToFiles(res.data.posts_to_files)),
-            dispatch(setPostToMentions(res.data.posts_to_mentions)),
-            dispatch(setPostToSponsors(res.data.posts_to_sponsors)),
-            dispatch(setUsers(res.data.users)),
-            dispatch(setProfiles(res.data.profiles)),
-            dispatch(setFiles(res.data.files)),
-          );
+          batch(() => {
+            dispatch(setPosts(res.data.posts));
+            dispatch(setComments(res.data.comments));
+            dispatch(setPostReactions(res.data.posts_reactions));
+            dispatch(setPostToFiles(res.data.posts_to_files));
+            dispatch(setPostToMentions(res.data.posts_to_mentions));
+            dispatch(setPostToSponsors(res.data.posts_to_sponsors));
+            dispatch(setUsers(res.data.users));
+            dispatch(setProfiles(res.data.profiles));
+            dispatch(setFiles(res.data.files));
+          });
         });
         // Cargar los posts de Busqueda
         search_services.search({search_in: 'posts'}).then((res) => {
