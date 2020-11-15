@@ -21,10 +21,10 @@ import CommentFormatter from '../../../utils/CommentFormatter';
 import DateFormatter from '../../../components/DateFormatter';
 import { useDispatch, useSelector } from 'react-redux';
 import { getLoggedUser } from '../../../reducers/loggedUser';
-import { getPost, getPostLikes, likePost, unlikePost } from '../../../reducers/posts';
+import { getPost } from '../../../reducers/posts';
 import Counter from '../../../components/Counter';
 import { getPostComments } from '../../../reducers/comments';
-import { getPostReactions } from '../../../reducers/postReactions';
+import { addPostReactions, createPostReaction, getPostReactions, removePostReaction } from '../../../reducers/postReactions';
 import { getUser } from '../../../reducers/users';
 import { getProfile } from '../../../reducers/profiles';
 import { getPostToFilesByPost } from '../../../reducers/postsToFiles';
@@ -43,13 +43,16 @@ export default function Publication({ postId, navigation, showFullContent }) {
   const ownerProfile = useSelector(getProfile(owner.profile_id));
   const ownerPhoto = ownerProfile.photo_id ? useSelector(getFile(ownerProfile.photo_id)) : null;
   const user = useSelector(getLoggedUser);
+  let reactionId = 0;
 
   const getLikesCounter = () => {
     return postReactions ? postReactions.length : 0;
   };
 
   const getILiked = () => {
-    return postReactions.filter((reaction) => reaction.user_id === user.id).length > 0;
+    const reaction = postReactions.filter((reaction) => reaction.user_id === user.id);
+    reactionId = reaction.length > 0 ? reaction[0].id : 0;
+    return reaction.length > 0;
   };
 
   const [showComments, setShowComments] = useState(true);
@@ -58,8 +61,6 @@ export default function Publication({ postId, navigation, showFullContent }) {
     true,
   );
   const [savingComment, setSavingComment] = useState(false);
-  // const [likesCounter, setLikesCounter] = useState(getLikesCounter());
-  // const [iLiked, setILiked] = useState(getILiked());
   const [countComments, setCountComments] = useState(comments.length);
   const dispatch = useDispatch();
 
@@ -117,29 +118,19 @@ export default function Publication({ postId, navigation, showFullContent }) {
   };
 
   const AddLike = async () => {
-    // console.log('likes', likesCounter);
-    // if (iLiked) {
-    //   setILiked(false);
-    //   setLikesCounter(likesCounter - 1);
-    // } else {
-    //   setILiked(true);
-    //   setLikesCounter(likesCounter + 1);
-    // }
-    setTimeout(() => {
-      try {
-        //si contiene algo lo elimino si no lo agrego
-        if (getILiked()) {
-          posts_services.deleteReaction(postId);
-          dispatch(unlikePost({ postId: postId, userId: user.id }));
-        } else {
-          posts_services.addReaction(postId, 2);
-          dispatch(likePost({ postId: postId, userId: user.id }));
-          // setLikesCounter(likesCounter + 1);
-        }
-      } catch (error) {
-        console.log('Error de agregar like' + error);
+    try {
+      //si contiene algo lo elimino si no lo agrego
+      if (getILiked()) {
+        posts_services.deleteReaction(postId);
+        dispatch(removePostReaction(reactionId));
+      } else {
+        posts_services.addReaction(postId, 2);
+        dispatch(addPostReactions([createPostReaction(postId, user.id)]));
+        // setLikesCounter(likesCounter + 1);
       }
-    }, 1);
+    } catch (error) {
+      console.log('Error de agregar like' + error);
+    }
   };
 
   const goToPost = () => {
@@ -248,6 +239,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
                     ? require('../../../assets/corazon_limon.png')
                     : require('../../../assets/corazon_gris.png')
                 }
+                fadeDuration={0}
               />
             </TouchableOpacity>
 

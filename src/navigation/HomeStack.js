@@ -38,7 +38,7 @@ const HomeStack = () => {
   const loadingProfile = useSelector(getLoadingProfile);
   const loadingOtherProfile = useSelector(getLoadingOtherProfile);
   const waitingLoadingTime = 10; // 17
-  const initHomePostsCount = 10;
+  const initHomePostsCount = 20;
 
   useEffect(() => {
     dispatch(setLoadingProfile(true));

@@ -24,34 +24,6 @@ export const postsSlice = createSlice({
       posts = initialState;
       return posts;
     },
-    likePost: (posts, action) => {
-      posts = posts.map((p) => {
-        if (p.id === action.payload.postId) {
-          if (p.reactionscount.REACTION_TYPE_PRUEBA) {
-            p.reactionscount.REACTION_TYPE_PRUEBA++;
-          } else {
-            p.reactionscount.REACTION_TYPE_PRUEBA = 1;
-          }
-        }
-        p.reactions_details.push({user_id: action.payload.userId});
-        return p;
-      });
-    },
-    unlikePost: (posts, action) => {
-      posts = posts.map((p) => {
-        if (p.id === action.payload.postId) {
-          if (p.reactionscount.REACTION_TYPE_PRUEBA) {
-            p.reactionscount.REACTION_TYPE_PRUEBA--;
-          } else {
-            p.reactionscount.REACTION_TYPE_PRUEBA = 0;
-          }
-        }
-        p.reactions_details = p.reactions_details.filter(
-          (r) => r.user_id !== action.payload.userId,
-        );
-        return p;
-      });
-    },
   },
 });
 
