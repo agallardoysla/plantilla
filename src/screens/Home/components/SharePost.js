@@ -6,11 +6,17 @@ import FormSearchInput from '../../../components/FormSearchInput';
 import chats_services from '../../../services/chats_services';
 import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
+import { useDispatch, useSelector } from 'react-redux';
+import { getShowSharePost, setShowSharePost } from '../../../reducers/showSharePost';
+import { getPostToShare } from '../../../reducers/postToShare';
 
-export default function SharePost({showModal, sharedPost, setShowModal}) {
+export default function SharePost() {
   const [valueSearch, setValueSearch] = useState('');
   const [originalUsersSearched, setOriginalUsersSearched] = useState([]);
   const [usersSearched, setUsersSearched] = useState([]);
+  const showSharePost = useSelector(getShowSharePost);
+  const sharedPost = useSelector(getPostToShare);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const init = async () => {
@@ -26,8 +32,7 @@ export default function SharePost({showModal, sharedPost, setShowModal}) {
   useEffect(() => {
     setUsersSearched(originalUsersSearched);
     setValueSearch('');
-  }, [showModal]);
-
+  }, [showSharePost]);
 
   const showSearch = async (seachedString) => {
     setValueSearch(seachedString);
@@ -52,11 +57,13 @@ export default function SharePost({showModal, sharedPost, setShowModal}) {
     return user.display_name.slice(0, 20);
   };
 
+  const closeModal = () => dispatch(setShowSharePost(false));
+
   const shareSelectedPost = (userId) => {
     // console.warn(userId);
     console.log(userId, `[post:${sharedPost.id}]`);
     chats_services.sendMessage(userId, { text: `[post:${sharedPost.id}]` });
-    setShowModal(false);
+    closeModal();
   };
 
   const SearchedProfileItem = ({ item }) => {
@@ -79,11 +86,11 @@ export default function SharePost({showModal, sharedPost, setShowModal}) {
 
   return (
     <Modal
-      isVisible={showModal}
+      isVisible={showSharePost}
       style={styles.shareModal}
       swipeDirection={['up', 'left', 'right', 'down']}
-      onBackButtonPress={() => setShowModal(false)}
-      onBackdropPress={() => setShowModal(false)}>
+      onBackButtonPress={closeModal}
+      onBackdropPress={closeModal}>
       <View style={styles.shareModalContent}>
         <FormSearchInput value={valueSearch} onChangeText={showSearch} />
         {usersSearched.length > 0 ? (

@@ -29,20 +29,23 @@ import { getUser } from '../../../reducers/users';
 import { getProfile } from '../../../reducers/profiles';
 import { getPostToFilesByPost } from '../../../reducers/postsToFiles';
 import { getFile } from '../../../reducers/files';
+import { setPostToShare } from '../../../reducers/postToShare';
+import { setShowSharePost } from '../../../reducers/showSharePost';
 let window = Dimensions.get('window');
 
-export default function Publication({ postId, navigation, showSharePost, showFullContent }) {
+export default function Publication({ postId, navigation, showFullContent }) {
   const post = useSelector(getPost(postId));
   const comments = useSelector(getPostComments(postId));
   const postReactions = useSelector(getPostReactions(postId));
   const postFiles = useSelector(getPostToFilesByPost(postId));
   const files = postFiles.map(fr => useSelector(getFile(fr.file_id)));
   const owner = useSelector(getUser(post.user_id));
-  const ownerProfile = useSelector(getProfile(post.user_id));
+  const ownerProfile = useSelector(getProfile(owner.profile_id));
+  const ownerPhoto = ownerProfile.photo_id ? useSelector(getFile(ownerProfile.photo_id)) : null;
   const user = useSelector(getLoggedUser);
 
   const getLikesCounter = () => {
-    return postReactions ? postReactions : 0;
+    return postReactions ? postReactions.length : 0;
   };
 
   const getILiked = () => {
@@ -143,9 +146,14 @@ export default function Publication({ postId, navigation, showSharePost, showFul
     navigation.navigate('PostGroup', {
       screen: 'PublicationDetails',
       params: {
-        post,
+        postId,
       },
     });
+  };
+
+  const sharePost = () => {
+    dispatch(setPostToShare(post));
+    dispatch(setShowSharePost(true));
   };
 
   return (
@@ -192,8 +200,8 @@ export default function Publication({ postId, navigation, showSharePost, showFul
             <View style={{ flexDirection: 'column' }}>
               <Image
                 source={
-                  owner.photo
-                    ? {uri: owner.photo}
+                  ownerPhoto
+                    ? {uri: ownerPhoto.url_original}
                     : require('../../../assets/pride-dog_1.png')
                 }
                 resizeMode="cover"
@@ -263,7 +271,7 @@ export default function Publication({ postId, navigation, showSharePost, showFul
           </View>
 
           <TouchableOpacity
-            onPress={() => showSharePost(post)}
+            onPress={sharePost}
             style={styles.icon_container}>
             <Image
               source={require('../../../assets/compartir.png')}

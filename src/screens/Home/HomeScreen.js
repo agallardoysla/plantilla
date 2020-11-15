@@ -9,11 +9,10 @@ import { getPosts } from '../../reducers/posts';
 import { useDispatch, useSelector } from 'react-redux';
 import SharePost from './components/SharePost';
 import { doAddPosts } from '../../utils/reduxLoader';
+import { getShowSharePost } from '../../reducers/showSharePost';
 
 export default function HomeScreen({ navigation }) {
   const [page, setPage] = useState(1);
-  const [showModal, setShowModal] = useState(false);
-  const [sharedPost, setSharedPost] = useState({});
   const pages = [20, 10];
   const posts = useSelector(getPosts);
   const dispatch = useDispatch();
@@ -52,19 +51,10 @@ export default function HomeScreen({ navigation }) {
       });
   };
 
-  const showSharePost = async (post) => {
-    setShowModal(true);
-    setSharedPost(post);
-  };
-
   const PublicationItem = ({ item, index }) => {
     return (
       <View style={styles.publication}>
-        <Publication
-          postId={item}
-          navigation={navigation}
-          showSharePost={showSharePost}
-        />
+        <Publication postId={item} navigation={navigation} />
         {index % 2 === 1 ? <Admob /> : null}
       </View>
     );
@@ -98,11 +88,7 @@ export default function HomeScreen({ navigation }) {
         keyExtractor={(item, index) => index.toString()}
         style={styles.publications}
       />
-      <SharePost
-        showModal={showModal}
-        setShowModal={setShowModal}
-        sharedPost={sharedPost}
-      />
+      <SharePost />
     </SafeAreaView>
   );
 }

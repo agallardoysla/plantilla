@@ -18,6 +18,8 @@ import postToSponsors from './postToSponsors';
 import postToFiles from './postsToFiles';
 import profiles from './profiles';
 import users from './users';
+import showSharePost from './showSharePost';
+import postToShare from './postToShare';
 
 const rootReducer = combineReducers({
   loggedUser,
@@ -38,6 +40,8 @@ const rootReducer = combineReducers({
   postToFiles,
   profiles,
   users,
+  showSharePost,
+  postToShare,
 });
 
 export default rootReducer;
