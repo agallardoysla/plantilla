@@ -1,7 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import { addComments, createComment } from '../reducers/comments';
 import {getLoggedUser} from '../reducers/loggedUser';
 import { getFullUsers } from '../reducers/users';
 import comments_services from '../services/comments_services';
@@ -18,8 +19,6 @@ export default function CommentInput({
   style,
   initialText,
   isEdition,
-  countComments,
-  setCountComments,
 }) {
   const [newComment, setNewComment] = useState(initialText);
   const [showSugestions, setShowSugestions] = useState(false);
@@ -28,6 +27,7 @@ export default function CommentInput({
   const users = useSelector(getFullUsers);
   const [sugestionsAsync, setSugestionsAsync] = useState([]);
   const maxSugestions = 5;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let filteredSugestions = getFixedSugestions;
@@ -35,7 +35,7 @@ export default function CommentInput({
       s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase();
     });
     getMentionsSugestionsAsync(filteredSugestions);
-  }, [sugestionsInput]);
+  }, [getFixedSugestions, getMentionsSugestionsAsync, sugestionsInput]);
 
   const getFixedSugestions = useMemo(() => {
     const res = [];
@@ -46,7 +46,6 @@ export default function CommentInput({
       res.push(comment.user_id);
     }
     if (comments) {
-      console.log('comments', comments);
       comments.forEach((c) => {
         if (res.reduce((r, s) => r && c.user_id !== s, true)) {
           res.push(c.user_id);
@@ -54,7 +53,7 @@ export default function CommentInput({
       });
     }
     return res.map((s) => users[s]);
-  }, []);
+  }, [comment, comments, post, users]);
 
   const getMentionsSugestions = () => {
     const filteredSugestions = getFixedSugestions.filter(
@@ -101,26 +100,27 @@ export default function CommentInput({
     const _comment = {
       post: post.id,
       text: newComment,
-      user_owner: user,
+      user_owner: user.id,
       comments: [],
     };
-    if (comment && !isEdition) _comment.original_comment = comment.id;
+    if (comment && !isEdition) {
+      _comment.original_comment_id = comment.id;
+    }
 
     if (isEdition) {
       const res = await comments_services.edit(comment.id, _comment);
       console.log(res.data);
     } else {
       const res = await comments_services.create(_comment);
-      setCountComments(countComments + 1) //sumo al agregar new comment
-      console.log(res.data);
-      _comment.id = res.data.id;
-      _comment.user_owner = {
-        user_id: user.id,
-        display_name: user.display_name,
-      };
+      let reduxComment = createComment(res.data.id, newComment, post.id, user.id);
+      if (comment) {
+        reduxComment.original_comment_id = comment.id;
+      }
+      console.log('new comment: ', reduxComment);
+      dispatch(addComments([reduxComment]));
     }
     setNewComment('');
-    callback(_comment);
+    callback();
   };
 
   const selectSugestion = (sugestion) => {

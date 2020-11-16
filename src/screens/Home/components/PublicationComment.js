@@ -23,14 +23,12 @@ import {getLoggedUser} from '../../../reducers/loggedUser';
 import { getCommentAnswers, removeComment } from '../../../reducers/comments';
 import { getUser } from '../../../reducers/users';
 
-export default function PublicationsComments({
+export default function PublicationComment({
   post,
   comment,
   comments,
   setComments,
   navigation,
-  setCountComments,
-  countComments,
 }) {
   const [showAnswerToComments, setShowAnswerToComments] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
@@ -55,16 +53,7 @@ export default function PublicationsComments({
     setEditingAnswer(answers.map((_, i) => i === index));
   };
 
-  const edittedAnswerCallback = (index) => (_comment) => {
-    answers[index].text = _comment.text;
-    // setAnswers(
-    //   answers.map((a, i) => {
-    //     if (i === index) {
-    //       a.text = _comment.text;
-    //     }
-    //     return a;
-    //   }),
-    // );
+  const edittedAnswerCallback = () => (_comment) => {
     editForAnswer(-1);
     setSavingForAnswer(-1);
     setShowMenu(false);
@@ -74,14 +63,12 @@ export default function PublicationsComments({
     setSavingAnswer(savingAnswer.map((_, i) => i === index));
   };
 
-  const newCommentCallback = (_comment) => {
-    // setAnswers([...answers, _comment]);
+  const newCommentCallback = () => {
     setSavingComment(false);
     setShowAnswerToComments(false);
   };
 
-  const edittedCommentCallback = (_comment) => {
-    comment.text = _comment.text;
+  const edittedCommentCallback = () => {
     setEditingComment(false);
     setShowMenu(false);
   };
@@ -89,7 +76,6 @@ export default function PublicationsComments({
   const doDeleteComment = () => {
     comments_services.delete(comment.id).then((res) => {
       setComments(comments.filter((c) => c.id !== comment.id));
-      setCountComments(countComments - 1); //a nivel local resto 1 al comment
       setShowMenu(false);
     });
   };
@@ -135,7 +121,6 @@ export default function PublicationsComments({
                 style={styles.newComment}
                 initialText={comment.text}
                 isEdition={true}
-                setCountComments={setCountComments}
               />
             )
           ) : (
@@ -191,7 +176,6 @@ export default function PublicationsComments({
                       style={styles.newComment}
                       initialText={answer.text}
                       isEdition={true}
-                      setCountComments={setCountComments}
                     />
                   )
                 ) : (
@@ -237,7 +221,6 @@ export default function PublicationsComments({
             setSavingComment={setSavingComment}
             style={styles.newComment}
             initialText={`@${commentOwner.display_name} `}
-            setCountComments={setCountComments}
           />
         )
       ) : (

@@ -15,7 +15,7 @@ import {
 import Video from 'react-native-video-player';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import posts_services from '../../../services/posts_services';
-import PublicationsComments from '../../Home/components/PublicationsComments';
+import PublicationComment from './PublicationComment';
 import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
 import DateFormatter from '../../../components/DateFormatter';
@@ -61,7 +61,6 @@ export default function Publication({ postId, navigation, showFullContent }) {
     true,
   );
   const [savingComment, setSavingComment] = useState(false);
-  const [countComments, setCountComments] = useState(comments.length);
   const dispatch = useDispatch();
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
@@ -260,7 +259,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
                 style={[styles.icon_post, styles.icon_comentario]}
               />
             </TouchableOpacity>
-            <Counter style={styles.icon_numbers_view} value={countComments} />
+            <Counter style={styles.icon_numbers_view} value={comments.length} />
           </View>
 
           <TouchableOpacity onPress={sharePost} style={styles.icon_container}>
@@ -299,18 +298,18 @@ export default function Publication({ postId, navigation, showFullContent }) {
           loadingComments ? (
             <ActivityIndicator color={StylesConfiguration.color} />
           ) : (
-            comments.map((comment, i) => (
-              <PublicationsComments
-                style={styles.publicationComments}
-                post={post}
-                comment={comment}
-                key={i}
-                comments={comments}
-                navigation={navigation}
-                setCountComments={setCountComments}
-                countComments={countComments}
-              />
-            ))
+            comments
+              .slice(-3)
+              .map((comment, i) => (
+                <PublicationComment
+                  style={styles.publicationComments}
+                  post={post}
+                  comment={comment}
+                  key={i}
+                  comments={comments}
+                  navigation={navigation}
+                />
+              ))
           )
         ) : null}
 
@@ -341,8 +340,6 @@ export default function Publication({ postId, navigation, showFullContent }) {
             setSavingComment={setSavingComment}
             style={styles.newComment}
             initialText={''}
-            setCountComments={setCountComments}
-            countComments={countComments}
           />
         )}
         {/*Fin de nuevo comentario hacia la publicaciòn */}

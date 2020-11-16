@@ -41,13 +41,14 @@ export const {
 
 export const getComments = (state) => state.comments.allIds;
 export const getComment = (id) => (state) => state.comments.byId[id.toString()];
-export const getPostComments = (postId) => (state) => Object.values(state.comments.byId).filter(c => c.post_id.toString() === postId);
-export const getCommentAnswers = (commentId) => (state) => {
-  const comments = Object.values(state.comments.byId);
-  return comments.filter(
+export const getPostComments = (postId) => (state) =>
+  Object.values(state.comments.byId).filter(
+    (c) => c.post_id.toString() === postId && c.original_comment_id === null,
+  );
+export const getCommentAnswers = (commentId) => (state) =>
+  Object.values(state.comments.byId).filter(
     (c) =>
       c.original_comment_id && c.original_comment_id.toString() === commentId,
   );
-};
 
 export default commentsSlice.reducer;
