@@ -3,6 +3,7 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
 import {getLoggedUser} from '../reducers/loggedUser';
+import { getFullUsers } from '../reducers/users';
 import comments_services from '../services/comments_services';
 import users_services from '../services/users_services';
 import CommentFormatter from './CommentFormatter';
@@ -24,37 +25,36 @@ export default function CommentInput({
   const [showSugestions, setShowSugestions] = useState(false);
   const [sugestionsInput, setSugestionsInput] = useState('');
   const user = useSelector(getLoggedUser);
+  const users = useSelector(getFullUsers);
   const [sugestionsAsync, setSugestionsAsync] = useState([]);
   const maxSugestions = 5;
 
   useEffect(() => {
     let filteredSugestions = getFixedSugestions;
-    filteredSugestions = filteredSugestions.filter(
-      (s) =>
-        s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase(),
-    );
+    filteredSugestions = filteredSugestions.filter((s) => {
+      s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase();
+    });
     getMentionsSugestionsAsync(filteredSugestions);
-  }, [getFixedSugestions, getMentionsSugestionsAsync, sugestionsInput]);
+  }, [sugestionsInput]);
 
   const getFixedSugestions = useMemo(() => {
     const res = [];
     if (post) {
-      res.push(post.user_owner);
+      res.push(post.user_id);
     }
     if (comment) {
-      res.push(comment.user_owner);
+      res.push(comment.user_id);
     }
     if (comments) {
+      console.log('comments', comments);
       comments.forEach((c) => {
-        if (
-          res.reduce((r, s) => r && c.user_owner.user_id !== s.user_id, true)
-        ) {
-          res.push(c.user_owner);
+        if (res.reduce((r, s) => r && c.user_id !== s, true)) {
+          res.push(c.user_id);
         }
       });
     }
-    return res;
-  }, [post, comment, comments]);
+    return res.map((s) => users[s]);
+  }, []);
 
   const getMentionsSugestions = () => {
     const filteredSugestions = getFixedSugestions.filter(

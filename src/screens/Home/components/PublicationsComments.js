@@ -18,8 +18,10 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import comments_services from '../../../services/comments_services';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getLoggedUser} from '../../../reducers/loggedUser';
+import { getCommentAnswers, removeComment } from '../../../reducers/comments';
+import { getUser } from '../../../reducers/users';
 
 export default function PublicationsComments({
   post,
@@ -34,13 +36,15 @@ export default function PublicationsComments({
   const [savingComment, setSavingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [editingComment, setEditingComment] = useState(false);
-  const [answers, setAnswers] = useState(comment.comments);
+  const answers = useSelector(getCommentAnswers(comment.id));
   const [savingAnswer, setSavingAnswer] = useState(answers.map(() => false));
   const [showMenuAnswer, setShowMenuAnswer] = useState(
     answers.map(() => false),
   );
   const [editingAnswer, setEditingAnswer] = useState(answers.map(() => false));
   const user = useSelector(getLoggedUser);
+  const commentOwner = useSelector(getUser(comment.user_id));
+  const dispatch = useDispatch();
 
   const showMenuForAnswer = (index) => {
     console.log(index);
@@ -53,14 +57,14 @@ export default function PublicationsComments({
 
   const edittedAnswerCallback = (index) => (_comment) => {
     answers[index].text = _comment.text;
-    setAnswers(
-      answers.map((a, i) => {
-        if (i === index) {
-          a.text = _comment.text;
-        }
-        return a;
-      }),
-    );
+    // setAnswers(
+    //   answers.map((a, i) => {
+    //     if (i === index) {
+    //       a.text = _comment.text;
+    //     }
+    //     return a;
+    //   }),
+    // );
     editForAnswer(-1);
     setSavingForAnswer(-1);
     setShowMenu(false);
@@ -71,7 +75,7 @@ export default function PublicationsComments({
   };
 
   const newCommentCallback = (_comment) => {
-    setAnswers([...answers, _comment]);
+    // setAnswers([...answers, _comment]);
     setSavingComment(false);
     setShowAnswerToComments(false);
   };
@@ -91,10 +95,9 @@ export default function PublicationsComments({
   };
 
   const doDeleteAnswer = (index) => () => {
-    comments_services.delete(answers[index].id).then((_) => {
-      setAnswers(answers.filter((_, i) => i !== index));
-      setShowMenu(false);
-    });
+    dispatch(removeComment(answers[index].id));
+    setShowMenu(false);
+    comments_services.delete(answers[index].id);
   };
 
   return (
@@ -110,7 +113,7 @@ export default function PublicationsComments({
               navigation.navigate('OtherProfileGroup', {
                 screen: 'OtherProfile',
                 params: {
-                  user_id: comment.user_owner.user_id,
+                  user_id: commentOwner.user_id,
                 },
               })
             }>
@@ -140,13 +143,13 @@ export default function PublicationsComments({
               <CommentFormatter
                 style={styles.content}
                 comment={
-                  `{${comment.user_owner.display_name}:${comment.user_owner.user_id}} ` +
+                  `{${commentOwner.display_name}:${commentOwner.user_id}} ` +
                   comment.text
                 }
                 navigation={navigation}
               />
               <Menu
-                opened={showMenu && comment.user_owner.user_id === user.id}
+                opened={showMenu && commentOwner.user_id === user.id}
                 onBackdropPress={() => setShowMenu(false)}>
                 <MenuTrigger />
                 <MenuOptions customStyles={menuOptions}>
@@ -226,14 +229,14 @@ export default function PublicationsComments({
           <ActivityIndicator color={StylesConfiguration.color} />
         ) : (
           <CommentInput
-            placeholder={'Responder a @' + comment.user_owner.display_name}
+            placeholder={'Responder a @' + commentOwner.display_name}
             callback={newCommentCallback}
             post={post}
             comment={comment}
             comments={answers}
             setSavingComment={setSavingComment}
             style={styles.newComment}
-            initialText={`@${comment.user_owner.display_name} `}
+            initialText={`@${commentOwner.display_name} `}
             setCountComments={setCountComments}
           />
         )
