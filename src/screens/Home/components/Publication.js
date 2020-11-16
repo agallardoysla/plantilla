@@ -69,27 +69,31 @@ export default function Publication({ postId, navigation, showFullContent }) {
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
 
   const toView = () => {
-    return isImage(files[0].url_original) ? (
-      <ScrollView horizontal={true} indicatorStyle="white">
-        {files.map((file, i) => (
-          <Image
-            source={{ uri: showFullContent ? file.url_original : file.url_half }}
-            style={[styles.image_post, i >= 1 ? { marginLeft: 10 } : {}]}
-            key={i}
-            resizeMode="contain"
-            fadeDuration={0}
-          />
-        ))}
-      </ScrollView>
-    ) : (
-      <Video
-        video={{ uri: files[0].url_original }}
-        style={styles.image_post}
-        autoplay={true}
-        defaultMuted={true}
-        loop={true}
-      />
-    );
+    if (files.length > 0) {
+      return isImage(files[0].url_original) ? (
+        <ScrollView horizontal={true} indicatorStyle="white">
+          {files.map((file, i) => (
+            <Image
+              source={{ uri: showFullContent ? file.url_original : file.url_half }}
+              style={[styles.image_post, i >= 1 ? { marginLeft: 10 } : {}]}
+              key={i}
+              resizeMode="contain"
+              fadeDuration={0}
+            />
+          ))}
+        </ScrollView>
+      ) : (
+        <Video
+          video={{ uri: files[0].url_original }}
+          style={styles.image_post}
+          autoplay={true}
+          defaultMuted={true}
+          loop={true}
+        />
+      );
+    } else {
+      return null;
+    }
   };
 
   const getAndSetShowComments = () => {

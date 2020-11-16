@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { adapt } from '../utils/normalizedDataAdaptator';
+import {anySatisfy} from '../utils/utils';
 
 const initialState = {
   byId: {},
@@ -32,8 +33,8 @@ export const {setFiles, addFiles, resetFiles} = filesSlice.actions;
 export const getFiles = (state) => state.files.allIds;
 export const getFile = (id) => (state) => id ? state.files.byId[id.toString()] : null;
 export const getFilesFromIds = (ids) => (state) => {
-  console.log(ids, ids.map(id => state.files.byId[id.file_id.toString()]));
-  return ids.map(id => state.files.byId[id.file_id.toString()]);
+  const res = ids.map(id => state.files.byId[id.file_id.toString()]);
+  return anySatisfy(res, undefined) ? [] : res;
 };
 
 export default filesSlice.reducer;
