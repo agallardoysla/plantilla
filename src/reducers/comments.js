@@ -24,13 +24,30 @@ export const commentsSlice = createSlice({
       comments = initialState;
       return comments;
     },
+    removeComment: (comments, action) => {
+      delete comments.byId[action.payload.toString()];
+      comments.allIds = comments.allIds.filter((pr) => pr !== action.payload.toString());
+      return comments;
+    },
   },
 });
 
-export const {setComments, addComments, resetComments} = commentsSlice.actions;
+export const {
+  setComments,
+  addComments,
+  resetComments,
+  removeComment,
+} = commentsSlice.actions;
 
 export const getComments = (state) => state.comments.allIds;
 export const getComment = (id) => (state) => state.comments.byId[id.toString()];
-export const getPostComments = (postId) => (state) => Object.values(state.comments.byId).filter(c => c.post_id === postId);
+export const getPostComments = (postId) => (state) => Object.values(state.comments.byId).filter(c => c.post_id.toString() === postId);
+export const getCommentAnswers = (commentId) => (state) => {
+  const comments = Object.values(state.comments.byId);
+  return comments.filter(
+    (c) =>
+      c.original_comment_id && c.original_comment_id.toString() === commentId,
+  );
+};
 
 export default commentsSlice.reducer;
