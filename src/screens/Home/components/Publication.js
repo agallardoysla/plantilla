@@ -28,7 +28,7 @@ import { addPostReactions, createPostReaction, getPostReactions, removePostReact
 import { getUser } from '../../../reducers/users';
 import { getProfile } from '../../../reducers/profiles';
 import { getPostToFilesByPost } from '../../../reducers/postsToFiles';
-import { getFile } from '../../../reducers/files';
+import { getFile, getFilesFromIds } from '../../../reducers/files';
 import { setPostToShare } from '../../../reducers/postToShare';
 import { setShowSharePost } from '../../../reducers/showSharePost';
 let window = Dimensions.get('window');
@@ -38,10 +38,10 @@ export default function Publication({ postId, navigation, showFullContent }) {
   const comments = useSelector(getPostComments(postId));
   const postReactions = useSelector(getPostReactions(postId));
   const postFiles = useSelector(getPostToFilesByPost(postId));
-  const files = postFiles.map(fr => useSelector(getFile(fr.file_id)));
+  const files = useSelector(getFilesFromIds(postFiles));
   const owner = useSelector(getUser(post.user_id));
   const ownerProfile = useSelector(getProfile(owner.profile_id));
-  const ownerPhoto = ownerProfile.photo_id ? useSelector(getFile(ownerProfile.photo_id)) : null;
+  const ownerPhoto = useSelector(getFile(ownerProfile.photo_id));
   const user = useSelector(getLoggedUser);
   let reactionId = 0;
 
@@ -150,10 +150,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
   return (
     <>
       <View style={styles.container}>
-
-
         {/*Inicia Nombre de usuario, foto, verificacion de cuenta*/}
-
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('OtherProfileGroup', {
@@ -262,9 +259,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
             <Counter style={styles.icon_numbers_view} value={countComments} />
           </View>
 
-          <TouchableOpacity
-            onPress={sharePost}
-            style={styles.icon_container}>
+          <TouchableOpacity onPress={sharePost} style={styles.icon_container}>
             <Image
               source={require('../../../assets/compartir.png')}
               style={[styles.icon_post, styles.icon_compartir]}
@@ -331,7 +326,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
         ) : null}
 
         {/*Inicia nuevo comentario hacia la publicaciòn */}
-        {/* {savingComment ? (
+        {savingComment ? (
           <ActivityIndicator color={StylesConfiguration.color} />
         ) : (
           <CommentInput
@@ -345,42 +340,14 @@ export default function Publication({ postId, navigation, showFullContent }) {
             setCountComments={setCountComments}
             countComments={countComments}
           />
-        )} */}
+        )}
         {/*Fin de nuevo comentario hacia la publicaciòn */}
 
         {/*Inicia fecha*/}
-        {/* <Text
-          style={{
-            textAlign: 'right',
-            color: 'gray',
-            marginBottom: 10,
-            right: 10,
-          }}>
-          Ayer a las 23:40
-        </Text> */}
         <View style={{ alignSelf: 'flex-end', marginHorizontal: 20, marginTop: 5 }}>
           <DateFormatter date={post.created_at} />
         </View>
         {/*Finaliza fecha */}
-
-        {/*Inicia franja amarilla */}
-        {/* <View
-        style={{
-          flex: 1,
-          height: 70,
-          backgroundColor: 'yellow',
-        }}>
-        <Image
-          style={{
-            alignContent: 'center',
-            marginHorizontal: 10,
-            marginVertical: 10,
-          }}
-          source={require('../assets/franja_amarilla_imagen.png')}
-          resizeMode="center"
-        />
-      </View> */}
-        {/*Finaliza franja amarilla */}
       </View>
     </>
   );
