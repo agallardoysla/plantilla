@@ -30,6 +30,10 @@ export const filesSlice = createSlice({
 export const {setFiles, addFiles, resetFiles} = filesSlice.actions;
 
 export const getFiles = (state) => state.files.allIds;
-export const getFile = (id) => (state) => state.files.byId[id.toString()];
+export const getFile = (id) => (state) => id ? state.files.byId[id.toString()] : null;
+export const getFilesFromIds = (ids) => (state) => {
+  console.log(ids, ids.map(id => state.files.byId[id.file_id.toString()]));
+  return ids.map(id => state.files.byId[id.file_id.toString()]);
+};
 
 export default filesSlice.reducer;

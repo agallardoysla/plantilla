@@ -30,6 +30,7 @@ export const usersSlice = createSlice({
 export const {setUsers, addUsers, resetUsers} = usersSlice.actions;
 
 export const getUsers = (state) => state.users.allIds;
+export const getFullUsers = (state) => state.users.byId;
 export const getUser = (id) => (state) => state.users.byId[id.toString()];
 
 export default usersSlice.reducer;
