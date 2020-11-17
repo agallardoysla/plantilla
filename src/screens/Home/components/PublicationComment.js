@@ -22,6 +22,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getLoggedUser} from '../../../reducers/loggedUser';
 import { getCommentAnswers, removeComment } from '../../../reducers/comments';
 import { getUser } from '../../../reducers/users';
+import CommentAnswer from './CommentAnswer';
 
 export default function PublicationComment({
   post,
@@ -35,33 +36,7 @@ export default function PublicationComment({
   const [showMenu, setShowMenu] = useState(false);
   const [editingComment, setEditingComment] = useState(false);
   const answers = useSelector(getCommentAnswers(comment.id));
-  const [savingAnswer, setSavingAnswer] = useState(answers.map(() => false));
-  const [showMenuAnswer, setShowMenuAnswer] = useState(
-    answers.map(() => false),
-  );
-  const [editingAnswer, setEditingAnswer] = useState(answers.map(() => false));
-  const user = useSelector(getLoggedUser);
   const commentOwner = useSelector(getUser(comment.user_id));
-  const dispatch = useDispatch();
-
-  const showMenuForAnswer = (index) => {
-    console.log(index);
-    setShowMenuAnswer(answers.map((_, i) => i === index));
-  };
-
-  const editForAnswer = (index) => {
-    setEditingAnswer(answers.map((_, i) => i === index));
-  };
-
-  const edittedAnswerCallback = () => (_comment) => {
-    editForAnswer(-1);
-    setSavingForAnswer(-1);
-    setShowMenu(false);
-  };
-
-  const setSavingForAnswer = (index) => () => {
-    setSavingAnswer(savingAnswer.map((_, i) => i === index));
-  };
 
   const newCommentCallback = () => {
     setSavingComment(false);
@@ -78,12 +53,6 @@ export default function PublicationComment({
       setComments(comments.filter((c) => c.id !== comment.id));
       setShowMenu(false);
     });
-  };
-
-  const doDeleteAnswer = (index) => () => {
-    dispatch(removeComment(answers[index].id));
-    setShowMenu(false);
-    comments_services.delete(answers[index].id);
   };
 
   return (
@@ -152,61 +121,7 @@ export default function PublicationComment({
         </View>
       </TouchableHighlight>
       {answers && answers.length > 0
-        ? answers.map((answer, i) => (
-            <TouchableHighlight
-              style={styles.commentContainer}
-              onLongPress={() => showMenuForAnswer(i)}
-              key={i}
-              underlayColor={StylesConfiguration.colorSelection}>
-              <View style={[styles.comment, styles.answer]}>
-                <Image
-                  source={require('../../../assets/foto.png')}
-                  style={styles.icon_profile}
-                />
-                {editingAnswer[i] ? (
-                  savingAnswer[i] ? (
-                    <ActivityIndicator color={StylesConfiguration.color} />
-                  ) : (
-                    <CommentInput
-                      placeholder={''}
-                      callback={edittedAnswerCallback(i)}
-                      post={post}
-                      comment={answer}
-                      setSavingComment={setSavingForAnswer(i)}
-                      style={styles.newComment}
-                      initialText={answer.text}
-                      isEdition={true}
-                    />
-                  )
-                ) : (
-                  <>
-                    <CommentFormatter
-                      style={styles.content}
-                      comment={`{${answer.user_owner.display_name}:${answer.user_owner.user_id}} ${answer.text}`}
-                      navigation={navigation}
-                    />
-                    <Menu
-                      opened={
-                        showMenuAnswer[i] &&
-                        answer.user_owner.user_id === user.id
-                      }
-                      onBackdropPress={() => showMenuForAnswer(-1)}>
-                      <MenuTrigger />
-                      <MenuOptions customStyles={menuOptions}>
-                        <MenuOption
-                          onSelect={() => editForAnswer(i)}
-                          text="Editar comentario"
-                        />
-                        <MenuOption onSelect={doDeleteAnswer(i)}>
-                          <Text style={{color: 'red'}}>Eliminar</Text>
-                        </MenuOption>
-                      </MenuOptions>
-                    </Menu>
-                  </>
-                )}
-              </View>
-            </TouchableHighlight>
-          ))
+        ? answers.map((answer, i) => <CommentAnswer answer={answer} key={i} />)
         : null}
       {showAnswerToComments ? (
         savingComment ? (

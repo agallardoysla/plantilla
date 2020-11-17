@@ -48,7 +48,19 @@ export const getPostComments = (postId) => (state) =>
 export const getCommentAnswers = (commentId) => (state) =>
   Object.values(state.comments.byId).filter(
     (c) =>
-      c.original_comment_id && c.original_comment_id.toString() === commentId,
+      c.original_comment_id && c.original_comment_id.toString() === commentId.toString(),
   );
+
+export const createComment = (id, text, post_id, user_id) => ({
+  id: id,
+  created_at: new Date(),
+  text: text,
+  file_id: null,
+  original_comment_id: null,
+  post_id: post_id,
+  user_id: user_id,
+  is_show: true,
+  is_notificated: true,
+});
 
 export default commentsSlice.reducer;

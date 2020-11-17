@@ -104,15 +104,19 @@ export default function CommentInput({
       comments: [],
     };
     if (comment && !isEdition) {
-      _comment.original_comment_id = comment.id;
+      _comment.original_comment = comment.id;
     }
 
+    console.log('created', _comment);
     if (isEdition) {
       const res = await comments_services.edit(comment.id, _comment);
       console.log(res.data);
     } else {
       const res = await comments_services.create(_comment);
-      let reduxComment = createComment(res.data.id, newComment, post.id, user.id);
+      console.log('res', res.data.comments);
+      const commentId = res.data.comments.reverse()[0].id;
+      console.log('id', commentId);
+      let reduxComment = createComment(commentId, newComment, post.id, user.id);
       if (comment) {
         reduxComment.original_comment_id = comment.id;
       }
