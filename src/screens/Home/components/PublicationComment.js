@@ -46,8 +46,8 @@ export default function PublicationComment({post, comment, navigation}) {
 
   const doDeleteComment = () => {
     dispatch(removeComment(comment.id));
-    comments_services.delete(comment.id);
     setShowMenu(false);
+    comments_services.delete(comment.id);
   };
 
   return (
