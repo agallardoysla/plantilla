@@ -11,14 +11,14 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import NewPostInput from '../../NewPublication/components/NewPostInput';
 import {batch, useDispatch, useSelector} from 'react-redux';
 import {
-  getUser,
+  getLoggedUser,
   setNewDisplayName,
   setNewProfileBio,
-} from '../../../reducers/user';
+} from '../../../reducers/loggedUser';
 
 export default function Preferences({navigation}) {
   const dispatch = useDispatch();
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const [editingNickname, setEditingNickname] = useState(false);
   const [editingDescription, setEditingDescription] = useState(false);
   const [newNickname, setNewNickname] = useState(user.display_name);
@@ -50,7 +50,7 @@ export default function Preferences({navigation}) {
       title={'EDITAR PERFIL'}>
       <Image
         source={
-          user.profile.photo
+          user.profile.photo && false
             ? {uri: user.profile.photo}
             : require('../../../assets/foto_perfil_superior.png')
         }

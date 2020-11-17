@@ -14,12 +14,12 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
 
   useEffect(() => {
     if (isInput && comment.length > 0) {
-      console.log(comment);
+      // console.log(comment);
       const matches = comment.match(initUserMentionPattern);
       setShowSugestions(!!matches);
       if (matches) {
         const lastMatch = matches[matches.length - 1];
-        console.log("input matches: ", matches);
+        // console.log("input matches: ", matches);
         const showSugestions = comment.slice(-lastMatch.length) === lastMatch;
         if (showSugestions) {
           setSugestionsInput(lastMatch.slice(1));

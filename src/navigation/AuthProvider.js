@@ -7,7 +7,7 @@ import profiles_services from '../services/profiles_services';
 import users_services from '../services/users_services';
 import { useDispatch } from 'react-redux';
 import { setLoadingProfile } from '../reducers/loadingProfile';
-import { login } from '../reducers/user';
+import { login } from '../reducers/loggedUser';
 
 /**
  * Proveedor creado para acceder

@@ -4,15 +4,15 @@ import { useSelector } from 'react-redux';
 import FormButtonCount from '../../../components/FormButtonCount';
 import FormButton from '../../../components/FormButton_small';
 import { getOtherUserFolloweds, getOtherUserFollowers } from '../../../reducers/otherUser';
-import { getUserFolloweds, getUserFollowers } from '../../../reducers/user';
+import { getLoggedUserFolloweds, getLoggedUserFollowers } from '../../../reducers/loggedUser';
 
 export default function ProfileLeftColumn({user, navigation, style, isLoggedUser}) {
   const followeds = isLoggedUser
-    ? useSelector(getUserFolloweds)
+    ? useSelector(getLoggedUserFolloweds)
     : useSelector(getOtherUserFolloweds);
 
   const followers = isLoggedUser
-    ? useSelector(getUserFollowers)
+    ? useSelector(getLoggedUserFollowers)
     : useSelector(getOtherUserFollowers);
 
   const goToFollowed = () => {

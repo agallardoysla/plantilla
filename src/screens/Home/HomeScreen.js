@@ -2,18 +2,17 @@ import React, { useState } from 'react';
 import { View, StyleSheet, FlatList, Image, Text } from 'react-native';
 import posts_services from '../../services/posts_services';
 import Publication from './components/Publication';
-import KBView from '../../components/KBView';
 import Admob from './components/Admob';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { addPosts, getPosts } from '../../reducers/posts';
+import { getPosts } from '../../reducers/posts';
 import { useDispatch, useSelector } from 'react-redux';
 import SharePost from './components/SharePost';
+import { doAddPosts } from '../../utils/reduxLoader';
+import { getShowSharePost } from '../../reducers/showSharePost';
 
 export default function HomeScreen({ navigation }) {
   const [page, setPage] = useState(1);
-  const [showModal, setShowModal] = useState(false);
-  const [sharedPost, setSharedPost] = useState({});
   const pages = [20, 10];
   const posts = useSelector(getPosts);
   const dispatch = useDispatch();
@@ -45,26 +44,17 @@ export default function HomeScreen({ navigation }) {
         getPageOffset(Math.min(page, pages.length - 1)),
       )
       .then((res) => {
-        console.log('nuevos posts', res.data.length);
-        dispatch(addPosts(res.data));
+        console.log('nuevos posts', res.data.posts.length);
+        dispatch(doAddPosts(res.data, dispatch));
         setPage(page + 1);
         // setReloading(false);
       });
   };
 
-  const showSharePost = async (post) => {
-    setShowModal(true);
-    setSharedPost(post);
-  };
-
   const PublicationItem = ({ item, index }) => {
     return (
       <View style={styles.publication}>
-        <Publication
-          postId={item.id}
-          navigation={navigation}
-          showSharePost={showSharePost}
-        />
+        <Publication postId={item} navigation={navigation} />
         {index % 2 === 1 ? <Admob /> : null}
       </View>
     );
@@ -92,17 +82,13 @@ export default function HomeScreen({ navigation }) {
         onRefresh={() => reloadPosts()}
         refreshing={reloading}
         renderItem={PublicationItem}
-        onEndReachedThreshold={300}
+        onEndReachedThreshold={0.7}
         onEndReached={loadPosts}
         bouncesZoom={true}
         keyExtractor={(item, index) => index.toString()}
         style={styles.publications}
       />
-      <SharePost
-        showModal={showModal}
-        setShowModal={setShowModal}
-        sharedPost={sharedPost}
-      />
+      <SharePost />
     </SafeAreaView>
   );
 }

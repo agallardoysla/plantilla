@@ -3,11 +3,11 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
 import {getConversationByParams} from '../../../reducers/conversations';
-import {getUser} from '../../../reducers/user';
+import {getLoggedUser} from '../../../reducers/loggedUser';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 const ListConversation = ({conversationId, navigation}) => {
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const conversation = useSelector(getConversationByParams(conversationId));
   //MyConversations > ListConversation(FlatList) > Chat
   const goChat = () => {

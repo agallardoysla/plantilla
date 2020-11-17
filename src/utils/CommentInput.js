@@ -1,8 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
-import {useSelector} from 'react-redux';
-import {getUser} from '../reducers/user';
+import {useDispatch, useSelector} from 'react-redux';
+import { addComments, createComment, updateComment } from '../reducers/comments';
+import {getLoggedUser} from '../reducers/loggedUser';
+import { getFullUsers } from '../reducers/users';
 import comments_services from '../services/comments_services';
 import users_services from '../services/users_services';
 import CommentFormatter from './CommentFormatter';
@@ -17,44 +19,41 @@ export default function CommentInput({
   style,
   initialText,
   isEdition,
-  countComments,
-  setCountComments,
 }) {
-  const [newComment, setNewComment] = useState(initialText);
+  const [newText, setNewText] = useState(initialText);
   const [showSugestions, setShowSugestions] = useState(false);
   const [sugestionsInput, setSugestionsInput] = useState('');
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
+  const users = useSelector(getFullUsers);
   const [sugestionsAsync, setSugestionsAsync] = useState([]);
   const maxSugestions = 5;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let filteredSugestions = getFixedSugestions;
-    filteredSugestions = filteredSugestions.filter(
-      (s) =>
-        s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase(),
-    );
+    filteredSugestions = filteredSugestions.filter((s) => {
+      s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase();
+    });
     getMentionsSugestionsAsync(filteredSugestions);
   }, [getFixedSugestions, getMentionsSugestionsAsync, sugestionsInput]);
 
   const getFixedSugestions = useMemo(() => {
     const res = [];
     if (post) {
-      res.push(post.user_owner);
+      res.push(post.user_id);
     }
     if (comment) {
-      res.push(comment.user_owner);
+      res.push(comment.user_id);
     }
     if (comments) {
       comments.forEach((c) => {
-        if (
-          res.reduce((r, s) => r && c.user_owner.user_id !== s.user_id, true)
-        ) {
-          res.push(c.user_owner);
+        if (res.reduce((r, s) => r && c.user_id !== s, true)) {
+          res.push(c.user_id);
         }
       });
     }
-    return res;
-  }, [post, comment, comments]);
+    return res.map((s) => users[s]);
+  }, [comment, comments, post, users]);
 
   const getMentionsSugestions = () => {
     const filteredSugestions = getFixedSugestions.filter(
@@ -100,32 +99,39 @@ export default function CommentInput({
     setSavingComment(true);
     const _comment = {
       post: post.id,
-      text: newComment,
-      user_owner: user,
+      text: newText,
+      user_owner: user.id,
       comments: [],
     };
-    if (comment && !isEdition) _comment.original_comment = comment.id;
+    if (comment && !isEdition) {
+      _comment.original_comment = comment.id;
+    }
 
+    console.log('created', _comment);
     if (isEdition) {
-      const res = await comments_services.edit(comment.id, _comment);
-      console.log(res.data);
+      comments_services.edit(comment.id, _comment);
+      dispatch(updateComment({id: comment.id, text: newText}));
     } else {
       const res = await comments_services.create(_comment);
-      setCountComments(countComments + 1) //sumo al agregar new comment
-      console.log(res.data);
-      _comment.id = res.data.id;
-      _comment.user_owner = {
-        user_id: user.id,
-        display_name: user.display_name,
-      };
+      let reduxComment;
+      if (comment) {
+        const commentId = res.data.comments.reverse()[0].id;
+        console.log('id', commentId);
+        reduxComment = createComment(commentId, newText, post.id, user.id);
+        reduxComment.original_comment_id = comment.id;
+      } else {
+        reduxComment = createComment(res.data.id, newText, post.id, user.id);
+      }
+      console.log('new comment: ', reduxComment);
+      dispatch(addComments([reduxComment]));
     }
-    setNewComment('');
-    callback(_comment);
+    setNewText('');
+    callback();
   };
 
   const selectSugestion = (sugestion) => {
-    setNewComment(
-      newComment
+    setNewText(
+      newText
         .slice(0, -(sugestionsInput.length + 2))
         .concat(`[${sugestion.display_name}:${sugestion.user_id}] `)
     );
@@ -166,14 +172,14 @@ export default function CommentInput({
       ) : null}
 
       <TextInput
-        style={[styles.newComment, style]}
-        onChangeText={setNewComment}
+        style={[styles.newText, style]}
+        onChangeText={setNewText}
         onSubmitEditing={saveComment}
         placeholder={placeholder}
         placeholderTextColor={'white'}>
 
         <CommentFormatter
-          comment={newComment}
+          comment={newText}
           isInput={true}
           post={post}
           comments={comments}
@@ -223,7 +229,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     borderRadius: 400 / 2,
   },
-  newComment: {
+  newText: {
     color: 'white',
     // fontFamily: StylesConfiguration.fontFamily,
     fontSize: 12,

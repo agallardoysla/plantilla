@@ -1,19 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { adapt } from '../utils/normalizedDataAdaptator';
+
+const initialState = {
+  byId: {},
+  allIds: [],
+};
 
 export const profilesSlice = createSlice({
   name: 'profiles',
-  initialState: [],
+  initialState: initialState,
   reducers: {
     setProfiles: (profiles, action) => {
-      profiles = action.payload;
+      profiles = adapt(action.payload);
       return profiles;
     },
     addProfiles: (profiles, action) => {
-      profiles = [...profiles, ...action.payload];
+      const newProfiles = adapt(action.payload);
+      profiles.byId = {...profiles.byId, ...newProfiles.byId};
+      profiles.allIds = [...profiles.allIds, ...newProfiles.allIds];
       return profiles;
     },
     resetProfiles: (profiles) => {
-      profiles = [];
+      profiles = initialState;
       return profiles;
     },
   },

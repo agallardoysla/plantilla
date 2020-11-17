@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 
-import user from './user';
+import loggedUser from './loggedUser';
 import posts from './posts';
 import searchedPosts from './searchedPosts';
 import searchedProfiles from './searchedProfiles';
@@ -17,10 +17,12 @@ import postToMentions from './postToMentions';
 import postToSponsors from './postToSponsors';
 import postToFiles from './postsToFiles';
 import profiles from './profiles';
-import list_users from './users';
+import users from './users';
+import showSharePost from './showSharePost';
+import postToShare from './postToShare';
 
 const rootReducer = combineReducers({
-  user,
+  loggedUser,
   posts,
   searchedPosts,
   searchedProfiles,
@@ -37,7 +39,9 @@ const rootReducer = combineReducers({
   postToSponsors,
   postToFiles,
   profiles,
-  list_users,
+  users,
+  showSharePost,
+  postToShare,
 });
 
 export default rootReducer;

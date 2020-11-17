@@ -6,7 +6,7 @@ import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
 import chats_services from '../../services/chats_services';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { getUser } from '../../reducers/user';
+import { getLoggedUser } from '../../reducers/loggedUser';
 import {
   addConversation,
   getConversationByParams,
@@ -19,7 +19,7 @@ import FormGoBack from '../../components/GoBackButton'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Chat = ({ navigation, route }) => {
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const [newMessage, setNewMessage] = useState('');
   const [other, setOther] = useState({});
   const dispatch = useDispatch();

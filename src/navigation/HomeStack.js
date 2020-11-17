@@ -14,7 +14,7 @@ import { setConversations } from '../reducers/conversations';
 import chats_services from '../services/chats_services';
 import Loading from '../components/Loading';
 import {useSelector} from 'react-redux';
-import {getUser, login, setReactions} from '../reducers/user';
+import {getLoggedUser, login, setReactions} from '../reducers/loggedUser';
 import profiles_services from '../services/profiles_services';
 import HomeGroup from './HomeGroups/HomeGroup';
 import MyProfileGroup from './HomeGroups/MyProfileGroup';
@@ -27,23 +27,18 @@ import postGroup from './HomeGroups/PostGroup';
 import { getLoadingProfile, setLoadingProfile } from '../reducers/loadingProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLoadingOtherProfile } from '../reducers/loadingOtherProfile';
-import { setComments } from '../reducers/comments';
-import { setPostReactions } from '../reducers/postReactions';
-import { setPostToFiles } from '../reducers/postsToFiles';
-import { setPostToMentions } from '../reducers/postToMentions';
-import { setPostToSponsors } from '../reducers/postToSponsors';
-import { setUsers } from '../reducers/users';
-import { setProfiles } from '../reducers/profiles';
-import { setFiles } from '../reducers/files';
+import { doSetPosts } from '../utils/reduxLoader';
 
 const Tab = createBottomTabNavigator();
 
 const HomeStack = () => {
   const dispatch = useDispatch();
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const [loading, setLoading] = useState(true);
   const loadingProfile = useSelector(getLoadingProfile);
   const loadingOtherProfile = useSelector(getLoadingOtherProfile);
+  const waitingLoadingTime = 25; // 17
+  const initHomePostsCount = 5;
 
   useEffect(() => {
     dispatch(setLoadingProfile(true));
@@ -63,21 +58,10 @@ const HomeStack = () => {
         setTimeout(() => {
           setLoading(false);
           dispatch(setLoadingProfile(false));
-        }, 17 * 1000);
+        }, waitingLoadingTime * 1000);
         // Cargar los posts de Home
-        const initHomePostsCount = 20;
         posts_services.list(initHomePostsCount, 0).then((res) => {
-          batch(
-            dispatch(setPosts(res.data.posts)),
-            dispatch(setComments(res.data.comments)),
-            dispatch(setPostReactions(res.data.posts_reactions)),
-            dispatch(setPostToFiles(res.data.posts_to_files)),
-            dispatch(setPostToMentions(res.data.posts_to_mentions)),
-            dispatch(setPostToSponsors(res.data.posts_to_sponsors)),
-            dispatch(setUsers(res.data.users)),
-            dispatch(setProfiles(res.data.profiles)),
-            dispatch(setFiles(res.data.files)),
-          );
+          batch(doSetPosts(res.data, dispatch));
         });
         // Cargar los posts de Busqueda
         search_services.search({search_in: 'posts'}).then((res) => {
@@ -111,7 +95,7 @@ const HomeStack = () => {
   }, [loadingProfile]);
 
   const icons = {
-    icon_profile: user.profile.photo
+    icon_profile: false //user.profile.photo
       ? {uri: user.profile.photo}
       : require('../assets/foto_perfil.png'),
 

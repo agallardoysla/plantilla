@@ -1,19 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { adapt } from '../utils/normalizedDataAdaptator';
+
+const initialState = {
+  byId: {},
+  allIds: [],
+};
 
 export const postToSponsorsSlice = createSlice({
   name: 'postToSponsors',
-  initialState: [],
+  initialState: initialState,
   reducers: {
     setPostToSponsors: (postToSponsors, action) => {
-      postToSponsors = action.payload;
+      postToSponsors = adapt(action.payload);
       return postToSponsors;
     },
     addPostToSponsors: (postToSponsors, action) => {
-      postToSponsors = [...postToSponsors, ...action.payload];
+      const newPostToSponsors = adapt(action.payload);
+      postToSponsors.byId = {...postToSponsors.byId, ...newPostToSponsors.byId};
+      postToSponsors.allIds = [...postToSponsors.allIds, ...newPostToSponsors.allIds];
       return postToSponsors;
     },
     resetPostToSponsors: (postToSponsors) => {
-      postToSponsors = [];
+      postToSponsors = initialState;
       return postToSponsors;
     },
   },

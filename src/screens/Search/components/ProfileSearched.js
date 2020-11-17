@@ -4,11 +4,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import FormButton from '../../../components/FormButton';
 import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
-import {getUser, followUser, unfollowUser} from '../../../reducers/user';
+import {getLoggedUser, followUser, unfollowUser} from '../../../reducers/loggedUser';
 
 const ProfileSearched = ({profile, navigation}) => {
   const dispatch = useDispatch();
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const [userFollowProfile, setUserFollowProfile] = useState(
     user.following_with_details.filter((u) => u.user_id === profile.id).length > 0,
   );

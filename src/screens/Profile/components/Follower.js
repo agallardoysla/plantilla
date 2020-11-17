@@ -4,14 +4,14 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {batch, useDispatch, useSelector} from 'react-redux';
 import FormButton from '../../../components/FormButton';
 import { followOtherUser, unfollowOtherUser } from '../../../reducers/otherUser';
-import {getUser, followUser, unfollowUser} from '../../../reducers/user';
+import {getLoggedUser, followUser, unfollowUser} from '../../../reducers/loggedUser';
 import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 
 const Follower = ({follower, navigation}) => {
   const dispatch = useDispatch();
-  const user = useSelector(getUser);
+  const user = useSelector(getLoggedUser);
   const [userFollowProfile, setUserFollowProfile] = useState(
     user.following_with_details.filter((u) => u.user_id === follower.user_id).length > 0,
   );
@@ -59,7 +59,7 @@ const Follower = ({follower, navigation}) => {
       <TouchableOpacity onPress={goToProfile} style={styles.user}>
         <Image
           source={
-            follower.profile && follower.profile.photo
+            follower.profile && follower.profile.photo && false
               ? {uri: follower.profile.photo}
               : require('../../../assets/foto_perfil_superior.png')
           }

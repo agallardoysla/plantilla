@@ -18,83 +18,36 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 import comments_services from '../../../services/comments_services';
-import {useSelector} from 'react-redux';
-import {getUser} from '../../../reducers/user';
+import {useDispatch, useSelector} from 'react-redux';
+import {getLoggedUser} from '../../../reducers/loggedUser';
+import { getCommentAnswers, removeComment } from '../../../reducers/comments';
+import { getUser } from '../../../reducers/users';
+import CommentAnswer from './CommentAnswer';
 
-export default function PublicationsComments({
-  post,
-  comment,
-  comments,
-  setComments,
-  navigation,
-  setCountComments,
-  countComments,
-}) {
+export default function PublicationComment({post, comment, navigation}) {
   const [showAnswerToComments, setShowAnswerToComments] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [editingComment, setEditingComment] = useState(false);
-  const [answers, setAnswers] = useState(comment.comments);
-  const [savingAnswer, setSavingAnswer] = useState(answers.map(() => false));
-  const [showMenuAnswer, setShowMenuAnswer] = useState(
-    answers.map(() => false),
-  );
-  const [editingAnswer, setEditingAnswer] = useState(answers.map(() => false));
-  const user = useSelector(getUser);
+  const answers = useSelector(getCommentAnswers(comment.id));
+  const commentOwner = useSelector(getUser(comment.user_id));
+  const loggedUser = useSelector(getLoggedUser);
+  const dispatch = useDispatch();
 
-  const showMenuForAnswer = (index) => {
-    console.log(index);
-    setShowMenuAnswer(answers.map((_, i) => i === index));
-  };
-
-  const editForAnswer = (index) => {
-    setEditingAnswer(answers.map((_, i) => i === index));
-  };
-
-  const edittedAnswerCallback = (index) => (_comment) => {
-    answers[index].text = _comment.text;
-    setAnswers(
-      answers.map((a, i) => {
-        if (i === index) {
-          a.text = _comment.text;
-        }
-        return a;
-      }),
-    );
-    editForAnswer(-1);
-    setSavingForAnswer(-1);
-    setShowMenu(false);
-  };
-
-  const setSavingForAnswer = (index) => () => {
-    setSavingAnswer(savingAnswer.map((_, i) => i === index));
-  };
-
-  const newCommentCallback = (_comment) => {
-    setAnswers([...answers, _comment]);
+  const newCommentCallback = () => {
     setSavingComment(false);
     setShowAnswerToComments(false);
   };
 
-  const edittedCommentCallback = (_comment) => {
-    comment.text = _comment.text;
+  const edittedCommentCallback = () => {
     setEditingComment(false);
     setShowMenu(false);
   };
 
   const doDeleteComment = () => {
-    comments_services.delete(comment.id).then((res) => {
-      setComments(comments.filter((c) => c.id !== comment.id));
-      setCountComments(countComments - 1); //a nivel local resto 1 al comment
-      setShowMenu(false);
-    });
-  };
-
-  const doDeleteAnswer = (index) => () => {
-    comments_services.delete(answers[index].id).then((_) => {
-      setAnswers(answers.filter((_, i) => i !== index));
-      setShowMenu(false);
-    });
+    dispatch(removeComment(comment.id));
+    setShowMenu(false);
+    comments_services.delete(comment.id);
   };
 
   return (
@@ -110,7 +63,7 @@ export default function PublicationsComments({
               navigation.navigate('OtherProfileGroup', {
                 screen: 'OtherProfile',
                 params: {
-                  user_id: comment.user_owner.user_id,
+                  user_id: commentOwner.user_id,
                 },
               })
             }>
@@ -132,7 +85,6 @@ export default function PublicationsComments({
                 style={styles.newComment}
                 initialText={comment.text}
                 isEdition={true}
-                setCountComments={setCountComments}
               />
             )
           ) : (
@@ -140,13 +92,13 @@ export default function PublicationsComments({
               <CommentFormatter
                 style={styles.content}
                 comment={
-                  `{${comment.user_owner.display_name}:${comment.user_owner.user_id}} ` +
+                  `{${commentOwner.display_name}:${commentOwner.id}} ` +
                   comment.text
                 }
                 navigation={navigation}
               />
               <Menu
-                opened={showMenu && comment.user_owner.user_id === user.id}
+                opened={showMenu && commentOwner.id === loggedUser.id}
                 onBackdropPress={() => setShowMenu(false)}>
                 <MenuTrigger />
                 <MenuOptions customStyles={menuOptions}>
@@ -165,60 +117,12 @@ export default function PublicationsComments({
       </TouchableHighlight>
       {answers && answers.length > 0
         ? answers.map((answer, i) => (
-            <TouchableHighlight
-              style={styles.commentContainer}
-              onLongPress={() => showMenuForAnswer(i)}
+            <CommentAnswer
+              answer={answer}
+              post={post}
+              navigation={navigation}
               key={i}
-              underlayColor={StylesConfiguration.colorSelection}>
-              <View style={[styles.comment, styles.answer]}>
-                <Image
-                  source={require('../../../assets/foto.png')}
-                  style={styles.icon_profile}
-                />
-                {editingAnswer[i] ? (
-                  savingAnswer[i] ? (
-                    <ActivityIndicator color={StylesConfiguration.color} />
-                  ) : (
-                    <CommentInput
-                      placeholder={''}
-                      callback={edittedAnswerCallback(i)}
-                      post={post}
-                      comment={answer}
-                      setSavingComment={setSavingForAnswer(i)}
-                      style={styles.newComment}
-                      initialText={answer.text}
-                      isEdition={true}
-                      setCountComments={setCountComments}
-                    />
-                  )
-                ) : (
-                  <>
-                    <CommentFormatter
-                      style={styles.content}
-                      comment={`{${answer.user_owner.display_name}:${answer.user_owner.user_id}} ${answer.text}`}
-                      navigation={navigation}
-                    />
-                    <Menu
-                      opened={
-                        showMenuAnswer[i] &&
-                        answer.user_owner.user_id === user.id
-                      }
-                      onBackdropPress={() => showMenuForAnswer(-1)}>
-                      <MenuTrigger />
-                      <MenuOptions customStyles={menuOptions}>
-                        <MenuOption
-                          onSelect={() => editForAnswer(i)}
-                          text="Editar comentario"
-                        />
-                        <MenuOption onSelect={doDeleteAnswer(i)}>
-                          <Text style={{color: 'red'}}>Eliminar</Text>
-                        </MenuOption>
-                      </MenuOptions>
-                    </Menu>
-                  </>
-                )}
-              </View>
-            </TouchableHighlight>
+            />
           ))
         : null}
       {showAnswerToComments ? (
@@ -226,15 +130,14 @@ export default function PublicationsComments({
           <ActivityIndicator color={StylesConfiguration.color} />
         ) : (
           <CommentInput
-            placeholder={'Responder a @' + comment.user_owner.display_name}
+            placeholder={'Responder a @' + commentOwner.display_name}
             callback={newCommentCallback}
             post={post}
             comment={comment}
             comments={answers}
             setSavingComment={setSavingComment}
             style={styles.newComment}
-            initialText={`@${comment.user_owner.display_name} `}
-            setCountComments={setCountComments}
+            initialText={`@${commentOwner.display_name} `}
           />
         )
       ) : (

@@ -11,7 +11,7 @@ export default function PublicationDetails({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Publication postId={route.params.post.id} navigation={navigation} showFullContent={true} />
+      <Publication postId={route.params.postId} navigation={navigation} showFullContent={true} />
       <View style={{ position: 'absolute', margin: 10, paddingTop: top }}>
         <Icon source={'boton_volver_atras'} onPress={() => navigation.goBack()} />
       </View>
