@@ -105,7 +105,6 @@ export default function Publication({ postId, navigation, showFullContent }) {
     // setLoadingComments(true);
     // if (showComments) {
     //   posts_services.getComments(postId).then((res) => {
-    //     setComments(res.data);
     //     setLoadingComments(false);
     //   });
     // } else {
@@ -115,9 +114,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
   };
 
   const newCommentCallback = (comment) => {
-    // setComments([...comments, comment]);
     setSavingComment(false);
-    // getAndSetShowComments();
   };
 
   const AddLike = async () => {
@@ -306,7 +303,6 @@ export default function Publication({ postId, navigation, showFullContent }) {
                   post={post}
                   comment={comment}
                   key={i}
-                  comments={comments}
                   navigation={navigation}
                 />
               ))

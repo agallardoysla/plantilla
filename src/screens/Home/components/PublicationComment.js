@@ -24,13 +24,7 @@ import { getCommentAnswers, removeComment } from '../../../reducers/comments';
 import { getUser } from '../../../reducers/users';
 import CommentAnswer from './CommentAnswer';
 
-export default function PublicationComment({
-  post,
-  comment,
-  comments,
-  setComments,
-  navigation,
-}) {
+export default function PublicationComment({post, comment, navigation}) {
   const [showAnswerToComments, setShowAnswerToComments] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -38,6 +32,7 @@ export default function PublicationComment({
   const answers = useSelector(getCommentAnswers(comment.id));
   const commentOwner = useSelector(getUser(comment.user_id));
   const loggedUser = useSelector(getLoggedUser);
+  const dispatch = useDispatch();
 
   const newCommentCallback = () => {
     setSavingComment(false);
@@ -50,10 +45,9 @@ export default function PublicationComment({
   };
 
   const doDeleteComment = () => {
-    comments_services.delete(comment.id).then((res) => {
-      setComments(comments.filter((c) => c.id !== comment.id));
-      setShowMenu(false);
-    });
+    dispatch(removeComment(comment.id));
+    comments_services.delete(comment.id);
+    setShowMenu(false);
   };
 
   return (
