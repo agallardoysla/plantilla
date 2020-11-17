@@ -24,6 +24,10 @@ export const commentsSlice = createSlice({
       comments = initialState;
       return comments;
     },
+    updateComment: (comments, action) => {
+      comments.byId[action.payload.id].text = action.payload.text;
+      return comments;
+    },
     removeComment: (comments, action) => {
       delete comments.byId[action.payload.toString()];
       comments.allIds = comments.allIds.filter((pr) => pr !== action.payload.toString());
@@ -36,6 +40,7 @@ export const {
   setComments,
   addComments,
   resetComments,
+  updateComment,
   removeComment,
 } = commentsSlice.actions;
 

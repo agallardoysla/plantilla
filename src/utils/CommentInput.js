@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
-import { addComments, createComment } from '../reducers/comments';
+import { addComments, createComment, updateComment } from '../reducers/comments';
 import {getLoggedUser} from '../reducers/loggedUser';
 import { getFullUsers } from '../reducers/users';
 import comments_services from '../services/comments_services';
@@ -20,7 +20,7 @@ export default function CommentInput({
   initialText,
   isEdition,
 }) {
-  const [newComment, setNewComment] = useState(initialText);
+  const [newText, setNewText] = useState(initialText);
   const [showSugestions, setShowSugestions] = useState(false);
   const [sugestionsInput, setSugestionsInput] = useState('');
   const user = useSelector(getLoggedUser);
@@ -99,7 +99,7 @@ export default function CommentInput({
     setSavingComment(true);
     const _comment = {
       post: post.id,
-      text: newComment,
+      text: newText,
       user_owner: user.id,
       comments: [],
     };
@@ -109,29 +109,29 @@ export default function CommentInput({
 
     console.log('created', _comment);
     if (isEdition) {
-      const res = await comments_services.edit(comment.id, _comment);
-      console.log(res.data);
+      comments_services.edit(comment.id, _comment);
+      dispatch(updateComment({id: comment.id, text: newText}));
     } else {
       const res = await comments_services.create(_comment);
       let reduxComment;
       if (comment) {
         const commentId = res.data.comments.reverse()[0].id;
         console.log('id', commentId);
-        reduxComment = createComment(commentId, newComment, post.id, user.id);
+        reduxComment = createComment(commentId, newText, post.id, user.id);
         reduxComment.original_comment_id = comment.id;
       } else {
-        reduxComment = createComment(res.data.id, newComment, post.id, user.id);
+        reduxComment = createComment(res.data.id, newText, post.id, user.id);
       }
       console.log('new comment: ', reduxComment);
       dispatch(addComments([reduxComment]));
     }
-    setNewComment('');
+    setNewText('');
     callback();
   };
 
   const selectSugestion = (sugestion) => {
-    setNewComment(
-      newComment
+    setNewText(
+      newText
         .slice(0, -(sugestionsInput.length + 2))
         .concat(`[${sugestion.display_name}:${sugestion.user_id}] `)
     );
@@ -172,14 +172,14 @@ export default function CommentInput({
       ) : null}
 
       <TextInput
-        style={[styles.newComment, style]}
-        onChangeText={setNewComment}
+        style={[styles.newText, style]}
+        onChangeText={setNewText}
         onSubmitEditing={saveComment}
         placeholder={placeholder}
         placeholderTextColor={'white'}>
 
         <CommentFormatter
-          comment={newComment}
+          comment={newText}
           isInput={true}
           post={post}
           comments={comments}
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
     borderRadius: 400 / 2,
   },
-  newComment: {
+  newText: {
     color: 'white',
     // fontFamily: StylesConfiguration.fontFamily,
     fontSize: 12,

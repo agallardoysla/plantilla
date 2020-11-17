@@ -22,14 +22,7 @@ import comments_services from '../../../services/comments_services';
 import CommentInput from '../../../utils/CommentInput';
 import { getUser } from '../../../reducers/users';
 
-export default function CommentAnswer({
-  answer,
-  post,
-  comment,
-  comments,
-  setComments,
-  navigation,
-}) {
+export default function CommentAnswer({answer, post, navigation}) {
   const [savingAnswer, setSavingAnswer] = useState(false);
   const [showMenuAnswer, setShowMenuAnswer] = useState(false);
   const [editingAnswer, setEditingAnswer] = useState(false);
@@ -78,17 +71,17 @@ export default function CommentAnswer({
           <>
             <CommentFormatter
               style={styles.content}
-              comment={`{${answerOwner.display_name}:${answerOwner.user_id}} ${answer.text}`}
+              comment={`{${answerOwner.display_name}:${answerOwner.id}} ${answer.text}`}
               navigation={navigation}
             />
             <Menu
-              opened={showMenuAnswer && answerOwner.user_id === user.id}
+              opened={showMenuAnswer && answerOwner.id === user.id}
               onBackdropPress={() => setShowMenuAnswer(true)}>
               <MenuTrigger />
               <MenuOptions customStyles={menuOptions}>
                 <MenuOption
                   onSelect={() => setEditingAnswer(true)}
-                  text="Editar comentario"
+                  text="Editar respuesta"
                 />
                 <MenuOption onSelect={doDeleteAnswer}>
                   <Text style={{color: 'red'}}>Eliminar</Text>

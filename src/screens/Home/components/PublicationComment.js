@@ -37,6 +37,7 @@ export default function PublicationComment({
   const [editingComment, setEditingComment] = useState(false);
   const answers = useSelector(getCommentAnswers(comment.id));
   const commentOwner = useSelector(getUser(comment.user_id));
+  const loggedUser = useSelector(getLoggedUser);
 
   const newCommentCallback = () => {
     setSavingComment(false);
@@ -97,13 +98,13 @@ export default function PublicationComment({
               <CommentFormatter
                 style={styles.content}
                 comment={
-                  `{${commentOwner.display_name}:${commentOwner.user_id}} ` +
+                  `{${commentOwner.display_name}:${commentOwner.id}} ` +
                   comment.text
                 }
                 navigation={navigation}
               />
               <Menu
-                opened={showMenu && commentOwner.user_id === user.id}
+                opened={showMenu && commentOwner.id === loggedUser.id}
                 onBackdropPress={() => setShowMenu(false)}>
                 <MenuTrigger />
                 <MenuOptions customStyles={menuOptions}>
@@ -121,7 +122,14 @@ export default function PublicationComment({
         </View>
       </TouchableHighlight>
       {answers && answers.length > 0
-        ? answers.map((answer, i) => <CommentAnswer answer={answer} key={i} />)
+        ? answers.map((answer, i) => (
+            <CommentAnswer
+              answer={answer}
+              post={post}
+              navigation={navigation}
+              key={i}
+            />
+          ))
         : null}
       {showAnswerToComments ? (
         savingComment ? (
