@@ -189,7 +189,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
               <Image
                 source={
                   ownerPhoto
-                    ? {uri: ownerPhoto.url_original}
+                    ? {uri: ownerPhoto.url_small}
                     : require('../../../assets/pride-dog_1.png')
                 }
                 resizeMode="cover"

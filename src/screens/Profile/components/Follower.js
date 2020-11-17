@@ -59,8 +59,8 @@ const Follower = ({follower, navigation}) => {
       <TouchableOpacity onPress={goToProfile} style={styles.user}>
         <Image
           source={
-            follower.profile && follower.profile.photo && false
-              ? {uri: follower.profile.photo}
+            follower.profile && follower.profile.photo
+              ? {uri: follower.profile.photo.url_small}
               : require('../../../assets/foto_perfil_superior.png')
           }
           style={styles.image}

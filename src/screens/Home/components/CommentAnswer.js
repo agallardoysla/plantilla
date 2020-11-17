@@ -21,12 +21,16 @@ import { getComment, removeComment } from '../../../reducers/comments';
 import comments_services from '../../../services/comments_services';
 import CommentInput from '../../../utils/CommentInput';
 import { getUser } from '../../../reducers/users';
+import { getProfile } from '../../../reducers/profiles';
+import { getFile } from '../../../reducers/files';
 
 export default function CommentAnswer({answer, post, navigation}) {
   const [savingAnswer, setSavingAnswer] = useState(false);
   const [showMenuAnswer, setShowMenuAnswer] = useState(false);
   const [editingAnswer, setEditingAnswer] = useState(false);
   const answerOwner = useSelector(getUser(answer.user_id));
+  const answerOwnerProfile = useSelector(getProfile(answerOwner.profile_id));
+  const ownerPhoto = useSelector(getFile(answerOwnerProfile.photo_id));
   const user = useSelector(getLoggedUser);
   const dispatch = useDispatch();
 
@@ -49,7 +53,11 @@ export default function CommentAnswer({answer, post, navigation}) {
       underlayColor={StylesConfiguration.colorSelection}>
       <View style={[styles.comment, styles.answer]}>
         <Image
-          source={require('../../../assets/foto.png')}
+          source={
+            ownerPhoto
+              ? {uri: ownerPhoto.url_small}
+              : require('../../../assets/foto.png')
+          }
           style={styles.icon_profile}
         />
         {editingAnswer ? (

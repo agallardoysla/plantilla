@@ -23,6 +23,8 @@ import {getLoggedUser} from '../../../reducers/loggedUser';
 import { getCommentAnswers, removeComment } from '../../../reducers/comments';
 import { getUser } from '../../../reducers/users';
 import CommentAnswer from './CommentAnswer';
+import { getProfile } from '../../../reducers/profiles';
+import { getFile } from '../../../reducers/files';
 
 export default function PublicationComment({post, comment, navigation}) {
   const [showAnswerToComments, setShowAnswerToComments] = useState(false);
@@ -31,6 +33,8 @@ export default function PublicationComment({post, comment, navigation}) {
   const [editingComment, setEditingComment] = useState(false);
   const answers = useSelector(getCommentAnswers(comment.id));
   const commentOwner = useSelector(getUser(comment.user_id));
+  const commentOwnerProfile = useSelector(getProfile(commentOwner.profile_id));
+  const ownerPhoto = useSelector(getFile(commentOwnerProfile.photo_id));
   const loggedUser = useSelector(getLoggedUser);
   const dispatch = useDispatch();
 
@@ -68,7 +72,11 @@ export default function PublicationComment({post, comment, navigation}) {
               })
             }>
             <Image
-              source={require('../../../assets/foto.png')}
+              source={
+                ownerPhoto
+                  ? {uri: ownerPhoto.url_small}
+                  : require('../../../assets/foto.png')
+              }
               style={styles.icon_profile}
             />
           </TouchableOpacity>
