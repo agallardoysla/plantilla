@@ -113,12 +113,14 @@ export default function CommentInput({
       console.log(res.data);
     } else {
       const res = await comments_services.create(_comment);
-      console.log('res', res.data.comments);
-      const commentId = res.data.comments.reverse()[0].id;
-      console.log('id', commentId);
-      let reduxComment = createComment(commentId, newComment, post.id, user.id);
+      let reduxComment;
       if (comment) {
+        const commentId = res.data.comments.reverse()[0].id;
+        console.log('id', commentId);
+        reduxComment = createComment(commentId, newComment, post.id, user.id);
         reduxComment.original_comment_id = comment.id;
+      } else {
+        reduxComment = createComment(res.data.id, newComment, post.id, user.id);
       }
       console.log('new comment: ', reduxComment);
       dispatch(addComments([reduxComment]));
