@@ -50,7 +50,7 @@ export default function Preferences({navigation}) {
       title={'EDITAR PERFIL'}>
       <Image
         source={
-          user.profile.photo
+          user.profile.photo && false
             ? {uri: user.profile.photo}
             : require('../../../assets/foto_perfil_superior.png')
         }

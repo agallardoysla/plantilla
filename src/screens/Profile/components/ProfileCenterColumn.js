@@ -58,7 +58,7 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
   };
 
   const getProfilePhoto = () => {
-    return user.profile.photo
+    return user.profile.photo && false
       ? {uri: user.profile.photo}
       : require('../../../assets/foto_perfil_superior.png');
   };
