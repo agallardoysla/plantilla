@@ -82,7 +82,7 @@ export default function HomeScreen({ navigation }) {
         onRefresh={() => reloadPosts()}
         refreshing={reloading}
         renderItem={PublicationItem}
-        onEndReachedThreshold={300}
+        onEndReachedThreshold={0.7}
         onEndReached={loadPosts}
         bouncesZoom={true}
         keyExtractor={(item, index) => index.toString()}
