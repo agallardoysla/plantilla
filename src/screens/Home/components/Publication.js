@@ -19,9 +19,9 @@ import PublicationComment from './PublicationComment';
 import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
 import DateFormatter from '../../../components/DateFormatter';
-import { useDispatch, useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector } from 'react-redux';
 import { getLoggedUser } from '../../../reducers/loggedUser';
-import { getPost } from '../../../reducers/posts';
+import { getPost, getReactionsByPost, likePost, unlikePost } from '../../../reducers/posts';
 import Counter from '../../../components/Counter';
 import { getPostComments } from '../../../reducers/comments';
 import { addPostReactions, createPostReaction, getPostReactions, removePostReaction } from '../../../reducers/postReactions';
@@ -35,23 +35,23 @@ let window = Dimensions.get('window');
 
 export default function Publication({ postId, navigation, showFullContent }) {
   const post = useSelector(getPost(postId));
-  const comments = useSelector(getPostComments(postId));
   const postReactions = useSelector(getPostReactions(postId));
+  const comments = useSelector(getPostComments(postId));
   const postFiles = useSelector(getPostToFilesByPost(postId));
   const files = useSelector(getFilesFromIds(postFiles));
   const owner = useSelector(getUser(post.user_id));
   const ownerProfile = useSelector(getProfile(owner.profile_id));
   const ownerPhoto = useSelector(getFile(ownerProfile.photo_id));
-  const user = useSelector(getLoggedUser);
-  let reactionId = 0;
+  const loggedUser = useSelector(getLoggedUser);
+  let myReactionId = 0;
 
   const getLikesCounter = () => {
-    return postReactions ? postReactions.length : 0;
+    return post.reactions.length;
   };
 
   const getILiked = () => {
-    const reaction = postReactions.filter((reaction) => reaction.user_id === user.id);
-    reactionId = reaction.length > 0 ? reaction[0].id : 0;
+    const reaction = postReactions.filter((reaction) => reaction.user_id === loggedUser.id);
+    myReactionId = reaction.length > 0 ? reaction[0].id : 0;
     return reaction.length > 0;
   };
 
@@ -117,16 +117,20 @@ export default function Publication({ postId, navigation, showFullContent }) {
     setSavingComment(false);
   };
 
-  const AddLike = async () => {
+  const doLike = async () => {
     try {
       //si contiene algo lo elimino si no lo agrego
       if (getILiked()) {
         posts_services.deleteReaction(postId);
-        dispatch(removePostReaction(reactionId));
+        dispatch(unlikePost({postId, reactionId: myReactionId}));
+        dispatch(removePostReaction(myReactionId));
       } else {
         posts_services.addReaction(postId, 2);
-        dispatch(addPostReactions([createPostReaction(postId, user.id)]));
-        // setLikesCounter(likesCounter + 1);
+        const newReaction = createPostReaction(postId, loggedUser.id);
+        batch(() => {
+          dispatch(likePost({postId, reactionId: newReaction.id}));
+          dispatch(addPostReactions([newReaction]));
+        });
       }
     } catch (error) {
       console.log('Error de agregar like' + error);
@@ -229,7 +233,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
 
           <View style={styles.icon_container}>
 
-            <TouchableOpacity onPress={AddLike}>
+            <TouchableOpacity onPress={doLike}>
               <Image
                 source={
                   getILiked()

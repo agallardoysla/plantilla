@@ -24,6 +24,16 @@ export const postsSlice = createSlice({
       posts = initialState;
       return posts;
     },
+    likePost: (posts, action) => {
+      posts.byId[action.payload.postId.toString()].reactions.push(action.payload.reactionId);
+    },
+    unlikePost: (posts, action) => {
+      posts.byId[action.payload.postId.toString()].reactions = posts.byId[
+        action.payload.postId.toString()
+      ].reactions.filter(
+        (r) => r.toString() !== action.payload.reactionId.toString(),
+      );
+    },
   },
 });
 
@@ -37,12 +47,11 @@ export const {
 
 export const getPosts = (state) => state.posts.allIds;
 export const getPost = (id) => (state) => state.posts.byId[id.toString()];
-
-export const getPostLikes = (post) => (state) => {
-  const statePost = state.posts.filter((p) => p.id === post.id)[0];
-  return statePost.reactionscount.REACTION_TYPE_PRUEBA
-    ? statePost.reactionscount.REACTION_TYPE_PRUEBA
-    : 0;
+export const getReactionsByPost = (id) => (state) => {
+  const post = state.posts.byId[id.toString()];
+  const reactions = post.reactions.map((r) => state.postReactions.byId[r.toString()]);
+  console.log('post reactions', id, reactions);
+  return reactions;
 };
 
 export default postsSlice.reducer;
