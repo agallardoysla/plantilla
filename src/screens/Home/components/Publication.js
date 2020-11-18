@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -14,45 +14,34 @@ import {
 } from 'react-native-gesture-handler';
 import Video from 'react-native-video-player';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
-import posts_services from '../../../services/posts_services';
 import PublicationComment from './PublicationComment';
 import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
 import DateFormatter from '../../../components/DateFormatter';
-import { batch, useDispatch, useSelector } from 'react-redux';
-import { getLoggedUser } from '../../../reducers/loggedUser';
-import { getPost, getReactionsByPost, likePost, unlikePost } from '../../../reducers/posts';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPost } from '../../../reducers/posts';
 import Counter from '../../../components/Counter';
 import { getPostComments } from '../../../reducers/comments';
-import { addPostReactions, createPostReaction, getPostReactions, removePostReaction } from '../../../reducers/postReactions';
 import { getUser } from '../../../reducers/users';
 import { getProfile } from '../../../reducers/profiles';
 import { getPostToFilesByPost } from '../../../reducers/postsToFiles';
 import { getFile, getFilesFromIds } from '../../../reducers/files';
 import { setPostToShare } from '../../../reducers/postToShare';
 import { setShowSharePost } from '../../../reducers/showSharePost';
+import Likes from './Likes';
 let window = Dimensions.get('window');
 
 export default function Publication({ postId, navigation, showFullContent }) {
   const post = useSelector(getPost(postId));
-  const postReactions = useSelector(getPostReactions(postId));
   const comments = useSelector(getPostComments(postId));
   const postFiles = useSelector(getPostToFilesByPost(postId));
   const files = useSelector(getFilesFromIds(postFiles));
   const owner = useSelector(getUser(post.user_id));
   const ownerProfile = useSelector(getProfile(owner.profile_id));
   const ownerPhoto = useSelector(getFile(ownerProfile.photo_id));
-  const loggedUser = useSelector(getLoggedUser);
-  let myReactionId = 0;
 
   const getLikesCounter = () => {
     return post.reactions.length;
-  };
-
-  const getILiked = () => {
-    const reaction = postReactions.filter((reaction) => reaction.user_id === loggedUser.id);
-    myReactionId = reaction.length > 0 ? reaction[0].id : 0;
-    return reaction.length > 0;
   };
 
   const [showComments, setShowComments] = useState(true);
@@ -115,26 +104,6 @@ export default function Publication({ postId, navigation, showFullContent }) {
 
   const newCommentCallback = (comment) => {
     setSavingComment(false);
-  };
-
-  const doLike = async () => {
-    try {
-      //si contiene algo lo elimino si no lo agrego
-      if (getILiked()) {
-        posts_services.deleteReaction(postId);
-        dispatch(unlikePost({postId, reactionId: myReactionId}));
-        dispatch(removePostReaction(myReactionId));
-      } else {
-        posts_services.addReaction(postId, 2);
-        const newReaction = createPostReaction(postId, loggedUser.id);
-        batch(() => {
-          dispatch(likePost({postId, reactionId: newReaction.id}));
-          dispatch(addPostReactions([newReaction]));
-        });
-      }
-    } catch (error) {
-      console.log('Error de agregar like' + error);
-    }
   };
 
   const goToPost = () => {
@@ -232,18 +201,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
           </View>
 
           <View style={styles.icon_container}>
-
-            <TouchableOpacity onPress={doLike}>
-              <Image
-                source={
-                  getILiked()
-                    ? require('../../../assets/corazon_limon.png')
-                    : require('../../../assets/corazon_gris.png')
-                }
-                fadeDuration={0}
-              />
-            </TouchableOpacity>
-
+            <Likes postId={postId} />
             {/* <TouchableOpacity
               style={styles.icon_numbers_view_container}
               onPress={() =>
