@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -14,45 +14,33 @@ import {
 } from 'react-native-gesture-handler';
 import Video from 'react-native-video-player';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
-import posts_services from '../../../services/posts_services';
 import PublicationComment from './PublicationComment';
 import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
 import DateFormatter from '../../../components/DateFormatter';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLoggedUser } from '../../../reducers/loggedUser';
 import { getPost } from '../../../reducers/posts';
 import Counter from '../../../components/Counter';
 import { getPostComments } from '../../../reducers/comments';
-import { addPostReactions, createPostReaction, getPostReactions, removePostReaction } from '../../../reducers/postReactions';
 import { getUser } from '../../../reducers/users';
 import { getProfile } from '../../../reducers/profiles';
 import { getPostToFilesByPost } from '../../../reducers/postsToFiles';
 import { getFile, getFilesFromIds } from '../../../reducers/files';
 import { setPostToShare } from '../../../reducers/postToShare';
 import { setShowSharePost } from '../../../reducers/showSharePost';
+import Likes from './Likes';
 let window = Dimensions.get('window');
 
 export default function Publication({ postId, navigation, showFullContent }) {
   const post = useSelector(getPost(postId));
-  const comments = useSelector(getPostComments(postId));
-  const postReactions = useSelector(getPostReactions(postId));
   const postFiles = useSelector(getPostToFilesByPost(postId));
   const files = useSelector(getFilesFromIds(postFiles));
   const owner = useSelector(getUser(post.user_id));
   const ownerProfile = useSelector(getProfile(owner.profile_id));
   const ownerPhoto = useSelector(getFile(ownerProfile.photo_id));
-  const user = useSelector(getLoggedUser);
-  let reactionId = 0;
 
   const getLikesCounter = () => {
-    return postReactions ? postReactions.length : 0;
-  };
-
-  const getILiked = () => {
-    const reaction = postReactions.filter((reaction) => reaction.user_id === user.id);
-    reactionId = reaction.length > 0 ? reaction[0].id : 0;
-    return reaction.length > 0;
+    return post.reactions.length;
   };
 
   const [showComments, setShowComments] = useState(true);
@@ -115,22 +103,6 @@ export default function Publication({ postId, navigation, showFullContent }) {
 
   const newCommentCallback = (comment) => {
     setSavingComment(false);
-  };
-
-  const AddLike = async () => {
-    try {
-      //si contiene algo lo elimino si no lo agrego
-      if (getILiked()) {
-        posts_services.deleteReaction(postId);
-        dispatch(removePostReaction(reactionId));
-      } else {
-        posts_services.addReaction(postId, 2);
-        dispatch(addPostReactions([createPostReaction(postId, user.id)]));
-        // setLikesCounter(likesCounter + 1);
-      }
-    } catch (error) {
-      console.log('Error de agregar like' + error);
-    }
   };
 
   const goToPost = () => {
@@ -228,18 +200,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
           </View>
 
           <View style={styles.icon_container}>
-
-            <TouchableOpacity onPress={AddLike}>
-              <Image
-                source={
-                  getILiked()
-                    ? require('../../../assets/corazon_limon.png')
-                    : require('../../../assets/corazon_gris.png')
-                }
-                fadeDuration={0}
-              />
-            </TouchableOpacity>
-
+            <Likes postId={postId} />
             {/* <TouchableOpacity
               style={styles.icon_numbers_view_container}
               onPress={() =>
@@ -256,7 +217,10 @@ export default function Publication({ postId, navigation, showFullContent }) {
                 style={[styles.icon_post, styles.icon_comentario]}
               />
             </TouchableOpacity>
-            <Counter style={styles.icon_numbers_view} value={comments.length} />
+            <Counter
+              style={styles.icon_numbers_view}
+              value={post.comments.length}
+            />
           </View>
 
           <TouchableOpacity onPress={sharePost} style={styles.icon_container}>
@@ -295,13 +259,13 @@ export default function Publication({ postId, navigation, showFullContent }) {
           loadingComments ? (
             <ActivityIndicator color={StylesConfiguration.color} />
           ) : (
-            comments
+            post.comments
               .slice(-3)
-              .map((comment, i) => (
+              .map((commentId, i) => (
                 <PublicationComment
                   style={styles.publicationComments}
                   post={post}
-                  comment={comment}
+                  commentId={commentId}
                   key={i}
                   navigation={navigation}
                 />
@@ -309,7 +273,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
           )
         ) : null}
 
-        {firstTimeLoadingComments && comments.length > 3 ? (
+        {firstTimeLoadingComments && post.comments.length > 3 ? (
           <TouchableOpacity onPress={getAndSetShowComments}>
             <Text
               style={{
@@ -318,8 +282,8 @@ export default function Publication({ postId, navigation, showFullContent }) {
                 left: 10,
                 textAlign: 'left',
               }}>
-              {comments.length - 3} comentario
-              {comments.length == 4 ? '' : 's'} mas...
+              {post.comments.length - 3} comentario
+              {post.comments.length === 4 ? '' : 's'} mas...
             </Text>
           </TouchableOpacity>
         ) : null}
@@ -332,7 +296,6 @@ export default function Publication({ postId, navigation, showFullContent }) {
             placeholder={'Escribir un nuevo comentario...'}
             callback={newCommentCallback}
             post={post}
-            comments={comments}
             setSavingComment={setSavingComment}
             style={styles.newComment}
             initialText={''}

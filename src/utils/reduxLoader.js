@@ -9,7 +9,6 @@ import { addProfiles, setProfiles } from "../reducers/profiles";
 import { addUsers, setUsers } from "../reducers/users";
 
 export const doSetPosts = (postsData, dispatch) => () => {
-  dispatch(setPosts(postsData.posts));
   dispatch(setComments(postsData.comments));
   dispatch(setPostReactions(postsData.posts_reactions));
   dispatch(setPostToFiles(postsData.posts_to_files));
@@ -18,10 +17,10 @@ export const doSetPosts = (postsData, dispatch) => () => {
   dispatch(setUsers(postsData.users));
   dispatch(setProfiles(postsData.profiles));
   dispatch(setFiles(postsData.files));
+  dispatch(setPosts(postsData.posts));
 };
 
 export const doAddPosts = (postsData, dispatch) => () => {
-  dispatch(addPosts(postsData.posts));
   dispatch(addComments(postsData.comments));
   dispatch(addPostReactions(postsData.posts_reactions));
   dispatch(addPostToFiles(postsData.posts_to_files));
@@ -30,4 +29,5 @@ export const doAddPosts = (postsData, dispatch) => () => {
   dispatch(addUsers(postsData.users));
   dispatch(addProfiles(postsData.profiles));
   dispatch(addFiles(postsData.files));
+  dispatch(addPosts(postsData.posts));
 };

@@ -2,7 +2,8 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
-import { addComments, createComment, updateComment } from '../reducers/comments';
+import { addComments, createComment, getPostComments, updateComment, answerComment } from '../reducers/comments';
+import { commentPost } from  '../reducers/posts';
 import {getLoggedUser} from '../reducers/loggedUser';
 import { getFullUsers } from '../reducers/users';
 import comments_services from '../services/comments_services';
@@ -13,13 +14,13 @@ export default function CommentInput({
   placeholder,
   post,
   comment,
-  comments,
   setSavingComment,
   callback,
   style,
   initialText,
   isEdition,
 }) {
+  const comments = useSelector(getPostComments(post.id));
   const [newText, setNewText] = useState(initialText);
   const [showSugestions, setShowSugestions] = useState(false);
   const [sugestionsInput, setSugestionsInput] = useState('');
@@ -116,7 +117,6 @@ export default function CommentInput({
       let reduxComment;
       if (comment) {
         const commentId = res.data.comments.reverse()[0].id;
-        console.log('id', commentId);
         reduxComment = createComment(commentId, newText, post.id, user.id);
         reduxComment.original_comment_id = comment.id;
       } else {
@@ -124,6 +124,10 @@ export default function CommentInput({
       }
       console.log('new comment: ', reduxComment);
       dispatch(addComments([reduxComment]));
+      dispatch(commentPost({postId: post.id, commentId: reduxComment.id}));
+      if (comment) {
+        dispatch(answerComment({originalCommentId: reduxComment.original_comment_id, answerId: reduxComment.id}));
+      }
     }
     setNewText('');
     callback();
