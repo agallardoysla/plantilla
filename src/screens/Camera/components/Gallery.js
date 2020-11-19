@@ -33,6 +33,7 @@ export default function Gallery({
   setAssetType,
   canGetVideo,
   callback,
+  goBack
 }) {
   const [type, setType] = useState(assetType);
   const [assetsGallery, setAssetsGallery] = useState([]);
@@ -105,7 +106,7 @@ export default function Gallery({
     <View style={styles.container}>
       <View style={styles.actionsBarTop}>
         <Icon
-          onPress={() => navigation.goBack()}
+          onPress={() => goBack()}
           source={'boton_volver_atras'}
         />
         {canGetVideo ? (

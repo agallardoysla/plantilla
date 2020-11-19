@@ -33,50 +33,44 @@ export default function PublishPublication({ route }) {
   }, []);
 
   const doPubliish = async () => {
-    setPublishing(true);
-    // var re = /(?:\.([^.]+))?$/;
-    let paths = images.length > 0 ? images : [video];
-    paths = paths.map((p) => {
-      return p;
-      // return {
-      //   url: p,
-      //   ext: re.exec(p)[1],
-      // };
-    });
-
-    console.log(paths);
-
-    const filesIds = await Promise.all(
-      paths.map(async (file) => {
-        // const result = await files_services.create(file.uri, file.ext);
+    try {
+      let paths = images.length > 0 ? images : [video];
+      const filesIds = []
+      setPublishing(true);
+      for(let i = 0; i < paths.length; i++){
+        let file = paths[i];
         const result = await files_services.createPost(file.uri, file.ext);
-        return result.json().id;
-      }),
-    );
-
-    console.log(filesIds);
-
-    if (filesIds.length > 0) {
-      const newPost = {
-        post_type: 1,
-        latitude: 'latitude',
-        longitude: 'longitude',
-        files: filesIds,
-      };
-      if (challengeText.length > 0) {
-        newPost.text = challengeText;
+        result = await result.json();
+        filesIds.push(result.id);
+        console.log(i , "Count", paths.length);
       }
-
-      await posts_services.create(newPost);
-      posts_services.list(20, 0).then((res) => {
+      
+      if (filesIds.length > 0) {
+        const newPost = {
+          post_type: 1,
+          latitude: 'latitude',
+          longitude: 'longitude',
+          files: filesIds,
+        };
+        if (challengeText.length > 0) {
+          newPost.text = challengeText;
+        }
+        
+        await posts_services.create(newPost)
+        
+        // let res = await posts_services.list(20, 0)
         setImages([]);
         setVideo(null);
         setChallengeText('');
-        setPublishing(false);
-        dispatch(setPosts(res.data));
-        navigation.navigate('HomeGroup');
-      });
+        // dispatch(setPosts(res.data),dispatch);
+        navigation.navigate('HomeGroup')
+      }
+      setPublishing(false);
+    } catch (error) {
+      setPublishing(false);
     }
+    
+
   };
 
   return (

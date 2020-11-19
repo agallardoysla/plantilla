@@ -44,6 +44,7 @@ export default function TakePicture({
   setAssetType,
   canGetVideo,
   callback,
+  goBack
 }) {
   const [isRecording, setIsRecording] = useState(false);
   const [timeCounter, setTimeCounter] = useState(maxDuration);
@@ -223,7 +224,7 @@ export default function TakePicture({
               <View style={styles.previewContainer}>
                 <View style={{ padding: 10 }}>
                   <Icon
-                    onPress={() => navigation.goBack()}
+                    onPress={() => goBack()}
                     source={'boton_volver_atras'}
                   />
                 </View>
