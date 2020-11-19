@@ -34,6 +34,16 @@ export const postsSlice = createSlice({
         (r) => r.toString() !== action.payload.reactionId.toString(),
       );
     },
+    commentPost: (posts, action) => {
+      posts.byId[action.payload.postId.toString()].comments.push(action.payload.commentId);
+    },
+    deleteCommentPost: (posts, action) => {
+      posts.byId[action.payload.postId.toString()].comments = posts.byId[
+        action.payload.postId.toString()
+      ].comments.filter(
+        (r) => r.toString() !== action.payload.commentId.toString(),
+      );
+    },
   },
 });
 
@@ -43,6 +53,8 @@ export const {
   resetPosts,
   likePost,
   unlikePost,
+  commentPost,
+  deleteCommentPost,
 } = postsSlice.actions;
 
 export const getPosts = (state) => state.posts.allIds;

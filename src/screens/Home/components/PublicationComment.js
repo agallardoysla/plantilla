@@ -20,18 +20,19 @@ import {
 import comments_services from '../../../services/comments_services';
 import {useDispatch, useSelector} from 'react-redux';
 import {getLoggedUser} from '../../../reducers/loggedUser';
-import { getCommentAnswers, removeComment } from '../../../reducers/comments';
+import { getComment, getCommentAnswers, removeComment } from '../../../reducers/comments';
 import { getUser } from '../../../reducers/users';
 import CommentAnswer from './CommentAnswer';
 import { getProfile } from '../../../reducers/profiles';
 import { getFile } from '../../../reducers/files';
+import { deleteCommentPost } from '../../../reducers/posts';
 
-export default function PublicationComment({post, comment, navigation}) {
+export default function PublicationComment({post, commentId, navigation}) {
+  const comment = useSelector(getComment(commentId));
   const [showAnswerToComments, setShowAnswerToComments] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [editingComment, setEditingComment] = useState(false);
-  const answers = useSelector(getCommentAnswers(comment.id));
   const commentOwner = useSelector(getUser(comment.user_id));
   const commentOwnerProfile = useSelector(getProfile(commentOwner.profile_id));
   const ownerPhoto = useSelector(getFile(commentOwnerProfile.photo_id));
@@ -49,12 +50,13 @@ export default function PublicationComment({post, comment, navigation}) {
   };
 
   const doDeleteComment = () => {
-    dispatch(removeComment(comment.id));
+    dispatch(removeComment(commentId));
+    dispatch(deleteCommentPost({postId: post.id, commentId: commentId}));
     setShowMenu(false);
-    comments_services.delete(comment.id);
+    comments_services.delete(commentId);
   };
 
-  return (
+  return comment.original_comment_id !== null ? null : (
     <View style={styles.container}>
       <TouchableHighlight
         style={styles.commentContainer}
@@ -123,16 +125,14 @@ export default function PublicationComment({post, comment, navigation}) {
           )}
         </View>
       </TouchableHighlight>
-      {answers && answers.length > 0
-        ? answers.map((answer, i) => (
-            <CommentAnswer
-              answer={answer}
-              post={post}
-              navigation={navigation}
-              key={i}
-            />
-          ))
-        : null}
+      {comment.comments.map((answerId, i) => (
+        <CommentAnswer
+          answerId={answerId}
+          post={post}
+          navigation={navigation}
+          key={i}
+        />
+      ))}
       {showAnswerToComments ? (
         savingComment ? (
           <ActivityIndicator color={StylesConfiguration.color} />
@@ -142,7 +142,6 @@ export default function PublicationComment({post, comment, navigation}) {
             callback={newCommentCallback}
             post={post}
             comment={comment}
-            comments={answers}
             setSavingComment={setSavingComment}
             style={styles.newComment}
             initialText={`@${commentOwner.display_name} `}

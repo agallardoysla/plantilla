@@ -33,7 +33,6 @@ let window = Dimensions.get('window');
 
 export default function Publication({ postId, navigation, showFullContent }) {
   const post = useSelector(getPost(postId));
-  const comments = useSelector(getPostComments(postId));
   const postFiles = useSelector(getPostToFilesByPost(postId));
   const files = useSelector(getFilesFromIds(postFiles));
   const owner = useSelector(getUser(post.user_id));
@@ -218,7 +217,10 @@ export default function Publication({ postId, navigation, showFullContent }) {
                 style={[styles.icon_post, styles.icon_comentario]}
               />
             </TouchableOpacity>
-            <Counter style={styles.icon_numbers_view} value={comments.length} />
+            <Counter
+              style={styles.icon_numbers_view}
+              value={post.comments.length}
+            />
           </View>
 
           <TouchableOpacity onPress={sharePost} style={styles.icon_container}>
@@ -257,13 +259,13 @@ export default function Publication({ postId, navigation, showFullContent }) {
           loadingComments ? (
             <ActivityIndicator color={StylesConfiguration.color} />
           ) : (
-            comments
+            post.comments
               .slice(-3)
-              .map((comment, i) => (
+              .map((commentId, i) => (
                 <PublicationComment
                   style={styles.publicationComments}
                   post={post}
-                  comment={comment}
+                  commentId={commentId}
                   key={i}
                   navigation={navigation}
                 />
@@ -271,7 +273,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
           )
         ) : null}
 
-        {firstTimeLoadingComments && comments.length > 3 ? (
+        {firstTimeLoadingComments && post.comments.length > 3 ? (
           <TouchableOpacity onPress={getAndSetShowComments}>
             <Text
               style={{
@@ -280,8 +282,8 @@ export default function Publication({ postId, navigation, showFullContent }) {
                 left: 10,
                 textAlign: 'left',
               }}>
-              {comments.length - 3} comentario
-              {comments.length == 4 ? '' : 's'} mas...
+              {post.comments.length - 3} comentario
+              {post.comments.length === 4 ? '' : 's'} mas...
             </Text>
           </TouchableOpacity>
         ) : null}
@@ -294,7 +296,6 @@ export default function Publication({ postId, navigation, showFullContent }) {
             placeholder={'Escribir un nuevo comentario...'}
             callback={newCommentCallback}
             post={post}
-            comments={comments}
             setSavingComment={setSavingComment}
             style={styles.newComment}
             initialText={''}

@@ -23,8 +23,10 @@ import CommentInput from '../../../utils/CommentInput';
 import { getUser } from '../../../reducers/users';
 import { getProfile } from '../../../reducers/profiles';
 import { getFile } from '../../../reducers/files';
+import { deleteCommentPost } from '../../../reducers/posts';
 
-export default function CommentAnswer({answer, post, navigation}) {
+export default function CommentAnswer({answerId, post, navigation}) {
+  const answer = useSelector(getComment(answerId));
   const [savingAnswer, setSavingAnswer] = useState(false);
   const [showMenuAnswer, setShowMenuAnswer] = useState(false);
   const [editingAnswer, setEditingAnswer] = useState(false);
@@ -41,9 +43,10 @@ export default function CommentAnswer({answer, post, navigation}) {
   };
 
   const doDeleteAnswer = () => {
-    dispatch(removeComment(answer.id));
+    dispatch(removeComment(answerId));
+    dispatch(deleteCommentPost({postId: post.id, commentId: answerId}));
     setShowMenuAnswer(false);
-    comments_services.delete(answer.id);
+    comments_services.delete(answerId);
   };
 
   return (

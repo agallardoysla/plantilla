@@ -33,6 +33,10 @@ export const commentsSlice = createSlice({
       comments.allIds = comments.allIds.filter((pr) => pr !== action.payload.toString());
       return comments;
     },
+    answerComment: (comments, action) => {
+      comments.byId[action.payload.originalCommentId].comments.push(action.payload.answerId);
+      return comments;
+    },
   },
 });
 
@@ -42,6 +46,7 @@ export const {
   resetComments,
   updateComment,
   removeComment,
+  answerComment,
 } = commentsSlice.actions;
 
 export const getComments = (state) => state.comments.allIds;
@@ -66,6 +71,7 @@ export const createComment = (id, text, post_id, user_id) => ({
   user_id: user_id,
   is_show: true,
   is_notificated: true,
+  comments: [],
 });
 
 export default commentsSlice.reducer;
