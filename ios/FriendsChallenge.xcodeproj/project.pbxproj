@@ -14,11 +14,11 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		291AA5A16CECC147A4E68B3A /* libPods-FriendsChallenge-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF7C0DC7BC70623816B98F2E /* libPods-FriendsChallenge-tvOSTests.a */; };
 		2AEA5D67252D27B4001EB40C /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEA5D66252D27B4001EB40C /* File.swift */; };
-		2AF8CE5A2532384D00495193 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2AF8CE592532384D00495193 /* GoogleService-Info.plist */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* FriendsChallengeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FriendsChallengeTests.m */; };
+		459DBCE92563313500134D85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 459DBCE82563313500134D85 /* GoogleService-Info.plist */; };
 		5C52F77C4BCC9939EFD663C6 /* libPods-FriendsChallenge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95DEBA4DD21B45494FBCE642 /* libPods-FriendsChallenge.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		94D146FBA32B8A15F045B615 /* libPods-FriendsChallenge-FriendsChallengeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06A544E1C2F0AC71EC6B5191 /* libPods-FriendsChallenge-FriendsChallengeTests.a */; };
@@ -62,13 +62,13 @@
 		2A904E5DD31FC83698D8B8BE /* Pods-FriendsChallenge-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-tvOSTests/Pods-FriendsChallenge-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2AEA5D65252D27B4001EB40C /* FriendsChallenge-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FriendsChallenge-Bridging-Header.h"; sourceTree = "<group>"; };
 		2AEA5D66252D27B4001EB40C /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
-		2AF8CE592532384D00495193 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../RN-Luis/CERTS/FriendsChallenge_CERTS/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* FriendsChallenge-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FriendsChallenge-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* FriendsChallenge-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "FriendsChallenge-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E9466516D2B496382E30CAF /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		3402B483FFC644EF9AC051A7 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		34EF261E00EC77C18C710FD1 /* Pods-FriendsChallenge-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge-tvOS/Pods-FriendsChallenge-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		3D1FB5AE7BF422629A8DDEA2 /* Pods-FriendsChallenge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FriendsChallenge.release.xcconfig"; path = "Target Support Files/Pods-FriendsChallenge/Pods-FriendsChallenge.release.xcconfig"; sourceTree = "<group>"; };
+		459DBCE82563313500134D85 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "FriendsChallenge/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4C147F262ACE4BADBC341CB0 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		4CE0E58D3DD29AAD9D018AF4 /* libPods-FriendsChallenge-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FriendsChallenge-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FE41557999947848653610A /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
@@ -157,9 +157,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				459DBCE82563313500134D85 /* GoogleService-Info.plist */,
 				2AEA5D66252D27B4001EB40C /* File.swift */,
 				2AEA5D65252D27B4001EB40C /* FriendsChallenge-Bridging-Header.h */,
-				2AF8CE592532384D00495193 /* GoogleService-Info.plist */,
 			);
 			name = FriendsChallenge;
 			sourceTree = "<group>";
@@ -396,8 +396,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				459DBCE92563313500134D85 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				2AF8CE5A2532384D00495193 /* GoogleService-Info.plist in Resources */,
 				B974CCB8061B49B79B4015E8 /* GothamBlack-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
