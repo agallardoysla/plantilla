@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import StylesConfiguration from '../../../utils/StylesConfiguration';
+import StylesConfiguration, { baseToast } from '../../../utils/StylesConfiguration';
 import FollowMenu from './FollowMenu';
 import {batch, useDispatch, useSelector} from 'react-redux';
 import {followUser, getLoggedUser, unfollowUser} from '../../../reducers/loggedUser';
 import users_services from '../../../services/users_services';
 import { followOtherUser, unfollowOtherUser } from '../../../reducers/otherUser';
+import Toast from 'react-native-toast-message';
 
 export default function OtherProfileRightColumn({user}) {
   const loggedUser = useSelector(getLoggedUser);
@@ -23,12 +24,18 @@ export default function OtherProfileRightColumn({user}) {
         dispatch(unfollowOtherUser(loggedUser));
       });
       users_services.cancelFollow(user.id);
+      Toast.show(
+        baseToast({text1: `Dejaste de seguir a ${user.display_name}`}),
+      );
     } else {
       batch(() => {
         dispatch(followUser({...user, user_id: user.id}));
         dispatch(followOtherUser(loggedUser));
       });
       users_services.follow(user.id);
+      Toast.show(
+        baseToast({text1: `Comenzaste a seguir a ${user.display_name}`}),
+      );
     }
     setLoggedUserFollowProfile(!loggedUserFollowProfile);
   };

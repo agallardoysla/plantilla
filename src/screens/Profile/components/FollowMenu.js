@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Icon from '../../../components/Icon';
 import { addVip, removeVip, getLoggedUserVips, getLoggedUser } from '../../../reducers/loggedUser';
 import users_services from '../../../services/users_services';
-import StylesConfiguration from '../../../utils/StylesConfiguration';
+import StylesConfiguration, { baseToast } from '../../../utils/StylesConfiguration';
+import Toast from 'react-native-toast-message';
 
 export default function FollowMenu({user, loggedUserFollowProfile}) {
   const [showFollowMenu, setShowFollowMenu] = useState(false);
@@ -29,17 +30,20 @@ export default function FollowMenu({user, loggedUserFollowProfile}) {
     users_services.followerVip(user.id);
     dispatch(addVip(user.id));
     setShowFollowMenu(false);
+    Toast.show(baseToast({text1: 'Agregado a VIP'}));
   };
 
   const removeFromVip = () => {
     users_services.removeFollowerVip(user.id);
     dispatch(removeVip(user.id));
     setShowFollowMenu(false);
+    Toast.show(baseToast({text1: 'Eliminado de VIP'}));
   };
 
   const blockUser = () => {
     users_services.blockUser(user.id);
     setShowFollowMenu(false);
+    Toast.show(baseToast({text1: 'Usuario bloqueado'}));
   };
 
   const hidePublications = () => {};
