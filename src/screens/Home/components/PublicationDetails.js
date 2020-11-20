@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import posts_services from '../../../services/posts_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import { batch, useDispatch, useSelector } from 'react-redux';
-import { doSetPosts } from '../../../utils/reduxLoader';
+import { doAddPosts } from '../../../utils/reduxLoader';
 import { getPost } from '../../../reducers/posts';
 
 export default function PublicationDetails({ navigation, route }) {
@@ -21,17 +21,14 @@ export default function PublicationDetails({ navigation, route }) {
       setLoading(false);
     } else {
       posts_services.get(route.params.postId).then((res) => {
-        console.log(res.data);
-        batch(doSetPosts(res.data, dispatch));
-        setTimeout(() => {
-          setLoading(false);
-        }, 4 * 1000);
+        batch(doAddPosts(res.data, dispatch));
+        setLoading(false);
       });
     }
   }, []);
 
   return loading ? (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.loadingContainer}>
       <ActivityIndicator size="small" color={StylesConfiguration.color} />
     </SafeAreaView>
   ) : (
@@ -46,6 +43,13 @@ export default function PublicationDetails({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: 'black',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+  },
+  loadingContainer: {
     flex: 1,
     backgroundColor: 'black',
     justifyContent: 'center',

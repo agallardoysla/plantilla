@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
+import { getLoggedUser } from '../../reducers/loggedUser';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import CommentCreated from './components/CommentCreated';
 import FollowRequestAccepted from './components/FollowRequestAccepted';
@@ -9,36 +11,78 @@ import PostReaction from './components/PostReaction';
 import ProfileReaction from './components/ProfileReaction';
 
 export default function Notification({notification, navigation, goToProfile}) {
+  const loggedUser = useSelector(getLoggedUser);
+
   const notificationsTypes = {
     follow_request_received: {
-      Component: FollowRequestReceived,
+      Component: loggedUser.profile.is_private
+        ? FollowRequestReceived
+        : FollowRequestAccepted,
       params: {notification, goToProfile: goToProfile(notification)},
       action: () => {},
     },
     follow_request_accepted: {
       Component: FollowRequestAccepted,
       params: {notification, goToProfile: goToProfile(notification)},
-      action: () => {},
+      action: () => {
+        navigation.navigate('OtherProfileGroup', {
+          screen: 'OtherProfile',
+          params: {
+            user_id: notification.from_user.user_id,
+          },
+        });
+      },
     },
     comment_comment_created: {
       Component: CommentCreated,
       params: {notification, goToProfile: goToProfile(notification)},
-      action: () => {},
+      action: () => {
+        console.log('comment_comment_created', notification);
+        navigation.navigate('PostGroup', {
+          screen: 'PublicationDetails',
+          params: {
+            postId: notification.related_to.post_id,
+          },
+        });
+      },
     },
     post_reaction_created: {
       Component: PostReaction,
       params: {notification, goToProfile: goToProfile(notification)},
-      action: () => {},
+      action: () => {
+        console.log('post_reaction_created', notification);
+        navigation.navigate('PostGroup', {
+          screen: 'PublicationDetails',
+          params: {
+            postId: notification.related_to.relation_to.id,
+          },
+        });
+      },
     },
     post_comment_created: {
       Component: PostComment,
       params: {notification, goToProfile: goToProfile(notification)},
-      action: () => {},
+      action: () => {
+        console.log('post_comment_created', notification);
+        navigation.navigate('PostGroup', {
+          screen: 'PublicationDetails',
+          params: {
+            postId: notification.related_to.post_id,
+          },
+        });
+      },
     },
     profile_reaction_created: {
       Component: ProfileReaction,
       params: {notification, goToProfile: goToProfile(notification)},
-      action: () => {},
+      action: () => {
+        navigation.navigate('OtherProfileGroup', {
+          screen: 'OtherProfile',
+          params: {
+            user_id: notification.from_user.user_id,
+          },
+        });
+      },
     },
   };
 
