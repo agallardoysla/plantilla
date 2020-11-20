@@ -46,6 +46,28 @@ export const loggedUserSlice = createSlice({
       loggedUser.followers_with_details.push(action.payload);
       return loggedUser;
     },
+    addVip: (loggedUser, action) => {
+      loggedUser.followers_with_details = loggedUser.followers_with_details.map(
+        (follower) => {
+          if (follower.user_id === action.payload) {
+            follower.is_vip = true;
+          }
+          return follower;
+        },
+      );
+      return loggedUser;
+    },
+    removeVip: (loggedUser, action) => {
+      loggedUser.followers_with_details = loggedUser.followers_with_details.map(
+        (follower) => {
+          if (follower.user_id === action.payload) {
+            follower.is_vip = false;
+          }
+          return follower;
+        },
+      );
+      return loggedUser;
+    },
   },
 });
 
@@ -60,6 +82,8 @@ export const {
   followUser,
   unfollowUser,
   otherUserFollowUser,
+  addVip,
+  removeVip,
 } = loggedUserSlice.actions;
 
 export const getLoggedUser = (state) => state.loggedUser;
@@ -69,5 +93,8 @@ export const getLoggedUserReactions = (state) => state.loggedUser.reactions;
 export const getLoggedUserFollowers = (state) => state.loggedUser.followers_with_details;
 
 export const getLoggedUserFolloweds = (state) => state.loggedUser.following_with_details;
+
+export const getLoggedUserVips = (state) =>
+  state.loggedUser.followers_with_details.filter((f) => f.is_vip);
 
 export default loggedUserSlice.reducer;

@@ -4,7 +4,7 @@ import MyProfileScreen from '../../screens/Profile/MyProfileScreen';
 import Followeds from '../../screens/Profile/SubScreens/Followeds';
 import Followers from '../../screens/Profile/SubScreens/Followers';
 import Preferences from '../../screens/Profile/Preferences';
-import Vip from '../../screens/Profile/SubScreens/Vip';
+import Vips from '../../screens/Profile/SubScreens/Vips';
 import ProfileEdition from '../../screens/Profile/SubScreens/ProfileEdition';
 import MyAccount from '../../screens/Profile/SubScreens/MyAccount';
 import CreateNewAccount from '../../screens/Profile/SubScreens/CreateNewAccount';
@@ -24,7 +24,7 @@ export default function MyProfileGroup() {
       <Stack.Screen name="MyProfile" component={MyProfileScreen} />
       <Stack.Screen name="Followeds" component={Followeds} />
       <Stack.Screen name="Followers" component={Followers} />
-      <Stack.Screen name="Vip" component={Vip} />
+      <Stack.Screen name="Vips" component={Vips} />
       <Stack.Screen name="Preferences" component={Preferences} />
       <Stack.Screen name="ProfileEdition" component={ProfileEdition} />
       <Stack.Screen name="NewProfilePhoto" component={NewProfilePhoto} />
