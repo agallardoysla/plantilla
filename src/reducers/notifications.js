@@ -16,6 +16,13 @@ export const notificationsSlice = createSlice({
       notifications = [];
       return notifications;
     },
+    readNotification: (notifications, action) => {
+      notifications = notifications.map((notification) => {
+        notification.is_read = notification.is_read || action.notificationId === notification.id;
+        return notification;
+      });
+      return notifications;
+    },
   },
 });
 
