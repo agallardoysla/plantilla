@@ -32,22 +32,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginRight: 10,
     height: 70,
   },
-  userImgContainer: {
-    width: '15%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  userImg: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
   detailContainer: {
-    width: '60%',
+    flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 10,
   },

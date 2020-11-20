@@ -16,33 +16,22 @@ export default function FollowRequestAccepted({ notification, goToProfile }) {
         </Text>
         <DateFormatter date={notification.created_at} />
       </View>
-      <View style={styles.followRequestContainer}>
-        <Icon source={'FC_Logo'} color={StylesConfiguration.color} size={40} />
-      </View>
+      <Icon source={'FC_Logo'} color={StylesConfiguration.color} size={40} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginRight: 10,
     height: 70,
-    backgroundColor: 'red'
-  },
-  userImgContainer: {
-    width: '15%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  userImg: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
   },
   detailContainer: {
+    flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 10,
   },
@@ -53,37 +42,5 @@ const styles = StyleSheet.create({
   otherName: {
     fontSize: 15,
     color: StylesConfiguration.color,
-  },
-  followRequestContainer: {
-    width: '18%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  likeImage: {
-    width: 60,
-    height: 60,
-  },
-  challengeContainer: {
-    height: 40,
-    width: '90%',
-    borderWidth: 1,
-    borderColor: StylesConfiguration.color,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  challengeText: {
-    fontSize: 15,
-    color: 'white',
-  },
-  commentContainer: {
-    width: '18%',
-    alignItems: 'center',
-  },
-  commentImage: {
-    height: 60,
-    width: 60,
-    resizeMode: 'cover',
   },
 });

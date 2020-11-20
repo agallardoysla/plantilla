@@ -12,32 +12,32 @@ export default function Notification({notification, navigation, goToProfile}) {
   const notificationsTypes = {
     follow_request_received: {
       Component: FollowRequestReceived,
-      params: {notification, goToProfile},
+      params: {notification, goToProfile: goToProfile(notification)},
       action: () => {},
     },
     follow_request_accepted: {
       Component: FollowRequestAccepted,
-      params: {notification, goToProfile},
+      params: {notification, goToProfile: goToProfile(notification)},
       action: () => {},
     },
     comment_comment_created: {
       Component: CommentCreated,
-      params: {notification, goToProfile},
+      params: {notification, goToProfile: goToProfile(notification)},
       action: () => {},
     },
     post_reaction_created: {
       Component: PostReaction,
-      params: {notification, goToProfile},
+      params: {notification, goToProfile: goToProfile(notification)},
       action: () => {},
     },
     post_comment_created: {
       Component: PostComment,
-      params: {notification, goToProfile},
+      params: {notification, goToProfile: goToProfile(notification)},
       action: () => {},
     },
     profile_reaction_created: {
       Component: ProfileReaction,
-      params: {notification, goToProfile},
+      params: {notification, goToProfile: goToProfile(notification)},
       action: () => {},
     },
   };
@@ -49,7 +49,6 @@ export default function Notification({notification, navigation, goToProfile}) {
 
   const getType = () => {
     const type = notificationsTypes[notification.event];
-    console.log(notification.from_user, type);
     return type ? <type.Component {...type.params} /> : null;
   };
 
@@ -72,7 +71,6 @@ export default function Notification({notification, navigation, goToProfile}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
