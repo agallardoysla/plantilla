@@ -1,8 +1,13 @@
 import {createSlice} from '@reduxjs/toolkit';
 
+const initialState = {
+  followers_with_details: [],
+  following_with_details: [],
+};
+
 export const otherUserSlice = createSlice({
   name: 'otherUser',
-  initialState: null,
+  initialState: initialState,
   reducers: {
     updateOtherUser: (otherUser, action) => {
       otherUser = action.payload;

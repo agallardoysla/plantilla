@@ -38,7 +38,7 @@ export const loggedUserSlice = createSlice({
     },
     unfollowUser: (loggedUser, action) => {
       loggedUser.following_with_details = loggedUser.following_with_details.filter(
-        (f) => f.loggedUser_id !== action.payload.loggedUser_id,
+        (f) => f.user_id !== action.payload.user_id,
       );
       return loggedUser;
     },

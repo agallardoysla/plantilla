@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import { useSelector } from 'react-redux';
 import FormButtonCount from '../../../components/FormButtonCount';
@@ -7,13 +7,41 @@ import { getOtherUserFolloweds, getOtherUserFollowers } from '../../../reducers/
 import { getLoggedUserFolloweds, getLoggedUserFollowers } from '../../../reducers/loggedUser';
 
 export default function ProfileLeftColumn({user, navigation, style, isLoggedUser}) {
-  const followeds = isLoggedUser
-    ? useSelector(getLoggedUserFolloweds)
-    : useSelector(getOtherUserFolloweds);
+  const loggedFolloweds = useSelector(getLoggedUserFolloweds);
+  const otherFolloweds = useSelector(getOtherUserFolloweds);
+  const [localFolloweds, setLocalFolloweds] = useState(
+    isLoggedUser ? loggedFolloweds : otherFolloweds,
+  );
 
-  const followers = isLoggedUser
-    ? useSelector(getLoggedUserFollowers)
-    : useSelector(getOtherUserFollowers);
+  useEffect(() => {
+    if (isLoggedUser) {
+      setLocalFolloweds(loggedFolloweds);
+    }
+  }, [loggedFolloweds]);
+
+  useEffect(() => {
+    if (!isLoggedUser) {
+      setLocalFolloweds(otherFolloweds);
+    }
+  }, [otherFolloweds]);
+
+  const loggedFollowers = useSelector(getLoggedUserFollowers);
+  const otherFollowers = useSelector(getOtherUserFollowers);
+  const [localFollowers, setLocalFollowers] = useState(
+    isLoggedUser ? loggedFollowers : otherFollowers,
+  );
+
+  useEffect(() => {
+    if (isLoggedUser) {
+      setLocalFollowers(loggedFollowers);
+    }
+  }, [loggedFollowers]);
+
+  useEffect(() => {
+    if (!isLoggedUser) {
+      setLocalFollowers(otherFollowers);
+    }
+  }, [otherFollowers]);
 
   const goToFollowed = () => {
     navigation.navigate('Followeds', {isLoggedUser});
@@ -26,11 +54,19 @@ export default function ProfileLeftColumn({user, navigation, style, isLoggedUser
   return (
     <View style={style}>
       <Text style={styles.text_profile}>Publicaciones</Text>
-      <FormButtonCount buttonTitle={user.posts_count ? user.posts_count.POST_TYPE_PRUEBA : 0} />
+      <FormButtonCount
+        buttonTitle={user.posts_count ? user.posts_count.POST_TYPE_PRUEBA : 0}
+      />
       <Text style={styles.text_profile}>Seguidos</Text>
-      <FormButtonCount buttonTitle={followeds.length} onPress={goToFollowed} />
+      <FormButtonCount
+        buttonTitle={localFolloweds.length}
+        onPress={goToFollowed}
+      />
       <Text style={styles.text_profile}>Seguidores</Text>
-      <FormButtonCount buttonTitle={followers.length} onPress={goToFollowers} />
+      <FormButtonCount
+        buttonTitle={localFollowers.length}
+        onPress={goToFollowers}
+      />
 
       <FormButton
         buttonTitle="CHALLENGE"
