@@ -29,12 +29,11 @@ import { getFile, getFilesFromIds } from '../../../reducers/files';
 import { setPostToShare } from '../../../reducers/postToShare';
 import { setShowSharePost } from '../../../reducers/showSharePost';
 import Likes from './Likes';
+import PublicationContent from './PublicationContent';
 let window = Dimensions.get('window');
 
 export default function Publication({ postId, navigation, showFullContent }) {
   const post = useSelector(getPost(postId));
-  const postFiles = useSelector(getPostToFilesByPost(postId));
-  const files = useSelector(getFilesFromIds(postFiles));
   const owner = useSelector(getUser(post.user_id));
   const ownerProfile = useSelector(getProfile(owner.profile_id));
   const ownerPhoto = useSelector(getFile(ownerProfile.photo_id));
@@ -51,36 +50,23 @@ export default function Publication({ postId, navigation, showFullContent }) {
   const [savingComment, setSavingComment] = useState(false);
   const dispatch = useDispatch();
 
-  const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
-  const isImage = (uri) =>
-    availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
 
   const toView = () => {
-    if (files.length > 0) {
-      return isImage(files[0].url_original) ? (
-        <ScrollView horizontal={true} indicatorStyle="white">
-          {files.map((file, i) => (
-            <Image
-              source={{ uri: showFullContent ? file.url_original : file.url_half }}
-              style={[styles.image_post, i >= 1 ? { marginLeft: 10 } : {}]}
-              key={i}
-              resizeMode="contain"
-              fadeDuration={0}
-            />
-          ))}
-        </ScrollView>
-      ) : (
-        <Video
-          video={{ uri: files[0].url_original }}
-          style={styles.image_post}
-          autoplay={true}
-          defaultMuted={true}
-          loop={true}
-        />
-      );
-    } else {
-      return null;
-    }
+    return (
+      <ScrollView horizontal={true} indicatorStyle="white">
+        {post.files.map((file, i) => (
+          <PublicationContent
+            fileId={file}
+            showFullContent={showFullContent}
+            style={[
+              styles.image_post,
+              i >= 1 ? styles.other_images : styles.first_images,
+            ]}
+            key={i}
+          />
+        ))}
+      </ScrollView>
+    );
   };
 
   const getAndSetShowComments = () => {
@@ -175,15 +161,13 @@ export default function Publication({ postId, navigation, showFullContent }) {
         {/*Finaliza Nombre de usuario como encabezado*/}
 
         {/*Inicia Foto de la publicaciòn */}
-        {files.length > 0 ? (
-          <View style={styles.postImagesContainer}>
-            <TouchableWithoutFeedback
-              style={styles.postImagesContainerPresable}
-              onPress={goToPost}>
-              {toView(files)}
-            </TouchableWithoutFeedback>
-          </View>
-        ) : null}
+        <View style={styles.postImagesContainer}>
+          <TouchableWithoutFeedback
+            style={styles.postImagesContainerPresable}
+            onPress={goToPost}>
+            {toView()}
+          </TouchableWithoutFeedback>
+        </View>
         {/*Finaliza Foto de la publicaciòn*/}
 
         {/*Inicio de iconos de la publicaciòn*/}
@@ -349,6 +333,10 @@ const styles = StyleSheet.create({
   image_post: {
     width: window.width,
     minHeight: 360,
+  },
+  first_image: {},
+  other_images: {
+    marginLeft: 10
   },
   icons_container: {
     justifyContent: 'center',
