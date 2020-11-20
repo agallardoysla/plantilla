@@ -1,34 +1,51 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ImageBackground,
-  ScrollView,
-} from 'react-native';
+import React, { useEffect } from 'react';
+import {Text, StyleSheet, ScrollView, View, Image} from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
+import GoBackButton from '../../components/GoBackButton';
 import { getNotifications } from '../../reducers/notifications';
+import StylesConfiguration from '../../utils/StylesConfiguration';
 import Notification from './Notification';
 
-//Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function NotificationScreen({ navigation }) {
   const notifications = useSelector(getNotifications);
 
-  const goToPost = (post) => () => {
-    navigation.navigate('PostGroup', {
-      screen: 'PublicationDetails',
+  const goToProfile = (notification) => {
+    navigation.navigate('OtherProfileGroup', {
+      screen: 'OtherProfile',
       params: {
-        post,
+        user_id: notification.from_user.id,
       },
     });
   };
 
+  const NotificationItem = ({item}) => (
+    <Notification
+      notification={item}
+      navigation={navigation}
+      goToProfile={goToProfile}
+    />
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ color: '#E9FC64', marginTop: 10 }}>NOTIFICACIONES</Text>
-      <ScrollView>
+      <View style={styles.row}>
+        <GoBackButton navigation={navigation} />
+        <Text style={styles.titulo}>NOTIFICACIONES</Text>
+        <Image
+          style={styles.tuercaBlanca}
+          source={require('../../assets/tuerca_blanca_grande.png')}
+        />
+      </View>
+      <FlatList
+        style={styles.list}
+        data={notifications}
+        renderItem={NotificationItem}
+        keyExtractor={(item, index) => index.toString()}
+      />
+
+      {/* <ScrollView>
         {notifications.map((notification, index) => (
           <Notification
             key={index}
@@ -46,7 +63,7 @@ export default function NotificationScreen({ navigation }) {
             date={notification.created_at}
           />
         ))}
-      </ScrollView>
+      </ScrollView> */}
     </SafeAreaView>
   );
 }
@@ -54,8 +71,32 @@ export default function NotificationScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
     backgroundColor: 'black',
-    alignContent: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginVertical: 5,
+    marginHorizontal: 10,
+  },
+  tuercaBlanca: {
+    width: 30,
+    height: 30,
+  },
+  titulo: {
+    fontFamily: StylesConfiguration.fontFamily,
+    color: StylesConfiguration.color,
+    fontSize: 14,
+    marginHorizontal: 10,
+    marginVertical: 10,
+    textDecorationLine: 'underline',
+  },
+  list: {
+    flex: 1,
+    marginTop: 20,
   },
 });
