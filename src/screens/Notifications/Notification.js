@@ -37,7 +37,6 @@ export default function Notification({notification, navigation, goToProfile}) {
       Component: CommentCreated,
       params: {notification, goToProfile: goToProfile(notification)},
       action: () => {
-        console.log('comment_comment_created', notification);
         navigation.navigate('PostGroup', {
           screen: 'PublicationDetails',
           params: {
@@ -50,7 +49,6 @@ export default function Notification({notification, navigation, goToProfile}) {
       Component: PostReaction,
       params: {notification, goToProfile: goToProfile(notification)},
       action: () => {
-        console.log('post_reaction_created', notification);
         navigation.navigate('PostGroup', {
           screen: 'PublicationDetails',
           params: {
@@ -63,7 +61,6 @@ export default function Notification({notification, navigation, goToProfile}) {
       Component: PostComment,
       params: {notification, goToProfile: goToProfile(notification)},
       action: () => {
-        console.log('post_comment_created', notification);
         navigation.navigate('PostGroup', {
           screen: 'PublicationDetails',
           params: {

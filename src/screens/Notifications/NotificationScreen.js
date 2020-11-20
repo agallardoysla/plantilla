@@ -12,7 +12,6 @@ export default function NotificationScreen({ navigation }) {
   const notifications = useSelector(getNotifications);
 
   const goToProfile = (notification) => () => {
-    console.log(notification, notification.from_user);
     navigation.navigate('OtherProfileGroup', {
       screen: 'OtherProfile',
       params: {

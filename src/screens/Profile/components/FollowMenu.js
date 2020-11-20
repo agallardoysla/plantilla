@@ -6,19 +6,36 @@ import {
   MenuOptions,
   MenuTrigger,
 } from 'react-native-popup-menu';
+import { useDispatch, useSelector } from 'react-redux';
 import Icon from '../../../components/Icon';
+import { addVip, removeVip, getLoggedUserVips, getLoggedUser } from '../../../reducers/loggedUser';
 import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 export default function FollowMenu({user, loggedUserFollowProfile}) {
   const [showFollowMenu, setShowFollowMenu] = useState(false);
+  const loggedUser = useSelector(getLoggedUser);
+  const loggedFollowers = useSelector(getLoggedUserVips);
+  const profileFollowLoggedUser = user.following_with_details.filter((u) => u.user_id === loggedUser.id).length > 0;
+  const dispatch = useDispatch();
+
+  const isVip = () => {
+    return loggedFollowers
+      .map((follower) => follower.user_id)
+      .includes(user.id);
+  };
 
   const addToVip = () => {
     users_services.followerVip(user.id);
+    dispatch(addVip(user.id));
     setShowFollowMenu(false);
   };
 
-  const removeFromVip = () => {};
+  const removeFromVip = () => {
+    users_services.removeFollowerVip(user.id);
+    dispatch(removeVip(user.id));
+    setShowFollowMenu(false);
+  };
 
   const blockUser = () => {
     users_services.blockUser(user.id);
@@ -48,12 +65,24 @@ export default function FollowMenu({user, loggedUserFollowProfile}) {
       </MenuTrigger>
       {loggedUserFollowProfile ? (
         <MenuOptions customStyles={menuOptions(loggedUserFollowProfile)}>
-          <MenuOption onSelect={addToVip} text="Añadir a VIP" />
+          {profileFollowLoggedUser ? (
+            isVip() ? (
+              <MenuOption onSelect={removeFromVip} text="Quitar de VIP" />
+            ) : (
+              <MenuOption onSelect={addToVip} text="Añadir a VIP" />
+            )
+          ) : null}
           <MenuOption onSelect={blockUser} text="Bloquear" />
         </MenuOptions>
       ) : (
         <MenuOptions customStyles={menuOptions(loggedUserFollowProfile)}>
-          <MenuOption onSelect={addToVip} text="Añadir a VIP" />
+          {profileFollowLoggedUser ? (
+            isVip() ? (
+              <MenuOption onSelect={removeFromVip} text="Quitar de VIP" />
+            ) : (
+              <MenuOption onSelect={addToVip} text="Añadir a VIP" />
+            )
+          ) : null}
           <MenuOption onSelect={blockUser} text="Bloquear" />
           <MenuOption onSelect={hidePublications} text="Ocultar publicaciones" />
         </MenuOptions>
