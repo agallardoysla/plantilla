@@ -9,7 +9,7 @@ import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 
-const Follower = ({follower, navigation}) => {
+const Follower = ({follower, navigation, isLoggedUser}) => {
   const dispatch = useDispatch();
   const user = useSelector(getLoggedUser);
   const [userFollowProfile, setUserFollowProfile] = useState(
@@ -40,12 +40,14 @@ const Follower = ({follower, navigation}) => {
   const doFollow = () => {
     if (userFollowProfile) {
       batch(() => {
+        // No hace falta actualizar el otro perfil porque cuando se visita se carga la info
         dispatch(unfollowUser(follower));
         // dispatch(unfollowOtherUser(user));
       });
       users_services.cancelFollow(follower.user_id);
     } else {
       batch(() => {
+        // No hace falta actualizar el otro perfil porque cuando se visita se carga la info
         dispatch(followUser(follower));
         // dispatch(followOtherUser(user));
       });
@@ -71,25 +73,29 @@ const Follower = ({follower, navigation}) => {
           @{follower.display_name}
         </Text>
       </TouchableOpacity>
-      <View style={styles.actions}>
-        <TouchableOpacity style={styles.sobre_amarillo} onPress={goToChat}>
-          <Image
-            source={require('../../../assets/sobre_amarillo.png')}
-            style={styles.sobre_amarillo}
+      {isLoggedUser ? (
+        <View style={styles.actions}>
+          <TouchableOpacity style={styles.sobre_amarillo} onPress={goToChat}>
+            <Image
+              source={require('../../../assets/sobre_amarillo.png')}
+              style={styles.sobre_amarillo}
+            />
+          </TouchableOpacity>
+          <FormButton
+            buttonTitle={userFollowProfile ? 'Seguido' : 'Seguir'}
+            style={[styles.followButton, userFollowProfile ? styles.followedButton : {}]}
+            textStyle={[styles.followButtonText, userFollowProfile ? styles.followedButtonText: {}]}
+            onPress={doFollow}
           />
-        </TouchableOpacity>
-        <FormButton
-          buttonTitle={userFollowProfile ? 'Seguido' : 'Seguir'}
-          style={[styles.followButton, userFollowProfile ? styles.followedButton : {}]}
-          textStyle={[styles.followButtonText, userFollowProfile ? styles.followedButtonText: {}]}
-          onPress={doFollow}
-        />
-        <FormButton
-          buttonTitle={'...'}
-          style={styles.followButton}
-          textStyle={styles.followButtonText}
-        />
-      </View>
+          <FormButton
+            buttonTitle={'...'}
+            style={styles.followButton}
+            textStyle={styles.followButtonText}
+          />
+        </View>
+      ) : (
+        <View style={styles.actions} />
+      )}
     </View>
   );
 };

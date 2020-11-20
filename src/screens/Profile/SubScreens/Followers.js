@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import GoBackButton from '../../../components/GoBackButton';
 import Follower from '../components/Follower';
@@ -11,13 +11,22 @@ import { getLoggedUserFollowers } from '../../../reducers/loggedUser';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Followers = ({ navigation, route }) => {
-  const followers = route.params.isLoggedUser
-    ? useSelector(getLoggedUserFollowers)
-    : useSelector(getOtherUserFollowers);
-  const [filteredFollowers, setFilteredFollowers] = useState(followers);
+  const loggedFollowers = useSelector(getLoggedUserFollowers);
+  const otherFollowers = useSelector(getOtherUserFollowers);
+  const [filteredFollowers, setFilteredFollowers] = useState(
+    route.params.isLoggedUser ? loggedFollowers : otherFollowers,
+  );
   const [searchString, setSearchString] = useState('');
 
-  const searchFollowers = (searchedString) => {
+  useEffect(() => {
+    if (route.params.isLoggedUser) {
+      searchFollowers(searchString, loggedFollowers);
+    } else {
+      searchFollowers(searchString, otherFollowers);
+    }
+  }, [searchString]);
+
+  const searchFollowers = (searchedString, followers) => {
     setSearchString(searchedString);
     if (searchedString.length > 0) {
       setFilteredFollowers(
@@ -29,7 +38,11 @@ const Followers = ({ navigation, route }) => {
   };
 
   const FollowerItem = ({ item }) => (
-    <Follower follower={item} navigation={navigation} />
+    <Follower
+      follower={item}
+      navigation={navigation}
+      isLoggedUser={route.params.isLoggedUser}
+    />
   );
 
   return (
@@ -40,7 +53,7 @@ const Followers = ({ navigation, route }) => {
         <View style={styles.placeholder} />
       </View>
       <View style={styles.row}>
-        <FormSearchInput value={searchString} onChangeText={searchFollowers} />
+        <FormSearchInput value={searchString} onChangeText={setSearchString} />
       </View>
       <FlatList
         style={styles.list}
