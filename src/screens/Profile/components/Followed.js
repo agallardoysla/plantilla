@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { batch, useDispatch } from 'react-redux';
 import FormButton from '../../../components/FormButton';
+import { unfollowUser } from '../../../reducers/loggedUser';
+import users_services from '../../../services/users_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
-const Followed = ({ followed, navigation }) => {
+const Followed = ({ followed, navigation, isLoggedUser }) => {
+  const dispatch = useDispatch();
 
   const goToProfile = () => {
     navigation.navigate('OtherProfileGroup', {
@@ -27,6 +31,15 @@ const Followed = ({ followed, navigation }) => {
     });
   };
 
+  const doUnfollowUser = () => {
+    batch(() => {
+      // No hace falta actualizar el otro perfil porque cuando se visita se carga la info
+      dispatch(unfollowUser(followed));
+      // dispatch(unfollowOtherUser(user));
+    });
+    users_services.cancelFollow(followed.user_id);
+  };
+
   return (
     <View style={styles.row}>
       <TouchableOpacity onPress={goToProfile} style={styles.user}>
@@ -44,24 +57,29 @@ const Followed = ({ followed, navigation }) => {
           @{followed.display_name}
         </Text>
       </TouchableOpacity>
-      <View style={styles.actions}>
-        <TouchableOpacity style={styles.sobre_amarillo} onPress={goToChat}>
-          <Image
-            source={require('../../../assets/sobre_amarillo.png')}
-            style={styles.sobre_amarillo}
+      {isLoggedUser ? (
+        <View style={styles.actions}>
+          <TouchableOpacity style={styles.sobre_amarillo} onPress={goToChat}>
+            <Image
+              source={require('../../../assets/sobre_amarillo.png')}
+              style={styles.sobre_amarillo}
+            />
+          </TouchableOpacity>
+          <FormButton
+            buttonTitle={'Borrar'}
+            style={styles.followButton}
+            textStyle={styles.followButtonText}
+            onPress={doUnfollowUser}
           />
-        </TouchableOpacity>
-        <FormButton
-          buttonTitle={'Borrar'}
-          style={styles.followButton}
-          textStyle={styles.followButtonText}
-        />
-        <FormButton
-          buttonTitle={'Bloquear'}
-          style={styles.followButton}
-          textStyle={styles.followButtonText}
-        />
-      </View>
+          <FormButton
+            buttonTitle={'Bloquear'}
+            style={styles.followButton}
+            textStyle={styles.followButtonText}
+          />
+        </View>
+      ) : (
+        <View style={styles.actions} />
+      )}
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import GoBackButton from '../../../components/GoBackButton';
@@ -10,16 +10,29 @@ import { getLoggedUserFolloweds } from '../../../reducers/loggedUser';
 import { getOtherUserFolloweds } from '../../../reducers/otherUser';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-
 const Followeds = ({ navigation, route }) => {
-  const followeds = route.params.isLoggedUser
-    ? useSelector(getLoggedUserFolloweds)
-    : useSelector(getOtherUserFolloweds);
-  const [filteredFolloweds, setFilteredFolloweds] = useState(followeds);
+  const loggedFolloweds = useSelector(getLoggedUserFolloweds);
+  const otherFolloweds = useSelector(getOtherUserFolloweds);
+  const [filteredFolloweds, setFilteredFolloweds] = useState(
+    route.params.isLoggedUser ? loggedFolloweds : otherFolloweds,
+  );
   const [searchString, setSearchString] = useState('');
 
-  const searchFolloweds = (searchedString) => {
-    setSearchString(searchedString);
+  useEffect(() => {
+    if (route.params.isLoggedUser) {
+      searchFolloweds(searchString, loggedFolloweds);
+    }
+  }, [loggedFolloweds]);
+
+  useEffect(() => {
+    if (route.params.isLoggedUser) {
+      searchFolloweds(searchString, loggedFolloweds);
+    } else {
+      searchFolloweds(searchString, otherFolloweds);
+    }
+  }, [searchString]);
+
+  const searchFolloweds = (searchedString, followeds) => {
     if (searchedString.length > 0) {
       setFilteredFolloweds(
         utils.filterByString(followeds, (f) => f.display_name, searchedString),
@@ -30,7 +43,11 @@ const Followeds = ({ navigation, route }) => {
   };
 
   const FollowedItem = ({ item }) => (
-    <Followed followed={item} navigation={navigation} />
+    <Followed
+      followed={item}
+      navigation={navigation}
+      isLoggedUser={route.params.isLoggedUser}
+    />
   );
 
   return (
@@ -41,7 +58,7 @@ const Followeds = ({ navigation, route }) => {
         <View style={styles.placeholder} />
       </View>
       <View style={styles.row}>
-        <FormSearchInput value={searchString} onChangeText={searchFolloweds} />
+        <FormSearchInput value={searchString} onChangeText={setSearchString} />
       </View>
       <FlatList
         style={styles.list}
