@@ -61,7 +61,7 @@ export const getPosts = (state) => state.posts.allIds;
 export const getPost = (id) => (state) => state.posts.byId[id.toString()];
 export const getReactionsByPost = (id) => (state) => {
   const post = state.posts.byId[id.toString()];
-  const reactions = post.reactions.map((r) => state.postReactions.byId[r.toString()]);
+  const reactions = post.reactions.map((r) => state.postReactions.byId[r?.toString()]);
   console.log('post reactions', id, reactions);
   return reactions;
 };

@@ -55,6 +55,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
     return (
       <ScrollView horizontal={true} indicatorStyle="white">
         {post.files.map((file, i) => (
+          <View style={{}}>
           <PublicationContent
             fileId={file}
             showFullContent={showFullContent}
@@ -63,7 +64,9 @@ export default function Publication({ postId, navigation, showFullContent }) {
               i >= 1 ? styles.other_images : styles.first_images,
             ]}
             key={i}
+            onPress={()=> goToPost(file) }
           />
+          </View>
         ))}
       </ScrollView>
     );
