@@ -3,6 +3,7 @@ import { adapt } from '../utils/normalizedDataAdaptator';
 
 const initialState = {
   byId: {},
+  reloadPost: {},
   allIds: [],
 };
 
@@ -42,7 +43,6 @@ export const {
 // Solo se pueden obtener las reacciones asociadas a un Post
 export const getPostReactions = (postId) => (state) => Object.values(state.postReactions.byId).filter(c => c.post_id.toString() === postId);
 export const getPostReaction = (id) => (state) => state.postReactions.byId[id.toString()];
-
 export const createPostReaction = (post_id, user_id) => ({
   id: Math.random(),
   created_at: new Date(),

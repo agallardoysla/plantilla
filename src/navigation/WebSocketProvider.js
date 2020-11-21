@@ -4,6 +4,8 @@ import api_config from '../services/api_config';
 import {useDispatch} from 'react-redux';
 import {pushMessage} from '../reducers/conversations';
 import { addReaction, otherUserFollowUser } from '../reducers/loggedUser';
+import { getComments, getCommentAnswers } from '../reducers/comments';
+import { relaodReaction } from '../reducers/postReactions';
 import { addNotification } from '../reducers/notifications';
 
 export const WebSocketContext = createContext({});
@@ -38,6 +40,29 @@ export const WebSocketProvider = ({children}) => {
       event: 'comment_comment_created',
       action: (info) => {
         console.log('handling comment_comment_created', info);
+        createNotification(info);
+      },
+    },
+    {
+      event: 'watching_post__post_reaction_created',
+      action:  (info) => {
+        dispatch(
+          addReaction({
+            id: info.id,
+            created_at: Date.now(),
+            updated_at: Date.now(),
+            is_show: true,
+            is_notificated: false,
+            // user: ?,
+            // reaction_type: null,
+          }),
+        );
+      },
+    },
+    {
+      event: 'watching_post__post_comment_created',
+      action:  (info) => {
+        console.log('handling post_comment_created', info);
         createNotification(info);
       },
     },
