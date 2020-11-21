@@ -5,6 +5,7 @@ import { getLoggedUser } from '../../reducers/loggedUser';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import CommentCreated from './components/CommentCreated';
 import FollowRequestAccepted from './components/FollowRequestAccepted';
+import FollowRequestDeleted from './components/FollowRequestDeleted';
 import FollowRequestReceived from './components/FollowRequestReceived';
 import PostComment from './components/PostComment';
 import PostReaction from './components/PostReaction';
@@ -23,6 +24,18 @@ export default function Notification({notification, navigation, goToProfile}) {
     },
     follow_request_accepted: {
       Component: FollowRequestAccepted,
+      params: {notification, goToProfile: goToProfile(notification)},
+      action: () => {
+        navigation.navigate('OtherProfileGroup', {
+          screen: 'OtherProfile',
+          params: {
+            user_id: notification.from_user.user_id,
+          },
+        });
+      },
+    },
+    follow_request_deleted: {
+      Component: FollowRequestDeleted,
       params: {notification, goToProfile: goToProfile(notification)},
       action: () => {
         navigation.navigate('OtherProfileGroup', {
