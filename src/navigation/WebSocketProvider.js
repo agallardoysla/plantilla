@@ -3,13 +3,7 @@ import auth from '@react-native-firebase/auth';
 import api_config from '../services/api_config';
 import {useDispatch, useSelector} from 'react-redux';
 import {pushMessage} from '../reducers/conversations';
-<<<<<<< HEAD
-import { addReaction, otherUserFollowUser } from '../reducers/loggedUser';
-import { getComments, getCommentAnswers } from '../reducers/comments';
-import { relaodReaction } from '../reducers/postReactions';
-=======
 import { addReaction, getLoggedUser, otherUserFollowUser } from '../reducers/loggedUser';
->>>>>>> a4dc9419566b954f67f0b998b072ae7e8a72c704
 import { addNotification } from '../reducers/notifications';
 
 export const WebSocketContext = createContext({});
