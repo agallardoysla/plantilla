@@ -1,16 +1,21 @@
-import React, {createContext, useEffect} from 'react';
+import React, {createContext, useDebugValue, useEffect} from 'react';
 import auth from '@react-native-firebase/auth';
 import api_config from '../services/api_config';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {pushMessage} from '../reducers/conversations';
+<<<<<<< HEAD
 import { addReaction, otherUserFollowUser } from '../reducers/loggedUser';
 import { getComments, getCommentAnswers } from '../reducers/comments';
 import { relaodReaction } from '../reducers/postReactions';
+=======
+import { addReaction, getLoggedUser, otherUserFollowUser } from '../reducers/loggedUser';
+>>>>>>> a4dc9419566b954f67f0b998b072ae7e8a72c704
 import { addNotification } from '../reducers/notifications';
 
 export const WebSocketContext = createContext({});
 
 export const WebSocketProvider = ({children}) => {
+  const loggedUser = useSelector(getLoggedUser);
   const url = api_config.webSocketUrl;
   const dispatch = useDispatch();
   const handlers = [
@@ -113,45 +118,45 @@ export const WebSocketProvider = ({children}) => {
     dispatch(addNotification(messageToNotification(info)));
   };
 
-  useEffect(() => {
-    const init = async () => {
-      const token = await auth().currentUser.getIdToken(true);
+  const init = async () => {
+    const token = await auth().currentUser.getIdToken(true);
 
-      const headers = {
-        Authorization: `JWT ${token}`,
-      };
-
-      const ws = new WebSocket(url, '', {headers: headers});
-
-      ws.onopen = () => {
-        console.log('WS connected!');
-      };
-
-      // ws.on('close', function close() {
-      //   console.log('disconnected');
-      // });
-
-      ws.onmessage = function incoming(message) {
-        if (message.data.includes('Hi')) {
-          console.log(message.data);
-        } else {
-          const info = JSON.parse(message.data);
-          console.log(info);
-          handlers.forEach((h) => {
-            if (h.event === info.event) {
-              h.action(info);
-            }
-          });
-        }
-      };
+    const headers = {
+      Authorization: `JWT ${token}`,
     };
+
+    const ws = new WebSocket(url, '', {headers: headers});
+
+    ws.onopen = () => {
+      console.log('WS connected!');
+    };
+
+    // ws.on('close', function close() {
+    //   console.log('disconnected');
+    // });
+
+    ws.onmessage = function incoming(message) {
+      if (message.data.includes('Hi')) {
+        console.log(message.data);
+      } else {
+        const info = JSON.parse(message.data);
+        console.log(info);
+        handlers.forEach((h) => {
+          if (h.event === info.event) {
+            h.action(info);
+          }
+        });
+      }
+    };
+  };
+
+  useEffect(() => {
     init();
   }, []);
 
-  return (
-    <WebSocketContext.Provider
-      value={{}}>
-      {children}
-    </WebSocketContext.Provider>
-  );
+  useEffect(() => {
+    init();
+  }, [loggedUser]);
+
+  return <WebSocketContext.Provider>{children}</WebSocketContext.Provider>;
 };
