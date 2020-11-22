@@ -12,7 +12,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Routes() {
   const {existProfile, setExistProfile} = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
   const user = useSelector(getLoggedUser);
   const dispatch = useDispatch();
 
@@ -21,7 +20,7 @@ export default function Routes() {
 
   async function onAuthStateChanged(isUserLogged) {
     await AsyncStorage.removeItem('local_token');
-    // setUser(isUserLogged);
+
     if (isUserLogged) {
       await AsyncStorage.setItem('account', 'main');
       if (user) {
@@ -33,11 +32,9 @@ export default function Routes() {
         setExistProfile(backendUser.data.profile.is_ready);
       }
     } else {
-      // setUser(null);
       dispatch(logout());
       setExistProfile(false);
     }
-    setLoading(false);
   }
 
   /**
@@ -49,14 +46,17 @@ export default function Routes() {
     return subscriber; // unsubscribe on unmount
   }, []);
 
-  if (loading) {
-    return <Loading />;
+  if (!existProfile || !user) {
+    return <Loading message="Recuperando datos de sesion" />;
   }
 
   /**
    * Lógica de ruteo. Si el usuario está autenticado voy a las rutas de HomeStack, sino
    * a las rutas de AuthStack
    */
+  console.log('existProfile', existProfile);
+  console.log('user', user);
+
   return (
     <NavigationContainer>
       {existProfile && user ? <HomeStack /> : <AuthStack />}
