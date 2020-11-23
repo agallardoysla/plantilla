@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+  Pressable
 } from 'react-native';
 import {
   ScrollView,
@@ -238,11 +239,11 @@ export default function Publication({ postId, navigation, showFullContent }) {
         {/*Inicia Foto de la publicaciòn */}
         {files.length > 0 ? (
           <View style={styles.postImagesContainer}>
-            <TouchableWithoutFeedback
+            <Pressable
               style={styles.postImagesContainerPresable}
               onPress={goToPost}>
               {toView(files)}
-            </TouchableWithoutFeedback>
+            </Pressable>
           </View>
         ) : null}
         {/*Finaliza Foto de la publicaciòn*/}
