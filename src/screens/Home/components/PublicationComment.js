@@ -28,16 +28,18 @@ import { getFile } from '../../../reducers/files';
 import { deleteCommentPost } from '../../../reducers/posts';
 
 export default function PublicationComment({post, commentId, navigation}) {
-  const comment = useSelector(getComment(commentId));
+  const comment = useSelector(getComment(commentId.id));
   const [showAnswerToComments, setShowAnswerToComments] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [editingComment, setEditingComment] = useState(false);
+  // const [commentOwner, setCommentOwner] = useState(null);
   const commentOwner = useSelector(getUser(comment.user_id));
   const commentOwnerProfile = useSelector(getProfile(commentOwner.profile_id));
   const ownerPhoto = useSelector(getFile(commentOwnerProfile.photo_id));
   const loggedUser = useSelector(getLoggedUser);
   const dispatch = useDispatch();
+
 
   const newCommentCallback = () => {
     setSavingComment(false);

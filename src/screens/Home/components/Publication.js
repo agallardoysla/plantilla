@@ -59,7 +59,6 @@ export default function Publication({ postId, navigation, showFullContent }) {
    */
   const updateData = () => {
     posts_services.get(postId).then(res => {
-      console.log(res.data);
       setcommentsCount(res.data.comments.length ? res.data.comments.length : 0)
       setReactions(res.data.posts_reactions.length ? res.data.posts_reactions.length : 0)
     })
@@ -325,7 +324,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
         {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
         {/*Inicia comentarios hacia la publicaciòn */}
-        {/* {showComments ? (
+        {showComments ? (
           loadingComments ? (
             <ActivityIndicator color={StylesConfiguration.color} />
           ) : (
@@ -335,13 +334,13 @@ export default function Publication({ postId, navigation, showFullContent }) {
                 <PublicationComment
                   style={styles.publicationComments}
                   post={post}
-                  comment={comment}
+                  commentId={comment}
                   key={i}
                   navigation={navigation}
                 />
               ))
           )
-        ) : null} */}
+        ) : null}
 
         {firstTimeLoadingComments && commentsCount > 3 ? (
           <TouchableOpacity onPress={getAndSetShowComments}>
