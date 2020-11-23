@@ -15,12 +15,12 @@ export const getToken = async (forceJWT) => {
     account = await AsyncStorage.getItem('account');
     if (forceJWT || _token === null) {
       token = await auth().currentUser.getIdToken(true);
-      console.log('using firebase token');
+      //console.log('using firebase token');
       token = `${token}@${account}`;
     } else {
       token = _token;
       isLocalToken = true;
-      console.log('using local_token');
+      //console.log('using local_token');
     }
   } catch (e) {}
 
@@ -40,24 +40,24 @@ const getConfig = async (forceJWT) => {
 
 const genericMethodWithData = (method) => async (url, data, forceJWT) => {
   const config = await getConfig(forceJWT);
-  console.log(method, api_config.baseURL, url, data, config);
+  //console.log(method, api_config.baseURL, url, data, config);
   let res;
   try {
     res = await axios_v1[method.toLowerCase()](url, data, config);
   } catch (e) {
-    console.log(`Error ${method} ${url}: ${e}`);
+    //console.log(`Error ${method} ${url}: ${e}`);
   }
   return res;
 };
 
 const genericMethodNoData = (method) => async (url, forceJWT) => {
   const config = await getConfig(forceJWT);
-  console.log(method, api_config.baseURL, url, config);
+  //console.log(method, api_config.baseURL, url, config);
   let res;
   try {
     res = await axios_v1[method.toLowerCase()](url, config);
   } catch (e) {
-    console.log(`Error ${method} ${url}: ${e}`);
+    //console.log(`Error ${method} ${url}: ${e}`);
   }
   return res;
 };

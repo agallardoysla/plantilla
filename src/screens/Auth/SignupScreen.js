@@ -64,7 +64,7 @@ export default function SignupScreen({navigation}) {
     doLogin().then(
       () => navigation.navigate('CreateProfile'),
       (error) => {
-        console.log(error.message);
+        //console.log(error.message);
         const newErrors = {...errors};
         if (error.message.includes('email-already-in-use')) {
           newErrors.email = 'Ya existe una cuenta con este email';

@@ -19,7 +19,7 @@ export default function ViewNewImage({route}) {
       [
         {
           text: 'Cancelar',
-          onPress: () => console.log('Cancel Pressed'),
+          onPress: () =>{}, //console.log('Cancel Pressed'),
           style: 'cancel',
         },
         {

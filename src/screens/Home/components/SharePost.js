@@ -61,7 +61,7 @@ export default function SharePost() {
 
   const shareSelectedPost = (userId) => {
     // console.warn(userId);
-    console.log(userId, `[post:${sharedPost.id}]`);
+    //console.log(userId, `[post:${sharedPost.id}]`);
     chats_services.sendMessage(userId, { text: `[post:${sharedPost.id}]` });
     closeModal();
   };

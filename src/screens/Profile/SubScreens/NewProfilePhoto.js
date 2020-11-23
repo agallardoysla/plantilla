@@ -12,11 +12,11 @@ export default function NewProfilePhoto({navigation}) {
   const dispatch = useDispatch();
 
   const callback = async (params) => {
-    console.log('nueva imagen de perfil: ', params.images);
+    //console.log('nueva imagen de perfil: ', params.images);
     let path = params.images[0];
 
     const result = await files_services.createPost(path.uri, path.ext);
-    console.log('RESULT', await result.json());
+    //console.log('RESULT', await result.json());
     const photo = await result.json().id;
     profiles_services.edit(user.profile.id, {photo: photo});
     const backendUser = await users_services.me();

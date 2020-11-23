@@ -46,20 +46,21 @@ export default function Routes() {
     return subscriber; // unsubscribe on unmount
   }, []);
 
-  if (!existProfile || !user) {
-    return <Loading message="Recuperando datos de sesion" />;
-  }
+  // if (!existProfile || !user) {
+  //   return <Loading message="Recuperando datos de sesion" />;
+  // }
 
   /**
    * Lógica de ruteo. Si el usuario está autenticado voy a las rutas de HomeStack, sino
    * a las rutas de AuthStack
    */
-  console.log('existProfile', existProfile);
-  console.log('user', user);
+  //console.log('existProfile', existProfile);
+  //console.log('user', user);
 
   return (
     <NavigationContainer>
       {existProfile && user ? <HomeStack /> : <AuthStack />}
+      {/* <HomeStack/> */}
     </NavigationContainer>
   );
 }

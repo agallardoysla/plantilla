@@ -131,7 +131,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
   const getAndSetShowComments = () => {
     // if (!firstTimeLoadingComments) {
     //   setShowComments(!showComments);
-    //   console.log('get comments', showComments, loadingComments);
+    //   //console.log('get comments', showComments, loadingComments);
     // } else {
     //   setFirstTimeLoadingComments(false);
     // }
@@ -162,7 +162,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
         // setLikesCounter(likesCounter + 1);
       }
     } catch (error) {
-      console.log('Error de agregar like' + error);
+      //console.log('Error de agregar like' + error);
     }
   };
 

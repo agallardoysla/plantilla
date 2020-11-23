@@ -46,13 +46,13 @@ export default function Gallery({
   }, []);
 
   const assets = async (_assetType, _hasNextPage) => {
-    // console.log('LLEGUE', hasNextPage);
+    // //console.log('LLEGUE', hasNextPage);
     if (_hasNextPage) {
       const data = await getGallery({
         quantity: pageSize + 30,
         assetType: _assetType,
       });
-      // console.log('LENG', data.gallery.length);
+      // //console.log('LENG', data.gallery.length);
       setPagesize(pageSize + 30);
       setAssetsGallery(data.gallery);
       setHasNextPage(data.hasMore);
@@ -85,8 +85,8 @@ export default function Gallery({
       return images.includes(asset);
     }
     if (type === 'Videos') {
-      console.log('ASS', asset);
-      console.log('VID', video);
+      //console.log('ASS', asset);
+      //console.log('VID', video);
       return asset === video;
     }
   };
@@ -132,7 +132,7 @@ export default function Gallery({
           renderItem={({ item }) => (
             <Pressable
               onPress={() => {
-                // console.log(video)
+                // //console.log(video)
                 selectAsset(item);
               }}>
               <Image

@@ -16,7 +16,7 @@ export const WebSocketProvider = ({children}) => {
     {
       event: 'follow_request_received',
       action: (info) => {
-        console.log('handling follow_request_received', info);
+        //console.log('handling follow_request_received', info);
         dispatch(otherUserFollowUser(info.user));
         createNotification(info);
       },
@@ -24,21 +24,21 @@ export const WebSocketProvider = ({children}) => {
     {
       event: 'post_reaction_created',
       action: (info) => {
-        console.log('handling post_reaction_created', info);
+        //console.log('handling post_reaction_created', info);
         createNotification(info);
       },
     },
     {
       event: 'post_comment_created',
       action: (info) => {
-        console.log('handling post_comment_created', info);
+        //console.log('handling post_comment_created', info);
         createNotification(info);
       },
     },
     {
       event: 'comment_comment_created',
       action: (info) => {
-        console.log('handling comment_comment_created', info);
+        //console.log('handling comment_comment_created', info);
         createNotification(info);
       },
     },
@@ -61,14 +61,14 @@ export const WebSocketProvider = ({children}) => {
     {
       event: 'watching_post__post_comment_created',
       action:  (info) => {
-        console.log('handling post_comment_created', info);
+        //console.log('handling post_comment_created', info);
         createNotification(info);
       },
     },
     {
       event: 'profile_reaction_created',
       action: (info) => {
-        console.log('handling profile_reaction_created', info);
+        //console.log('handling profile_reaction_created', info);
         createNotification(info);
         dispatch(
           addReaction({
@@ -86,14 +86,14 @@ export const WebSocketProvider = ({children}) => {
     {
       event: 'comment_reaction_created',
       action: (info) => {
-        console.log('handling comment_reaction_created', info);
+        //console.log('handling comment_reaction_created', info);
         createNotification(info);
       },
     },
     {
       event: 'message_received',
       action: (info) => {
-        console.log('handling message_received', info.data.message);
+        //console.log('handling message_received', info.data.message);
         dispatch(pushMessage(info.data.message));
       },
     },
@@ -122,19 +122,19 @@ export const WebSocketProvider = ({children}) => {
     const ws = new WebSocket(url, '', {headers: headers});
 
     ws.onopen = () => {
-      console.log('WS connected!');
+      //console.log('WS connected!');
     };
 
     // ws.on('close', function close() {
-    //   console.log('disconnected');
+    //   //console.log('disconnected');
     // });
 
     ws.onmessage = function incoming(message) {
       if (message.data.includes('Hi')) {
-        console.log(message.data);
+        //console.log(message.data);
       } else {
         const info = JSON.parse(message.data);
-        console.log(info);
+        //console.log(info);
         handlers.forEach((h) => {
           if (h.event === info.event) {
             h.action(info);

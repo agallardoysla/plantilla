@@ -70,7 +70,7 @@ export default function TakePicture({
       // const options = { base64: true };
       const options = { quality: 0.5 };
       const data = await camera.takePictureAsync(options);
-      console.log(data.uri);
+      //console.log(data.uri);
       const asset = {
         uri: data.uri,
         ext: data.uri.slice(-5).split('.')[1].toLowerCase(),
@@ -101,7 +101,7 @@ export default function TakePicture({
     clearInterval(timeCounterInterval);
     setTimeCounter(maxDuration);
     setIsRecording(false);
-    console.log(data.uri);
+    //console.log(data.uri);
     setVideo(data.uri);
     setImages([]);
     if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
@@ -182,7 +182,7 @@ export default function TakePicture({
       [
         {
           text: 'Cancelar',
-          onPress: () => console.log('Cancel Pressed'),
+          onPress: () => {},//console.log('Cancel Pressed'),
           style: 'cancel',
         },
         {

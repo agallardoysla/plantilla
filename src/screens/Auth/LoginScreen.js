@@ -36,7 +36,7 @@ export default function LoginScreen({navigation}) {
   };
 
   const updateCanSubmit = () => {
-    console.log('can submit: ', emailIsOk(email) && passwordIsOk(password));
+    //console.log('can submit: ', emailIsOk(email) && passwordIsOk(password));
     setCanSubmit(emailIsOk(email) && passwordIsOk(password));
   };
 
@@ -44,7 +44,7 @@ export default function LoginScreen({navigation}) {
     loginFunction().then(
       () => navigation.navigate('CreateProfile'),
       (error) => {
-        console.log(error.message);
+        //console.log(error.message);
         const newErrors = {...errors};
         if (error.message.includes('wrong-password')) {
           newErrors.password = 'Contraseña incorrecta';

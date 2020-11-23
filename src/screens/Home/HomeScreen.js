@@ -44,7 +44,7 @@ export default function HomeScreen({ navigation }) {
         getPageOffset(Math.min(page, pages.length - 1)),
       )
       .then((res) => {
-        console.log('nuevos posts', res.data.posts.length);
+        //console.log('nuevos posts', res.data.posts.length);
         dispatch(doAddPosts(res.data, dispatch));
         setPage(page + 1);
         // setReloading(false);

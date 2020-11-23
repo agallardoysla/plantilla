@@ -14,12 +14,12 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
 
   useEffect(() => {
     if (isInput && comment.length > 0) {
-      // console.log(comment);
+      // //console.log(comment);
       const matches = comment.match(initUserMentionPattern);
       setShowSugestions(!!matches);
       if (matches) {
         const lastMatch = matches[matches.length - 1];
-        // console.log("input matches: ", matches);
+        // //console.log("input matches: ", matches);
         const showSugestions = comment.slice(-lastMatch.length) === lastMatch;
         if (showSugestions) {
           setSugestionsInput(lastMatch.slice(1));
@@ -36,7 +36,7 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
   const handleUserPress = (code, matchIndex) => {
     const test = /(\(|\{|\[)([^:]+):([^\]]+)(\)|\}|\])/i;
     const matches = code.match(test);
-    console.log(matches);
+    //console.log(matches);
     navigation.navigate('OtherProfileGroup', {
       screen: 'OtherProfile',
       params: {
@@ -54,7 +54,7 @@ export default function CommentFormatter({comment, isInput, setShowSugestions, s
   };
 
   const renderUserMention = (matchingString, matches) => {
-    // console.log("renderUserMention", matches, matchingString);
+    // //console.log("renderUserMention", matches, matchingString);
     // return matchingString;
     return '@' + matches[1];
   };

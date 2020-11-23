@@ -37,7 +37,7 @@ export default function Likes({ postId }) {
         });
       }
     } catch (error) {
-      console.log('Error de agregar like' + error);
+      //console.log('Error de agregar like' + error);
     }
   };
 

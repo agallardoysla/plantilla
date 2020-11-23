@@ -74,7 +74,7 @@ export default function CommentInput({
           exclude: filteredSugestions.map(s => s.user_id),
           limit: maxSugestions - filteredSugestions.length,
         });
-        // console.log(context.data);
+        // //console.log(context.data);
         context.data = context.data.map(d => {
           return {
             user_id: d.id,
@@ -108,7 +108,7 @@ export default function CommentInput({
       _comment.original_comment = comment.id;
     }
 
-    console.log('created', _comment);
+    //console.log('created', _comment);
     if (isEdition) {
       comments_services.edit(comment.id, _comment);
       dispatch(updateComment({id: comment.id, text: newText}));
@@ -122,7 +122,7 @@ export default function CommentInput({
       } else {
         reduxComment = createComment(res.data.id, newText, post.id, user.id);
       }
-      console.log('new comment: ', reduxComment);
+      //console.log('new comment: ', reduxComment);
       dispatch(addComments([reduxComment]));
       dispatch(commentPost({postId: post.id, commentId: reduxComment.id}));
       if (comment) {

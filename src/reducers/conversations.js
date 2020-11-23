@@ -54,7 +54,7 @@ export const {
 export const getConversations = (state) => state.conversations;
 
 export const getConversationByParams = (conversationId, userId) => {
-  console.log(conversationId, userId);
+  //console.log(conversationId, userId);
   if (conversationId) {
     return (state) => {
       const query = state.conversations.filter((c) => c.id === conversationId);

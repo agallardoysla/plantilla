@@ -30,7 +30,7 @@ export default function CreateNewAccount({navigation}) {
     );
     return maxDateObj;
   };
-  // console.log(today, moment(today).subtract(14, 'years'));
+  // //console.log(today, moment(today).subtract(14, 'years'));
   const [nickname, setNickname] = useState('');
   const [existNickname, setExistNickname] = useState(false);
   // const [birthday, setBirthday] = useState(today);
@@ -51,7 +51,7 @@ export default function CreateNewAccount({navigation}) {
   useEffect(() => {
     if (userPosibleLikes.length === 0) {
       // api.get('users/profilesLikes/').then((res) => {
-      //   console.log(res.data);
+      //   //console.log(res.data);
       //   setUserPosibleLikes(
       //     res.data.map((l) => {
       //       l.elected = false; // se agrega a cada posible gusto si fue elegido o no por el usuario
@@ -104,8 +104,8 @@ export default function CreateNewAccount({navigation}) {
   }, [userPosibleLikes.length, nickname, gender, birthday, user, existProfile]);
 
   useEffect(() => {
-    console.log(accounts);
-    console.log(getNextAccountName(accounts));
+    //console.log(accounts);
+    //console.log(getNextAccountName(accounts));
   }, [accounts]);
 
   const sameDayAsToday = () =>
@@ -257,7 +257,7 @@ export default function CreateNewAccount({navigation}) {
               value={gender === 'UNDEFINED2'}
               onValueChange={(newValue) => {
                 setCustomGender('');
-                console.log(customGender);
+                //console.log(customGender);
                 setGender(newValue ? 'UNDEFINED2' : '');
               }}
             />

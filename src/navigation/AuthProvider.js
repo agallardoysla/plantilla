@@ -34,7 +34,7 @@ export const AuthProvider = ({children}) => {
           try {
             return auth().signInWithEmailAndPassword(email, password);
           } catch (e) {
-            console.log(e);
+            //console.log(e);
             callback(e.message);
           }
         },
@@ -42,7 +42,7 @@ export const AuthProvider = ({children}) => {
           try {
             return auth().createUserWithEmailAndPassword(email, password);
           } catch (e) {
-            console.log(e);
+            //console.log(e);
             callback(e.message);
           }
         },

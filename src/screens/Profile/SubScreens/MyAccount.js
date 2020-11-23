@@ -14,7 +14,7 @@ export default function MyAccount({navigation}) {
 
   useEffect(() => {
     users_services.getAccounts().then((res) => {
-      console.log('my account', res.data);
+      //console.log('my account', res.data);
       dispatch(setAccounts(res.data));
     });
   }, []);

@@ -17,7 +17,7 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
   const dispatch = useDispatch();
 
   const getILiked = () => {
-    console.log(isLoggedUser, userReactions);
+    //console.log(isLoggedUser, userReactions);
     return isLoggedUser || userReactions.filter((item) => item.user === loggedUser.id).length >= 1;
   };
 
@@ -35,7 +35,7 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
         dispatch(addOtherUserReaction({user: loggedUser.id}));
       }
     } catch (error) {
-      console.log('Error de agregar like' + error);
+      //console.log('Error de agregar like' + error);
     }
   };
 

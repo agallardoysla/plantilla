@@ -10,7 +10,7 @@ export default function Wellcoming({navigation}) {
   useEffect(() => {
     setTimeout(() => {
       setExistProfile(true);
-      console.log('existi!!');
+      //console.log('existi!!');
     }, 2 * 1000);
   });
 

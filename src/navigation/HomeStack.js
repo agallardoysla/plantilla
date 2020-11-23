@@ -170,8 +170,8 @@ const HomeStack = () => {
 
   const unmountOnBlur = false; // resetea el estado del stack
 
-  return !loading && !loadingProfile ? (
-    <>
+  // return !loading && !loadingProfile ? (
+    return<>
       <StatusBar backgroundColor="black" />
 
       <Tab.Navigator
@@ -241,9 +241,9 @@ const HomeStack = () => {
         />
       </Tab.Navigator>
     </>
-  ) : (
-    <Loading />
-  );
+  // ) : (
+  //   <Loading />
+  // );
 };
 
 const styles = StyleSheet.create({

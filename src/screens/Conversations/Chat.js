@@ -32,7 +32,7 @@ const Chat = ({ navigation, route }) => {
   );
 
   useEffect(() => {
-    console.log('conversation', conversation);
+    //console.log('conversation', conversation);
     if (route.params.conversationId) {
       setOther(getOther(conversation));
     } else {
@@ -65,7 +65,7 @@ const Chat = ({ navigation, route }) => {
     chats_services
       .sendMessage(other.user_id, { text: newMessage })
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
         dispatch(pushMessage(res.data));
         if (!conversation.messages.length > 0) {
           chats_services.list().then((_res) => {
