@@ -43,6 +43,29 @@ export const WebSocketProvider = ({children}) => {
       },
     },
     {
+      event: 'watching_post__post_reaction_created',
+      action:  (info) => {
+        dispatch(
+          addReaction({
+            id: info.id,
+            created_at: Date.now(),
+            updated_at: Date.now(),
+            is_show: true,
+            is_notificated: false,
+            // user: ?,
+            // reaction_type: null,
+          }),
+        );
+      },
+    },
+    {
+      event: 'watching_post__post_comment_created',
+      action:  (info) => {
+        console.log('handling post_comment_created', info);
+        createNotification(info);
+      },
+    },
+    {
       event: 'profile_reaction_created',
       action: (info) => {
         console.log('handling profile_reaction_created', info);

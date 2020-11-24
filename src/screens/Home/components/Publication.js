@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -14,32 +14,77 @@ import {
 } from 'react-native-gesture-handler';
 import Video from 'react-native-video-player';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
+import posts_services from '../../../services/posts_services';
 import PublicationComment from './PublicationComment';
 import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
 import DateFormatter from '../../../components/DateFormatter';
 import { useDispatch, useSelector } from 'react-redux';
+import { getLoggedUser } from '../../../reducers/loggedUser';
 import { getPost } from '../../../reducers/posts';
 import Counter from '../../../components/Counter';
 import { getPostComments } from '../../../reducers/comments';
+import { addPostReactions, createPostReaction, getPostReactions, removePostReaction } from '../../../reducers/postReactions';
 import { getUser } from '../../../reducers/users';
 import { getProfile } from '../../../reducers/profiles';
 import { getPostToFilesByPost } from '../../../reducers/postsToFiles';
 import { getFile, getFilesFromIds } from '../../../reducers/files';
 import { setPostToShare } from '../../../reducers/postToShare';
 import { setShowSharePost } from '../../../reducers/showSharePost';
-import Likes from './Likes';
-import PublicationContent from './PublicationContent';
+import api_config from '../../../services/api_config';
+
+import auth from '@react-native-firebase/auth';
 let window = Dimensions.get('window');
 
 export default function Publication({ postId, navigation, showFullContent }) {
   const post = useSelector(getPost(postId));
+  const comments = useSelector(getPostComments(postId));
+  const postReactions = useSelector(getPostReactions(postId));
+  const postFiles = useSelector(getPostToFilesByPost(postId));
+  const files = useSelector(getFilesFromIds(postFiles));
   const owner = useSelector(getUser(post.user_id));
   const ownerProfile = useSelector(getProfile(owner.profile_id));
   const ownerPhoto = useSelector(getFile(ownerProfile.photo_id));
+  const user = useSelector(getLoggedUser);
+  /**
+   * Estados agregados para actualzar internamente los contadores de reaciones y comentarios
+   */
+  const [reactions, setReactions] = useState(0);
+  const [commentsCount, setcommentsCount] = useState(0);
+  let reactionId = 0;
 
-  const getLikesCounter = () => {
-    return post.reactions.length;
+  /**
+   * Esta función permite hacer las soliciutdes al servidor de los cambios y actualizar los estados
+   */
+  const updateData = () => {
+    posts_services.get(postId).then(res => {
+      console.log(res.data);
+      setcommentsCount(res.data.comments.length ? res.data.comments.length : 0)
+      setReactions(res.data.posts_reactions.length ? res.data.posts_reactions.length : 0)
+    })
+  };
+
+  /**
+   * Usamos el clico de vida con hooks para disparar el evento de actualización de cada contador
+   */
+
+  useEffect(() => {
+    updateData()
+  }, [postReactions])
+  
+  useEffect(() => {
+    updateData()
+  }, [comments])
+
+  useEffect(() => {
+    updateData()
+  }, [])
+
+  
+  const getILiked = () => {
+    const reaction = postReactions.filter((reaction) => reaction.user_id === user.id);
+    reactionId = reaction.length > 0 ? reaction[0].id : 0;
+    return reaction.length > 0;
   };
 
   const [showComments, setShowComments] = useState(true);
@@ -50,24 +95,38 @@ export default function Publication({ postId, navigation, showFullContent }) {
   const [savingComment, setSavingComment] = useState(false);
   const dispatch = useDispatch();
 
+  const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
+  const isImage = (uri) =>
+    availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
 
   const toView = () => {
-    return (
-      <ScrollView horizontal={true} indicatorStyle="white">
-        {post.files.map((file, i) => (
-          <PublicationContent
-            fileId={file}
-            showFullContent={showFullContent}
-            style={[
-              styles.image_post,
-              i >= 1 ? styles.other_images : styles.first_images,
-            ]}
-            key={i}
-          />
-        ))}
-      </ScrollView>
-    );
+    if (files.length > 0) {
+      return isImage(files[0].url_original) ? (
+        <ScrollView horizontal={true} indicatorStyle="white">
+          {files.map((file, i) => (
+            <Image
+              source={{ uri: showFullContent ? file.url_original : file.url_half }}
+              style={[styles.image_post, i >= 1 ? { marginLeft: 10 } : {}]}
+              key={i}
+              resizeMode="contain"
+              fadeDuration={0}
+            />
+          ))}
+        </ScrollView>
+      ) : (
+        <Video
+          video={{ uri: files[0].url_original }}
+          style={styles.image_post}
+          autoplay={true}
+          defaultMuted={true}
+          loop={true}
+        />
+      );
+    } else {
+      return null;
+    }
   };
+
 
   const getAndSetShowComments = () => {
     // if (!firstTimeLoadingComments) {
@@ -89,6 +148,22 @@ export default function Publication({ postId, navigation, showFullContent }) {
 
   const newCommentCallback = (comment) => {
     setSavingComment(false);
+  };
+
+  const AddLike = async () => {
+    try {
+      //si contiene algo lo elimino si no lo agrego
+      if (getILiked()) {
+        posts_services.deleteReaction(postId);
+        dispatch(removePostReaction(reactionId));
+      } else {
+        posts_services.addReaction(postId, 2);
+        dispatch(addPostReactions([createPostReaction(postId, user.id)]));
+        // setLikesCounter(likesCounter + 1);
+      }
+    } catch (error) {
+      console.log('Error de agregar like' + error);
+    }
   };
 
   const goToPost = () => {
@@ -161,13 +236,15 @@ export default function Publication({ postId, navigation, showFullContent }) {
         {/*Finaliza Nombre de usuario como encabezado*/}
 
         {/*Inicia Foto de la publicaciòn */}
-        <View style={styles.postImagesContainer}>
-          <TouchableWithoutFeedback
-            style={styles.postImagesContainerPresable}
-            onPress={goToPost}>
-            {toView()}
-          </TouchableWithoutFeedback>
-        </View>
+        {files.length > 0 ? (
+          <View style={styles.postImagesContainer}>
+            <TouchableWithoutFeedback
+              style={styles.postImagesContainerPresable}
+              onPress={goToPost}>
+              {toView(files)}
+            </TouchableWithoutFeedback>
+          </View>
+        ) : null}
         {/*Finaliza Foto de la publicaciòn*/}
 
         {/*Inicio de iconos de la publicaciòn*/}
@@ -184,13 +261,24 @@ export default function Publication({ postId, navigation, showFullContent }) {
           </View>
 
           <View style={styles.icon_container}>
-            <Likes postId={postId} />
+
+            <TouchableOpacity onPress={AddLike}>
+              <Image
+                source={
+                  getILiked()
+                    ? require('../../../assets/corazon_limon.png')
+                    : require('../../../assets/corazon_gris.png')
+                }
+                fadeDuration={0}
+              />
+            </TouchableOpacity>
+
             {/* <TouchableOpacity
               style={styles.icon_numbers_view_container}
               onPress={() =>
                 navigation.navigate('PostLikes', owner.display_name)
               }> */}
-            <Counter style={styles.icon_numbers_view} value={getLikesCounter()} />
+            <Counter style={styles.icon_numbers_view} value={reactions} />
             {/* </TouchableOpacity> */}
           </View>
 
@@ -201,10 +289,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
                 style={[styles.icon_post, styles.icon_comentario]}
               />
             </TouchableOpacity>
-            <Counter
-              style={styles.icon_numbers_view}
-              value={post.comments.length}
-            />
+            <Counter style={styles.icon_numbers_view} value={commentsCount} />
           </View>
 
           <TouchableOpacity onPress={sharePost} style={styles.icon_container}>
@@ -239,25 +324,25 @@ export default function Publication({ postId, navigation, showFullContent }) {
         {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
         {/*Inicia comentarios hacia la publicaciòn */}
-        {showComments ? (
+        {/* {showComments ? (
           loadingComments ? (
             <ActivityIndicator color={StylesConfiguration.color} />
           ) : (
-            post.comments
+            comments
               .slice(-3)
-              .map((commentId, i) => (
+              .map((comment, i) => (
                 <PublicationComment
                   style={styles.publicationComments}
                   post={post}
-                  commentId={commentId}
+                  comment={comment}
                   key={i}
                   navigation={navigation}
                 />
               ))
           )
-        ) : null}
+        ) : null} */}
 
-        {firstTimeLoadingComments && post.comments.length > 3 ? (
+        {firstTimeLoadingComments && commentsCount > 3 ? (
           <TouchableOpacity onPress={getAndSetShowComments}>
             <Text
               style={{
@@ -266,8 +351,8 @@ export default function Publication({ postId, navigation, showFullContent }) {
                 left: 10,
                 textAlign: 'left',
               }}>
-              {post.comments.length - 3} comentario
-              {post.comments.length === 4 ? '' : 's'} mas...
+              {commentsCount - 3} comentario
+              {commentsCount == 4 ? '' : 's'} mas...
             </Text>
           </TouchableOpacity>
         ) : null}
@@ -280,6 +365,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
             placeholder={'Escribir un nuevo comentario...'}
             callback={newCommentCallback}
             post={post}
+            comments={comments}
             setSavingComment={setSavingComment}
             style={styles.newComment}
             initialText={''}
@@ -333,10 +419,6 @@ const styles = StyleSheet.create({
   image_post: {
     width: window.width,
     minHeight: 360,
-  },
-  first_image: {},
-  other_images: {
-    marginLeft: 10
   },
   icons_container: {
     justifyContent: 'center',
