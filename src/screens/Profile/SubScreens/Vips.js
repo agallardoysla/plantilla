@@ -27,39 +27,6 @@ export default ({navigation}) => {
         keyExtractor={(item, index) => index.toString()}
       />
     </SafeAreaView>
-
-    // <View style={styles.container}>
-    //   <View style={{flexDirection: 'row'}}>
-    //     <GoBackButton navigation={navigation} _styles={styles.goBack} />
-    //   </View>
-
-    //   <ScrollView>
-    //     <View style={{flexDirection: 'row'}}>
-    //       <Text style={styles.titulo}>V.I.P</Text>
-    //     </View>
-
-    //     {data.map((item) => {
-    //       return (
-    //         <View style={{flexDirection: 'row', paddingHorizontal: 10, marginBottom: 10}}>
-    //           <FormImageIcon
-    //             _styles={styles.iconProfile}
-    //             source={require('../../../assets/foto_perfil.png')}
-    //           />
-    //           <Text style={styles.NameProfile}>@{item.name}</Text>
-
-    //           <View
-    //             style={{
-    //               flex: 1,
-    //               alignItems: 'flex-end',
-    //               justifyContent: 'center',
-    //             }}>
-    //             <FormButton style={{marginTop: 0}} buttonTitle="Enviar" />
-    //           </View>
-    //         </View>
-    //       );
-    //     })}
-    //   </ScrollView>
-    // </View>
   );
 };
 

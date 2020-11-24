@@ -2,11 +2,11 @@ import React from 'react';
 import {Image, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-export default function GoBackButton({navigation, _styles}) {
+export default function GoBackButton({navigation, style}) {
   return (
     <TouchableOpacity
       onPress={navigation.goBack}
-      style={[styles.container, _styles]}>
+      style={[styles.container, style]}>
       <Image
         style={styles.boton_back}
         source={require('../assets/boton_volver_atras.png')}
