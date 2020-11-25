@@ -1,33 +1,35 @@
 import React from 'react';
 import {Image} from 'react-native';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import Video from 'react-native-video-player';
-import {useSelector} from 'react-redux';
-import {getFile} from '../../../reducers/files';
 
-export default function PublicationContent({
-  fileId,
-  showFullContent,
-  style,
-}) {
-  const file = useSelector(getFile(fileId));
-
+export default function PublicationContent({files, showFullContent, style}) {
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) => availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
-  return isImage(file.url_original) ? (
-    <Image
-      source={{uri: showFullContent ? file.url_original : file.url_half}}
-      style={style}
-      resizeMode="cover"
-      fadeDuration={0}
-    />
-  ) : (
-    <Video
-      video={{uri: file.url_original}}
-      style={style}
-      autoplay={true}
-      defaultMuted={true}
-      loop={true}
-    />
-  );
+
+  if (files.length > 0) {
+    return isImage(files[0].url_original) ? (
+      <ScrollView horizontal={true} indicatorStyle="white">
+        {files.map((file, i) => (
+          <Image
+            source={{uri: showFullContent ? file.url_original : file.url_half}}
+            style={[style, i >= 1 ? {marginLeft: 10} : {}]}
+            resizeMode="cover"
+            fadeDuration={0}
+            key={i}
+          />
+        ))}
+      </ScrollView>
+    ) : (
+      <Video
+        video={{uri: files[0].url_original}}
+        style={style}
+        autoplay={true}
+        defaultMuted={true}
+        loop={true}
+      />
+    );
+  } else {
+    return null;
+  }
 }

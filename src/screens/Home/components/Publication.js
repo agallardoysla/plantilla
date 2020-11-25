@@ -8,44 +8,40 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {
-  ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native-gesture-handler';
-import Video from 'react-native-video-player';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import posts_services from '../../../services/posts_services';
-import PublicationComment from './PublicationComment';
 import CommentInput from '../../../utils/CommentInput';
 import CommentFormatter from '../../../utils/CommentFormatter';
 import DateFormatter from '../../../components/DateFormatter';
-import { useDispatch, useSelector } from 'react-redux';
-import { getLoggedUser } from '../../../reducers/loggedUser';
-import { getPost } from '../../../reducers/posts';
 import Counter from '../../../components/Counter';
-import { getPostComments } from '../../../reducers/comments';
-import { addPostReactions, createPostReaction, getPostReactions, removePostReaction } from '../../../reducers/postReactions';
-import { getUser } from '../../../reducers/users';
-import { getProfile } from '../../../reducers/profiles';
-import { getPostToFilesByPost } from '../../../reducers/postsToFiles';
-import { getFile, getFilesFromIds } from '../../../reducers/files';
-import { setPostToShare } from '../../../reducers/postToShare';
-import { setShowSharePost } from '../../../reducers/showSharePost';
-import api_config from '../../../services/api_config';
+import PublicationContent from './PublicationContent';
+import GoBackButton from '../../../components/GoBackButton';
 
-import auth from '@react-native-firebase/auth';
 let window = Dimensions.get('window');
 
-export default function Publication({ postId, navigation, showFullContent }) {
-  const post = useSelector(getPost(postId));
-  const comments = useSelector(getPostComments(postId));
-  const postReactions = useSelector(getPostReactions(postId));
-  const postFiles = useSelector(getPostToFilesByPost(postId));
-  const files = useSelector(getFilesFromIds(postFiles));
-  const owner = useSelector(getUser(post.user_id));
-  const ownerProfile = useSelector(getProfile(owner.profile_id));
-  const ownerPhoto = useSelector(getFile(ownerProfile.photo_id));
-  const user = useSelector(getLoggedUser);
+export default function Publication({
+  // data
+  post,
+  comments,
+  postReactions,
+  files,
+  owner,
+  ownerProfile,
+  ownerPhoto,
+  loggedUser,
+  showFullContent,
+  navigation,
+  // actions
+  goToOwnerProfile,
+  goToPost,
+  addLike,
+  getAndSetShowComments,
+  sharePost,
+  newCommentCallback,
+}) {
   /**
    * Estados agregados para actualzar internamente los contadores de reaciones y comentarios
    */
@@ -57,11 +53,11 @@ export default function Publication({ postId, navigation, showFullContent }) {
    * Esta función permite hacer las soliciutdes al servidor de los cambios y actualizar los estados
    */
   const updateData = () => {
-    posts_services.get(postId).then(res => {
+    posts_services.get(post.id).then(res => {
       console.log(res.data);
-      setcommentsCount(res.data.comments.length ? res.data.comments.length : 0)
-      setReactions(res.data.posts_reactions.length ? res.data.posts_reactions.length : 0)
-    })
+      setcommentsCount(res.data.comments.length ? res.data.comments.length : 0);
+      setReactions(res.data.posts_reactions.length ? res.data.posts_reactions.length : 0);
+    });
   };
 
   /**
@@ -69,20 +65,19 @@ export default function Publication({ postId, navigation, showFullContent }) {
    */
 
   useEffect(() => {
-    updateData()
-  }, [postReactions])
-  
-  useEffect(() => {
-    updateData()
-  }, [comments])
+    updateData();
+  }, [postReactions]);
 
   useEffect(() => {
-    updateData()
-  }, [])
+    updateData();
+  }, [comments]);
 
-  
+  useEffect(() => {
+    updateData();
+  }, []);
+
   const getILiked = () => {
-    const reaction = postReactions.filter((reaction) => reaction.user_id === user.id);
+    const reaction = postReactions.filter((reaction) => reaction.user_id === loggedUser.id);
     reactionId = reaction.length > 0 ? reaction[0].id : 0;
     return reaction.length > 0;
   };
@@ -93,132 +88,37 @@ export default function Publication({ postId, navigation, showFullContent }) {
     true,
   );
   const [savingComment, setSavingComment] = useState(false);
-  const dispatch = useDispatch();
-
-  const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
-  const isImage = (uri) =>
-    availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
-
-  const toView = () => {
-    if (files.length > 0) {
-      return isImage(files[0].url_original) ? (
-        <ScrollView horizontal={true} indicatorStyle="white">
-          {files.map((file, i) => (
-            <Image
-              source={{ uri: showFullContent ? file.url_original : file.url_half }}
-              style={[styles.image_post, i >= 1 ? { marginLeft: 10 } : {}]}
-              key={i}
-              resizeMode="contain"
-              fadeDuration={0}
-            />
-          ))}
-        </ScrollView>
-      ) : (
-        <Video
-          video={{ uri: files[0].url_original }}
-          style={styles.image_post}
-          autoplay={true}
-          defaultMuted={true}
-          loop={true}
-        />
-      );
-    } else {
-      return null;
-    }
-  };
-
-
-  const getAndSetShowComments = () => {
-    // if (!firstTimeLoadingComments) {
-    //   setShowComments(!showComments);
-    //   console.log('get comments', showComments, loadingComments);
-    // } else {
-    //   setFirstTimeLoadingComments(false);
-    // }
-    // setLoadingComments(true);
-    // if (showComments) {
-    //   posts_services.getComments(postId).then((res) => {
-    //     setLoadingComments(false);
-    //   });
-    // } else {
-    //   setLoadingComments(false);
-    //   setShowComments(true);
-    // }
-  };
-
-  const newCommentCallback = (comment) => {
-    setSavingComment(false);
-  };
-
-  const AddLike = async () => {
-    try {
-      //si contiene algo lo elimino si no lo agrego
-      if (getILiked()) {
-        posts_services.deleteReaction(postId);
-        dispatch(removePostReaction(reactionId));
-      } else {
-        posts_services.addReaction(postId, 2);
-        dispatch(addPostReactions([createPostReaction(postId, user.id)]));
-        // setLikesCounter(likesCounter + 1);
-      }
-    } catch (error) {
-      console.log('Error de agregar like' + error);
-    }
-  };
-
-  const goToPost = () => {
-    navigation.navigate('PostGroup', {
-      screen: 'PublicationDetails',
-      params: {
-        postId,
-      },
-    });
-  };
-
-  const sharePost = () => {
-    dispatch(setPostToShare(post));
-    dispatch(setShowSharePost(true));
-  };
 
   return (
     <>
       <View style={styles.container}>
         {/*Inicia Nombre de usuario, foto, verificacion de cuenta*/}
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('OtherProfileGroup', {
-              screen: 'OtherProfile',
-              params: {
-                user_id: post.user_id,
-              },
-            })
-          }>
-          <View style={{ flexDirection: 'row' }}>
-            {owner.account_verified ? (
+        <View style={styles.upperBar}>
+          {showFullContent ? (
+            <GoBackButton navigation={navigation} />
+          ) : (
+            <View />
+          )}
+          <TouchableOpacity onPress={goToOwnerProfile}>
+            <View style={styles.ownerData}>
+              {owner.account_verified ? (
+                <Image
+                  source={require('../../../assets/tilde.png')}
+                  style={styles.ownerVerified}
+                />
+              ) : null}
               <View
-                style={{
-                  flex: 1,
-                  alignItems: 'flex-end',
-                  justifyContent: 'center',
-                }}>
-                <Image source={require('../../../assets/tilde.png')} />
+                style={[
+                  styles.ownerDisplayNameContainer,
+                  owner.account_verified
+                    ? styles.ownerDisplayNameVerified
+                    : styles.ownerDisplayNameNotVerified,
+                ]}>
+                <Text style={styles.ownerDisplayName}>
+                  {' '}
+                  @{owner.display_name}{' '}
+                </Text>
               </View>
-            ) : null}
-
-            <View
-              style={{
-                flexDirection: 'column',
-                flex: owner.account_verified ? 0 : 1,
-                alignItems: 'flex-end',
-                justifyContent: 'center',
-              }}>
-              <Text style={styles.encabezado_text}>
-                {' '}
-                @{owner.display_name}{' '}
-              </Text>
-            </View>
-
-            <View style={{ flexDirection: 'column' }}>
               <Image
                 source={
                   ownerPhoto
@@ -230,8 +130,8 @@ export default function Publication({ postId, navigation, showFullContent }) {
                 fadeDuration={0}
               />
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
 
         {/*Finaliza Nombre de usuario como encabezado*/}
 
@@ -241,7 +141,11 @@ export default function Publication({ postId, navigation, showFullContent }) {
             <TouchableWithoutFeedback
               style={styles.postImagesContainerPresable}
               onPress={goToPost}>
-              {toView(files)}
+              <PublicationContent
+                files={files}
+                showFullContent={showFullContent}
+                style={styles.image_post}
+              />
             </TouchableWithoutFeedback>
           </View>
         ) : null}
@@ -261,8 +165,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
           </View>
 
           <View style={styles.icon_container}>
-
-            <TouchableOpacity onPress={AddLike}>
+            <TouchableOpacity onPress={addLike}>
               <Image
                 source={
                   getILiked()
@@ -344,15 +247,9 @@ export default function Publication({ postId, navigation, showFullContent }) {
 
         {firstTimeLoadingComments && commentsCount > 3 ? (
           <TouchableOpacity onPress={getAndSetShowComments}>
-            <Text
-              style={{
-                color: 'gray',
-                marginBottom: 10,
-                left: 10,
-                textAlign: 'left',
-              }}>
+            <Text style={styles.showMoreComments}>
               {commentsCount - 3} comentario
-              {commentsCount == 4 ? '' : 's'} mas...
+              {commentsCount === 4 ? '' : 's'} mas...
             </Text>
           </TouchableOpacity>
         ) : null}
@@ -374,7 +271,7 @@ export default function Publication({ postId, navigation, showFullContent }) {
         {/*Fin de nuevo comentario hacia la publicaciòn */}
 
         {/*Inicia fecha*/}
-        <View style={{ alignSelf: 'flex-end', marginHorizontal: 20, marginTop: 5 }}>
+        <View style={styles.publicationDate}>
           <DateFormatter date={post.created_at} />
         </View>
         {/*Finaliza fecha */}
@@ -392,11 +289,39 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     marginBottom: 20,
   },
+  upperBar: {
+    height: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+  },
+  ownerData: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ownerVerified: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
   text: {
     fontSize: 20,
     color: 'white',
   },
-  encabezado_text: {
+  ownerDisplayNameContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
+  ownerDisplayNameVerified: {
+    flex: 0,
+  },
+  ownerDisplayNameNotVerified: {
+    flex: 1,
+  },
+  ownerDisplayName: {
     color: 'white',
     fontWeight: 'bold',
   },
@@ -493,6 +418,12 @@ const styles = StyleSheet.create({
   publicationComments: {
     flex: 1,
   },
+  showMoreComments: {
+    color: 'gray',
+    marginBottom: 10,
+    left: 10,
+    textAlign: 'left',
+  },
   newComment: {
     marginHorizontal: 10,
     marginTop: 10,
@@ -516,5 +447,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 14,
     marginBottom: 5,
+  },
+  publicationDate: {
+    alignSelf: 'flex-end',
+    marginHorizontal: 20,
+    marginTop: 5,
   },
 });

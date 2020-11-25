@@ -15,7 +15,7 @@ import {
 } from '../../reducers/conversations';
 import Message from './components/Message';
 
-import FormGoBack from '../../components/GoBackButton'
+import GoBackButton from '../../components/GoBackButton'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Chat = ({ navigation, route }) => {
@@ -90,7 +90,7 @@ const Chat = ({ navigation, route }) => {
               alignItems: 'center',
             }}>
 
-            <FormGoBack navigation={navigation} />
+            <GoBackButton navigation={navigation} />
 
           </View>
 
