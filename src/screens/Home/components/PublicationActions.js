@@ -47,11 +47,11 @@ const goToOwnerProfile = () => {
     }
   };
 
-  const goToPost = () => {
+  const goToPost = (id, navigation) => {
     navigation.navigate('PostGroup', {
       screen: 'PublicationDetails',
       params: {
-        postId,
+        id,
       },
     });
   };
@@ -60,3 +60,7 @@ const goToOwnerProfile = () => {
     dispatch(setPostToShare(post));
     dispatch(setShowSharePost(true));
   };
+
+  export default {
+    goToPost
+  }

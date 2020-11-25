@@ -15,3 +15,4 @@ export function recoverSession() {
     payload: generic_service.doGet(url + 'me/', true),
   };
 }
+

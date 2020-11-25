@@ -4,7 +4,7 @@ import generic_service_normalized from './generic_service_normalized';
 const url = 'posts/';
 
 export default {
-  list: (pageSize, offset) => generic_service_normalized.doGet(`${url}?limit=${pageSize}&offset=${offset}`),
+  list: (pageSize, offset) => generic_service.doGet(`${url}?limit=${pageSize}&offset=${offset}`),
   get: (id) => generic_service_normalized.doGet(`post/?id=${id}`),
   edit: (id, newPost) => generic_service.doPut(`${url}${id}/`, newPost),
   create: (newPost) => generic_service.doPost(url, newPost),

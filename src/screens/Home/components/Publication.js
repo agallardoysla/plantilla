@@ -20,91 +20,123 @@ import DateFormatter from '../../../components/DateFormatter';
 import Counter from '../../../components/Counter';
 import PublicationContent from './PublicationContent';
 import GoBackButton from '../../../components/GoBackButton';
+import {useNavigation} from '@react-navigation/native';
+import PublishPublication from '../../NewPublication/components/PublishPublication';
+import PublicationActions from './PublicationActions';
+import files_services from '../../../services/files_services';
+import {getFiles} from '../../../reducers/files';
 
 let window = Dimensions.get('window');
 
 export default function Publication({
   // data
   post,
-  comments,
+  isFeed,
   postReactions,
-  files,
   owner,
   ownerProfile,
   ownerPhoto,
   loggedUser,
-  showFullContent,
-  navigation,
   // actions
   goToOwnerProfile,
-  goToPost,
   addLike,
   getAndSetShowComments,
   sharePost,
   newCommentCallback,
+  navigation,
 }) {
+  // console.log('post', post);
+  const {id, user_owner, comments, files_with_urls} = post;
+  const {
+    account_verified,
+    display_name,
+    first_name,
+    last_name,
+    photo,
+    user_id,
+  } = user_owner;
+
+  const files = files_with_urls.map(fileObj => fileObj.url);
+  console.log('files', files_with_urls)
+  const commentsLegth = comments.length;
+
+
   /**
    * Estados agregados para actualzar internamente los contadores de reaciones y comentarios
    */
-  const [reactions, setReactions] = useState(0);
-  const [commentsCount, setcommentsCount] = useState(0);
-  let reactionId = 0;
+  // const [reactions, setReactions] = useState(0);
+  // const [commentsCount, setcommentsCount] = useState(0);
+  // let reactionId = 0;
 
   /**
    * Esta función permite hacer las soliciutdes al servidor de los cambios y actualizar los estados
    */
-  const updateData = () => {
-    posts_services.get(post.id).then((res) => {
-      console.log(res.data);
-      setcommentsCount(res.data.comments.length ? res.data.comments.length : 0);
-      setReactions(
-        res.data.posts_reactions.length ? res.data.posts_reactions.length : 0,
-      );
-    });
-  };
+  // const updateData = () => {
+  //   posts_services.get(post.id).then((res) => {
+  //     console.log(res.data);
+  //     setcommentsCount(res.data.comments.length ? res.data.comments.length : 0);
+  //     setReactions(
+  //       res.data.posts_reactions.length ? res.data.posts_reactions.length : 0,
+  //     );
+  //   });
+  // };
 
   /**
    * Usamos el clico de vida con hooks para disparar el evento de actualización de cada contador
    */
 
-  useEffect(() => {
-    updateData();
-  }, [postReactions]);
+  // useEffect(() => {
+  //   updateData();
+  // }, [postReactions]);
 
-  useEffect(() => {
-    updateData();
-  }, [comments]);
+  // useEffect(() => {
+  //   updateData();
+  // }, [comments]);
 
-  useEffect(() => {
-    updateData();
-  }, []);
+  // useEffect(() => {
+  //   updateData();
+  // }, []);
 
-  const getILiked = () => {
-    const reaction = postReactions.filter(
-      (reaction) => reaction.user_id === loggedUser.id,
-    );
-    reactionId = reaction.length > 0 ? reaction[0].id : 0;
-    return reaction.length > 0;
-  };
+  // const getILiked = () => {
+  //   const reaction = postReactions.filter(
+  //     (reaction) => reaction.user_id === loggedUser.id,
+  //   );
+  //   reactionId = reaction.length > 0 ? reaction[0].id : 0;
+  //   return reaction.length > 0;
+  // };
 
-  const [showComments, setShowComments] = useState(true);
-  const [loadingComments, setLoadingComments] = useState(false);
-  const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
-    true,
-  );
-  const [savingComment, setSavingComment] = useState(false);
+  // const [showComments, setShowComments] = useState(true);
+  // const [loadingComments, setLoadingComments] = useState(false);
+  // const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
+  //   true,
+  // );
+  // const [savingComment, setSavingComment] = useState(false);
 
   return (
     <>
       <View style={styles.container}>
-        {/*Inicia Nombre de usuario, foto, verificacion de cuenta*/}
-        <View style={styles.upperBar}>
-          {showFullContent ? (
+        {!isFeed && (
+          <View style={styles.upperBar}>
             <GoBackButton navigation={navigation} />
-          ) : (
-            <View />
-          )}
-          <TouchableOpacity onPress={goToOwnerProfile}>
+          </View>
+        )}
+
+        <TouchableOpacity
+          onPress={() => PublicationActions.goToPost(id, navigation)}>
+          <Text style={{color: 'white'}}>{`id: ${id}`}</Text>
+          <Text style={{color: 'white'}}>{`user id: ${user_id}`}</Text>
+          <Text
+            style={{
+              color: 'white',
+            }}>{`comments length: ${commentsLegth}`}</Text>
+          <PublicationContent
+            files={files_with_urls}
+            showFullContent={true}
+            style={styles.image_post}
+          />
+        </TouchableOpacity>
+
+        {/* <TouchableOpacity onPress={goToOwnerProfile}>
             <View style={styles.ownerData}>
               {owner.account_verified ? (
                 <Image
@@ -136,18 +168,20 @@ export default function Publication({
               />
             </View>
           </TouchableOpacity>
-        </View>
+       */}
+        {/* </View> */}
 
         {/*Finaliza Nombre de usuario como encabezado*/}
 
         {/*Inicia Foto de la publicaciòn */}
-        {files.length > 0 ? (
+        {/* {files && files.length > 0 ? (
           <PublicationContent
             files={files}
             showFullContent={showFullContent}
             style={styles.image_post}
           />
-        ) : // <View style={styles.postImagesContainer}>
+        ) :  
+        // <View style={styles.postImagesContainer}>
         //   <Pressable
         //     style={styles.postImagesContainerPresable}
         //     onPress={goToPost}>
@@ -158,11 +192,13 @@ export default function Publication({
         //     />
         //   </TouchableWithoutFeedback>
         // </View>
-        null}
+        null}*/}
         {/*Finaliza Foto de la publicaciòn*/}
 
         {/*Inicio de iconos de la publicaciòn*/}
+
         <View style={styles.icons_container}>
+          {/*        
           <View style={styles.icon_container}>
             <Image
               source={require('../../../assets/ojo_vista.png')}
@@ -186,14 +222,14 @@ export default function Publication({
               />
             </TouchableOpacity>
 
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={styles.icon_numbers_view_container}
               onPress={() =>
                 navigation.navigate('PostLikes', owner.display_name)
-              }> */}
+              }>
             <Counter style={styles.icon_numbers_view} value={reactions} />
-            {/* </TouchableOpacity> */}
-          </View>
+             </TouchableOpacity> 
+          </View> 
 
           <View style={styles.icon_container}>
             <TouchableOpacity onPress={getAndSetShowComments}>
@@ -218,11 +254,13 @@ export default function Publication({
               style={[styles.icon_post, styles.icon_mostrarMas]}
             />
           </View>
+       */}
         </View>
+
         {/*Fin de iconos de una publicaciòn*/}
 
         {/*Inicio de nombre de usuario y la descripciòn de la publicaciòn*/}
-        <CommentFormatter
+        {/* <CommentFormatter
           style={styles.description}
           comment={
             '(' +
@@ -233,11 +271,11 @@ export default function Publication({
             (post.text === '__post_text__' ? '' : post.text)
           }
           navigation={navigation}
-        />
+        /> */}
         {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
         {/*Inicia comentarios hacia la publicaciòn */}
-        {showComments ? (
+        {/* {showComments ? (
           loadingComments ? (
             <ActivityIndicator color={StylesConfiguration.color} />
           ) : (
@@ -253,19 +291,19 @@ export default function Publication({
                 />
               ))
           )
-        ) : null}
+        ) : null} */}
 
-        {firstTimeLoadingComments && commentsCount > 3 ? (
+        {/* {firstTimeLoadingComments && commentsCount > 3 ? (
           <TouchableOpacity onPress={getAndSetShowComments}>
             <Text style={styles.showMoreComments}>
               {commentsCount - 3} comentario
               {commentsCount === 4 ? '' : 's'} mas...
             </Text>
           </TouchableOpacity>
-        ) : null}
+        ) : null} */}
 
         {/*Inicia nuevo comentario hacia la publicaciòn */}
-        {savingComment ? (
+        {/* {savingComment ? (
           <ActivityIndicator color={StylesConfiguration.color} />
         ) : (
           <CommentInput
@@ -277,13 +315,13 @@ export default function Publication({
             style={styles.newComment}
             initialText={''}
           />
-        )}
+        )} */}
         {/*Fin de nuevo comentario hacia la publicaciòn */}
 
         {/*Inicia fecha*/}
-        <View style={styles.publicationDate}>
+        {/* <View style={styles.publicationDate}>
           <DateFormatter date={post.created_at} />
-        </View>
+        </View> */}
         {/*Finaliza fecha */}
       </View>
     </>
