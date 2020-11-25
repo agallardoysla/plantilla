@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
-  Pressable
+  Pressable,
 } from 'react-native';
 import {
   TouchableOpacity,
@@ -54,10 +54,12 @@ export default function Publication({
    * Esta función permite hacer las soliciutdes al servidor de los cambios y actualizar los estados
    */
   const updateData = () => {
-    posts_services.get(post.id).then(res => {
+    posts_services.get(post.id).then((res) => {
       console.log(res.data);
       setcommentsCount(res.data.comments.length ? res.data.comments.length : 0);
-      setReactions(res.data.posts_reactions.length ? res.data.posts_reactions.length : 0);
+      setReactions(
+        res.data.posts_reactions.length ? res.data.posts_reactions.length : 0,
+      );
     });
   };
 
@@ -78,7 +80,9 @@ export default function Publication({
   }, []);
 
   const getILiked = () => {
-    const reaction = postReactions.filter((reaction) => reaction.user_id === loggedUser.id);
+    const reaction = postReactions.filter(
+      (reaction) => reaction.user_id === loggedUser.id,
+    );
     reactionId = reaction.length > 0 ? reaction[0].id : 0;
     return reaction.length > 0;
   };
@@ -138,18 +142,23 @@ export default function Publication({
 
         {/*Inicia Foto de la publicaciòn */}
         {files.length > 0 ? (
-          <View style={styles.postImagesContainer}>
-            <Pressable
-              style={styles.postImagesContainerPresable}
-              onPress={goToPost}>
-              <PublicationContent
-                files={files}
-                showFullContent={showFullContent}
-                style={styles.image_post}
-              />
-            </TouchableWithoutFeedback>
-          </View>
-        ) : null}
+          <PublicationContent
+            files={files}
+            showFullContent={showFullContent}
+            style={styles.image_post}
+          />
+        ) : // <View style={styles.postImagesContainer}>
+        //   <Pressable
+        //     style={styles.postImagesContainerPresable}
+        //     onPress={goToPost}>
+        //     <PublicationContent
+        //       files={files}
+        //       showFullContent={showFullContent}
+        //       style={styles.image_post}
+        //     />
+        //   </TouchableWithoutFeedback>
+        // </View>
+        null}
         {/*Finaliza Foto de la publicaciòn*/}
 
         {/*Inicio de iconos de la publicaciòn*/}
