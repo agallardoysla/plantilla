@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import FormSearchInput from '../../components/FormSearchInput';
 import ListConversation from './components/ListConversation';
-import FormGoBack from '../../components/GoBackButton';
+import GoBackButton from '../../components/GoBackButton';
 import IconMessage from '../../components/IconMessage';
 import { getConversations } from '../../reducers/conversations';
 import { useSelector } from 'react-redux';
@@ -24,7 +24,7 @@ const MyConversations = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.row}>
-        <FormGoBack navigation={navigation} />
+        <GoBackButton navigation={navigation} />
         <IconMessage />
         <View />
       </View>
