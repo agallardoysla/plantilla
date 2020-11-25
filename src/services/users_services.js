@@ -2,9 +2,13 @@ import generic_service from './generic_service';
 
 const url = 'users/';
 
+const me = () => {
+  const dunno = generic_service.doGet(url + 'me/', true);
+  return dunno
+}
 export default {
   list: () => generic_service.doGet(url),
-  me: () => generic_service.doGet(url + 'me/', true),
+  me,
   getAccounts: () => generic_service.doGet(`${url}me/accounts/`),
   getContext: (query) => generic_service.doPut(`${url}me/context/`, query),
   getNotifications: () => generic_service.doGet(`${url}me/notifications/`),

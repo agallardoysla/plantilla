@@ -14,7 +14,7 @@ export default function MessageFormatter({message, navigation, style}) {
     const matches = message.match(postPattern);
     if (matches) {
       posts_services.get(matches[1]).then((res) => {
-        // console.log('post a rederizar', res.data);
+        // //console.log('post a rederizar', res.data);
         setPost(res.data);
       });
     }
@@ -25,7 +25,7 @@ export default function MessageFormatter({message, navigation, style}) {
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
 
   const toView = (file) => {
-    // console.log(file, i);
+    // //console.log(file, i);
     return isImage(file.url) ? (
       <Image
         source={{uri: file.url}}

@@ -6,6 +6,8 @@ import {AuthContext} from '../../navigation/AuthProvider';
 import MatInput from '../../components/MatInput';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/actions/session';
 
 export default function LoginScreen({navigation}) {
   const {loginEmail, loginFacebook, loginGoogle} = useContext(AuthContext);
@@ -36,7 +38,7 @@ export default function LoginScreen({navigation}) {
   };
 
   const updateCanSubmit = () => {
-    console.log('can submit: ', emailIsOk(email) && passwordIsOk(password));
+    //console.log('can submit: ', emailIsOk(email) && passwordIsOk(password));
     setCanSubmit(emailIsOk(email) && passwordIsOk(password));
   };
 
@@ -44,7 +46,7 @@ export default function LoginScreen({navigation}) {
     loginFunction().then(
       () => navigation.navigate('CreateProfile'),
       (error) => {
-        console.log(error.message);
+        //console.log(error.message);
         const newErrors = {...errors};
         if (error.message.includes('wrong-password')) {
           newErrors.password = 'Contraseña incorrecta';
@@ -66,8 +68,14 @@ export default function LoginScreen({navigation}) {
     }
   };
 
+  const dispatch = useDispatch();
+
+  const coso = () => {
+    dispatch(login())
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container || {}}>
       <Image
         style={styles.logo}
         source={require('../../assets/logo-home.png')}
@@ -105,7 +113,7 @@ export default function LoginScreen({navigation}) {
       />
       <FormButton
         buttonTitle="INGRESAR"
-        onPress={loginMail}
+        onPress={coso}
         style={canSubmit ? styles.canSubmit : styles.notCanSubmit}
         disabled={!canSubmit}
       />

@@ -18,7 +18,7 @@ class MatInput extends Component {
   }
 
   handleClickShowPassword = () => {
-    console.log(this.state.showPassword);
+    //console.log(this.state.showPassword);
     this.setState({showPassword: !this.state.showPassword});
   };
 

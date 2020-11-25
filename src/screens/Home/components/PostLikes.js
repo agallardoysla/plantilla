@@ -16,7 +16,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 const PostLikes = ({navigation, route}) => {
   //trae el nombre del usuario
-  console.log(route.params);
+  //console.log(route.params);
 
   const data = [
     {

@@ -13,14 +13,12 @@ export default function Providers() {
 
   return (
     <Provider store={store}>
-      <WebSocketProvider>
-        <MenuProvider>
-          <AuthProvider>
+      {/* <WebSocketProvider> */}
+        {/* <MenuProvider> */}
             <Routes />
-            <Toast ref={(ref) => Toast.setRef(ref)} />
-          </AuthProvider>
-        </MenuProvider>
-      </WebSocketProvider>
+            {/* <Toast ref={(ref) => Toast.setRef(ref)} /> */}
+        {/* </MenuProvider> */}
+      {/* </WebSocketProvider> */}
     </Provider>
   );
 }

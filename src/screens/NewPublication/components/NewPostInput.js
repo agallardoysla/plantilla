@@ -26,7 +26,7 @@ export default function NewPostInput({
         exclude: [],
         limit: maxSugestions,
       });
-      // console.log(context.data);
+      // //console.log(context.data);
       context.data = context.data.map(d => {
         return {
           user_id: d.id,
@@ -47,7 +47,7 @@ export default function NewPostInput({
   }, [sugestionsInput]);
 
   const selectSugestion = (sugestion) => {
-    console.log(sugestion);
+    //console.log(sugestion);
     setNewComment(
       newComment
         .slice(0, -(sugestionsInput.length + 1))

@@ -29,7 +29,7 @@ export default function PublishPublication({ route }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('[CARGANDO]:', images, video);
+    //console.log('[CARGANDO]:', images, video);
   }, []);
 
   const doPubliish = async () => {
@@ -42,7 +42,7 @@ export default function PublishPublication({ route }) {
         const result = await files_services.createPost(file.uri, file.ext);
         result = await result.json();
         filesIds.push(result.id);
-        console.log(i , "Count", paths.length);
+        //console.log(i , "Count", paths.length);
       }
       
       if (filesIds.length > 0) {

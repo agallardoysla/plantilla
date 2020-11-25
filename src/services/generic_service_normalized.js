@@ -22,24 +22,24 @@ const getConfig = async () => {
 
 const genericMethodWithData = (method) => async (url, data) => {
   const config = await getConfig();
-  console.log(method, api_config.normalizedBaseURL, url, data, config);
+  //console.log(method, api_config.normalizedBaseURL, url, data, config);
   let res;
   try {
     res = await axios_normalized[method.toLowerCase()](url, data, config);
   } catch (e) {
-    console.log(`Error ${method} ${url}: ${e}`);
+    //console.log(`Error ${method} ${url}: ${e}`);
   }
   return res;
 };
 
 const genericMethodNoData = (method) => async (url) => {
   const config = await getConfig();
-  console.log(method, api_config.normalizedBaseURL, url, config);
+  //console.log(method, api_config.normalizedBaseURL, url, config);
   let res;
   try {
     res = await axios_normalized[method.toLowerCase()](url, config);
   } catch (e) {
-    console.log(`Error ${method} ${url}: ${e}`);
+    //console.log(`Error ${method} ${url}: ${e}`);
   }
   return res;
 };

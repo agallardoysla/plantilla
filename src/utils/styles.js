@@ -1,10 +1,10 @@
 export default {
   buttonContainer: {
-    marginTop: 22,
+    marginTop: 0,
     width: 120,
     height: 43,
     backgroundColor: 'rgb(0,0,0)',
-    padding: 10,
+    padding: 0,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
@@ -18,12 +18,12 @@ export default {
     color: 'white',
   },
   patreon: {
-    marginTop: -14,
-    marginBottom: 21,
+    marginTop: 5,
+    marginBottom: 5,
     height: 32,
     width: 105,
     borderWidth: 0.8,
-    padding: 9,
+    padding: 0,
   },
   vipButton: {
     marginTop: 0,

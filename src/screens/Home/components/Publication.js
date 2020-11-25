@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+  Pressable
 } from 'react-native';
 import {
   TouchableOpacity,
@@ -138,7 +139,7 @@ export default function Publication({
         {/*Inicia Foto de la publicaciòn */}
         {files.length > 0 ? (
           <View style={styles.postImagesContainer}>
-            <TouchableWithoutFeedback
+            <Pressable
               style={styles.postImagesContainerPresable}
               onPress={goToPost}>
               <PublicationContent
@@ -227,7 +228,7 @@ export default function Publication({
         {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
         {/*Inicia comentarios hacia la publicaciòn */}
-        {/* {showComments ? (
+        {showComments ? (
           loadingComments ? (
             <ActivityIndicator color={StylesConfiguration.color} />
           ) : (
@@ -237,13 +238,13 @@ export default function Publication({
                 <PublicationComment
                   style={styles.publicationComments}
                   post={post}
-                  comment={comment}
+                  commentId={comment}
                   key={i}
                   navigation={navigation}
                 />
               ))
           )
-        ) : null} */}
+        ) : null}
 
         {firstTimeLoadingComments && commentsCount > 3 ? (
           <TouchableOpacity onPress={getAndSetShowComments}>

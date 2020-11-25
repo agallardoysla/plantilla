@@ -43,7 +43,7 @@ export const getGallery = async ({ quantity = 20, assetType = 'Photos' }: getGal
       return { gallery, hasMore };
     })
     .catch((err) => {
-      console.log('ERROR', err);
+      //console.log('ERROR', err);
       return { gallery: [], hasMore: false, error: err };
     });
 }

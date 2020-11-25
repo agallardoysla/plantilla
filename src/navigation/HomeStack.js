@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Image, StatusBar, StyleSheet, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, StatusBar, StyleSheet, View} from 'react-native';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { batch, useDispatch } from 'react-redux';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {batch, useDispatch} from 'react-redux';
 import posts_services from '../services/posts_services';
 import {setPosts} from '../reducers/posts';
 import search_services from '../services/search_services';
 import {setSearchedPosts} from '../reducers/searchedPosts';
 import {setSearchedProfiles} from '../reducers/searchedProfiles';
 import users_services from '../services/users_services';
-import { setNotifications } from '../reducers/notifications';
-import { setConversations } from '../reducers/conversations';
+import {setNotifications} from '../reducers/notifications';
+import {setConversations} from '../reducers/conversations';
 import chats_services from '../services/chats_services';
 import Loading from '../components/Loading';
 import {useSelector} from 'react-redux';
@@ -24,73 +24,75 @@ import NewPublicationGroup from './HomeGroups/NewPublicationGroup';
 import OtherProfileGroup from './HomeGroups/OtherProfileGroup';
 import MyConversationsGroup from './HomeGroups/MyConversationsGroup';
 import postGroup from './HomeGroups/PostGroup';
-import { getLoadingProfile, setLoadingProfile } from '../reducers/loadingProfile';
+import {getLoadingProfile, setLoadingProfile} from '../reducers/loadingProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getLoadingOtherProfile } from '../reducers/loadingOtherProfile';
-import { doSetPosts } from '../utils/reduxLoader';
+import {getLoadingOtherProfile} from '../reducers/loadingOtherProfile';
+import {doSetPosts} from '../utils/reduxLoader';
+import {MenuProvider} from 'react-native-popup-menu';
 
 const Tab = createBottomTabNavigator();
 
 const HomeStack = () => {
   const dispatch = useDispatch();
-  const user = useSelector(getLoggedUser);
+  const user = useSelector((state) => state.session.user);
   const [loading, setLoading] = useState(true);
   const loadingProfile = useSelector(getLoadingProfile);
   const loadingOtherProfile = useSelector(getLoadingOtherProfile);
-  const waitingLoadingTime = 25; // 17
-  const initHomePostsCount = 5;
+  const waitingLoadingTime = 1.5; // 17
+  const initHomePostsCount = 3;
 
   useEffect(() => {
     dispatch(setLoadingProfile(true));
   }, []);
 
-  useEffect(() => {
-    const init = async () => {
-      if (loadingProfile) {
-        setLoading(true);
-        let userId = user.id;
-        if (loadingOtherProfile) {
-          const backendUser = await users_services.me();
-          await AsyncStorage.setItem('local_token', backendUser.data.local_token);
-          dispatch(login(backendUser.data));
-          userId = backendUser.data.id;
-        }
-        setTimeout(() => {
-          setLoading(false);
-          dispatch(setLoadingProfile(false));
-        }, waitingLoadingTime * 1000);
-        // Cargar los posts de Home
-        posts_services.list(initHomePostsCount, 0).then((res) => {
-          batch(doSetPosts(res.data, dispatch));
-        });
-        // Cargar los posts de Busqueda
-        search_services.search({search_in: 'posts'}).then((res) => {
-          dispatch(setSearchedPosts(res.data.posts));
-        });
-        // Cargar los perfiles de Busqueda
-        search_services.search({search_in: 'users'}).then((res) => {
-          dispatch(setSearchedProfiles(res.data.users));
-        });
-        // Cargar los perfiles para compartir publicacion
-        // Cargar notificaciones
-        users_services.getNotifications().then((res) => {
-          dispatch(setNotifications(res.data));
-        });
-        // Cargar conversaciones
-        chats_services.list().then((res) => {
-          dispatch(setConversations(res.data));
-        });
-
-        try {
-          // Cargar reacciones al perfil propio
-          profiles_services.getReactions(userId).then((res) => {
-            dispatch(setReactions(res.data));
-          });
-        } catch (e) {
-          dispatch(setReactions([]));
-        }
+  const init = async () => {
+    if (loadingProfile) {
+      setLoading(true);
+      let userId = user.id;
+      if (loadingOtherProfile) {
+        const backendUser = await users_services.me();
+        await AsyncStorage.setItem('local_token', backendUser.data.local_token);
+        dispatch(login(backendUser.data));
+        userId = backendUser.data.id;
       }
-    };
+      setTimeout(() => {
+        setLoading(false);
+        dispatch(setLoadingProfile(false));
+      }, waitingLoadingTime * 1000);
+      // Cargar los posts de Home
+      posts_services.list(initHomePostsCount, 0).then((res) => {
+        batch(doSetPosts(res.data, dispatch));
+      });
+      // Cargar los posts de Busqueda
+      // search_services.search({search_in: 'posts'}).then((res) => {
+      //   dispatch(setSearchedPosts(res.data.posts));
+      // });
+      // Cargar los perfiles de Busqueda
+      // search_services.search({search_in: 'users'}).then((res) => {
+      //   dispatch(setSearchedProfiles(res.data.users));
+      // });
+      // Cargar los perfiles para compartir publicacion
+      // Cargar notificaciones
+      // users_services.getNotifications().then((res) => {
+      //   dispatch(setNotifications(res.data));
+      // });
+      // Cargar conversaciones
+      // chats_services.list().then((res) => {
+      //   dispatch(setConversations(res.data));
+      // });
+
+      try {
+        // Cargar reacciones al perfil propio
+        profiles_services.getReactions(userId).then((res) => {
+          dispatch(setReactions(res.data));
+        });
+      } catch (e) {
+        dispatch(setReactions([]));
+      }
+    }
+  };
+
+  useEffect(() => {
     init();
   }, [loadingProfile]);
 
@@ -124,8 +126,8 @@ const HomeStack = () => {
 
   const isLargeIcon = (routeName) => routeName === 'HomeGroup';
 
-  const screenOptions = ({ route }) => ({
-    tabBarIcon: ({ focused }) => {
+  const screenOptions = ({route}) => ({
+    tabBarIcon: ({focused}) => {
       let iconName;
       switch (route.name) {
         case 'HomeGroup':
@@ -165,12 +167,14 @@ const HomeStack = () => {
     },
   });
 
-  const HiddenButton = ({ pops }) => <View style={styles.empy} />;
+  const HiddenButton = ({pops}) => <View style={styles.empy} />;
 
   const unmountOnBlur = false; // resetea el estado del stack
 
-  return !loading && !loadingProfile ? (
-    <>
+  // return !loading && !loadingProfile ? (
+  // return <>
+  return (
+    <MenuProvider>
       <StatusBar backgroundColor="black" />
 
       <Tab.Navigator
@@ -179,38 +183,43 @@ const HomeStack = () => {
         tabBarOptions={tabBarOptions}
         screenOptions={screenOptions}>
         <Tab.Screen
-          name="ProfileGroup"
-          component={MyProfileGroup}
-          options={{ title: '', unmountOnBlur }}
-        />
-        <Tab.Screen
-          name="NotificationGroup"
-          component={NotificationsGroup}
-          options={{
-            title: '',
-            tabBarBadge: user.unread_notifications,
-            unmountOnBlur,
-          }}
-        />
-        <Tab.Screen
           name="HomeGroup"
           component={HomeGroup}
-          options={{ title: '', unmountOnBlur }}
+          options={{title: '', unmountOnBlur}}
         />
-        <Tab.Screen
-          name="SearchGroup"
-          component={SearchGroup}
-          options={{ title: '', unmountOnBlur }}
-        />
-        <Tab.Screen
-          name="NewPublicationGroup"
-          component={NewPublicationGroup}
-          options={({ route }) => ({
-            title: '',
-            tabBarVisible: route.name !== 'NewPublicationGroup',
-            unmountOnBlur,
-          })}
-        />
+        {/* <Tab.Screen
+        name="ProfileGroup"
+        component={MyProfileGroup}
+        options={{title: '', unmountOnBlur}}
+      />
+      <Tab.Screen
+        name="NotificationGroup"
+        component={NotificationsGroup}
+        options={{
+          title: '',
+          tabBarBadge: user.unread_notifications,
+          unmountOnBlur,
+        }}
+      />
+      <Tab.Screen
+        name="HomeGroup"
+        component={HomeGroup}
+        options={{title: '', unmountOnBlur}}
+      />
+      <Tab.Screen
+        name="SearchGroup"
+        component={SearchGroup}
+        options={{title: '', unmountOnBlur}}
+      />
+      <Tab.Screen
+        name="NewPublicationGroup"
+        component={NewPublicationGroup}
+        options={({route}) => ({
+          title: '',
+          tabBarVisible: route.name !== 'NewPublicationGroup',
+          unmountOnBlur,
+        })}
+      /> */}
 
         {/* Hidded screens */}
 
@@ -239,9 +248,7 @@ const HomeStack = () => {
           })}
         />
       </Tab.Navigator>
-    </>
-  ) : (
-    <Loading />
+    </MenuProvider>
   );
 };
 
