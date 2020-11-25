@@ -1,19 +1,13 @@
-import {
-  RECOVER_SESSION_FULFILLED,
-  RECOVER_SESSION_PENDING,
-} from '../actions/session';
+import {LOGIN_USER_FULFILLED, LOGIN_USER_PENDING} from '../actions/session';
 
 const defaultState = {
-  loading: false,
-  userExists: false,
-  user: {},
-  config: {},
+  allPosts: false,
 };
 
 export default function (state = defaultState, action) {
   switch (action.type) {
-    case RECOVER_SESSION_FULFILLED:
-      console.log('RECOVER_SESSION_FULFILLED payload: ', action.payload);
+    case LOGIN_USER_FULFILLED:
+      console.log('LOGIN_USER_FULFILLED payload: ', action.payload)
       return {
         ...state,
         user: action.payload.data,
@@ -21,7 +15,7 @@ export default function (state = defaultState, action) {
         config: action.payload.config,
         loading: false,
       };
-    case RECOVER_SESSION_PENDING:
+    case LOGIN_USER_PENDING:
       return {
         ...state,
         loading: true,

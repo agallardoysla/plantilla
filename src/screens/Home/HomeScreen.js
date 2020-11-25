@@ -12,84 +12,87 @@ import { doAddPosts } from '../../utils/reduxLoader';
 import { getShowSharePost } from '../../reducers/showSharePost';
 
 export default function HomeScreen({ navigation }) {
-  const [page, setPage] = useState(1);
-  const pages = [20, 10];
-  const posts = useSelector(getPosts);
-  const dispatch = useDispatch();
-  const [reloading, setReloading] = useState(false);
+  // const [page, setPage] = useState(1);
+  // const pages = [20, 10];
+  // const posts = useSelector(getPosts);
+  // const dispatch = useDispatch();
+  // const [reloading, setReloading] = useState(false);
 
 
-  const reloadPosts = () => {
-    // setReloading(true);
-    // setPage(1);
-    // posts_services.list(pages[0], 0).then((res) => {
-    //   dispatch(addPosts(res.data));
-    //   // setReloading(false);
-    // });
-  };
+  // const reloadPosts = () => {
+  //   // setReloading(true);
+  //   // setPage(1);
+  //   // posts_services.list(pages[0], 0).then((res) => {
+  //   //   dispatch(addPosts(res.data));
+  //   //   // setReloading(false);
+  //   // });
+  // };
 
-  const getPageOffset = (_page) => {
-    let res = 0;
-    for (var i = 0; i < _page; i++) {
-      res += pages[i];
-    }
-    return res;
-  };
+  // const getPageOffset = (_page) => {
+  //   let res = 0;
+  //   for (var i = 0; i < _page; i++) {
+  //     res += pages[i];
+  //   }
+  //   return res;
+  // };
 
-  const loadPosts = () => {
-    // setReloading(true);
-    posts_services
-      .list(
-        pages[Math.min(page, pages.length - 1)],
-        getPageOffset(Math.min(page, pages.length - 1)),
-      )
-      .then((res) => {
-        //console.log('nuevos posts', res.data.posts.length);
-        dispatch(doAddPosts(res.data, dispatch));
-        setPage(page + 1);
-        // setReloading(false);
-      });
-  };
+  // const loadPosts = () => {
+  //   // setReloading(true);
+  //   posts_services
+  //     .list(
+  //       pages[Math.min(page, pages.length - 1)],
+  //       getPageOffset(Math.min(page, pages.length - 1)),
+  //     )
+  //     .then((res) => {
+  //       //console.log('nuevos posts', res.data.posts.length);
+  //       dispatch(doAddPosts(res.data, dispatch));
+  //       setPage(page + 1);
+  //       // setReloading(false);
+  //     });
+  // };
 
-  const PublicationItem = ({ item, index }) => {
-    return (
-      <View style={styles.publication}>
-        <Publication postId={item} navigation={navigation} />
-        {index % 2 === 1 ? <Admob /> : null}
-      </View>
-    );
-  };
+  // const PublicationItem = ({ item, index }) => {
+  //   return (
+  //     <View style={styles.publication}>
+  //       <Publication postId={item} navigation={navigation} />
+  //       {index % 2 === 1 ? <Admob /> : null}
+  //     </View>
+  //   );
+  // };
 
-  const gotToMyConversations = () => {
-    navigation.navigate('MyConversationsGroup', {
-      screen: 'MyConversations',
-    });
-  };
+  // const gotToMyConversations = () => {
+  //   navigation.navigate('MyConversationsGroup', {
+  //     screen: 'MyConversations',
+  //   });
+  // };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.row_header}>
-        <TouchableOpacity onPress={gotToMyConversations}>
-          <Image
-            source={require('../../assets/sobre_amarillo.png')}
-            style={styles.sobre_amarillo}
-            resizeMode={'contain'}
-          />
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        data={posts}
-        onRefresh={() => reloadPosts()}
-        refreshing={reloading}
-        renderItem={PublicationItem}
-        onEndReachedThreshold={0.7}
-        onEndReached={loadPosts}
-        bouncesZoom={true}
-        keyExtractor={(item, index) => index.toString()}
-        style={styles.publications}
-      />
-      <SharePost />
-    </SafeAreaView>
+    <View>
+      <Text>HOME </Text>
+    </View>
+    // <SafeAreaView style={styles.container}>
+    //   <View style={styles.row_header}>
+    //     <TouchableOpacity onPress={gotToMyConversations}>
+    //       <Image
+    //         source={require('../../assets/sobre_amarillo.png')}
+    //         style={styles.sobre_amarillo}
+    //         resizeMode={'contain'}
+    //       />
+    //     </TouchableOpacity>
+    //   </View>
+    //   <FlatList
+    //     data={posts}
+    //     onRefresh={() => reloadPosts()}
+    //     refreshing={reloading}
+    //     renderItem={PublicationItem}
+    //     onEndReachedThreshold={0.7}
+    //     onEndReached={loadPosts}
+    //     bouncesZoom={true}
+    //     keyExtractor={(item, index) => index.toString()}
+    //     style={styles.publications}
+    //   />
+      /* <SharePost /> */
+    // </SafeAreaView>
   );
 }
 

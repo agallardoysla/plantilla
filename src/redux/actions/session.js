@@ -1,17 +1,17 @@
 import generic_service from "../../services/generic_service";
 
-export const LOGIN_USER = 'LOGIN_USER';
-export const LOGIN_USER_PENDING = 'LOGIN_USER_PENDING';
-export const LOGIN_USER_FULFILLED = 'LOGIN_USER_FULFILLED';
+export const RECOVER_SESSION = 'RECOVER_SESSION';
+export const RECOVER_SESSION_PENDING = 'RECOVER_SESSION_PENDING';
+export const RECOVER_SESSION_FULFILLED = 'RECOVER_SESSION_FULFILLED';
 export const LOADING = 'LOADING';
 
 const url = 'users/';
 
 //action creators
 
-export function login() {
+export function recoverSession() {
   return {
-    type: LOGIN_USER,
+    type: RECOVER_SESSION,
     payload: generic_service.doGet(url + 'me/', true),
   };
 }

@@ -5,7 +5,7 @@ import GenericProfile from './components/GenericProfile';
 
 //Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function Profile({navigation}) {
-  const user = useSelector(getLoggedUser);
+  const user = useSelector(state => state.session.user);
 
   return (
     <GenericProfile

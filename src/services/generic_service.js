@@ -6,13 +6,35 @@ import Cache from '../utils/Cache';
 
 /* Todo este modulo se usa solo cuando el usuario ya esta logueado con Firebase */
 
+export const getToken = async (forceJWT) => {
+  let token;
+  let account;
+  let isLocalToken = false;
+
+  try {
+    const _token = await AsyncStorage.getItem('local_token');
+    account = await AsyncStorage.getItem('account');
+    if (forceJWT || _token === null) {
+      token = await auth().currentUser.getIdToken(true);
+      console.log('using firebase token');
+      token = `${token}@${account}`;
+    } else {
+      token = _token;
+      isLocalToken = true;
+      console.log('using local_token');
+    }
+  } catch (e) {}
+
+  return `${isLocalToken ? 'LJWT' : 'JWT'} ${token}`;
+};
+
 const getConfig = async (forceJWT) => {
   return {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       // 'Access-Control-Allow-Origin': '*',
-      'Authorization': await Cache.getToken(forceJWT),
+      'Authorization': await getToken(forceJWT),
     },
   };
 };
@@ -35,6 +57,7 @@ const genericMethodNoData = (method) => async (url, forceJWT) => {
   try {
     res = await axios_v1[method.toLowerCase()](url, config);
   } catch (e) {
+    return e
   }
   return res;
 };
