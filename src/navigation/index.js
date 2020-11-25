@@ -15,10 +15,8 @@ export default function Providers() {
     <Provider store={store}>
       {/* <WebSocketProvider> */}
         {/* <MenuProvider> */}
-          {/* <AuthProvider> */}
             <Routes />
             {/* <Toast ref={(ref) => Toast.setRef(ref)} /> */}
-          {/* </AuthProvider> */}
         {/* </MenuProvider> */}
       {/* </WebSocketProvider> */}
     </Provider>

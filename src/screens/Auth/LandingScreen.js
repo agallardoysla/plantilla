@@ -4,8 +4,12 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import FilledButton from '../../components/FilledButton';
 import LinkButton from '../../components/LinkButtom';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import { login } from '../../redux/actions/session';
+import { useDispatch } from 'react-redux';
 
 export default function LandingScreen({navigation}) {
+  const dispatch = useDispatch();
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Bienvenido</Text>
@@ -16,7 +20,7 @@ export default function LandingScreen({navigation}) {
       />
       <FilledButton
         buttonTitle="Ya estoy registrado"
-        onPress={() => navigation.navigate('Login')}
+        onPress={() =>dispatch(login())}
       />
       <FilledButton
         buttonTitle="Usuario nuevo"
