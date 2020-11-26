@@ -51,6 +51,10 @@ export default function SearchScreen({ navigation }) {
     }
   };
 
+  const doAdvancedSearch = (params) => {
+    console.log(params);
+  };
+
   const ProfileSearchItem = ({ item }) => {
     return <ProfileSearched profile={item} navigation={navigation} />;
   };
@@ -86,6 +90,8 @@ export default function SearchScreen({ navigation }) {
         <FormSearchInput
           value={searchString}
           onChangeText={(e) => doShowSearch(e)}
+          showControls={true}
+          callback={doAdvancedSearch}
         />
       </View>
       {showSearch ? <SearchedUsers /> : <PostsFeed />}
@@ -109,8 +115,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginTop: 10,
     marginBottom: 10,
+    marginHorizontal: 5,
   },
 });
