@@ -4,15 +4,33 @@ import { useForm, Controller } from "react-hook-form";
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-picker';
-
+import users_services from '../../../services/users_services';
 
 export default function VerifyAccount() {
     const { register, control, handleSubmit, errors } = useForm();
     const [isFocused, setisFocused] = useState(false);
 
     const onSubmit = (data) => {
-        data.DNI = filePath
-        console.log(data)
+        console.log('====================================');
+        console.log(data);
+        console.log('====================================');
+        let formData = new FormData();
+        formData.append('file', filePath);
+        let idDni;
+        users_services.addFilesVerify(formData).then((resp)=>{
+            idDni = resp.data.id;
+            data.documentation = idDni;
+            data.legal_files = [];
+            users_services.addAccountVerify(data).then((resp)=>{
+                console.log('======= buena respuesta =============================');
+                console.log(resp.data);
+                console.log('====================================');
+            }).catch((error)=>{
+                console.log("oops", error);
+            })
+        }).catch((error)=>{
+            console.log("oops", error);
+        })
     }
 
     const labelStyle = {
@@ -35,37 +53,23 @@ export default function VerifyAccount() {
     const chooseFile = () => {
         let options = {
           title: 'Select Image',
-          customButtons: [
-            {
-              name: 'customOptionKey',
-              title: 'Choose Photo from Custom Option'
-            },
-          ],
           storageOptions: {
             skipBackup: true,
             path: 'images',
           },
         };
-        ImagePicker.showImagePicker(options, (response) => {
-          console.log('Response = ', response.fileName);
+        ImagePicker.showImagePicker(options, async (response) => {
           setFileName(response.fileName)
-    
           if (response.didCancel) {
             console.log('User cancelled image picker');
           } else if (response.error) {
             console.log('ImagePicker Error: ', response.error);
-          } else if (response.customButton) {
-            console.log(
-              'User tapped custom button: ',
-              response.customButton
-            );
-            alert(response.customButton);
           } else {
-            let source = response;
-            // You can also display the image using data:
-            // let source = {
-            //   uri: 'data:image/jpeg;base64,' + response.data
-            // };
+            let source = {
+                name: 'photo.png',
+                type: 'image/png',
+                uri: 'data:image/jpeg;base64,' + response.data
+            }
             setFilePath(source);
           }
         });
@@ -93,7 +97,7 @@ export default function VerifyAccount() {
                     rules={{ required: true, pattern:  /^[a-z ,.'-]+$/i}}
                     defaultValue=""
                 />
-                {errors.name && <Text style={{color:"red"}}>This is required.</Text>}
+                {errors.name && <Text style={{color:"red"}}>Ingrese un nombre válido.</Text>}
                 <Controller
                     control={control}
                     render={({ onChange, onBlur, value }) => (
@@ -106,11 +110,11 @@ export default function VerifyAccount() {
                             value={value}
                         />
                     )}
-                    name="lastname"
+                    name="last_name"
                     rules={{ required: true, pattern:  /^[a-z ,.'-]+$/i}}
                     defaultValue=""
                 />
-                {errors.lastname && <Text style={{color:"red"}}>This is required.</Text>}
+                {errors.last_name && <Text style={{color:"red"}}>Ingrese un apellido válido.</Text>}
                  <Controller
                     control={control}
                     render={({ onChange, onBlur, value }) => (
@@ -127,7 +131,7 @@ export default function VerifyAccount() {
                     rules={{ required: true ,pattern: EMAIL_REGEX}}
                     defaultValue=""
                 />
-                {errors.email && <Text style={{color:"red"}}>This is required.</Text>}
+                {errors.email && <Text style={{color:"red"}}>Ingrese un correo válido.</Text>}
                 <Controller
                     control={control}
                     render={({ onChange, onBlur, value }) => (
@@ -140,7 +144,7 @@ export default function VerifyAccount() {
                             value={value}
                         />
                     )}
-                    name="alias"
+                    name="nickname"
                     defaultValue=""
                 />
                 <Text style={{color:"white", marginTop: 30, marginBottom: 15,  fontSize:15}}>Indicanos tu profesion o que actividad realizas</Text>
@@ -156,7 +160,7 @@ export default function VerifyAccount() {
                             value={value}
                         />
                     )}
-                    name="profesion"
+                    name="professional_info"
                     defaultValue=""
                 />
             </View>

@@ -1,4 +1,5 @@
 import generic_service from './generic_service';
+import axios from 'react-native-axios';
 
 const url = 'users/';
 
@@ -26,4 +27,7 @@ export default {
   cancelBlockUser: (userId) => generic_service.doDelete(`${url}${userId}/block/`),
   followerVip: (userId) => generic_service.doGet(`${url}${userId}/vip/`),
   removeFollowerVip: (userId) => generic_service.doDelete(`${url}${userId}/vip/`),
+  // adding user verify
+  addAccountVerify: (data) => generic_service.doPost(`${url}me/verify/`, data),
+  addFilesVerify: (data) => generic_service.doPostFile(`${url}me/legalfiles/`, data),
 };

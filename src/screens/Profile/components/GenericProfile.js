@@ -26,60 +26,60 @@ export default function GenericProfile({ navigation, isLoggedUser }) {
   const [usersPosts, setUsersPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadPost();
-  }, []);
+  // useEffect(() => {
+  //   loadPost();
+  // }, []);
 
-  const loadPost = () => {
-    setLoading(true)
-    users_services.listPosts(localUser.id).then((res) => {
-      let postsPaginated = [];
-      // Se paginan los post de acuerdo a la cantidad de columnas
-      res.data.forEach((p, i) => {
-        // si se llega a (i % numColumns === 0) se agrega una nueva pagina
-        if (i % numColumns === 0) {
-          postsPaginated.push([]);
-        }
-        // siempre se agregan los posts en la ultima fila que se agrego
-        postsPaginated[postsPaginated.length - 1].push(p);
-        setLoading(false)
-      });
-      setUsersPosts(postsPaginated);
-    });
-  };
+  // const loadPost = () => {
+  //   setLoading(true)
+  //   users_services.listPosts(localUser.id).then((res) => {
+  //     let postsPaginated = [];
+  //     // Se paginan los post de acuerdo a la cantidad de columnas
+  //     res.data.forEach((p, i) => {
+  //       // si se llega a (i % numColumns === 0) se agrega una nueva pagina
+  //       if (i % numColumns === 0) {
+  //         postsPaginated.push([]);
+  //       }
+  //       // siempre se agregan los posts en la ultima fila que se agrego
+  //       postsPaginated[postsPaginated.length - 1].push(p);
+  //       setLoading(false)
+  //     });
+  //     setUsersPosts(postsPaginated);
+  //   });
+  // };
 
-  const goToPost = (post) => () => {
-    navigation.navigate('PostGroup', {
-      screen: 'PublicationDetails',
-      params: {
-        post,
-      },
-    });
-  };
+  // const goToPost = (post) => () => {
+  //   navigation.navigate('PostGroup', {
+  //     screen: 'PublicationDetails',
+  //     params: {
+  //       post,
+  //     },
+  //   });
+  // };
 
-  const UserPostItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      {item.map((post, i) => (
-        <View style={styles.item} key={i}>
-          <TouchableOpacity
-            onPress={goToPost(post)}
-            style={styles.itemImageContainer}>
-            <Image
-              source={{
-                uri: post.files_with_urls[0].url_half ? post.files_with_urls[0].url_half : post.files_with_urls[0].url,
-              }}
-              style={styles.itemImage}
-              fadeDuration={0}
-            />
-          </TouchableOpacity>
-        </View>
-      ))}
-    </View>
-  );
+  // const UserPostItem = ({ item }) => (
+  //   <View style={styles.itemContainer}>
+  //     {item.map((post, i) => (
+  //       <View style={styles.item} key={i}>
+  //         <TouchableOpacity
+  //           onPress={goToPost(post)}
+  //           style={styles.itemImageContainer}>
+  //           <Image
+  //             source={{
+  //               uri: post.files_with_urls[0].url_half ? post.files_with_urls[0].url_half : post.files_with_urls[0].url,
+  //             }}
+  //             style={styles.itemImage}
+  //             fadeDuration={0}
+  //           />
+  //         </TouchableOpacity>
+  //       </View>
+  //     ))}
+  //   </View>
+  // );
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.profileData}>
+      {/* <View style={styles.profileData}>
         <ProfileLeftColumn
           style={[styles.profileDataColumn, styles.columnLeft]}
           user={localUser}
@@ -114,7 +114,7 @@ export default function GenericProfile({ navigation, isLoggedUser }) {
           renderItem={UserPostItem}
           keyExtractor={(item, index) => index.toString()}
         />
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 }
