@@ -4,12 +4,16 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import FilledButton from '../../components/FilledButton';
 import LinkButton from '../../components/LinkButtom';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { login } from '../../redux/actions/session';
-import { useDispatch } from 'react-redux';
+import {login} from '../../redux/actions/session';
+import {useDispatch} from 'react-redux';
+import auth from '@react-native-firebase/auth';
 
 export default function LandingScreen({navigation}) {
   const dispatch = useDispatch();
-
+  const directLogin = async () => {
+    console.log('login')
+    await auth().signInWithEmailAndPassword("franciscomolinaya@gmail.com", "265813frank");
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Bienvenido</Text>
@@ -20,7 +24,7 @@ export default function LandingScreen({navigation}) {
       />
       <FilledButton
         buttonTitle="Ya estoy registrado"
-        onPress={() =>dispatch(login())}
+        onPress={() => navigation.navigate('Login')}
       />
       <FilledButton
         buttonTitle="Usuario nuevo"

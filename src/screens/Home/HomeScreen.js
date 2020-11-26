@@ -12,10 +12,11 @@ import {doAddPosts} from '../../utils/reduxLoader';
 import {getShowSharePost} from '../../reducers/showSharePost';
 import {addToFeed, fetchFeed} from '../../redux/actions/feed';
 import Loading from '../../components/Loading';
+import auth from '@react-native-firebase/auth';
 
 export default function HomeScreen({navigation}) {
   const [page, setPage] = useState(1);
-  const pages = [20, 10];
+  const pages = [0, 10];
 
   const dispatch = useDispatch();
   const feed = useSelector((state) => state.feed.feed);
@@ -88,6 +89,8 @@ export default function HomeScreen({navigation}) {
         feed.length > 0 && (
           <>
             <View style={styles.row_header}>
+            <Button title="Logout" onPress={() =>  auth().signOut()}/>
+
               <TouchableOpacity onPress={gotToMyConversations}>
                 <Image
                   source={require('../../assets/sobre_amarillo.png')}

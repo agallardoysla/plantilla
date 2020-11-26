@@ -45,7 +45,7 @@ class ProgressiveImage extends React.Component {
 
     return (
       <TouchableWithoutFeedback onPress={onPress} on>
-      <View style={styles.container} useNativeDriver={true}>
+      <View style={{...styles.container}} useNativeDriver={true}>
         <Animated.Image
           {...props}
           source={thumbnailSource}

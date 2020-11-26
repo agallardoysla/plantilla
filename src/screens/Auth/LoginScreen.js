@@ -8,6 +8,7 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/actions/session';
+import session from '../../utils/session';
 
 export default function LoginScreen({navigation}) {
   const {loginEmail, loginFacebook, loginGoogle} = useContext(AuthContext);
@@ -43,6 +44,7 @@ export default function LoginScreen({navigation}) {
   };
 
   const doLogin = (loginFunction) => () => {
+    console.log("dologin")
     loginFunction().then(
       () => navigation.navigate('CreateProfile'),
       (error) => {
@@ -64,15 +66,11 @@ export default function LoginScreen({navigation}) {
 
   const loginMail = () => {
     if (canSubmit) {
-      doLogin(() => loginEmail(email, password))();
+      doLogin(() => session.loginEmail(email, password))();
     }
   };
 
   const dispatch = useDispatch();
-
-  const coso = () => {
-    dispatch(login())
-  }
 
   return (
     <SafeAreaView style={styles.container || {}}>
@@ -113,7 +111,7 @@ export default function LoginScreen({navigation}) {
       />
       <FormButton
         buttonTitle="INGRESAR"
-        onPress={coso}
+        onPress={() => dispatch(login(email, password))}
         style={canSubmit ? styles.canSubmit : styles.notCanSubmit}
         disabled={!canSubmit}
       />

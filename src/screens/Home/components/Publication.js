@@ -25,7 +25,9 @@ import PublishPublication from '../../NewPublication/components/PublishPublicati
 import PublicationActions from './PublicationActions';
 import files_services from '../../../services/files_services';
 import {getFiles} from '../../../reducers/files';
-import { isDate } from 'moment';
+import {isDate} from 'moment';
+import PublicationComment from './PublicationComment';
+import ProgressiveImage from '../../../components/ProgressiveImage';
 
 let window = Dimensions.get('window');
 
@@ -34,7 +36,6 @@ export default function Publication({
   post,
   isFeed,
   postReactions,
-  owner,
   ownerProfile,
   ownerPhoto,
   loggedUser,
@@ -46,10 +47,8 @@ export default function Publication({
   newCommentCallback,
   navigation,
 }) {
-  // console.log('post', post);
-  const {id, files_with_urls} = post;
-
-
+  const {id, files_with_urls, comments, user_owner} = post;
+  console.log('user_owner', user_owner);
 
   /**
    * Estados agregados para actualzar internamente los contadores de reaciones y comentarios
@@ -111,6 +110,39 @@ export default function Publication({
           </View>
         )}
 
+         <TouchableOpacity onPress={()=>{}}> 
+            <View style={styles.ownerData}>
+              {user_owner.account_verified ? (
+                <Image
+                  source={require('../../../assets/tilde.png')}
+                  style={styles.ownerVerified}
+                />
+              ) : null}
+              <View
+                style={[
+                  styles.ownerDisplayNameContainer,
+                  user_owner.account_verified
+                    ? styles.ownerDisplayNameVerified
+                    : styles.ownerDisplayNameNotVerified,
+                ]}>
+                <Text style={styles.ownerDisplayName}>
+                  {' '}
+                  @{user_owner.display_name}{' '}
+                </Text>
+              </View>
+              <ProgressiveImage
+                source={
+                  user_owner.photo !== null
+                    ? {uri: user_owner.photo}
+                    : require('../../../assets/pride-dog_1.png')
+                }
+                resizeMode="cover"
+                style={styles.image_profile}
+                fadeDuration={0}
+                thumbnailSource={require('../../../assets/FC_Logo.png')}
+              />
+            </View>
+              </TouchableOpacity>
         <TouchableOpacity>
           <PublicationContent
             id={id}
@@ -123,39 +155,8 @@ export default function Publication({
           />
         </TouchableOpacity>
 
-        {/* <TouchableOpacity onPress={goToOwnerProfile}>
-            <View style={styles.ownerData}>
-              {owner.account_verified ? (
-                <Image
-                  source={require('../../../assets/tilde.png')}
-                  style={styles.ownerVerified}
-                />
-              ) : null}
-              <View
-                style={[
-                  styles.ownerDisplayNameContainer,
-                  owner.account_verified
-                    ? styles.ownerDisplayNameVerified
-                    : styles.ownerDisplayNameNotVerified,
-                ]}>
-                <Text style={styles.ownerDisplayName}>
-                  {' '}
-                  @{owner.display_name}{' '}
-                </Text>
-              </View>
-              <Image
-                source={
-                  ownerPhoto
-                    ? {uri: ownerPhoto.url_small}
-                    : require('../../../assets/pride-dog_1.png')
-                }
-                resizeMode="cover"
-                style={styles.image_profile}
-                fadeDuration={0}
-              />
-            </View>
-          </TouchableOpacity>
-       */}
+
+       
         {/* </View> */}
 
         {/*Finaliza Nombre de usuario como encabezado*/}
@@ -262,23 +263,18 @@ export default function Publication({
         {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
         {/*Inicia comentarios hacia la publicaciòn */}
-        {/* {showComments ? (
-          loadingComments ? (
-            <ActivityIndicator color={StylesConfiguration.color} />
-          ) : (
-            comments
-              .slice(-3)
-              .map((comment, i) => (
-                <PublicationComment
-                  style={styles.publicationComments}
-                  post={post}
-                  commentId={comment}
-                  key={i}
-                  navigation={navigation}
-                />
-              ))
-          )
-        ) : null} */}
+        {
+          comments && (comments.map((comment, i)=>{
+            return <PublicationComment
+            style={styles.publicationComments}
+            post={post}
+            commentId={comment}
+            key={i}
+            navigation={navigation}
+          />
+          }))
+        }
+
 
         {/* {firstTimeLoadingComments && commentsCount > 3 ? (
           <TouchableOpacity onPress={getAndSetShowComments}>
@@ -329,7 +325,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 5,
-    margin: 25
+    margin: 25,
   },
   ownerData: {
     flexDirection: 'row',
