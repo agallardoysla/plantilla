@@ -12,6 +12,9 @@ import SelectAccount from '../../screens/Profile/SubScreens/SelectAccount';
 import NewProfilePhoto from '../../screens/Profile/SubScreens/NewProfilePhoto';
 import ViewNewImage from '../../screens/Camera/ViewNewImage';
 
+import VerifyAccount from '../../screens/Profile/SubScreens/VerifyAccount';
+import VerifyAccountText from '../../screens/Profile/SubScreens/VerifyAccountText';
+
 export default function MyProfileGroup() {
   const Stack = createStackNavigator();
 
@@ -32,6 +35,8 @@ export default function MyProfileGroup() {
       <Stack.Screen name="MyAccount" component={MyAccount} />
       <Stack.Screen name="SelectAccount" component={SelectAccount} />
       <Stack.Screen name="CreateNewAccount" component={CreateNewAccount} />
+      <Stack.Screen name="VerifyAccount" component={VerifyAccount} />
+      <Stack.Screen name="VerifyAccountText" component={VerifyAccountText} />
     </Stack.Navigator>
   );
 };

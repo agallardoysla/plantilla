@@ -72,7 +72,7 @@ export default function HomeScreen({ navigation }) {
         <Text>HOME </Text>
       </View>
       <View>
-      <TouchableOpacity onPress={() => console.log('das')}>
+      <TouchableOpacity onPress={() => navigation.navigate('VerifyAccount')}>
            <Image
              source={require('../../assets/sobre_amarillo.png')}
              style={styles.sobre_amarillo}

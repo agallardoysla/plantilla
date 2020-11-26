@@ -18,7 +18,7 @@ export default function Routes() {
 
   return (
     <NavigationContainer>
-      {!checkingForUser ? (
+      {checkingForUser ? (
         <Loading message="Verificando datos de sesion" />
       ) : userExists ? (
         <HomeStack />
