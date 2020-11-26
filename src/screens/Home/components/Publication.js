@@ -147,7 +147,7 @@ export default function Publication({
                 showFullContent={showFullContent}
                 style={styles.image_post}
               />
-            </TouchableWithoutFeedback>
+            </Pressable>
           </View>
         ) : null}
         {/*Finaliza Foto de la publicaciòn*/}

@@ -29,6 +29,10 @@ export default function SelectAccount({navigation}) {
       label: 'Crear nueva cuenta',
       action: () => navigation.navigate('CreateNewAccount'),
     },
+    {
+      label: 'editar perfil',
+      action: () => navigation.navigate('VerifyAccount'),
+    },
   ].slice(0, 5);
 
   return (

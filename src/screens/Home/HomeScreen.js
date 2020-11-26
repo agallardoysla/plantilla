@@ -14,7 +14,7 @@ import { getShowSharePost } from '../../reducers/showSharePost';
 export default function HomeScreen({ navigation }) {
   // const [page, setPage] = useState(1);
   // const pages = [20, 10];
-  // const posts = useSelector(getPosts);
+  const posts = useSelector(getPosts);
   // const dispatch = useDispatch();
   // const [reloading, setReloading] = useState(false);
 
@@ -67,10 +67,20 @@ export default function HomeScreen({ navigation }) {
   // };
 
   return (
-    <View>
-      <Text>HOME </Text>
-    </View>
-    // <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View>
+        <Text>HOME </Text>
+      </View>
+      <View>
+      <TouchableOpacity onPress={() => console.log('das')}>
+           <Image
+             source={require('../../assets/sobre_amarillo.png')}
+             style={styles.sobre_amarillo}
+             resizeMode={'contain'}
+           />
+      </TouchableOpacity>
+      </View>
+    </SafeAreaView>
     //   <View style={styles.row_header}>
     //     <TouchableOpacity onPress={gotToMyConversations}>
     //       <Image
