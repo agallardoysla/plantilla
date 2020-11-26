@@ -1,3 +1,4 @@
+import { fetchPostDetails } from "../../../redux/actions/postDetails";
 
 const goToOwnerProfile = () => {
   navigation.navigate('OtherProfileGroup', {
@@ -47,11 +48,13 @@ const goToOwnerProfile = () => {
     }
   };
 
-  const goToPost = (id, navigation) => {
+  const goToPost = (post, navigation) => {
+    // dispatch(fetchPostDetails(id))""
+
     navigation.navigate('PostGroup', {
       screen: 'PublicationDetails',
       params: {
-        id,
+        post,
       },
     });
   };

@@ -5,7 +5,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 export default function GoBackButton({navigation, style}) {
   return (
     <TouchableOpacity
-      onPress={navigation.goBack}
+      onPress={() => navigation.goBack()}
       style={[styles.container, style]}>
       <Image
         style={styles.boton_back}

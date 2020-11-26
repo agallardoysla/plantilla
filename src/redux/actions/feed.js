@@ -4,6 +4,10 @@ import utils from '../../utils/utils';
 export const FETCH_FEED = 'FETCH_FEED';
 export const FETCH_FEED_PENDING = 'FETCH_FEED_PENDING';
 export const FETCH_FEED_FULFILLED = 'FETCH_FEED_FULFILLED';
+
+export const ADD_TO_FEED = 'ADD_TO_FEED';
+export const ADD_TO_FEED_PENDING = 'ADD_TO_FEED_PENDING';
+export const ADD_TO_FEED_FULFILLED = 'ADD_TO_FEED_FULFILLED';
 export const LOADING = 'LOADING';
 
 const url = 'users/';
@@ -18,5 +22,14 @@ export function fetchFeed(page, pages) {
       utils.getPageOffset(Math.min(page, pages.length - 1), pages),
     ),
   };
-  
+}
+
+export function addToFeed(page, pages) {
+  return {
+    type: ADD_TO_FEED,
+    payload: posts_services.list(
+      pages[Math.min(page, pages.length - 1)],
+      utils.getPageOffset(Math.min(page, pages.length - 1), pages),
+    ),
+  };
 }

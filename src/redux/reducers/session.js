@@ -15,7 +15,6 @@ const defaultState = {
 export default function (state = defaultState, action) {
   switch (action.type) {
     case RECOVER_SESSION_FULFILLED:
-      console.log('RECOVER_SESSION_FULFILLED payload: ', action.payload.data);
       return {
         ...state,
         user: action.payload.data,

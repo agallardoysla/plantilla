@@ -41,7 +41,6 @@ const HomeStack = () => {
   const waitingLoadingTime = 1.5; // 17
   const initHomePostsCount = 3;
 
-  console.log('user', user)
   // useEffect(() => {
   //   dispatch(setLoadingProfile(true));
   // }, []);

@@ -1,9 +1,14 @@
-import {FETCH_FEED_FULFILLED, FETCH_FEED_PENDING} from '../actions/feed';
+import {
+  FETCH_FEED_FULFILLED,
+  FETCH_FEED_PENDING,
+  ADD_TO_FEED_PENDING,
+  ADD_TO_FEED_FULFILLED,
+} from '../actions/feed';
 
 const defaultState = {
   fetching: false,
+  addingToFeed: false,
   feed: [],
-  feedFiles: [],
 };
 
 export default function (state = defaultState, action) {
@@ -12,13 +17,22 @@ export default function (state = defaultState, action) {
       return {
         ...state,
         feed: action.payload.data,
-        fetching: false
-
+        fetching: false,
       };
     case FETCH_FEED_PENDING:
       return {
         ...state,
         fetching: true,
+      };
+    case ADD_TO_FEED_FULFILLED:
+      return {
+        ...state,
+        feed: [...state.feed, ...action.payload.data],
+      };
+    case ADD_TO_FEED_PENDING:
+      return {
+        ...state,
+        addingToFeed: true,
       };
     default:
       return state;

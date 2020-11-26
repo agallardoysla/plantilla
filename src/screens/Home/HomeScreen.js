@@ -10,7 +10,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import SharePost from './components/SharePost';
 import {doAddPosts} from '../../utils/reduxLoader';
 import {getShowSharePost} from '../../reducers/showSharePost';
-import {fetchFeed} from '../../redux/actions/feed';
+import {addToFeed, fetchFeed} from '../../redux/actions/feed';
+import Loading from '../../components/Loading';
 
 export default function HomeScreen({navigation}) {
   const [page, setPage] = useState(1);
@@ -56,6 +57,10 @@ export default function HomeScreen({navigation}) {
     //   });
   };
 
+  const addPosts = () => {
+    dispatch(addToFeed(page, pages))
+  }
+
   React.useEffect(() => {
     loadPosts();
   }, []);
@@ -68,46 +73,47 @@ export default function HomeScreen({navigation}) {
   //   );
   // };
 
-   const gotToMyConversations = () => {
-     navigation.navigate('MyConversationsGroup', {
-       screen: 'MyConversations',
-     });
-   };
+  const gotToMyConversations = () => {
+    navigation.navigate('MyConversationsGroup', {
+      screen: 'MyConversations',
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.row_header}>
-
-      <TouchableOpacity onPress={gotToMyConversations}>
-        <Image
-          source={require('../../assets/sobre_amarillo.png')}
-          style={styles.sobre_amarillo}
-          resizeMode={'contain'}
-        />
-      </TouchableOpacity>
-      </View>
       {fetchingFeed ? (
-        <Text>Loading</Text>
-      ) : (
-        feed && (
-          <FlatList
-            data={feed}
-            // onRefresh={() => reloadPosts()}
-            // refreshing={reloading}
-            renderItem={({item, index}) => (
-              <Publication
-                key={`${item.id}-${index}`}
-                post={item}
-                isFeed
-                navigation={navigation}
-              />
-            )}
-             onEndReachedThreshold={0.7}
-            // onEndReached={() =>loadPosts()}
-            // bouncesZoom={true}
-            keyExtractor={(item, index) => index.toString()}
-            style={styles.publications}
-          />
+        <Loading/>
+        ) : (
+        feed && feed.length > 0 && (
+          <>
+            <View style={styles.row_header}>
+              <TouchableOpacity onPress={gotToMyConversations}>
+                <Image
+                  source={require('../../assets/sobre_amarillo.png')}
+                  style={styles.sobre_amarillo}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              data={feed}
+              // onRefresh={() => reloadPosts()}
+              // refreshing={reloading}
+              renderItem={({item, index}) => (
+                <Publication
+                  key={`${item.id}-${index}`}
+                  post={item}
+                  isFeed
+                  navigation={navigation}
+                />
+              )}
+              onEndReachedThreshold={0.7}
+              onEndReached={() =>addPosts()}
+              //bouncesZoom={true}
+              keyExtractor={(item, index) => index.toString()}
+              style={styles.publications}
+            />
+          </>
         )
       )}
     </SafeAreaView>

@@ -25,6 +25,7 @@ import PublishPublication from '../../NewPublication/components/PublishPublicati
 import PublicationActions from './PublicationActions';
 import files_services from '../../../services/files_services';
 import {getFiles} from '../../../reducers/files';
+import { isDate } from 'moment';
 
 let window = Dimensions.get('window');
 
@@ -46,19 +47,8 @@ export default function Publication({
   navigation,
 }) {
   // console.log('post', post);
-  const {id, user_owner, comments, files_with_urls} = post;
-  const {
-    account_verified,
-    display_name,
-    first_name,
-    last_name,
-    photo,
-    user_id,
-  } = user_owner;
+  const {id, files_with_urls} = post;
 
-  const files = files_with_urls.map(fileObj => fileObj.url);
-  console.log('files', files_with_urls)
-  const commentsLegth = comments.length;
 
 
   /**
@@ -121,18 +111,15 @@ export default function Publication({
           </View>
         )}
 
-        <TouchableOpacity
-          onPress={() => PublicationActions.goToPost(id, navigation)}>
-          <Text style={{color: 'white'}}>{`id: ${id}`}</Text>
-          <Text style={{color: 'white'}}>{`user id: ${user_id}`}</Text>
-          <Text
-            style={{
-              color: 'white',
-            }}>{`comments length: ${commentsLegth}`}</Text>
+        <TouchableOpacity>
           <PublicationContent
+            id={id}
             files={files_with_urls}
             showFullContent={true}
             style={styles.image_post}
+            navigation={navigation}
+            isFeed={isFeed}
+            post={post}
           />
         </TouchableOpacity>
 
@@ -338,11 +325,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   upperBar: {
-    height: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 5,
+    margin: 25
   },
   ownerData: {
     flexDirection: 'row',

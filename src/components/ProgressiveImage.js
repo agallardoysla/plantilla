@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   imageOverlay: {
@@ -10,7 +11,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   container: {
-    backgroundColor: '#e1e4e8',
+    backgroundColor: '#101010',
   },
 });
 
@@ -22,12 +23,14 @@ class ProgressiveImage extends React.Component {
   handleThumbnailLoad = () => {
     Animated.timing(this.thumbnailAnimated, {
       toValue: 1,
+      useNativeDriver: true,
     }).start();
   }
 
   onImageLoad = () => {
     Animated.timing(this.imageAnimated, {
       toValue: 1,
+      useNativeDriver: true
     }).start();
   }
 
@@ -36,11 +39,13 @@ class ProgressiveImage extends React.Component {
       thumbnailSource,
       source,
       style,
+      onPress,
       ...props
     } = this.props;
 
     return (
-      <View style={styles.container}>
+      <TouchableWithoutFeedback onPress={onPress} on>
+      <View style={styles.container} useNativeDriver={true}>
         <Animated.Image
           {...props}
           source={thumbnailSource}
@@ -55,6 +60,7 @@ class ProgressiveImage extends React.Component {
           onLoad={this.onImageLoad}
         />
       </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

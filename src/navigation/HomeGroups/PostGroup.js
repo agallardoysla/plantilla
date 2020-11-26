@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import PublicationDetails from '../../screens/Home/components/PublicationDetails';
 import PostLikes from '../../screens/Home/components/PostLikes';
+import Publication from '../../screens/Home/components/Publication'
 import { View } from 'react-native';
 
 export default function postGroup() {
