@@ -22,7 +22,7 @@ export default function HomeScreen({navigation}) {
   const fetchingFeed = useSelector((state) => state.feed.fetching);
   // const posts = useSelector(getPosts);
   // const dispatch = useDispatch();
-  // const [reloading, setReloading] = useState(false);
+  // // const [reloading, setReloading] = useState(false);
 
   // const reloadPosts = () => {
   //   // setReloading(true);
@@ -58,8 +58,8 @@ export default function HomeScreen({navigation}) {
   };
 
   const addPosts = () => {
-    dispatch(addToFeed(page, pages))
-  }
+    dispatch(addToFeed(page, pages));
+  };
 
   React.useEffect(() => {
     loadPosts();
@@ -82,9 +82,10 @@ export default function HomeScreen({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       {fetchingFeed ? (
-        <Loading/>
-        ) : (
-        feed && feed.length > 0 && (
+        <Loading />
+      ) : (
+        feed &&
+        feed.length > 0 && (
           <>
             <View style={styles.row_header}>
               <TouchableOpacity onPress={gotToMyConversations}>
@@ -97,7 +98,7 @@ export default function HomeScreen({navigation}) {
             </View>
             <FlatList
               data={feed}
-              // onRefresh={() => reloadPosts()}
+              //  onRefresh={() => loadPosts()}
               // refreshing={reloading}
               renderItem={({item, index}) => (
                 <Publication
@@ -108,8 +109,8 @@ export default function HomeScreen({navigation}) {
                 />
               )}
               onEndReachedThreshold={0.7}
-              onEndReached={() =>addPosts()}
-              //bouncesZoom={true}
+              onEndReached={() => addPosts()}
+              bouncesZoom={true}
               keyExtractor={(item, index) => index.toString()}
               style={styles.publications}
             />
