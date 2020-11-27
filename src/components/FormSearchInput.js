@@ -14,7 +14,7 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
   const [distance, setDistance] = useState(100);
   const [ageStart, setAgeStart] = useState(14);
   const [ageEnd, setAgeEnd] = useState(75);
-  const [shareFriends, setShareFriends] = useState(null);
+  const [related, setRelated] = useState(null);
   
   const availablesGenders = {
     MALE: 'MALE',
@@ -31,14 +31,20 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
     setDistance(low);
   }, []);
 
-  const handleValueChange = useCallback((low, high) => {
+  const handleAgeChange = useCallback((low, high) => {
     setAgeStart(low);
     setAgeEnd(high);
   }, []);
 
 
   const doAdvancedSearch = () => {
-    const res = {};
+    const res = {
+      gender: gender,
+      distance: distance,
+      age: [ageStart, ageEnd],
+      related: related,
+    };
+    setShowAdvancedSearch(false);
     callback(res);
   }
 
@@ -129,7 +135,7 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
               renderRail={renderRail}
               renderRailSelected={renderRailSelected}
               renderLabel={renderLabel}
-              onValueChanged={handleValueChange}
+              onValueChanged={handleAgeChange}
             />
             <Text style={[styles.valueSelected, styles.valueSelectedRight]}>
               {ageEnd}
@@ -141,13 +147,13 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
             </Text>
             <Selector 
               label='Si' 
-              onPress={() => {setShareFriends(true)}} 
-              isSelected={isSelected(shareFriends, true)}
+              onPress={() => {setRelated(true)}} 
+              isSelected={isSelected(related, true)}
             />
             <Selector 
               label='No' 
-              onPress={() => {setShareFriends(false)}} 
-              isSelected={isSelected(shareFriends, false)}
+              onPress={() => {setRelated(false)}} 
+              isSelected={isSelected(related, false)}
             />
             <TouchableOpacity onPress={doAdvancedSearch} style={styles.doAdvancedSearch}>
               <Text style={styles.doAdvancedSearchText}>
