@@ -2,13 +2,18 @@ import React, {useCallback, useState} from 'react';
 import {StyleSheet, View, TextInput, Image, TouchableOpacity, Text} from 'react-native';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import Slider from '@react-native-community/slider';
+import RangeSlider from 'rn-range-slider';
+import Thumb from './RangeSliderComponents/Thumb';
+import Rail from './RangeSliderComponents/Rail';
+import RailSelected from './RangeSliderComponents/RailSelected';
+import Label from './RangeSliderComponents/Label';
 
 export default function FormSearchInput({labelValue, placeholderText, showControls, callback, ...props }){
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(true);
   const [gender, setGender] = useState(null);
-  const [distance, setDistance] = useState(null);
-  const [ageStart, setAgeStart] = useState(null);
-  const [ageEnd, setAgeEnd] = useState(null);
+  const [distance, setDistance] = useState(100);
+  const [ageStart, setAgeStart] = useState(14);
+  const [ageEnd, setAgeEnd] = useState(75);
   const [shareFriends, setShareFriends] = useState(null);
   
   const availablesGenders = {
@@ -16,6 +21,21 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
     FEMALE: 'FEMALE',
     OTHER: 'OTHER',
   };
+
+  const renderThumb = useCallback(() => <Thumb/>, []);
+  const renderRail = useCallback(() => <Rail/>, []);
+  const renderRailSelected = useCallback(() => <RailSelected/>, []);
+  const renderLabel = useCallback(value => <Label text={value}/>, []);
+
+  const handleDistanceChange = useCallback((low, high) => {
+    setDistance(low);
+  }, []);
+
+  const handleValueChange = useCallback((low, high) => {
+    setAgeStart(low);
+    setAgeEnd(high);
+  }, []);
+
 
   const doAdvancedSearch = () => {
     const res = {};
@@ -71,21 +91,48 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
               isSelected={isSelected(gender, availablesGenders.OTHER)}
             />
           </View>
-          <View style={styles.selector}>
+          <View style={styles.selectorRange}>
             <Text style={styles.selectorLabel}>
               Distancia
             </Text>
-            <Slider
-              style={{width: 200, height: 40}}
-              minimumValue={0}
-              maximumValue={100}
-              minimumTrackTintColor="#FFFFFF"
-              maximumTrackTintColor="#000000"
+            <RangeSlider
+              style={styles.rangeSlider}
+              min={0}
+              max={100}
+              step={10}
+              disableRange
+              floatingLabel
+              renderThumb={renderThumb}
+              renderRail={renderRail}
+              renderRailSelected={renderRailSelected}
+              renderLabel={renderLabel}
+              onValueChanged={handleDistanceChange}
             />
+            <Text style={[styles.valueSelected, styles.valueSelectedRight]}>
+              {distance}km
+            </Text>
           </View>
-          <View style={styles.selector}>
+          <View style={styles.selectorRange}>
             <Text style={styles.selectorLabel}>
               Edad
+            </Text>
+            <Text style={[styles.valueSelected, styles.valueSelectedLeft]}>
+              {ageStart}
+            </Text>
+            <RangeSlider
+              style={styles.rangeSlider}
+              min={14}
+              max={75}
+              step={1}
+              floatingLabel
+              renderThumb={renderThumb}
+              renderRail={renderRail}
+              renderRailSelected={renderRailSelected}
+              renderLabel={renderLabel}
+              onValueChanged={handleValueChange}
+            />
+            <Text style={[styles.valueSelected, styles.valueSelectedRight]}>
+              {ageEnd}
             </Text>
           </View>
           <View style={styles.selector}>
@@ -162,6 +209,14 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginLeft: 7,
   },
+  selectorRange: {
+    height: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 5,
+    marginHorizontal: 7,
+  },
   selectorLabel: {
     color: 'white',
     fontSize: 14,
@@ -185,8 +240,14 @@ const styles = StyleSheet.create({
     fontFamily: StylesConfiguration.fontFamily,
   },
   rangeSlider: {
-    flex: 1,
-    marginRight: 25,
+    width: 160,
+  },
+  valueSelected: {
+    color: StylesConfiguration.color,
+  },
+  valueSelectedLeft: {},
+  valueSelectedRight: {
+    width: 45,
   },
   doAdvancedSearch: {
     height: 20,
