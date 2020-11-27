@@ -4,10 +4,35 @@ import FormSearchInput from '../../../components/FormSearchInput';
 import GoBackButton from '../../../components/GoBackButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
+import SearchedHashtagsList from './SearchedHashtagsList';
+import SearchedProfilesList from './SearchedProfilesList';
+
+/* Datos para popular las busquedas */
+
+const profiles = Array(10).fill({
+  id: -1,
+  display_name: 'UnPerrito',
+  profile: {
+    bio: 'una bio',
+    photo: {
+      url_small: require('../../../assets/pride-dog_1.png'),
+    },
+  }
+});
+
+const hashtags = Array(10).fill({
+  name: 'unHashtag',
+  posts: Array(3).fill({
+    files: [require('../../../assets/pride-dog_1.png')]
+  }),
+  views: 87498234,
+});
 
 export default function AdvancedSearchScreen({ navigation }) {
   const [searchString, setSearchString] = useState('');
   const [filterSelected, setFilterSelected] = useState(0);
+  const [profilesSearched, setProfilesSearched] = useState(profiles);
+  const [hashtagsSearched, setHashtagsSearched] = useState(hashtags);
 
   const setFilter = (value) => () => {
     setFilterSelected(value);
@@ -55,6 +80,16 @@ export default function AdvancedSearchScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
+      {filterSelected === 0
+        ? <SearchedHashtagsList
+            navigation={navigation}
+            hashtags={hashtagsSearched}
+          />
+        : <SearchedProfilesList
+            navigation={navigation}
+            profiles={profilesSearched}
+          />
+      }
     </SafeAreaView>
   );
 }
