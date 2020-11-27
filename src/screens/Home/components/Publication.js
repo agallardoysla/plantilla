@@ -47,9 +47,25 @@ export default function Publication({
   newCommentCallback,
   navigation,
 }) {
-  const {id, files_with_urls, comments, user_owner} = post;
-  console.log('user_owner', user_owner);
+  const {
+    id,
+    files_with_urls,
+    comments,
+    user_owner,
+    views_count,
+    reacted,
+    reactionscount,
+    text,
+  } = post;
 
+  const [reaction, toggleReaction] = useState({
+    reacted,
+    reactionscount: reactionscount?.REACTION_TYPE_PRUEBA || 0,
+  });
+  const commentsCount = comments.length;
+  const [commentsShown, toggleshowMoreComments] = useState(5);
+  const toggleshowMoreCommentsIncrement = 3;
+  console.log('comments', comments);
   /**
    * Estados agregados para actualzar internamente los contadores de reaciones y comentarios
    */
@@ -110,39 +126,39 @@ export default function Publication({
           </View>
         )}
 
-         <TouchableOpacity onPress={()=>{}}> 
-            <View style={styles.ownerData}>
-              {user_owner.account_verified ? (
-                <Image
-                  source={require('../../../assets/tilde.png')}
-                  style={styles.ownerVerified}
-                />
-              ) : null}
-              <View
-                style={[
-                  styles.ownerDisplayNameContainer,
-                  user_owner.account_verified
-                    ? styles.ownerDisplayNameVerified
-                    : styles.ownerDisplayNameNotVerified,
-                ]}>
-                <Text style={styles.ownerDisplayName}>
-                  {' '}
-                  @{user_owner.display_name}{' '}
-                </Text>
-              </View>
-              <ProgressiveImage
-                source={
-                  user_owner.photo !== null
-                    ? {uri: user_owner.photo}
-                    : require('../../../assets/pride-dog_1.png')
-                }
-                resizeMode="cover"
-                style={styles.image_profile}
-                fadeDuration={0}
-                thumbnailSource={require('../../../assets/FC_Logo.png')}
+        <TouchableOpacity onPress={() => {}}>
+          <View style={styles.ownerData}>
+            {user_owner.account_verified ? (
+              <Image
+                source={require('../../../assets/tilde.png')}
+                style={styles.ownerVerified}
               />
+            ) : null}
+            <View
+              style={[
+                styles.ownerDisplayNameContainer,
+                user_owner.account_verified
+                  ? styles.ownerDisplayNameVerified
+                  : styles.ownerDisplayNameNotVerified,
+              ]}>
+              <Text style={styles.ownerDisplayName}>
+                {' '}
+                @{user_owner.display_name}{' '}
+              </Text>
             </View>
-              </TouchableOpacity>
+            <ProgressiveImage
+              source={
+                user_owner.photo !== null
+                  ? {uri: user_owner.photo}
+                  : require('../../../assets/pride-dog_1.png')
+              }
+              resizeMode="cover"
+              style={styles.image_profile}
+              fadeDuration={0}
+              thumbnailSource={require('../../../assets/FC_Logo.png')}
+            />
+          </View>
+        </TouchableOpacity>
         <TouchableOpacity>
           <PublicationContent
             id={id}
@@ -154,11 +170,100 @@ export default function Publication({
             post={post}
           />
         </TouchableOpacity>
+        <View style={styles.icons_container}>
+          <View style={styles.icon_container}>
+            <Image
+              source={require('../../../assets/ojo_vista.png')}
+              style={[styles.icon_post, styles.icon_ojo]}
+            />
+            <Counter style={styles.icon_numbers_view} value={views_count} />
+          </View>
+          <View style={styles.icon_container}>
+            <TouchableOpacity
+              onPress={() =>
+                toggleReaction({
+                  reacted: !reaction.reacted,
+                  reactionscount: reaction.reacted
+                    ? reaction.reactionscount - 1
+                    : reaction.reactionscount + 1,
+                })
+              }>
+              <Image
+                source={
+                  reaction.reacted
+                    ? require('../../../assets/corazon_limon.png')
+                    : require('../../../assets/corazon_gris.png')
+                }
+                fadeDuration={0}
+              />
+            </TouchableOpacity>
+            <Counter
+              style={styles.icon_numbers_view}
+              value={reaction.reactionscount}
+            />
+          </View>
+          <View style={styles.icon_container}>
+            <TouchableOpacity onPress={getAndSetShowComments}>
+              <Image
+                source={require('../../../assets/comentario.png')}
+                style={[styles.icon_post, styles.icon_comentario]}
+              />
+            </TouchableOpacity>
+            <Counter style={styles.icon_numbers_view} value={commentsCount} />
+          </View>
+          <View style={styles.icon_container}>
+            <TouchableOpacity onPress={sharePost}>
+              <Image
+                source={require('../../../assets/compartir.png')}
+                style={[styles.icon_post, styles.icon_compartir]}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.icon_container}>
+            <Image
+              source={require('../../../assets/menu_desbordamiento.png')}
+              style={[styles.icon_post, styles.icon_mostrarMas]}
+            />
+          </View>
+        </View>
+        <View style={styles.description_container}>
+          {text && text !== '__post_text__' && (
+            <CommentFormatter
+              style={styles.description}
+              comment={`(${user_owner.display_name}:${id}): ${text}`}
+              navigation={navigation}
+            />
+          )}
+        </View>
 
-
-       
-        {/* </View> */}
-
+        {comments &&
+          comments.map((comment, index) => {
+            console.log('index, commentsShown', index, commentsShown);
+            return index < commentsShown ? (
+              <PublicationComment
+                style={styles.publicationComments}
+                post={post}
+                comment={comment}
+                key={index}
+                navigation={navigation}
+              />
+            ) : (
+              <></>
+            );
+          })}
+        {commentsCount > commentsShown ? (
+          <TouchableOpacity
+            onPress={() =>
+              toggleshowMoreComments(
+                commentsShown + toggleshowMoreCommentsIncrement,
+              )
+            }>
+            <Text style={styles.showMoreComments}>
+              {commentsCount - commentsShown} comentario
+              {commentsCount - commentsShown === 1 ? '' : 's'} mas...
+            </Text>
+          </TouchableOpacity>
+        ) : null}
         {/*Finaliza Nombre de usuario como encabezado*/}
 
         {/*Inicia Foto de la publicaciòn */}
@@ -185,8 +290,7 @@ export default function Publication({
 
         {/*Inicio de iconos de la publicaciòn*/}
 
-        <View style={styles.icons_container}>
-          {/*        
+        {/*        
           <View style={styles.icon_container}>
             <Image
               source={require('../../../assets/ojo_vista.png')}
@@ -243,12 +347,12 @@ export default function Publication({
             />
           </View>
        */}
-        </View>
+      </View>
 
-        {/*Fin de iconos de una publicaciòn*/}
+      {/*Fin de iconos de una publicaciòn*/}
 
-        {/*Inicio de nombre de usuario y la descripciòn de la publicaciòn*/}
-        {/* <CommentFormatter
+      {/*Inicio de nombre de usuario y la descripciòn de la publicaciòn*/}
+      {/* <CommentFormatter
           style={styles.description}
           comment={
             '(' +
@@ -260,23 +364,23 @@ export default function Publication({
           }
           navigation={navigation}
         /> */}
-        {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
+      {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
-        {/*Inicia comentarios hacia la publicaciòn */}
-        {
-          comments && (comments.map((comment, i)=>{
-            return <PublicationComment
-            style={styles.publicationComments}
-            post={post}
-            commentId={comment}
-            key={i}
-            navigation={navigation}
-          />
-          }))
-        }
+      {/*Inicia comentarios hacia la publicaciòn */}
+      {/* {comments &&
+          comments.map((comment, i) => {
+            return (
+              <PublicationComment
+                style={styles.publicationComments}
+                post={post}
+                commentId={comment}
+                key={i}
+                navigation={navigation}
+              />
+            );
+          })} */}
 
-
-        {/* {firstTimeLoadingComments && commentsCount > 3 ? (
+      {/* {firstTimeLoadingComments && commentsCount > 3 ? (
           <TouchableOpacity onPress={getAndSetShowComments}>
             <Text style={styles.showMoreComments}>
               {commentsCount - 3} comentario
@@ -285,8 +389,8 @@ export default function Publication({
           </TouchableOpacity>
         ) : null} */}
 
-        {/*Inicia nuevo comentario hacia la publicaciòn */}
-        {/* {savingComment ? (
+      {/*Inicia nuevo comentario hacia la publicaciòn */}
+      {/* {savingComment ? (
           <ActivityIndicator color={StylesConfiguration.color} />
         ) : (
           <CommentInput
@@ -299,14 +403,14 @@ export default function Publication({
             initialText={''}
           />
         )} */}
-        {/*Fin de nuevo comentario hacia la publicaciòn */}
+      {/*Fin de nuevo comentario hacia la publicaciòn */}
 
-        {/*Inicia fecha*/}
-        {/* <View style={styles.publicationDate}>
+      {/*Inicia fecha*/}
+      {/* <View style={styles.publicationDate}>
           <DateFormatter date={post.created_at} />
         </View> */}
-        {/*Finaliza fecha */}
-      </View>
+      {/*Finaliza fecha */}
+      {/* </View> */}
     </>
   );
 }
@@ -445,6 +549,12 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingHorizontal: 10,
     marginBottom: 10,
+  },
+  description_container: {
+    borderTopWidth: 1,
+    borderTopColor: '#E8FC64',
+    padding: 8,
+    paddingLeft: 0,
   },
   publicationComments: {
     flex: 1,

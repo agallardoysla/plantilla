@@ -20,16 +20,29 @@ import {
 import comments_services from '../../../services/comments_services';
 import {useDispatch, useSelector} from 'react-redux';
 import {getLoggedUser} from '../../../reducers/loggedUser';
-import { getComment, getCommentAnswers, removeComment } from '../../../reducers/comments';
-import { getUser } from '../../../reducers/users';
+import {
+  getComment,
+  getCommentAnswers,
+  removeComment,
+} from '../../../reducers/comments';
+import {getUser} from '../../../reducers/users';
 import CommentAnswer from './CommentAnswer';
-import { getProfile } from '../../../reducers/profiles';
-import { getFile } from '../../../reducers/files';
-import { deleteCommentPost } from '../../../reducers/posts';
+import {getProfile} from '../../../reducers/profiles';
+import {getFile} from '../../../reducers/files';
+import {deleteCommentPost} from '../../../reducers/posts';
 
-export default function PublicationComment({post, comment={}, navigation}) {
+export default function PublicationComment({post, comment, navigation}) {
+  console.log('comment', comment);
+  const {text, user_owner: commenter} = comment;
+  const {
+    account_verified,
+    display_name,
+    first_name,
+    last_name,
+    photo,
+    user_id,
+  } = commenter;
 
-  const {text=""} = comment;
   // const comment = useSelector(getComment(commentId.id));
   // const [showAnswerToComments, setShowAnswerToComments] = useState(false);
   // const [savingComment, setSavingComment] = useState(false);
@@ -61,33 +74,44 @@ export default function PublicationComment({post, comment={}, navigation}) {
   //   comments_services.delete(commentId);
   // };
 
-  return <Text style={{color:'white'}}>{text}</Text>
+  // return <Text style={{color:'white'}}>{`Comment: ${text}`}</Text>
   // return comment.original_comment_id !== null ? null : (
-  //   <View style={styles.container}>
-  //     <TouchableHighlight
-  //       style={styles.commentContainer}
-  //       onLongPress={() => setShowMenu(true)}
-  //       underlayColor={StylesConfiguration.colorSelection}>
-  //       <View style={styles.comment}>
-  //         <TouchableOpacity
-  //           style={styles.senderContainer}
-  //           onPress={() =>
-  //             navigation.navigate('OtherProfileGroup', {
-  //               screen: 'OtherProfile',
-  //               params: {
-  //                 user_id: commentOwner.user_id,
-  //               },
-  //             })
-  //           }>
-  //           <Image
-  //             source={
-  //               ownerPhoto
-  //                 ? {uri: ownerPhoto.url_small}
-  //                 : require('../../../assets/foto.png')
-  //             }
-  //             style={styles.icon_profile}
-  //           />
-  //         </TouchableOpacity>
+  return (
+    <View style={styles.container}>
+      <TouchableHighlight
+        style={styles.commentContainer}
+        onLongPress={() => setShowMenu(true)}
+        underlayColor={StylesConfiguration.colorSelection}>
+        <View style={styles.comment}>
+          <TouchableOpacity
+            style={styles.senderContainer}
+            onPress={() =>
+              navigation.navigate('OtherProfileGroup', {
+                screen: 'OtherProfile',
+                params: {
+                  user_id,
+                },
+              })
+            }>
+            <Image
+              source={
+                photo ? {uri: photo} : require('../../../assets/foto.png')
+              }
+              style={styles.icon_profile}
+            />
+          </TouchableOpacity>
+          <CommentFormatter
+                 style={styles.content}
+                 comment={`(${display_name}:${user_id}): ${
+                  text === '__post_text__' ? '' : text
+                }`}
+                 navigation={navigation}
+               />
+        </View>
+      </TouchableHighlight>
+
+    </View>
+  );
   //         {editingComment ? (
   //           savingComment ? (
   //             <ActivityIndicator color={StylesConfiguration.color} />
