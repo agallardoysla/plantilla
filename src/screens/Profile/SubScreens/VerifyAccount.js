@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, TextInput, Button, Alert, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Text, View, TextInput, Button, Alert, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,49 +8,43 @@ import users_services from '../../../services/users_services';
 
 export default function VerifyAccount() {
     const { register, control, handleSubmit, errors } = useForm();
-    const [isFocused, setisFocused] = useState(false);
+    const [documentation, setdocumentation] = useState({});
+    const [legalFiles, setLegalFiles] = useState({});
+    const [legalId, setLegalId] = useState({});
+    const [loading, setLoading] = useState(false);
 
-    const onSubmit = (data) => {
-        console.log('====================================');
-        console.log(data);
-        console.log('====================================');
-        let formData = new FormData();
-        formData.append('file', filePath);
-        let idDni;
-        users_services.addFilesVerify(formData).then((resp)=>{
-            idDni = resp.data.id;
-            data.documentation = idDni;
-            data.legal_files = [];
-            users_services.addAccountVerify(data).then((resp)=>{
-                console.log('======= buena respuesta =============================');
-                console.log(resp.data);
-                console.log('====================================');
-            }).catch((error)=>{
-                console.log("oops", error);
-            })
+    const onSubmit = async (data) => {
+        setLoading(true);
+        let legalId = await sendFile(legalFiles);
+        let docId;
+        data.documentation = [];
+        if (documentation) {
+            docId = await sendFile(documentation);
+            data.documentation = [docId];
+        }
+        data.legalFiles = legalId
+        users_services.addAccountVerify(data).then((resp)=>{
+            setLoading(false);
+            console.log('======= buena respuesta  - falta retornar =============================');
+            console.log(resp.data);
+            console.log('====================================');
         }).catch((error)=>{
             console.log("oops", error);
         })
     }
 
-    const labelStyle = {
-        position: "absolute",
-        left: 0,
-        top: !isFocused ? 18 : 0,
-        fontSize: !isFocused ? 20 : 14,
-        color: !isFocused ? "#000" : "white"
-      };
+    const sendFile = async (file) => {
+        let formData = new FormData();
+        formData.append('file', file);
+        try {
+            let response = await users_services.addFilesVerify(formData);
+            return response.data.id;
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
-    const [filePath, setFilePath] = useState({});
-    const [fileName, setFileName] = useState('');
-
-    /* useEffect(()=>{
-        register({ name: "DNI" });
-    },[register])
-
-    const handleChange = e => setValue("DNI", filePath); */
-
-    const chooseFile = () => {
+    const chooseFile = (type) => {
         let options = {
           title: 'Select Image',
           storageOptions: {
@@ -59,7 +53,6 @@ export default function VerifyAccount() {
           },
         };
         ImagePicker.showImagePicker(options, async (response) => {
-          setFileName(response.fileName)
           if (response.didCancel) {
             console.log('User cancelled image picker');
           } else if (response.error) {
@@ -70,13 +63,21 @@ export default function VerifyAccount() {
                 type: 'image/png',
                 uri: 'data:image/jpeg;base64,' + response.data
             }
-            setFilePath(source);
+            if(type == "legalFiles"){
+                setLegalFiles(source)
+            }else{
+                setdocumentation(source)
+            }
           }
         });
       };
     const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    return (
+    
+    return loading ? (
+        <SafeAreaView style={styles.container}>
+          <ActivityIndicator size="small" color={StylesConfiguration.color} />
+        </SafeAreaView>
+      ) : (
         <SafeAreaView  style={styles.container} >
             <Text style={styles.titleText}>solicitar verificación</Text>
             <View style={styles.containerForm}>
@@ -167,14 +168,14 @@ export default function VerifyAccount() {
             <View style={styles.containerFormTwo} >
                 <View style={styles.formTwoInput} >
                     <Text style={{color:"white",fontSize:15}}>Foto DNI o Pasaporte</Text>
-                    <TouchableOpacity  onPress={() => { chooseFile() }}>
+                    <TouchableOpacity  onPress={() => { chooseFile('document') }}>
                         <Image source={require('../../../assets/camara.png')} 
                     style={{ width: 35, height: 35 }} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.formTwoInput} >
                     <Text style={{color:"white",fontSize:15}}>Documentación complementaria</Text>
-                    <TouchableOpacity  onPress={() => { chooseFile() }}>
+                    <TouchableOpacity  onPress={() => { chooseFile('legalFiles') }}>
                         <Image source={require('../../../assets/camara.png')} 
                     style={{ width: 35, height: 35 }} />
                     </TouchableOpacity>
