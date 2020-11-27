@@ -1,87 +1,22 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import FormSearchInput from '../../../components/FormSearchInput';
-import PostSearched from './PostSearched';
-import ProfileSearched from './ProfileSearched';
-import search_services from '../../../services/search_services';
 import GoBackButton from '../../../components/GoBackButton';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  setSearchedProfiles,
-  getSearchedProfiles,
-} from '../../../reducers/searchedProfiles';
-import { getSearchedPosts } from '../../../reducers/searchedPosts';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 export default function AdvancedSearchScreen({ navigation }) {
-  const [showSearch, setShowSearch] = useState(false);
   const [searchString, setSearchString] = useState('');
-  const dispatch = useDispatch();
-  const searchedPosts = useSelector(getSearchedPosts);
-  const searchedProfiles = useSelector(getSearchedProfiles);
+  const [filterSelected, setFilterSelected] = useState(0);
 
-  const buildUserSearch = (searchingString) => ({
-    search: searchingString,
-    search_in: 'users',
-  });
+  const setFilter = (value) => () => {
+    setFilterSelected(value);
+    setSearchString('');
+  }
 
-  const doShowSearch = (searchedString) => {
-    setSearchString(searchedString);
-    setShowSearch(searchedString.length > 0);
-    if (searchedString.length > 0) {
-      if (searchedString.length > 3) {
-        search_services.search(buildUserSearch(searchedString)).then((res) => {
-          dispatch(setSearchedProfiles(res.data.users));
-        });
-      } else {
-        dispatch(
-          setSearchedProfiles(
-            searchedProfiles.filter((u) =>
-              u.display_name
-                .toLowerCase()
-                .includes(searchedString.toLowerCase()),
-            ),
-          ),
-        );
-      }
-    } else {
-      search_services.search({ search_in: 'users' }).then((res) => {
-        dispatch(setSearchedProfiles(res.data.users));
-      });
-    }
-  };
-
-  const doAdvancedSearch = (params) => {
-    console.log(params);
-  };
-
-  const ProfileSearchItem = ({ item }) => {
-    return <ProfileSearched profile={item} navigation={navigation} />;
-  };
-
-  const PostSearchItem = ({ item }) => {
-    return <PostSearched post={item} navigation={navigation} />;
-  };
-
-  const SearchedUsers = () => (
-    <FlatList
-      data={searchedProfiles}
-      renderItem={ProfileSearchItem}
-      bouncesZoom={true}
-      keyExtractor={(item, index) => index.toString()}
-      numColumns={1}
-    />
-  );
-
-  const PostsFeed = () => (
-    <FlatList
-      data={searchedPosts}
-      renderItem={PostSearchItem}
-      bouncesZoom={true}
-      keyExtractor={(item, index) => index.toString()}
-      numColumns={3}
-    />
-  );
+  const doShowSearch = (searched) => {
+    setSearchString(searched);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -91,10 +26,35 @@ export default function AdvancedSearchScreen({ navigation }) {
           value={searchString}
           onChangeText={(e) => doShowSearch(e)}
           showControls={false}
-          callback={doAdvancedSearch}
+          style={styles.searchInput}
         />
       </View>
-      {showSearch ? <SearchedUsers /> : <PostsFeed />}
+      <View style={styles.row}>
+        <View style={[styles.filter, styles.filterLeft]}>
+          <TouchableOpacity style={styles.filterButton} onPress={setFilter(0)}>
+            <Text style={[
+              styles.filterButtonText, 
+              filterSelected === 0 
+                ? styles.filterButtonTextSelected
+                : styles.filterButtonTextNotSelected
+              ]}>
+              Hashtags
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.filter, styles.filterRight]}>
+          <TouchableOpacity style={styles.filterButton} onPress={setFilter(1)}>
+            <Text style={[
+              styles.filterButtonText, 
+              filterSelected === 1 
+                ? styles.filterButtonTextSelected
+                : styles.filterButtonTextNotSelected
+              ]}>
+              Perfiles
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -104,7 +64,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'stretch',
     paddingHorizontal: 0,
   },
@@ -114,10 +74,50 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'flex-start',
     marginTop: 10,
-    marginBottom: 10,
     marginHorizontal: 5,
+  },
+  searchInput: {
+    marginRight: 30,
+  },
+  filter: {
+    top: -5,
+    flex: 1,
+    height: 55,
+    backgroundColor: '#50555C',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'stretch',
+  },
+  filterLeft: {
+    marginLeft: 40,
+    marginRight: 1,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+  },
+  filterRight: {
+    marginRight: 30,
+    marginLeft: 1,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+  filterButton: {
+    height: 55,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterButtonText: {
+    fontSize: 24,
+    fontWeight: '500',
+    fontFamily: StylesConfiguration.fontFamily,
+  },
+  filterButtonTextSelected: {
+    color: StylesConfiguration.color,
+  },
+  filterButtonTextNotSelected: {
+    color: 'black',
   },
 });

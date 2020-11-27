@@ -8,7 +8,7 @@ import Rail from './RangeSliderComponents/Rail';
 import RailSelected from './RangeSliderComponents/RailSelected';
 import Label from './RangeSliderComponents/Label';
 
-export default function FormSearchInput({labelValue, placeholderText, showControls, callback, ...props }){
+export default function FormSearchInput({labelValue, placeholderText, showControls, callback, style, ...props }){
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [gender, setGender] = useState(null);
   const [distance, setDistance] = useState(100);
@@ -59,7 +59,7 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
   const isSelected = (state, value) => state === value;
 
   return (  
-    <View style={styles.container} >
+    <View style={[styles.container, style]} >
       <View style={styles.inputContainer}>
         <Image
           source={require('../assets/lupa.png')}
