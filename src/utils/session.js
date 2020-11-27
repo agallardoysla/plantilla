@@ -4,9 +4,9 @@ export default {
   loginEmail: async (email, password, callback) => {
     try {
      const al = await auth().signInWithEmailAndPassword(email, password);
-     console.log('al', al)
+    //  console.log('al', al)
     } catch (e) {
-      console.log(e);
+    //   console.log(e);
     }
   },
   register: async (email, password, callback) => {

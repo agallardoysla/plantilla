@@ -32,7 +32,6 @@ import {getFile} from '../../../reducers/files';
 import {deleteCommentPost} from '../../../reducers/posts';
 
 export default function PublicationComment({post, comment, navigation}) {
-  console.log('comment', comment);
   const {text, user_owner: commenter} = comment;
   const {
     account_verified,

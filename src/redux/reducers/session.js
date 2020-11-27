@@ -41,26 +41,26 @@ export default function (state = defaultState, action) {
       };
 
     case LOGIN_FULFILLED:
-      console.log('action.payload LOGIN_FULFILLED', action.payload);
+      //console.log('action.payload LOGIN_FULFILLED', action.payload);
       return {
         ...state,
         isSessionActive: action.payload !== undefined,
       };
     case LOGIN_PENDING:
-      console.log('action.payload LOGIN_PENDING', action.payload);
+      //console.log('action.payload LOGIN_PENDING', action.payload);
 
       return {
         ...state,
       };
     case LOGIN_REJECTED:
-      console.log('action.payload LOGIN_REJECTED', action.payload);
+      //console.log('action.payload LOGIN_REJECTED', action.payload);
 
       return {
         ...state,
       };
 
     case GET_SESSION_ACTIVE:
-      console.log('action.payload GET_SESSION_ACTIVE', action.payload);
+      //console.log('action.payload GET_SESSION_ACTIVE', action.payload);
       return {
         ...state,
         isSessionActive: action.payload,

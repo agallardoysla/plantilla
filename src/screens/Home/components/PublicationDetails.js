@@ -11,7 +11,6 @@ import {doAddPosts} from '../../../utils/reduxLoader';
 import {getPost} from '../../../reducers/posts';
 
 export default function PublicationDetails({navigation, route}) {
-  console.log('route', route.params.post);
   const post = route.params.post;
   return <Publication post={post} navigation={navigation} />;
 

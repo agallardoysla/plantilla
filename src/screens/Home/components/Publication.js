@@ -46,6 +46,7 @@ export default function Publication({
   sharePost,
   newCommentCallback,
   navigation,
+  openMenu
 }) {
   const {
     id,
@@ -65,7 +66,6 @@ export default function Publication({
   const commentsCount = comments.length;
   const [commentsShown, toggleshowMoreComments] = useState(5);
   const toggleshowMoreCommentsIncrement = 3;
-  console.log('comments', comments);
   /**
    * Estados agregados para actualzar internamente los contadores de reaciones y comentarios
    */
@@ -142,7 +142,6 @@ export default function Publication({
                   : styles.ownerDisplayNameNotVerified,
               ]}>
               <Text style={styles.ownerDisplayName}>
-                {' '}
                 @{user_owner.display_name}{' '}
               </Text>
             </View>
@@ -171,7 +170,7 @@ export default function Publication({
           />
         </TouchableOpacity>
         <View style={styles.icons_container}>
-          <View style={styles.icon_container}>
+          <View style={styles.icon_numbers_view_container}>
             <Image
               source={require('../../../assets/ojo_vista.png')}
               style={[styles.icon_post, styles.icon_ojo]}
@@ -189,6 +188,7 @@ export default function Publication({
                 })
               }>
               <Image
+                style={[styles.icon_post, styles.icon_corazon]}
                 source={
                   reaction.reacted
                     ? require('../../../assets/corazon_limon.png')
@@ -198,7 +198,7 @@ export default function Publication({
               />
             </TouchableOpacity>
             <Counter
-              style={styles.icon_numbers_view}
+              style={styles.icon_numbers_like}
               value={reaction.reactionscount}
             />
           </View>
@@ -219,11 +219,13 @@ export default function Publication({
               />
             </TouchableOpacity>
           </View>
-          <View style={styles.icon_container}>
-            <Image
-              source={require('../../../assets/menu_desbordamiento.png')}
-              style={[styles.icon_post, styles.icon_mostrarMas]}
-            />
+          <View style={{...styles.icon_container, justifyContent:'flex-end'}}>
+            <TouchableOpacity onPress={openMenu}>
+              <Image
+                source={require('../../../assets/menu_desbordamiento.png')}
+                style={[styles.icon_post, styles.icon_mostrarMas]}
+              />
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.description_container}>
@@ -238,7 +240,6 @@ export default function Publication({
 
         {comments &&
           comments.map((comment, index) => {
-            console.log('index, commentsShown', index, commentsShown);
             return index < commentsShown ? (
               <PublicationComment
                 style={styles.publicationComments}
@@ -482,58 +483,68 @@ const styles = StyleSheet.create({
   },
   icons_container: {
     justifyContent: 'center',
-    // flex: 1,
-    height: 44,
+    // height: 30,
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
+    paddingHorizontal: 8,
+    marginVertical: 5,
   },
   icon_container: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    alignContent: 'space-around',
+    height: 22,
+    marginTop: 0,
   },
   icon_post: {
-    marginRight: 10,
+    marginRight: 0,
   },
   icon_ojo: {
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
   },
   icon_corazon: {
-    width: 25,
-    height: 25,
+    width: 15,
+    height: 15,
+    marginTop: 4,
   },
   icon_comentario: {
-    width: 25,
-    height: 25,
+    width: 22,
+    height: 22,
   },
   icon_compartir: {
-    width: 25,
-    height: 25,
+    width: 18,
+    height: 18,
+    marginTop: 2,
   },
   icon_mostrarMas: {
-    width: 33,
-    height: 10,
+    margin: 6,
+        justifyContent: 'flex-start',
+    // height: 15,
   },
   icon_numbers_view_container: {
-    top: 3,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'stretch',
-    marginHorizontal: -5,
-    color: 'white',
-    minWidth: 30,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignContent: 'space-around',
+    // height: 20,
   },
   icon_numbers_view: {
     color: 'white',
     fontSize: 14,
-    marginHorizontal: 5,
+    marginTop: 3,
+    marginHorizontal: 4,
+    alignContent: 'center',
+    justifyContent: 'space-evenly',
   },
   icon_numbers_like: {
     color: 'white',
     fontSize: 14,
-    marginHorizontal: 5,
+    marginHorizontal: 4,
+    marginTop: 3,
+    alignContent: 'center',
+    justifyContent: 'space-evenly',
   },
   icon_numbers_comment: {
     color: 'white',

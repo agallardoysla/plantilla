@@ -44,7 +44,7 @@ export default function LoginScreen({navigation}) {
   };
 
   const doLogin = (loginFunction) => () => {
-    console.log("dologin")
+    // console.log("dologin")
     loginFunction().then(
       () => navigation.navigate('CreateProfile'),
       (error) => {

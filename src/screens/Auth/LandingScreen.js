@@ -11,7 +11,7 @@ import auth from '@react-native-firebase/auth';
 export default function LandingScreen({navigation}) {
   const dispatch = useDispatch();
   const directLogin = async () => {
-    console.log('login')
+    // console.log('login')
     await auth().signInWithEmailAndPassword("franciscomolinaya@gmail.com", "265813frank");
   };
   return (
