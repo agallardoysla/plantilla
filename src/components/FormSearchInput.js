@@ -9,7 +9,7 @@ import RailSelected from './RangeSliderComponents/RailSelected';
 import Label from './RangeSliderComponents/Label';
 
 export default function FormSearchInput({labelValue, placeholderText, showControls, callback, ...props }){
-  const [showAdvancedSearch, setShowAdvancedSearch] = useState(true);
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [gender, setGender] = useState(null);
   const [distance, setDistance] = useState(100);
   const [ageStart, setAgeStart] = useState(14);
@@ -105,6 +105,7 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
               style={styles.rangeSlider}
               min={0}
               max={100}
+              low={100}
               step={10}
               disableRange
               floatingLabel
