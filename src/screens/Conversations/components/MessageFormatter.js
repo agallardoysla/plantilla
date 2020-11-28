@@ -28,9 +28,10 @@ export default function MessageFormatter({message, navigation, style}) {
     // //console.log(file, i);
     return isImage(file.url) ? (
       <Image
-        source={{uri: file.url}}
+        source={{uri: file.url_half}}
         resizeMode="cover"
         style={styles.postImage}
+        fadeDuration={0}
       />
     ) : null;
   };
@@ -63,7 +64,10 @@ export default function MessageFormatter({message, navigation, style}) {
           />
         </View>
       </TouchableOpacity>
-    ) : null;
+    ) : (
+      null
+      // <View style={styles.postContainer} />
+    );
   };
 
   return (
