@@ -26,10 +26,7 @@ export default {
     padding: 0,
   },
   vipButton: {
-    marginTop: 0,
     width: 90,
-    marginLeft: 11,
-    alignSelf: 'flex-end',
     bottom: -22,
   },
   vipContent: {

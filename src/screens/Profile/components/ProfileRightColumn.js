@@ -28,9 +28,7 @@ export default function ProfileRightColumn({user, isLoggedUser, style, navigatio
       ))}
       {isLoggedUser ? (
         <MyProfileRightColumn navigation={navigation} />
-      ) : (
-        <OtherProfileRightColumn user={user} />
-      )}
+      ) : null}
     </View>
   );
 };

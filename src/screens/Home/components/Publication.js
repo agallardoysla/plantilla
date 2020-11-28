@@ -117,6 +117,15 @@ export default function Publication({
   // );
   // const [savingComment, setSavingComment] = useState(false);
 
+  const navigateProfile = (user) => {
+    navigation.navigate('OtherProfileGroup', {
+      screen: 'OtherProfile',
+      params: {
+        user_id: user,
+      },
+    });
+  }
+
   return (
     <>
       <View style={styles.container}>
@@ -126,7 +135,7 @@ export default function Publication({
           </View>
         )}
 
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => {navigateProfile(user_owner.user_id)}}>
           <View style={styles.ownerData}>
             {user_owner.account_verified ? (
               <Image

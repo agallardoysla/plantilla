@@ -86,15 +86,14 @@ export const {
   removeVip,
 } = loggedUserSlice.actions;
 
-export const getLoggedUser = (state) => state.loggedUser;
+export const getLoggedUser = (state) => state.session.user;
 
-export const getLoggedUserReactions = (state) => state.loggedUser.reactions;
+export const getLoggedUserReactions = (state) => state.session.user.reactions;
 
-export const getLoggedUserFollowers = (state) => state.loggedUser.followers_with_details;
+export const getLoggedUserFollowers = (state) => state.session.user.followers_with_details;
 
-export const getLoggedUserFolloweds = (state) => state.loggedUser.following_with_details;
+export const getLoggedUserFolloweds = (state) => state.session.user.following_with_details;
 
-export const getLoggedUserVips = (state) =>
-  state.loggedUser.followers_with_details.filter((f) => f.is_vip);
+export const getLoggedUserVips = (state) => state.session.user.followers_with_details.filter((f) => f.is_vip);
 
 export default loggedUserSlice.reducer;

@@ -9,12 +9,18 @@ import { getLoggedUserFolloweds, getLoggedUserFollowers } from '../../../reducer
 export default function ProfileLeftColumn({user, navigation, style, isLoggedUser}) {
   const loggedFolloweds = useSelector(getLoggedUserFolloweds);
   const otherFolloweds = useSelector(getOtherUserFolloweds);
-  const [localFolloweds, setLocalFolloweds] = useState(
-    isLoggedUser ? loggedFolloweds : otherFolloweds,
+  const [localFolloweds, setLocalFolloweds] = useState(isLoggedUser ? loggedFolloweds : otherFolloweds);
+
+  const loggedFollowers = useSelector(getLoggedUserFollowers);
+  const otherFollowers = useSelector(getOtherUserFollowers);
+  const [localFollowers, setLocalFollowers] = useState(
+    isLoggedUser ? loggedFollowers : otherFollowers,
   );
 
   useEffect(() => {
     if (isLoggedUser) {
+      console.log('========= mira primo ===========================');
+      console.log(user);
       setLocalFolloweds(loggedFolloweds);
     }
   }, [loggedFolloweds]);
@@ -24,12 +30,6 @@ export default function ProfileLeftColumn({user, navigation, style, isLoggedUser
       setLocalFolloweds(otherFolloweds);
     }
   }, [otherFolloweds]);
-
-  const loggedFollowers = useSelector(getLoggedUserFollowers);
-  const otherFollowers = useSelector(getOtherUserFollowers);
-  const [localFollowers, setLocalFollowers] = useState(
-    isLoggedUser ? loggedFollowers : otherFollowers,
-  );
 
   useEffect(() => {
     if (isLoggedUser) {
@@ -54,7 +54,7 @@ export default function ProfileLeftColumn({user, navigation, style, isLoggedUser
   return (
     <View style={style}>
       <Text style={styles.text_profile}>Publicaciones</Text>
-      <FormButtonCount
+       <FormButtonCount
         buttonTitle={user.posts_count ? user.posts_count.POST_TYPE_PRUEBA : 0}
       />
       <Text style={styles.text_profile}>Seguidos</Text>
@@ -72,7 +72,7 @@ export default function ProfileLeftColumn({user, navigation, style, isLoggedUser
         buttonTitle="CHALLENGE"
         style={styles.challengeButton}
         textStyle={styles.challengeContent}
-      />
+      /> 
     </View>
   );
 };

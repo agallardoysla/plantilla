@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-  Dimensions,
-  TouchableOpacity
-} from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, Dimensions, TouchableOpacity } from 'react-native';
 import users_services from '../../../services/users_services';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileLeftColumn from './ProfileLeftColumn';
@@ -19,10 +11,7 @@ import { getOtherUser } from '../../../reducers/otherUser';
 
 const numColumns = 3; //para el flatList
 
-export default function GenericProfile({ navigation, isLoggedUser }) {
-  const localUser = isLoggedUser
-    ? useSelector(getLoggedUser)
-    : useSelector(getOtherUser);
+export default function GenericProfile({ localUser, navigation, isLoggedUser }) {
   const [usersPosts, setUsersPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -164,22 +153,24 @@ const styles = StyleSheet.create({
   },
   //columnas dentro de profileData
   profileDataColumn: {
+    marginVertical: 20,
     justifyContent: 'flex-start',
   },
   columnLeft: {
     flex: columns[0],
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    paddingHorizontal: 20
     // // backgroundColor: 'red',
   },
   columnCenter: {
     flex: columns[1],
-    alignItems: 'stretch',
-    paddingTop: 20,
+    alignItems: 'center',
     // backgroundColor: 'white',
   },
   columnRight: {
     flex: columns[0],
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    paddingHorizontal: 20
     // backgroundColor: 'blue',
   },
   itemContainer: {

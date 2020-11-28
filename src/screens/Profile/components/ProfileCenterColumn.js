@@ -1,4 +1,4 @@
-import React from 'react';
+import React , { useEffect } from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,19 +10,19 @@ import profiles_services from '../../../services/profiles_services';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 export default function ProfileCenterColumn({user, navigation, style, isLoggedUser}) {
-  const userReactions = isLoggedUser
-    ? useSelector(getLoggedUserReactions)
-    : useSelector(getOtherUserReactions);
+  // const userReactions = isLoggedUser
+  //   ? useSelector(getLoggedUserReactions)
+  //   : useSelector(getOtherUserReactions);
   const loggedUser = useSelector(getLoggedUser);
   const dispatch = useDispatch();
 
   const getILiked = () => {
     //console.log(isLoggedUser, userReactions);
-    return isLoggedUser || userReactions.filter((item) => item.user === loggedUser.id).length >= 1;
+    return isLoggedUser || user.reactions.filter((item) => item.user === loggedUser.id).length >= 1;
   };
 
   const getLikesCounter = () => {
-    return userReactions ? userReactions.length : 0;
+    return user.reactions ? user.reactions.length : 0;
   };
 
   const addReactions = () => {

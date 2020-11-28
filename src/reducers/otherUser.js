@@ -11,7 +11,6 @@ export const otherUserSlice = createSlice({
   reducers: {
     updateOtherUser: (otherUser, action) => {
       otherUser = action.payload;
-      otherUser.reactions = [];
       return otherUser;
     },
     setOtherUserReactions: (otherUser, action) => {
@@ -49,12 +48,12 @@ export const {
   unfollowOtherUser,
 } = otherUserSlice.actions;
 
-export const getOtherUser = (state) => state.otherUser;
+export const getOtherUser = (state) => state.otherProfile.user;
 
-export const getOtherUserReactions = (state) => state.otherUser.reactions;
+export const getOtherUserReactions = (state) => state.otherProfile.user.following_with_details
 
-export const getOtherUserFollowers = (state) => state.otherUser.followers_with_details;
+export const getOtherUserFollowers = (state) => state.otherProfile.user.followers_with_details;
 
-export const getOtherUserFolloweds = (state) => state.otherUser.following_with_details;
+export const getOtherUserFolloweds = (state) => state.otherProfile.user.following_with_details
 
 export default otherUserSlice.reducer;
