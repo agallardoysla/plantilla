@@ -107,7 +107,6 @@ const PostLikes = ({navigation, route}) => {
   };
 
   const filterUsers = (searchTerms) => {
-    console.log('search.reactions', search.reactions);
     if (searchTerms !== '') {
       const filtered = search.reactions.filter((user) =>
         user.username.toLowerCase().includes(searchTerms.toLowerCase()),
