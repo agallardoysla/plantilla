@@ -1,7 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, View, TextInput, Image, TouchableOpacity, Text} from 'react-native';
 import StylesConfiguration from '../utils/StylesConfiguration';
-import Slider from '@react-native-community/slider';
 import RangeSlider from 'rn-range-slider';
 import Thumb from './RangeSliderComponents/Thumb';
 import Rail from './RangeSliderComponents/Rail';
@@ -9,11 +8,15 @@ import RailSelected from './RangeSliderComponents/RailSelected';
 import Label from './RangeSliderComponents/Label';
 
 export default function FormSearchInput({labelValue, placeholderText, showControls, callback, style, ...props }){
+  const minAge = 14;
+  const maxAge = 75;
+  const maxDistance = 100;
+
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [gender, setGender] = useState(null);
-  const [distance, setDistance] = useState(100);
-  const [ageStart, setAgeStart] = useState(14);
-  const [ageEnd, setAgeEnd] = useState(75);
+  const [distance, setDistance] = useState(maxDistance);
+  const [ageStart, setAgeStart] = useState(minAge);
+  const [ageEnd, setAgeEnd] = useState(maxAge);
   const [related, setRelated] = useState(null);
   
   const availablesGenders = {
@@ -104,8 +107,8 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
             <RangeSlider
               style={styles.rangeSlider}
               min={0}
-              max={100}
-              low={100}
+              max={maxDistance}
+              low={maxDistance}
               step={10}
               disableRange
               floatingLabel
@@ -128,8 +131,10 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
             </Text>
             <RangeSlider
               style={styles.rangeSlider}
-              min={14}
-              max={75}
+              min={minAge}
+              max={maxAge}
+              low={minAge}
+              high={maxAge}
               step={1}
               floatingLabel
               renderThumb={renderThumb}
@@ -247,7 +252,8 @@ const styles = StyleSheet.create({
     fontFamily: StylesConfiguration.fontFamily,
   },
   rangeSlider: {
-    width: 160,
+    // width: 140,
+    flex: 1,
   },
   valueSelected: {
     color: StylesConfiguration.color,
