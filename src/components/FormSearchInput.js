@@ -1,13 +1,30 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, View, TextInput, Image, TouchableOpacity, Text} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import StylesConfiguration from '../utils/StylesConfiguration';
 import RangeSlider from 'rn-range-slider';
 import Thumb from './RangeSliderComponents/Thumb';
 import Rail from './RangeSliderComponents/Rail';
 import RailSelected from './RangeSliderComponents/RailSelected';
 import Label from './RangeSliderComponents/Label';
+import { onChange } from 'react-native-reanimated';
 
-export default function FormSearchInput({labelValue, placeholderText, showControls, callback, style, ...props }){
+export default function FormSearchInput({
+  labelValue,
+  placeholderText,
+  showControls,
+  callback,
+  style,
+  onChange,
+  value,
+  ...props
+}) {
   const minAge = 14;
   const maxAge = 75;
   const maxDistance = 100;
@@ -18,17 +35,17 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
   const [ageStart, setAgeStart] = useState(minAge);
   const [ageEnd, setAgeEnd] = useState(maxAge);
   const [related, setRelated] = useState(null);
-  
+
   const availablesGenders = {
     MALE: 'MALE',
     FEMALE: 'FEMALE',
     OTHER: 'OTHER',
   };
 
-  const renderThumb = useCallback(() => <Thumb/>, []);
-  const renderRail = useCallback(() => <Rail/>, []);
-  const renderRailSelected = useCallback(() => <RailSelected/>, []);
-  const renderLabel = useCallback(value => <Label text={value}/>, []);
+  const renderThumb = useCallback(() => <Thumb />, []);
+  const renderRail = useCallback(() => <Rail />, []);
+  const renderRailSelected = useCallback(() => <RailSelected />, []);
+  const renderLabel = useCallback((value) => <Label text={value} />, []);
 
   const handleDistanceChange = useCallback((low, high) => {
     setDistance(low);
@@ -39,7 +56,6 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
     setAgeEnd(high);
   }, []);
 
-
   const doAdvancedSearch = () => {
     const res = {
       gender: gender,
@@ -49,11 +65,14 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
     };
     setShowAdvancedSearch(false);
     callback(res);
-  }
+  };
 
   const Selector = ({label, onPress, isSelected}) => (
     <TouchableOpacity onPress={onPress} style={styles.selectorContainer}>
-      <Text style={isSelected ? styles.selectorSelected : styles.selectorNotSelected}>
+      <Text
+        style={
+          isSelected ? styles.selectorSelected : styles.selectorNotSelected
+        }>
         {label}
       </Text>
     </TouchableOpacity>
@@ -61,49 +80,60 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
 
   const isSelected = (state, value) => state === value;
 
-  return (  
-    <View style={[styles.container, style]} >
+  return (
+    <View style={[styles.container, style]}>
       <View style={styles.inputContainer}>
         <Image
           source={require('../assets/lupa.png')}
           style={styles.searchImage}
         />
-        <TextInput style={styles.texInput} underlineColorAndroid="transparent" {...props}/>
-        { showControls ? (
-          <TouchableOpacity onPress={() => setShowAdvancedSearch(!showAdvancedSearch)} >
+        <TextInput
+          style={styles.texInput}
+          underlineColorAndroid="transparent"
+          placeholder={placeholderText}
+          placeholderTextColor={'white'}
+          onChangeText={onChange}
+          value={value}
+          {...props}
+        />
+        {showControls ? (
+          <TouchableOpacity
+            onPress={() => setShowAdvancedSearch(!showAdvancedSearch)}>
             <Image
               source={require('../assets/filtros.png')}
               style={styles.searchImage}
             />
           </TouchableOpacity>
-        ) : null }
+        ) : null}
       </View>
       {showAdvancedSearch ? (
         <View style={styles.advancedSearchContainer}>
           <View style={styles.selector}>
-            <Text style={styles.selectorLabel}>
-              Género
-            </Text>
-            <Selector 
-              label='Masculino' 
-              onPress={() => {setGender(availablesGenders.MALE)}} 
+            <Text style={styles.selectorLabel}>Género</Text>
+            <Selector
+              label="Masculino"
+              onPress={() => {
+                setGender(availablesGenders.MALE);
+              }}
               isSelected={isSelected(gender, availablesGenders.MALE)}
             />
-            <Selector 
-              label='Femenino' 
-              onPress={() => {setGender(availablesGenders.FEMALE)}} 
+            <Selector
+              label="Femenino"
+              onPress={() => {
+                setGender(availablesGenders.FEMALE);
+              }}
               isSelected={isSelected(gender, availablesGenders.FEMALE)}
             />
-            <Selector 
-              label='Otro' 
-              onPress={() => {setGender(availablesGenders.OTHER)}} 
+            <Selector
+              label="Otro"
+              onPress={() => {
+                setGender(availablesGenders.OTHER);
+              }}
               isSelected={isSelected(gender, availablesGenders.OTHER)}
             />
           </View>
           <View style={styles.selectorRange}>
-            <Text style={styles.selectorLabel}>
-              Distancia
-            </Text>
+            <Text style={styles.selectorLabel}>Distancia</Text>
             <RangeSlider
               style={styles.rangeSlider}
               min={0}
@@ -123,9 +153,7 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
             </Text>
           </View>
           <View style={styles.selectorRange}>
-            <Text style={styles.selectorLabel}>
-              Edad
-            </Text>
+            <Text style={styles.selectorLabel}>Edad</Text>
             <Text style={[styles.valueSelected, styles.valueSelectedLeft]}>
               {ageStart}
             </Text>
@@ -148,29 +176,32 @@ export default function FormSearchInput({labelValue, placeholderText, showContro
             </Text>
           </View>
           <View style={styles.selector}>
-            <Text style={styles.selectorLabel}>
-              Amigos en común
-            </Text>
-            <Selector 
-              label='Si' 
-              onPress={() => {setRelated(true)}} 
+            <Text style={styles.selectorLabel}>Amigos en común</Text>
+            <Selector
+              label="Si"
+              onPress={() => {
+                setRelated(true);
+              }}
               isSelected={isSelected(related, true)}
             />
-            <Selector 
-              label='No' 
-              onPress={() => {setRelated(false)}} 
+            <Selector
+              label="No"
+              onPress={() => {
+                setRelated(false);
+              }}
               isSelected={isSelected(related, false)}
             />
-            <TouchableOpacity onPress={doAdvancedSearch} style={styles.doAdvancedSearch}>
-              <Text style={styles.doAdvancedSearchText}>
-                APLICAR
-              </Text>
+            <TouchableOpacity
+              onPress={doAdvancedSearch}
+              style={styles.doAdvancedSearch}>
+              <Text style={styles.doAdvancedSearchText}>APLICAR</Text>
             </TouchableOpacity>
           </View>
         </View>
-      ) : null }
+      ) : null}
     </View>
-  )}
+  );
+}
 
 const styles = StyleSheet.create({
   container: {

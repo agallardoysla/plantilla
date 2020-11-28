@@ -21,7 +21,7 @@ export default function PublicationContent({files, style, navigation, post, isFe
             resizeMode="cover"
             thumbnailSource={{uri:file.url_small}}
             key={i}
-            onPress={()=>isFeed && PublicationActions.goToPost(post, navigation)}
+            onPress={()=>isFeed && post && PublicationActions.goToPost(post, navigation)}
           />
         ))}
       </ScrollView>

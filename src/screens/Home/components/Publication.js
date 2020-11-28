@@ -46,7 +46,7 @@ export default function Publication({
   sharePost,
   newCommentCallback,
   navigation,
-  openMenu
+  openMenu,
 }) {
   const {
     id,
@@ -56,6 +56,7 @@ export default function Publication({
     views_count,
     reacted,
     reactionscount,
+    reactions_details,
     text,
   } = post;
 
@@ -179,14 +180,17 @@ export default function Publication({
           </View>
           <View style={styles.icon_container}>
             <TouchableOpacity
-              onPress={() =>
+              onPress={() => {
                 toggleReaction({
                   reacted: !reaction.reacted,
                   reactionscount: reaction.reacted
                     ? reaction.reactionscount - 1
                     : reaction.reactionscount + 1,
-                })
-              }>
+                });
+              }}
+              onLongPress={() => {
+                navigation.navigate('PostLikes', {reactions_details, files_with_urls, reactionscount: reaction.reactionscount});
+              }}>
               <Image
                 style={[styles.icon_post, styles.icon_corazon]}
                 source={
@@ -219,7 +223,7 @@ export default function Publication({
               />
             </TouchableOpacity>
           </View>
-          <View style={{...styles.icon_container, justifyContent:'flex-end'}}>
+          <View style={{...styles.icon_container, justifyContent: 'flex-end'}}>
             <TouchableOpacity onPress={openMenu}>
               <Image
                 source={require('../../../assets/menu_desbordamiento.png')}
@@ -520,7 +524,7 @@ const styles = StyleSheet.create({
   },
   icon_mostrarMas: {
     margin: 6,
-        justifyContent: 'flex-start',
+    justifyContent: 'flex-start',
     // height: 15,
   },
   icon_numbers_view_container: {
