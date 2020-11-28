@@ -1,83 +1,77 @@
 import React, { useState } from "react";
-import { Text, View, TextInput, Button, Alert, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Text, View, TextInput, Button, Alert, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-picker';
-import users_services from '../../../services/users_services';
+
 
 export default function VerifyAccount() {
     const { register, control, handleSubmit, errors } = useForm();
-    const [documentation, setdocumentation] = useState({});
-    const [legalFiles, setLegalFiles] = useState({});
-    const [legalId, setLegalId] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [isFocused, setisFocused] = useState(false);
 
-    const onSubmit = async (data) => {
-        setLoading(true);
-        let legalId = await sendFile(legalFiles);
-        let docId;
-        data.documentation = [];
-        if (documentation) {
-            docId = await sendFile(documentation);
-            data.documentation = [docId];
-        }
-        data.legalFiles = legalId
-        users_services.addAccountVerify(data).then((resp)=>{
-            setLoading(false);
-            console.log('======= buena respuesta  - falta retornar =============================');
-            console.log(resp.data);
-            console.log('====================================');
-        }).catch((error)=>{
-            console.log("oops", error);
-        })
+    const onSubmit = (data) => {
+        data.DNI = filePath
+        console.log(data)
     }
 
-    const sendFile = async (file) => {
-        let formData = new FormData();
-        formData.append('file', file);
-        try {
-            let response = await users_services.addFilesVerify(formData);
-            return response.data.id;
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    const labelStyle = {
+        position: "absolute",
+        left: 0,
+        top: !isFocused ? 18 : 0,
+        fontSize: !isFocused ? 20 : 14,
+        color: !isFocused ? "#000" : "white"
+      };
 
-    const chooseFile = (type) => {
+    const [filePath, setFilePath] = useState({});
+    const [fileName, setFileName] = useState('');
+
+    /* useEffect(()=>{
+        register({ name: "DNI" });
+    },[register])
+    const handleChange = e => setValue("DNI", filePath); */
+
+    const chooseFile = () => {
         let options = {
           title: 'Select Image',
+          customButtons: [
+            {
+              name: 'customOptionKey',
+              title: 'Choose Photo from Custom Option'
+            },
+          ],
           storageOptions: {
             skipBackup: true,
             path: 'images',
           },
         };
-        ImagePicker.showImagePicker(options, async (response) => {
+        ImagePicker.showImagePicker(options, (response) => {
+          console.log('Response = ', response.fileName);
+          setFileName(response.fileName)
+
           if (response.didCancel) {
             console.log('User cancelled image picker');
           } else if (response.error) {
             console.log('ImagePicker Error: ', response.error);
+          } else if (response.customButton) {
+            console.log(
+              'User tapped custom button: ',
+              response.customButton
+            );
+            alert(response.customButton);
           } else {
-            let source = {
-                name: 'photo.png',
-                type: 'image/png',
-                uri: 'data:image/jpeg;base64,' + response.data
-            }
-            if(type == "legalFiles"){
-                setLegalFiles(source)
-            }else{
-                setdocumentation(source)
-            }
+            let source = response;
+            // You can also display the image using data:
+            // let source = {
+            //   uri: 'data:image/jpeg;base64,' + response.data
+            // };
+            setFilePath(source);
           }
         });
       };
     const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    
-    return loading ? (
-        <SafeAreaView style={styles.container}>
-          <ActivityIndicator size="small" color={StylesConfiguration.color} />
-        </SafeAreaView>
-      ) : (
+
+    return (
         <SafeAreaView  style={styles.container} >
             <Text style={styles.titleText}>solicitar verificación</Text>
             <View style={styles.containerForm}>
@@ -98,7 +92,7 @@ export default function VerifyAccount() {
                     rules={{ required: true, pattern:  /^[a-z ,.'-]+$/i}}
                     defaultValue=""
                 />
-                {errors.name && <Text style={{color:"red"}}>Ingrese un nombre válido.</Text>}
+                {errors.name && <Text style={{color:"red"}}>This is required.</Text>}
                 <Controller
                     control={control}
                     render={({ onChange, onBlur, value }) => (
@@ -111,11 +105,11 @@ export default function VerifyAccount() {
                             value={value}
                         />
                     )}
-                    name="last_name"
+                    name="lastname"
                     rules={{ required: true, pattern:  /^[a-z ,.'-]+$/i}}
                     defaultValue=""
                 />
-                {errors.last_name && <Text style={{color:"red"}}>Ingrese un apellido válido.</Text>}
+                {errors.lastname && <Text style={{color:"red"}}>This is required.</Text>}
                  <Controller
                     control={control}
                     render={({ onChange, onBlur, value }) => (
@@ -132,7 +126,7 @@ export default function VerifyAccount() {
                     rules={{ required: true ,pattern: EMAIL_REGEX}}
                     defaultValue=""
                 />
-                {errors.email && <Text style={{color:"red"}}>Ingrese un correo válido.</Text>}
+                {errors.email && <Text style={{color:"red"}}>This is required.</Text>}
                 <Controller
                     control={control}
                     render={({ onChange, onBlur, value }) => (
@@ -145,7 +139,7 @@ export default function VerifyAccount() {
                             value={value}
                         />
                     )}
-                    name="nickname"
+                    name="alias"
                     defaultValue=""
                 />
                 <Text style={{color:"white", marginTop: 30, marginBottom: 15,  fontSize:15}}>Indicanos tu profesion o que actividad realizas</Text>
@@ -161,21 +155,21 @@ export default function VerifyAccount() {
                             value={value}
                         />
                     )}
-                    name="professional_info"
+                    name="profesion"
                     defaultValue=""
                 />
             </View>
             <View style={styles.containerFormTwo} >
                 <View style={styles.formTwoInput} >
                     <Text style={{color:"white",fontSize:15}}>Foto DNI o Pasaporte</Text>
-                    <TouchableOpacity  onPress={() => { chooseFile('document') }}>
+                    <TouchableOpacity  onPress={() => { chooseFile() }}>
                         <Image source={require('../../../assets/camara.png')} 
                     style={{ width: 35, height: 35 }} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.formTwoInput} >
                     <Text style={{color:"white",fontSize:15}}>Documentación complementaria</Text>
-                    <TouchableOpacity  onPress={() => { chooseFile('legalFiles') }}>
+                    <TouchableOpacity  onPress={() => { chooseFile() }}>
                         <Image source={require('../../../assets/camara.png')} 
                     style={{ width: 35, height: 35 }} />
                     </TouchableOpacity>
