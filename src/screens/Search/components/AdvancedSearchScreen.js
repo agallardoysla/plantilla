@@ -23,7 +23,10 @@ const profiles = Array(10).fill({
 const hashtags = Array(10).fill({
   name: 'unHashtag',
   posts: Array(3).fill({
-    files: [require('../../../assets/pride-dog_1.png')]
+    files_with_urls: [{
+      url: require('../../../assets/pride-dog_1.png'),
+      url_half: require('../../../assets/pride-dog_1.png'),
+    }]
   }),
   views: 87498234,
 });

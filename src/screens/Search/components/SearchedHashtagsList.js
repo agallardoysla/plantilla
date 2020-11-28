@@ -1,7 +1,20 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import HashtagSearched from './HashtagSearched';
 
 export default function SearchedHashtagsList({ navigation, hashtags }) {
 
-  return <Text>Profiles</Text>
+  const HashtagsSearchedItem = ({ item }) => {
+    return <HashtagSearched hashtag={item} navigation={navigation} />;
+  };
+
+  return (
+    <FlatList
+      data={hashtags}
+      renderItem={HashtagsSearchedItem}
+      bouncesZoom={true}
+      keyExtractor={(item, index) => index.toString()}
+      numColumns={1}
+    />
+  )
 }
