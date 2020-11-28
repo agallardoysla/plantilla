@@ -187,12 +187,12 @@ const HomeStack = () => {
           component={HomeGroup}
           options={{title: '', unmountOnBlur}}
         />
-        {/* <Tab.Screen
+        <Tab.Screen
         name="ProfileGroup"
         component={MyProfileGroup}
         options={{title: '', unmountOnBlur}}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="NotificationGroup"
         component={NotificationsGroup}
         options={{
