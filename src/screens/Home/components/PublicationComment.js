@@ -20,45 +20,62 @@ import {
 import comments_services from '../../../services/comments_services';
 import {useDispatch, useSelector} from 'react-redux';
 import {getLoggedUser} from '../../../reducers/loggedUser';
-import { getComment, getCommentAnswers, removeComment } from '../../../reducers/comments';
-import { getUser } from '../../../reducers/users';
+import {
+  getComment,
+  getCommentAnswers,
+  removeComment,
+} from '../../../reducers/comments';
+import {getUser} from '../../../reducers/users';
 import CommentAnswer from './CommentAnswer';
-import { getProfile } from '../../../reducers/profiles';
-import { getFile } from '../../../reducers/files';
-import { deleteCommentPost } from '../../../reducers/posts';
+import {getProfile} from '../../../reducers/profiles';
+import {getFile} from '../../../reducers/files';
+import {deleteCommentPost} from '../../../reducers/posts';
 
-export default function PublicationComment({post, commentId, navigation}) {
-  const comment = useSelector(getComment(commentId.id));
-  const [showAnswerToComments, setShowAnswerToComments] = useState(false);
-  const [savingComment, setSavingComment] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-  const [editingComment, setEditingComment] = useState(false);
-  // const [commentOwner, setCommentOwner] = useState(null);
-  const commentOwner = useSelector(getUser(comment.user_id));
-  const commentOwnerProfile = useSelector(getProfile(commentOwner.profile_id));
-  const ownerPhoto = useSelector(getFile(commentOwnerProfile.photo_id));
-  const loggedUser = useSelector(getLoggedUser);
-  const dispatch = useDispatch();
+export default function PublicationComment({post, comment, navigation}) {
+  const {text, user_owner: commenter} = comment;
+  const {
+    account_verified,
+    display_name,
+    first_name,
+    last_name,
+    photo,
+    user_id,
+  } = commenter;
 
+  // const comment = useSelector(getComment(commentId.id));
+  // const [showAnswerToComments, setShowAnswerToComments] = useState(false);
+  // const [savingComment, setSavingComment] = useState(false);
+  // const [showMenu, setShowMenu] = useState(false);
+  // const [editingComment, setEditingComment] = useState(false);
+  // // const [commentOwner, setCommentOwner] = useState(null);
+  // const commentOwner = useSelector(getUser(comment.user_id));
+  // const commentOwnerProfile = useSelector(getProfile(commentOwner.profile_id));
+  // const ownerPhoto = useSelector(getFile(commentOwnerProfile.photo_id));
+  // const loggedUser = useSelector(getLoggedUser);
+  // const dispatch = useDispatch();
 
-  const newCommentCallback = () => {
-    setSavingComment(false);
-    setShowAnswerToComments(false);
-  };
+  // // console.log('comment', comment)
 
-  const edittedCommentCallback = () => {
-    setEditingComment(false);
-    setShowMenu(false);
-  };
+  // const newCommentCallback = () => {
+  //   setSavingComment(false);
+  //   setShowAnswerToComments(false);
+  // };
 
-  const doDeleteComment = () => {
-    dispatch(removeComment(commentId));
-    dispatch(deleteCommentPost({postId: post.id, commentId: commentId}));
-    setShowMenu(false);
-    comments_services.delete(commentId);
-  };
+  // const edittedCommentCallback = () => {
+  //   setEditingComment(false);
+  //   setShowMenu(false);
+  // };
 
-  return comment.original_comment_id !== null ? null : (
+  // const doDeleteComment = () => {
+  //   dispatch(removeComment(commentId));
+  //   dispatch(deleteCommentPost({postId: post.id, commentId: commentId}));
+  //   setShowMenu(false);
+  //   comments_services.delete(commentId);
+  // };
+
+  // return <Text style={{color:'white'}}>{`Comment: ${text}`}</Text>
+  // return comment.original_comment_id !== null ? null : (
+  return (
     <View style={styles.container}>
       <TouchableHighlight
         style={styles.commentContainer}
@@ -71,94 +88,104 @@ export default function PublicationComment({post, commentId, navigation}) {
               navigation.navigate('OtherProfileGroup', {
                 screen: 'OtherProfile',
                 params: {
-                  user_id: commentOwner.user_id,
+                  user_id,
                 },
               })
             }>
             <Image
               source={
-                ownerPhoto
-                  ? {uri: ownerPhoto.url_small}
-                  : require('../../../assets/foto.png')
+                photo ? {uri: photo} : require('../../../assets/foto.png')
               }
               style={styles.icon_profile}
             />
           </TouchableOpacity>
-          {editingComment ? (
-            savingComment ? (
-              <ActivityIndicator color={StylesConfiguration.color} />
-            ) : (
-              <CommentInput
-                placeholder={''}
-                callback={edittedCommentCallback}
-                post={post}
-                comment={comment}
-                setSavingComment={setSavingComment}
-                style={styles.newComment}
-                initialText={comment.text}
-                isEdition={true}
-              />
-            )
-          ) : (
-            <>
-              <CommentFormatter
-                style={styles.content}
-                comment={
-                  `{${commentOwner.display_name}:${commentOwner.id}} ` +
-                  comment.text
-                }
-                navigation={navigation}
-              />
-              <Menu
-                opened={showMenu && commentOwner.id === loggedUser.id}
-                onBackdropPress={() => setShowMenu(false)}>
-                <MenuTrigger />
-                <MenuOptions customStyles={menuOptions}>
-                  <MenuOption
-                    onSelect={() => setEditingComment(true)}
-                    text="Editar comentario"
-                  />
-                  <MenuOption onSelect={doDeleteComment}>
-                    <Text style={{color: 'red'}}>Eliminar</Text>
-                  </MenuOption>
-                </MenuOptions>
-              </Menu>
-            </>
-          )}
+          <CommentFormatter
+                 style={styles.content}
+                 comment={`(${display_name}:${user_id}): ${
+                  text === '__post_text__' ? '' : text
+                }`}
+                 navigation={navigation}
+               />
         </View>
       </TouchableHighlight>
-      {comment.comments.map((answerId, i) => (
-        <CommentAnswer
-          answerId={answerId}
-          post={post}
-          navigation={navigation}
-          key={i}
-        />
-      ))}
-      {showAnswerToComments ? (
-        savingComment ? (
-          <ActivityIndicator color={StylesConfiguration.color} />
-        ) : (
-          <CommentInput
-            placeholder={'Responder a @' + commentOwner.display_name}
-            callback={newCommentCallback}
-            post={post}
-            comment={comment}
-            setSavingComment={setSavingComment}
-            style={styles.newComment}
-            initialText={`@${commentOwner.display_name} `}
-          />
-        )
-      ) : (
-        <View style={styles.actions}>
-          <TouchableOpacity
-            onPress={() => setShowAnswerToComments(!showAnswerToComments)}>
-            <Text style={styles.answerButton}>Responder</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+
     </View>
   );
+  //         {editingComment ? (
+  //           savingComment ? (
+  //             <ActivityIndicator color={StylesConfiguration.color} />
+  //           ) : (
+  //             <CommentInput
+  //               placeholder={''}
+  //               callback={edittedCommentCallback}
+  //               post={post}
+  //               comment={comment}
+  //               setSavingComment={setSavingComment}
+  //               style={styles.newComment}
+  //               initialText={comment.text}
+  //               isEdition={true}
+  //             />
+  //           )
+  //         ) : (
+  //           <>
+  //             <CommentFormatter
+  //               style={styles.content}
+  //               comment={
+  //                 `{${commentOwner.display_name}:${commentOwner.id}} ` +
+  //                 comment.text
+  //               }
+  //               navigation={navigation}
+  //             />
+  //             <Menu
+  //               opened={showMenu && commentOwner.id === loggedUser.id}
+  //               onBackdropPress={() => setShowMenu(false)}>
+  //               <MenuTrigger />
+  //               <MenuOptions customStyles={menuOptions}>
+  //                 <MenuOption
+  //                   onSelect={() => setEditingComment(true)}
+  //                   text="Editar comentario"
+  //                 />
+  //                 <MenuOption onSelect={doDeleteComment}>
+  //                   <Text style={{color: 'red'}}>Eliminar</Text>
+  //                 </MenuOption>
+  //               </MenuOptions>
+  //             </Menu>
+  //           </>
+  //         )}
+  //       </View>
+  //     </TouchableHighlight>
+  //     {comment.comments.map((answerId, i) => (
+  //       <CommentAnswer
+  //         answerId={answerId}
+  //         post={post}
+  //         navigation={navigation}
+  //         key={i}
+  //       />
+  //     ))}
+  //     {showAnswerToComments ? (
+  //       savingComment ? (
+  //         <ActivityIndicator color={StylesConfiguration.color} />
+  //       ) : (
+  //         <CommentInput
+  //           placeholder={'Responder a @' + commentOwner.display_name}
+  //           callback={newCommentCallback}
+  //           post={post}
+  //           comment={comment}
+  //           setSavingComment={setSavingComment}
+  //           style={styles.newComment}
+  //           initialText={`@${commentOwner.display_name} `}
+  //         />
+  //       )
+  //     ) : (
+  //       <View style={styles.actions}>
+  //         <TouchableOpacity
+  //           onPress={() => setShowAnswerToComments(!showAnswerToComments)}>
+  //           <Text style={styles.answerButton}>Responder</Text>
+  //         </TouchableOpacity>
+  //       </View>
+  //     )}
+  //   </View>
+  // );
 }
 
 const styles = StyleSheet.create({

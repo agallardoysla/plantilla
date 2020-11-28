@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
-  Pressable
+  Pressable,
 } from 'react-native';
 import {
   TouchableOpacity,
@@ -20,140 +20,278 @@ import DateFormatter from '../../../components/DateFormatter';
 import Counter from '../../../components/Counter';
 import PublicationContent from './PublicationContent';
 import GoBackButton from '../../../components/GoBackButton';
+import {useNavigation} from '@react-navigation/native';
+import PublishPublication from '../../NewPublication/components/PublishPublication';
+import PublicationActions from './PublicationActions';
+import files_services from '../../../services/files_services';
+import {getFiles} from '../../../reducers/files';
+import {isDate} from 'moment';
+import PublicationComment from './PublicationComment';
+import ProgressiveImage from '../../../components/ProgressiveImage';
 
 let window = Dimensions.get('window');
 
 export default function Publication({
   // data
   post,
-  comments,
+  isFeed,
   postReactions,
-  files,
-  owner,
   ownerProfile,
   ownerPhoto,
   loggedUser,
-  showFullContent,
-  navigation,
   // actions
   goToOwnerProfile,
-  goToPost,
   addLike,
   getAndSetShowComments,
   sharePost,
   newCommentCallback,
+  navigation,
+  openMenu
 }) {
+  const {
+    id,
+    files_with_urls,
+    comments,
+    user_owner,
+    views_count,
+    reacted,
+    reactionscount,
+    text,
+  } = post;
+
+  const [reaction, toggleReaction] = useState({
+    reacted,
+    reactionscount: reactionscount?.REACTION_TYPE_PRUEBA || 0,
+  });
+  const commentsCount = comments.length;
+  const [commentsShown, toggleshowMoreComments] = useState(5);
+  const toggleshowMoreCommentsIncrement = 3;
   /**
    * Estados agregados para actualzar internamente los contadores de reaciones y comentarios
    */
-  const [reactions, setReactions] = useState(0);
-  const [commentsCount, setcommentsCount] = useState(0);
-  let reactionId = 0;
+  // const [reactions, setReactions] = useState(0);
+  // const [commentsCount, setcommentsCount] = useState(0);
+  // let reactionId = 0;
 
   /**
    * Esta función permite hacer las soliciutdes al servidor de los cambios y actualizar los estados
    */
-  const updateData = () => {
-    posts_services.get(post.id).then(res => {
-      console.log(res.data);
-      setcommentsCount(res.data.comments.length ? res.data.comments.length : 0);
-      setReactions(res.data.posts_reactions.length ? res.data.posts_reactions.length : 0);
-    });
-  };
+  // const updateData = () => {
+  //   posts_services.get(post.id).then((res) => {
+  //     console.log(res.data);
+  //     setcommentsCount(res.data.comments.length ? res.data.comments.length : 0);
+  //     setReactions(
+  //       res.data.posts_reactions.length ? res.data.posts_reactions.length : 0,
+  //     );
+  //   });
+  // };
 
   /**
    * Usamos el clico de vida con hooks para disparar el evento de actualización de cada contador
    */
 
-  useEffect(() => {
-    updateData();
-  }, [postReactions]);
+  // useEffect(() => {
+  //   updateData();
+  // }, [postReactions]);
 
-  useEffect(() => {
-    updateData();
-  }, [comments]);
+  // useEffect(() => {
+  //   updateData();
+  // }, [comments]);
 
-  useEffect(() => {
-    updateData();
-  }, []);
+  // useEffect(() => {
+  //   updateData();
+  // }, []);
 
-  const getILiked = () => {
-    const reaction = postReactions.filter((reaction) => reaction.user_id === loggedUser.id);
-    reactionId = reaction.length > 0 ? reaction[0].id : 0;
-    return reaction.length > 0;
-  };
+  // const getILiked = () => {
+  //   const reaction = postReactions.filter(
+  //     (reaction) => reaction.user_id === loggedUser.id,
+  //   );
+  //   reactionId = reaction.length > 0 ? reaction[0].id : 0;
+  //   return reaction.length > 0;
+  // };
 
-  const [showComments, setShowComments] = useState(true);
-  const [loadingComments, setLoadingComments] = useState(false);
-  const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
-    true,
-  );
-  const [savingComment, setSavingComment] = useState(false);
+  // const [showComments, setShowComments] = useState(true);
+  // const [loadingComments, setLoadingComments] = useState(false);
+  // const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
+  //   true,
+  // );
+  // const [savingComment, setSavingComment] = useState(false);
 
   return (
     <>
       <View style={styles.container}>
-        {/*Inicia Nombre de usuario, foto, verificacion de cuenta*/}
-        <View style={styles.upperBar}>
-          {showFullContent ? (
+        {!isFeed && (
+          <View style={styles.upperBar}>
             <GoBackButton navigation={navigation} />
-          ) : (
-            <View />
-          )}
-          <TouchableOpacity onPress={goToOwnerProfile}>
-            <View style={styles.ownerData}>
-              {owner.account_verified ? (
-                <Image
-                  source={require('../../../assets/tilde.png')}
-                  style={styles.ownerVerified}
-                />
-              ) : null}
-              <View
-                style={[
-                  styles.ownerDisplayNameContainer,
-                  owner.account_verified
-                    ? styles.ownerDisplayNameVerified
-                    : styles.ownerDisplayNameNotVerified,
-                ]}>
-                <Text style={styles.ownerDisplayName}>
-                  {' '}
-                  @{owner.display_name}{' '}
-                </Text>
-              </View>
+          </View>
+        )}
+
+        <TouchableOpacity onPress={() => {}}>
+          <View style={styles.ownerData}>
+            {user_owner.account_verified ? (
               <Image
+                source={require('../../../assets/tilde.png')}
+                style={styles.ownerVerified}
+              />
+            ) : null}
+            <View
+              style={[
+                styles.ownerDisplayNameContainer,
+                user_owner.account_verified
+                  ? styles.ownerDisplayNameVerified
+                  : styles.ownerDisplayNameNotVerified,
+              ]}>
+              <Text style={styles.ownerDisplayName}>
+                @{user_owner.display_name}{' '}
+              </Text>
+            </View>
+            <ProgressiveImage
+              source={
+                user_owner.photo !== null
+                  ? {uri: user_owner.photo}
+                  : require('../../../assets/pride-dog_1.png')
+              }
+              resizeMode="cover"
+              style={styles.image_profile}
+              fadeDuration={0}
+              thumbnailSource={require('../../../assets/FC_Logo.png')}
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <PublicationContent
+            id={id}
+            files={files_with_urls}
+            showFullContent={true}
+            style={styles.image_post}
+            navigation={navigation}
+            isFeed={isFeed}
+            post={post}
+          />
+        </TouchableOpacity>
+        <View style={styles.icons_container}>
+          <View style={styles.icon_numbers_view_container}>
+            <Image
+              source={require('../../../assets/ojo_vista.png')}
+              style={[styles.icon_post, styles.icon_ojo]}
+            />
+            <Counter style={styles.icon_numbers_view} value={views_count} />
+          </View>
+          <View style={styles.icon_container}>
+            <TouchableOpacity
+              onPress={() =>
+                toggleReaction({
+                  reacted: !reaction.reacted,
+                  reactionscount: reaction.reacted
+                    ? reaction.reactionscount - 1
+                    : reaction.reactionscount + 1,
+                })
+              }>
+              <Image
+                style={[styles.icon_post, styles.icon_corazon]}
                 source={
-                  ownerPhoto
-                    ? {uri: ownerPhoto.url_small}
-                    : require('../../../assets/pride-dog_1.png')
+                  reaction.reacted
+                    ? require('../../../assets/corazon_limon.png')
+                    : require('../../../assets/corazon_gris.png')
                 }
-                resizeMode="cover"
-                style={styles.image_profile}
                 fadeDuration={0}
               />
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+            <Counter
+              style={styles.icon_numbers_like}
+              value={reaction.reactionscount}
+            />
+          </View>
+          <View style={styles.icon_container}>
+            <TouchableOpacity onPress={getAndSetShowComments}>
+              <Image
+                source={require('../../../assets/comentario.png')}
+                style={[styles.icon_post, styles.icon_comentario]}
+              />
+            </TouchableOpacity>
+            <Counter style={styles.icon_numbers_view} value={commentsCount} />
+          </View>
+          <View style={styles.icon_container}>
+            <TouchableOpacity onPress={sharePost}>
+              <Image
+                source={require('../../../assets/compartir.png')}
+                style={[styles.icon_post, styles.icon_compartir]}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={{...styles.icon_container, justifyContent:'flex-end'}}>
+            <TouchableOpacity onPress={openMenu}>
+              <Image
+                source={require('../../../assets/menu_desbordamiento.png')}
+                style={[styles.icon_post, styles.icon_mostrarMas]}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.description_container}>
+          {text && text !== '__post_text__' && (
+            <CommentFormatter
+              style={styles.description}
+              comment={`(${user_owner.display_name}:${id}): ${text}`}
+              navigation={navigation}
+            />
+          )}
         </View>
 
+        {comments &&
+          comments.map((comment, index) => {
+            return index < commentsShown ? (
+              <PublicationComment
+                style={styles.publicationComments}
+                post={post}
+                comment={comment}
+                key={index}
+                navigation={navigation}
+              />
+            ) : (
+              <></>
+            );
+          })}
+        {commentsCount > commentsShown ? (
+          <TouchableOpacity
+            onPress={() =>
+              toggleshowMoreComments(
+                commentsShown + toggleshowMoreCommentsIncrement,
+              )
+            }>
+            <Text style={styles.showMoreComments}>
+              {commentsCount - commentsShown} comentario
+              {commentsCount - commentsShown === 1 ? '' : 's'} mas...
+            </Text>
+          </TouchableOpacity>
+        ) : null}
         {/*Finaliza Nombre de usuario como encabezado*/}
 
         {/*Inicia Foto de la publicaciòn */}
-        {files.length > 0 ? (
-          <View style={styles.postImagesContainer}>
-            <Pressable
-              style={styles.postImagesContainerPresable}
-              onPress={goToPost}>
-              <PublicationContent
-                files={files}
-                showFullContent={showFullContent}
-                style={styles.image_post}
-              />
-            </Pressable>
-          </View>
-        ) : null}
+        {/* {files && files.length > 0 ? (
+          <PublicationContent
+            files={files}
+            showFullContent={showFullContent}
+            style={styles.image_post}
+          />
+        ) :  
+        // <View style={styles.postImagesContainer}>
+        //   <Pressable
+        //     style={styles.postImagesContainerPresable}
+        //     onPress={goToPost}>
+        //     <PublicationContent
+        //       files={files}
+        //       showFullContent={showFullContent}
+        //       style={styles.image_post}
+        //     />
+        //   </TouchableWithoutFeedback>
+        // </View>
+        null}*/}
         {/*Finaliza Foto de la publicaciòn*/}
 
         {/*Inicio de iconos de la publicaciòn*/}
-        <View style={styles.icons_container}>
+
+        {/*        
           <View style={styles.icon_container}>
             <Image
               source={require('../../../assets/ojo_vista.png')}
@@ -177,14 +315,14 @@ export default function Publication({
               />
             </TouchableOpacity>
 
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={styles.icon_numbers_view_container}
               onPress={() =>
                 navigation.navigate('PostLikes', owner.display_name)
-              }> */}
+              }>
             <Counter style={styles.icon_numbers_view} value={reactions} />
-            {/* </TouchableOpacity> */}
-          </View>
+             </TouchableOpacity> 
+          </View> 
 
           <View style={styles.icon_container}>
             <TouchableOpacity onPress={getAndSetShowComments}>
@@ -209,11 +347,13 @@ export default function Publication({
               style={[styles.icon_post, styles.icon_mostrarMas]}
             />
           </View>
-        </View>
-        {/*Fin de iconos de una publicaciòn*/}
+       */}
+      </View>
 
-        {/*Inicio de nombre de usuario y la descripciòn de la publicaciòn*/}
-        <CommentFormatter
+      {/*Fin de iconos de una publicaciòn*/}
+
+      {/*Inicio de nombre de usuario y la descripciòn de la publicaciòn*/}
+      {/* <CommentFormatter
           style={styles.description}
           comment={
             '(' +
@@ -224,39 +364,34 @@ export default function Publication({
             (post.text === '__post_text__' ? '' : post.text)
           }
           navigation={navigation}
-        />
-        {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
+        /> */}
+      {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
 
-        {/*Inicia comentarios hacia la publicaciòn */}
-        {showComments ? (
-          loadingComments ? (
-            <ActivityIndicator color={StylesConfiguration.color} />
-          ) : (
-            comments
-              .slice(-3)
-              .map((comment, i) => (
-                <PublicationComment
-                  style={styles.publicationComments}
-                  post={post}
-                  commentId={comment}
-                  key={i}
-                  navigation={navigation}
-                />
-              ))
-          )
-        ) : null}
+      {/*Inicia comentarios hacia la publicaciòn */}
+      {/* {comments &&
+          comments.map((comment, i) => {
+            return (
+              <PublicationComment
+                style={styles.publicationComments}
+                post={post}
+                commentId={comment}
+                key={i}
+                navigation={navigation}
+              />
+            );
+          })} */}
 
-        {firstTimeLoadingComments && commentsCount > 3 ? (
+      {/* {firstTimeLoadingComments && commentsCount > 3 ? (
           <TouchableOpacity onPress={getAndSetShowComments}>
             <Text style={styles.showMoreComments}>
               {commentsCount - 3} comentario
               {commentsCount === 4 ? '' : 's'} mas...
             </Text>
           </TouchableOpacity>
-        ) : null}
+        ) : null} */}
 
-        {/*Inicia nuevo comentario hacia la publicaciòn */}
-        {savingComment ? (
+      {/*Inicia nuevo comentario hacia la publicaciòn */}
+      {/* {savingComment ? (
           <ActivityIndicator color={StylesConfiguration.color} />
         ) : (
           <CommentInput
@@ -268,15 +403,15 @@ export default function Publication({
             style={styles.newComment}
             initialText={''}
           />
-        )}
-        {/*Fin de nuevo comentario hacia la publicaciòn */}
+        )} */}
+      {/*Fin de nuevo comentario hacia la publicaciòn */}
 
-        {/*Inicia fecha*/}
-        <View style={styles.publicationDate}>
+      {/*Inicia fecha*/}
+      {/* <View style={styles.publicationDate}>
           <DateFormatter date={post.created_at} />
-        </View>
-        {/*Finaliza fecha */}
-      </View>
+        </View> */}
+      {/*Finaliza fecha */}
+      {/* </View> */}
     </>
   );
 }
@@ -291,11 +426,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   upperBar: {
-    height: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 5,
+    margin: 25,
   },
   ownerData: {
     flexDirection: 'row',
@@ -348,58 +483,68 @@ const styles = StyleSheet.create({
   },
   icons_container: {
     justifyContent: 'center',
-    // flex: 1,
-    height: 44,
+    // height: 30,
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
+    paddingHorizontal: 8,
+    marginVertical: 5,
   },
   icon_container: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    alignContent: 'space-around',
+    height: 22,
+    marginTop: 0,
   },
   icon_post: {
-    marginRight: 10,
+    marginRight: 0,
   },
   icon_ojo: {
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
   },
   icon_corazon: {
-    width: 25,
-    height: 25,
+    width: 15,
+    height: 15,
+    marginTop: 4,
   },
   icon_comentario: {
-    width: 25,
-    height: 25,
+    width: 22,
+    height: 22,
   },
   icon_compartir: {
-    width: 25,
-    height: 25,
+    width: 18,
+    height: 18,
+    marginTop: 2,
   },
   icon_mostrarMas: {
-    width: 33,
-    height: 10,
+    margin: 6,
+        justifyContent: 'flex-start',
+    // height: 15,
   },
   icon_numbers_view_container: {
-    top: 3,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'stretch',
-    marginHorizontal: -5,
-    color: 'white',
-    minWidth: 30,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignContent: 'space-around',
+    // height: 20,
   },
   icon_numbers_view: {
     color: 'white',
     fontSize: 14,
-    marginHorizontal: 5,
+    marginTop: 3,
+    marginHorizontal: 4,
+    alignContent: 'center',
+    justifyContent: 'space-evenly',
   },
   icon_numbers_like: {
     color: 'white',
     fontSize: 14,
-    marginHorizontal: 5,
+    marginHorizontal: 4,
+    marginTop: 3,
+    alignContent: 'center',
+    justifyContent: 'space-evenly',
   },
   icon_numbers_comment: {
     color: 'white',
@@ -415,6 +560,12 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingHorizontal: 10,
     marginBottom: 10,
+  },
+  description_container: {
+    borderTopWidth: 1,
+    borderTopColor: '#E8FC64',
+    padding: 8,
+    paddingLeft: 0,
   },
   publicationComments: {
     flex: 1,

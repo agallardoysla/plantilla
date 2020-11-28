@@ -41,64 +41,64 @@ const HomeStack = () => {
   const waitingLoadingTime = 1.5; // 17
   const initHomePostsCount = 3;
 
-  useEffect(() => {
-    dispatch(setLoadingProfile(true));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setLoadingProfile(true));
+  // }, []);
 
-  const init = async () => {
-    if (loadingProfile) {
-      setLoading(true);
-      let userId = user.id;
-      if (loadingOtherProfile) {
-        const backendUser = await users_services.me();
-        await AsyncStorage.setItem('local_token', backendUser.data.local_token);
-        dispatch(login(backendUser.data));
-        userId = backendUser.data.id;
-      }
-      setTimeout(() => {
-        setLoading(false);
-        dispatch(setLoadingProfile(false));
-      }, waitingLoadingTime * 1000);
-      // Cargar los posts de Home
-      posts_services.list(initHomePostsCount, 0).then((res) => {
-        batch(doSetPosts(res.data, dispatch));
-      });
-      // Cargar los posts de Busqueda
-      // search_services.search({search_in: 'posts'}).then((res) => {
-      //   dispatch(setSearchedPosts(res.data.posts));
-      // });
-      // Cargar los perfiles de Busqueda
-      // search_services.search({search_in: 'users'}).then((res) => {
-      //   dispatch(setSearchedProfiles(res.data.users));
-      // });
-      // Cargar los perfiles para compartir publicacion
-      // Cargar notificaciones
-      // users_services.getNotifications().then((res) => {
-      //   dispatch(setNotifications(res.data));
-      // });
-      // Cargar conversaciones
-      // chats_services.list().then((res) => {
-      //   dispatch(setConversations(res.data));
-      // });
+  // const init = async () => {
+  //   if (loadingProfile) {
+  //     setLoading(true);
+  //     let userId = user.id;
+  //     if (loadingOtherProfile) {
+  //       const backendUser = await users_services.me();
+  //       await AsyncStorage.setItem('local_token', backendUser.data.local_token);
+  //       dispatch(login(backendUser.data));
+  //       userId = backendUser.data.id;
+  //     }
+  //     setTimeout(() => {
+  //       setLoading(false);
+  //       dispatch(setLoadingProfile(false));
+  //     }, waitingLoadingTime * 1000);
+  //     // Cargar los posts de Home
+  //     posts_services.list(initHomePostsCount, 0).then((res) => {
+  //       batch(doSetPosts(res.data, dispatch));
+  //     });
+  //     // Cargar los posts de Busqueda
+  //     // search_services.search({search_in: 'posts'}).then((res) => {
+  //     //   dispatch(setSearchedPosts(res.data.posts));
+  //     // });
+  //     // Cargar los perfiles de Busqueda
+  //     // search_services.search({search_in: 'users'}).then((res) => {
+  //     //   dispatch(setSearchedProfiles(res.data.users));
+  //     // });
+  //     // Cargar los perfiles para compartir publicacion
+  //     // Cargar notificaciones
+  //     // users_services.getNotifications().then((res) => {
+  //     //   dispatch(setNotifications(res.data));
+  //     // });
+  //     // Cargar conversaciones
+  //     // chats_services.list().then((res) => {
+  //     //   dispatch(setConversations(res.data));
+  //     // });
 
-      try {
-        // Cargar reacciones al perfil propio
-        profiles_services.getReactions(userId).then((res) => {
-          dispatch(setReactions(res.data));
-        });
-      } catch (e) {
-        dispatch(setReactions([]));
-      }
-    }
-  };
+  //     try {
+  //       // Cargar reacciones al perfil propio
+  //       profiles_services.getReactions(userId).then((res) => {
+  //         dispatch(setReactions(res.data));
+  //       });
+  //     } catch (e) {
+  //       dispatch(setReactions([]));
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    init();
-  }, [loadingProfile]);
+  // useEffect(() => {
+  //   init();
+  // }, [loadingProfile]);
 
   const icons = {
-    icon_profile: user.profile.photo
-      ? {uri: user.profile.photo.url_small}
+    icon_profile: user.photoURL
+      ? {uri: user.photoURL}
       : require('../assets/foto_perfil.png'),
 
     icon_notification: require('../assets/icono_notificacion.png'),

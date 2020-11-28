@@ -4,28 +4,31 @@ import AuthStack from './AuthStack';
 import HomeStack from './HomeStack';
 import Loading from '../components/Loading';
 import {useSelector, useDispatch} from 'react-redux';
-import { recoverSession } from '../redux/actions/session';
+import {checkSessionActive, recoverSession} from '../redux/actions/session';
 
 export default function Routes() {
   const dispatch = useDispatch();
 
   const checkingForUser = useSelector((state) => state.session.loading);
   const userExists = useSelector((state) => state.session.userExists);
+  const sessionIsActive = useSelector((state) => state.session.isSessionActive);
 
   useEffect(() => {
-    dispatch(recoverSession());
-  }, []);
+    dispatch(checkSessionActive());
+    if (sessionIsActive) {
+      dispatch(recoverSession());
+    }
+  }, [sessionIsActive]);
 
   return (
     <NavigationContainer>
       {checkingForUser ? (
         <Loading message="Verificando datos de sesion" />
-      ) : userExists ? (
+      ) : sessionIsActive && userExists ? (
         <HomeStack />
-        ) : (
+      ) : (
         <AuthStack />
       )}
-      {/* <HomeStack/> */}
     </NavigationContainer>
   );
 }

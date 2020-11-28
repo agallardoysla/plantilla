@@ -1,24 +1,38 @@
-import {LOGIN_USER_FULFILLED, LOGIN_USER_PENDING} from '../actions/session';
+import {
+  FETCH_FEED_FULFILLED,
+  FETCH_FEED_PENDING,
+  ADD_TO_FEED_PENDING,
+  ADD_TO_FEED_FULFILLED,
+} from '../actions/feed';
 
 const defaultState = {
-  allPosts: false,
+  fetching: false,
+  addingToFeed: false,
+  feed: [],
 };
 
 export default function (state = defaultState, action) {
   switch (action.type) {
-    case LOGIN_USER_FULFILLED:
-      console.log('LOGIN_USER_FULFILLED payload: ', action.payload)
+    case FETCH_FEED_FULFILLED:
       return {
         ...state,
-        user: action.payload.data,
-        userExists: true,
-        config: action.payload.config,
-        loading: false,
+        feed: action.payload.data,
+        fetching: false,
       };
-    case LOGIN_USER_PENDING:
+    case FETCH_FEED_PENDING:
       return {
         ...state,
-        loading: true,
+        fetching: true,
+      };
+    case ADD_TO_FEED_FULFILLED:
+      return {
+        ...state,
+        feed: [...state.feed, ...action.payload.data],
+      };
+    case ADD_TO_FEED_PENDING:
+      return {
+        ...state,
+        addingToFeed: true,
       };
     default:
       return state;
