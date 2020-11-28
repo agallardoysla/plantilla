@@ -24,7 +24,7 @@ const getConfig = async (forceJWT) => {
 
 const genericMethodWithData = (method) => async (url, data, forceJWT) => {
   const config = await getConfig(forceJWT);
-  //console.log(method, api_config.baseURL, url, data, config);
+  console.log(method, api_config.baseURL, url, data, config);
   let res;
   try {
     res = await axios_v1[method.toLowerCase()](url, data, config);
@@ -36,6 +36,7 @@ const genericMethodWithData = (method) => async (url, data, forceJWT) => {
 
 const genericMethodNoData = (method) => async (url, forceJWT) => {
   const config = await getConfig(forceJWT);
+  console.log(method, api_config.baseURL, url, config);
   let res;
   try {
     res = await axios_v1[method.toLowerCase()](url, config);
