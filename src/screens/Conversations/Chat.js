@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
 import chats_services from '../../services/chats_services';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { getLoggedUser } from '../../reducers/loggedUser';
 import {
   addConversation,
-  getConversationByParams,
   pushMessage,
   setNewConversation,
 } from '../../reducers/conversations';
+import { getConversationByParams } from '../../redux/reducers/conversations';
 import Message from './components/Message';
-
+import {getLoggedUser} from '../../redux/reducers/session';
 import GoBackButton from '../../components/GoBackButton'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Chat = ({ navigation, route }) => {
-  const user = useSelector(getLoggedUser);
+  const loggedUser = useSelector(getLoggedUser);
   const [newMessage, setNewMessage] = useState('');
   const [other, setOther] = useState({});
   const dispatch = useDispatch();
@@ -42,8 +40,8 @@ const Chat = ({ navigation, route }) => {
         const localConversation = {
           id: -1,
           messages: [],
-          users: [route.params.receiver, user], // tiene que estar en este orden por si es una conversacion nueva
-          active_users: [route.params.receiver.user_id, user.id], // tiene que estar en este orden por si es una conversacion nueva
+          users: [route.params.receiver, loggedUser], // tiene que estar en este orden por si es una conversacion nueva
+          active_users: [route.params.receiver.user_id, loggedUser.id], // tiene que estar en este orden por si es una conversacion nueva
         };
         dispatch(addConversation(localConversation));
         setOther(getOther(localConversation));
@@ -56,7 +54,7 @@ const Chat = ({ navigation, route }) => {
   };
 
   const getOther = (conv) => {
-    const _other = conv.users.filter(u => u.user_id !== user.id);
+    const _other = conv.users.filter(u => u.user_id !== loggedUser.id);
     return _other[0] ? _other[0] : conv.users[0];
   };
 
