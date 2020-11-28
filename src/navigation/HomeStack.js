@@ -182,17 +182,22 @@ const HomeStack = () => {
         lazy={false}
         tabBarOptions={tabBarOptions}
         screenOptions={screenOptions}>
+        {/* <Tab.Screen
+          name="ProfileGroup"
+          component={MyProfileGroup}
+          options={{title: '', unmountOnBlur}}
+        /> */}
+        <Tab.Screen
+          name="SearchGroup"
+          component={SearchGroup}
+          options={{title: '', unmountOnBlur}}
+        />
         <Tab.Screen
           name="HomeGroup"
           component={HomeGroup}
           options={{title: '', unmountOnBlur}}
         />
-        <Tab.Screen
-        name="ProfileGroup"
-        component={MyProfileGroup}
-        options={{title: '', unmountOnBlur}}
-      />
-      {/* <Tab.Screen
+        {/* <Tab.Screen
         name="NotificationGroup"
         component={NotificationsGroup}
         options={{

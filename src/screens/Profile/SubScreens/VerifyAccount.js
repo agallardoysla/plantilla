@@ -5,8 +5,9 @@ import StylesConfiguration from '../../../utils/StylesConfiguration';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-picker';
 import users_services from '../../../services/users_services';
+import GoBackButton from "../../../components/GoBackButton";
 
-export default function VerifyAccount() {
+export default function VerifyAccount({navigation}) {
     const { register, control, handleSubmit, errors } = useForm();
     const [documentation, setdocumentation] = useState({});
     const [legalFiles, setLegalFiles] = useState({});
@@ -79,6 +80,9 @@ export default function VerifyAccount() {
         </SafeAreaView>
       ) : (
         <SafeAreaView  style={styles.container} >
+            <View>
+            <GoBackButton navigation={navigation} />
+            </View>
             <Text style={styles.titleText}>solicitar verificación</Text>
             <View style={styles.containerForm}>
                 <Controller
