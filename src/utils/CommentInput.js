@@ -20,145 +20,145 @@ export default function CommentInput({
   initialText,
   isEdition,
 }) {
-  const comments = useSelector(getPostComments(post.id));
-  const [newText, setNewText] = useState(initialText);
-  const [showSugestions, setShowSugestions] = useState(false);
-  const [sugestionsInput, setSugestionsInput] = useState('');
-  const user = useSelector(getLoggedUser);
-  const users = useSelector(getFullUsers);
-  const [sugestionsAsync, setSugestionsAsync] = useState([]);
-  const maxSugestions = 5;
-  const dispatch = useDispatch();
+  // const comments = useSelector(getPostComments(post.id));
+  // const [newText, setNewText] = useState(initialText);
+  // const [showSugestions, setShowSugestions] = useState(false);
+  // const [sugestionsInput, setSugestionsInput] = useState('');
+  // const user = useSelector(getLoggedUser);
+  // const users = useSelector(getFullUsers);
+  // const [sugestionsAsync, setSugestionsAsync] = useState([]);
+  // const maxSugestions = 5;
+  // const dispatch = useDispatch();
 
-  useEffect(() => {
-    let filteredSugestions = getFixedSugestions;
-    filteredSugestions = filteredSugestions.filter((s) => {
-      s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase();
-    });
-    getMentionsSugestionsAsync(filteredSugestions);
-  }, [getFixedSugestions, getMentionsSugestionsAsync, sugestionsInput]);
+  // useEffect(() => {
+  //   let filteredSugestions = getFixedSugestions;
+  //   filteredSugestions = filteredSugestions.filter((s) => {
+  //     s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase();
+  //   });
+  //   getMentionsSugestionsAsync(filteredSugestions);
+  // }, [getFixedSugestions, getMentionsSugestionsAsync, sugestionsInput]);
 
-  const getFixedSugestions = useMemo(() => {
-    const res = [];
-    if (post) {
-      res.push(post.user_id);
-    }
-    if (comment) {
-      res.push(comment.user_id);
-    }
-    if (comments) {
-      comments.forEach((c) => {
-        if (res.reduce((r, s) => r && c.user_id !== s, true)) {
-          res.push(c.user_id);
-        }
-      });
-    }
-    return res.map((s) => users[s]);
-  }, [comment, comments, post, users]);
+  // const getFixedSugestions = useMemo(() => {
+  //   const res = [];
+  //   if (post) {
+  //     res.push(post.user_id);
+  //   }
+  //   if (comment) {
+  //     res.push(comment.user_id);
+  //   }
+  //   if (comments) {
+  //     comments.forEach((c) => {
+  //       if (res.reduce((r, s) => r && c.user_id !== s, true)) {
+  //         res.push(c.user_id);
+  //       }
+  //     });
+  //   }
+  //   return res.map((s) => users[s]);
+  // }, [comment, comments, post, users]);
 
-  const getMentionsSugestions = () => {
-    const filteredSugestions = getFixedSugestions.filter(
-      sugestionsInput.length > 0
-        ? (s) =>
-            s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase()
-        : [],
-    );
-    return filteredSugestions;
-  };
+  // const getMentionsSugestions = () => {
+  //   const filteredSugestions = getFixedSugestions.filter(
+  //     sugestionsInput.length > 0
+  //       ? (s) =>
+  //           s.display_name.slice(0, sugestionsInput.length).toLowerCase() === sugestionsInput.toLowerCase()
+  //       : [],
+  //   );
+  //   return filteredSugestions;
+  // };
 
-  const getMentionsSugestionsAsync = useCallback(
-    async (filteredSugestions) => {
-      if (sugestionsInput.length > 0) {
-        const context = await users_services.getContext({
-          search: sugestionsInput.toLowerCase(),
-          exclude: filteredSugestions.map(s => s.user_id),
-          limit: maxSugestions - filteredSugestions.length,
-        });
-        // //console.log(context.data);
-        context.data = context.data.map(d => {
-          return {
-            user_id: d.id,
-            ...d,
-          };
-        });
-        setSugestionsAsync(
-          sugestionsInput.length > 0
-            ? context.data.filter(
-                (s) =>
-                  s.display_name
-                    .slice(0, sugestionsInput.length)
-                    .toLowerCase() === sugestionsInput.toLowerCase(),
-              )
-            : [],
-        );
-      }
-    },
-    [sugestionsInput],
-  );
+  // const getMentionsSugestionsAsync = useCallback(
+  //   async (filteredSugestions) => {
+  //     if (sugestionsInput.length > 0) {
+  //       const context = await users_services.getContext({
+  //         search: sugestionsInput.toLowerCase(),
+  //         exclude: filteredSugestions.map(s => s.user_id),
+  //         limit: maxSugestions - filteredSugestions.length,
+  //       });
+  //       // //console.log(context.data);
+  //       context.data = context.data.map(d => {
+  //         return {
+  //           user_id: d.id,
+  //           ...d,
+  //         };
+  //       });
+  //       setSugestionsAsync(
+  //         sugestionsInput.length > 0
+  //           ? context.data.filter(
+  //               (s) =>
+  //                 s.display_name
+  //                   .slice(0, sugestionsInput.length)
+  //                   .toLowerCase() === sugestionsInput.toLowerCase(),
+  //             )
+  //           : [],
+  //       );
+  //     }
+  //   },
+  //   [sugestionsInput],
+  // );
 
-  const saveComment = async () => {
-    setSavingComment(true);
-    const _comment = {
-      post: post.id,
-      text: newText,
-      user_owner: user.id,
-      comments: [],
-    };
-    if (comment && !isEdition) {
-      _comment.original_comment = comment.id;
-    }
+  // const saveComment = async () => {
+  //   setSavingComment(true);
+  //   const _comment = {
+  //     post: post.id,
+  //     text: newText,
+  //     user_owner: user.id,
+  //     comments: [],
+  //   };
+  //   if (comment && !isEdition) {
+  //     _comment.original_comment = comment.id;
+  //   }
 
-    //console.log('created', _comment);
-    if (isEdition) {
-      comments_services.edit(comment.id, _comment);
-      dispatch(updateComment({id: comment.id, text: newText}));
-    } else {
-      const res = await comments_services.create(_comment);
-      let reduxComment;
-      if (comment) {
-        const commentId = res.data.comments.reverse()[0].id;
-        reduxComment = createComment(commentId, newText, post.id, user.id);
-        reduxComment.original_comment_id = comment.id;
-      } else {
-        reduxComment = createComment(res.data.id, newText, post.id, user.id);
-      }
-      //console.log('new comment: ', reduxComment);
-      dispatch(addComments([reduxComment]));
-      dispatch(commentPost({postId: post.id, commentId: reduxComment.id}));
-      if (comment) {
-        dispatch(answerComment({originalCommentId: reduxComment.original_comment_id, answerId: reduxComment.id}));
-      }
-    }
-    setNewText('');
-    callback();
-  };
+  //   //console.log('created', _comment);
+  //   if (isEdition) {
+  //     comments_services.edit(comment.id, _comment);
+  //     dispatch(updateComment({id: comment.id, text: newText}));
+  //   } else {
+  //     const res = await comments_services.create(_comment);
+  //     let reduxComment;
+  //     if (comment) {
+  //       const commentId = res.data.comments.reverse()[0].id;
+  //       reduxComment = createComment(commentId, newText, post.id, user.id);
+  //       reduxComment.original_comment_id = comment.id;
+  //     } else {
+  //       reduxComment = createComment(res.data.id, newText, post.id, user.id);
+  //     }
+  //     //console.log('new comment: ', reduxComment);
+  //     dispatch(addComments([reduxComment]));
+  //     dispatch(commentPost({postId: post.id, commentId: reduxComment.id}));
+  //     if (comment) {
+  //       dispatch(answerComment({originalCommentId: reduxComment.original_comment_id, answerId: reduxComment.id}));
+  //     }
+  //   }
+  //   setNewText('');
+  //   callback();
+  // };
 
-  const selectSugestion = (sugestion) => {
-    setNewText(
-      newText
-        .slice(0, -(sugestionsInput.length + 2))
-        .concat(`[${sugestion.display_name}:${sugestion.user_id}] `)
-    );
-    setShowSugestions(false);
-  };
+  // const selectSugestion = (sugestion) => {
+  //   setNewText(
+  //     newText
+  //       .slice(0, -(sugestionsInput.length + 2))
+  //       .concat(`[${sugestion.display_name}:${sugestion.user_id}] `)
+  //   );
+  //   setShowSugestions(false);
+  // };
 
-  const Mention = ({sugestion, key}) => (
-    <TouchableOpacity
-      key={key}
-      onPress={() => selectSugestion(sugestion)}
-      activeOpacity={0.4}
-      style={styles.sugestionContainer}>
-      <Image
-        source={require('../assets/foto.png')}
-        style={styles.icon_profile}
-      />
-      <Text style={styles.sugestion}>@{sugestion.display_name}</Text>
-    </TouchableOpacity>
-  );
+  // const Mention = ({sugestion, key}) => (
+  //   <TouchableOpacity
+  //     key={key}
+  //     onPress={() => selectSugestion(sugestion)}
+  //     activeOpacity={0.4}
+  //     style={styles.sugestionContainer}>
+  //     <Image
+  //       source={require('../assets/foto.png')}
+  //       style={styles.icon_profile}
+  //     />
+  //     <Text style={styles.sugestion}>@{sugestion.display_name}</Text>
+  //   </TouchableOpacity>
+  // );
 
   return (
     <>
-      {showSugestions ? (
+      {/* {showSugestions ? (
         <View
           style={[
             styles.sugestions,
@@ -173,22 +173,22 @@ export default function CommentInput({
             <Mention sugestion={sugestion} key={i} />
           ))}
         </View>
-      ) : null}
+      ) : null} */}
 
       <TextInput
         style={[styles.newText, style]}
-        onChangeText={setNewText}
-        onSubmitEditing={saveComment}
+        onChangeText={()=>{}}
+        // onSubmitEditing={saveComment}
         placeholder={placeholder}
         placeholderTextColor={'white'}>
 
         <CommentFormatter
-          comment={newText}
+          comment={""}
           isInput={true}
           post={post}
-          comments={comments}
-          setShowSugestions={setShowSugestions}
-          setSugestionsInput={setSugestionsInput}
+          // comments={comments}
+          // setShowSugestions={setShowSugestions}
+          // setSugestionsInput={setSugestionsInput}
         />
       </TextInput>
     </>

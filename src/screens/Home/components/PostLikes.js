@@ -126,7 +126,6 @@ const PostLikes = ({navigation, route}) => {
 
     } else return reactions_details;
   };
-  console.log('files_with_url', files_with_urls)
 
   return (
     <SafeAreaView style={styles.container}>
