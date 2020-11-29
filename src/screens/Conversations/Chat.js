@@ -5,12 +5,12 @@ import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
 import chats_services from '../../services/chats_services';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  addConversation,
-  setNewConversation,
-} from '../../reducers/conversations';
 import { getConversationByParams } from '../../redux/reducers/conversations';
-import {pushMessage} from '../../redux/actions/conversations';
+import {
+  pushMessage,
+  addConversation,
+  replaceConversation,
+} from '../../redux/actions/conversations';
 import Message from './components/Message';
 import {getLoggedUser} from '../../redux/reducers/session';
 import GoBackButton, { GoBackButtonPlaceholder } from '../../components/GoBackButton'
@@ -51,12 +51,14 @@ const Chat = ({ navigation, route }) => {
   };
 
   const sendNewMessage = async() => {
-    const newMessage = await chats_services.sendMessage(other.user_id, { text: newMessageText });
-    setNewMessageText('');
-    dispatch(pushMessage(newMessage.data));
-    if (!conversation.messages.length > 0) {
-      const conversations = await chats_services.list()
-      dispatch(setNewConversation(conversations.data[0]));
+    if ( newMessageText !== '') {
+      const newMessage = await chats_services.sendMessage(other.user_id, { text: newMessageText });
+      setNewMessageText('');
+      dispatch(pushMessage(conversation, newMessage.data));
+      if (!conversation.messages.length > 0) {
+        const conversations = await chats_services.list()
+        dispatch(replaceConversation(conversations.data[0]));
+      }
     }
   };
 

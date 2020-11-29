@@ -1,5 +1,6 @@
+import { anySatisfy } from '../../utils/utils';
 import {
-  FETCH_CONVERSATIONS_FULFILLED, FETCH_CONVERSATIONS_PENDING, PUSH_MESSAGE,
+  FETCH_CONVERSATIONS_FULFILLED, FETCH_CONVERSATIONS_PENDING, PUSH_CONVERSATION, PUSH_MESSAGE, REPLACE_CONVERSATION,
 } from '../actions/conversations';
 
 const defaultState = {
@@ -24,17 +25,33 @@ export default function (state = defaultState, action) {
       return {
         ...state,
         conversations: state.conversations.map((conversation) => {
-          if (
-            conversation.active_users[0] === action.payload.from.user_id ||
-            conversation.active_users[1] === action.payload.from.user_id
-          ) {
+          if ( conversation.id === action.payload.conversation.id) {
             const newMessage = {
-              ...action.payload,
-              from: action.payload.from.user_id,
+              ...action.payload.newMessage,
+              from: action.payload.newMessage.from.user_id,
             };
             conversation.messages.unshift(newMessage);
           }
           return conversation;
+        })
+      };
+    case PUSH_CONVERSATION:
+      return {
+        ...state,
+        conversations: [...state.conversations, action.payload],
+      };
+    case REPLACE_CONVERSATION:
+      return {
+        ...state,
+        conversations: state.conversations.map((c) => {
+          if (c.id === -1 
+            && anySatisfy(c.active_users, action.payload.from.user_id)
+            && anySatisfy(c.active_users, action.payload.to.user_id)
+          ) {
+            return action.payload;
+          } else {
+            return c;
+          }
         })
       };
     default:

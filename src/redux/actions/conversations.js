@@ -7,6 +7,9 @@ export const FETCH_CONVERSATIONS_REJECTED = 'FETCH_CONVERSATIONS_REJECTED';
 
 export const PUSH_MESSAGE = 'PUSH_MESSAGE';
 
+export const PUSH_CONVERSATION = 'PUSH_CONVERSATION';
+export const REPLACE_CONVERSATION = 'REPLACE_CONVERSATION';
+
 //action creators
 
 export function fetchConversations() {
@@ -16,16 +19,26 @@ export function fetchConversations() {
   };
 }
 
-export function pushMessage(newMessage) {
+export function pushMessage(conversation, newMessage) {
   return {
     type: PUSH_MESSAGE,
-    payload: newMessage,
+    payload: {
+      conversation,
+      newMessage
+    },
   };
 }
 
-export function setNewConversation(newConversation) {
+export function addConversation(newConversation) {
   return {
-    type: PUSH_MESSAGE,
-    payload: newMessage,
+    type: PUSH_CONVERSATION,
+    payload: newConversation,
+  };
+}
+
+export function replaceConversation(newConversation) {
+  return {
+    type: REPLACE_CONVERSATION,
+    payload: newConversation,
   };
 }
