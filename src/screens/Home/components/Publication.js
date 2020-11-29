@@ -129,21 +129,22 @@ export default function Publication({
 
         <TouchableOpacity onPress={() => {}}>
           <View style={styles.ownerData}>
-            {user_owner.account_verified ? (
+            {/* {user_owner.account_verified ? (
               <Image
                 source={require('../../../assets/tilde.png')}
                 style={styles.ownerVerified}
               />
-            ) : null}
+            ) : null} */}
             <View
               style={[
                 styles.ownerDisplayNameContainer,
-                user_owner.account_verified
-                  ? styles.ownerDisplayNameVerified
-                  : styles.ownerDisplayNameNotVerified,
+                styles.ownerDisplayNameNotVerified
+                // user_owner.account_verified
+                  // ? styles.ownerDisplayNameVerified
+                  // : styles.ownerDisplayNameNotVerified,
               ]}>
               <Text style={styles.ownerDisplayName}>
-                @{user_owner.display_name}{' '}
+                {user_owner.display_name}{' '}
               </Text>
             </View>
             <ProgressiveImage
@@ -463,7 +464,7 @@ const styles = StyleSheet.create({
   },
   ownerDisplayName: {
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   postImagesContainer: {
     height: 360,
@@ -566,8 +567,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   description_container: {
-    borderTopWidth: 1,
-    borderTopColor: '#E8FC64',
     padding: 8,
     paddingLeft: 0,
   },
