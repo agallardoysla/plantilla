@@ -3,16 +3,16 @@ import {StyleSheet, TextInput, View, Image} from 'react-native';
 import {windowHeight, windowWidth} from '../utils/Dimensions';
 import StylesConfiguration from '../utils/StylesConfiguration';
 
-export default function FormInput({
+export default function FormInputChat({
   value,
   placeholderText,
-  textStyle,
+  style,
   ...props
 }) {
   return (
     <TextInput
       value={value}
-      style={[styles.input, textStyle]}
+      style={[styles.input, style]}
       placeholder={placeholderText}
       placeholderTextColor="gray"
       {...props}
@@ -23,12 +23,13 @@ export default function FormInput({
 const styles = StyleSheet.create({
   input: {
     flex: 1,
+    backgroundColor: 'black',
+    borderColor: '#E9FC64',
+    color: 'white',
+    fontFamily: StylesConfiguration.fontFamily,
     fontSize: 16,
     borderRadius: 10,
     borderWidth: 1,
-    backgroundColor: 'black',
-    borderColor: '#E9FC64',
-    fontFamily: StylesConfiguration.fontFamily,
-    
+    paddingHorizontal: 10,
   },
 });

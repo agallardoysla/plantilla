@@ -4,7 +4,7 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import FormInputChat from '../../components/FormInputChat';
 import FormButton_small from '../../components/FormButton_small';
 import chats_services from '../../services/chats_services';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   addConversation,
   pushMessage,
@@ -13,7 +13,7 @@ import {
 import { getConversationByParams } from '../../redux/reducers/conversations';
 import Message from './components/Message';
 import {getLoggedUser} from '../../redux/reducers/session';
-import GoBackButton from '../../components/GoBackButton'
+import GoBackButton, { GoBackButtonPlaceholder } from '../../components/GoBackButton'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Chat = ({ navigation, route }) => {
@@ -24,10 +24,7 @@ const Chat = ({ navigation, route }) => {
   const receiver = route.params.receiver
     ? route.params.receiver.user_id
     : undefined;
-  const conversation = useSelector(
-    getConversationByParams(route.params.conversationId, receiver),
-    shallowEqual,
-  );
+  const conversation = useSelector(getConversationByParams(route.params.conversationId, receiver));
 
   useEffect(() => {
     //console.log('conversation', conversation);
@@ -48,10 +45,6 @@ const Chat = ({ navigation, route }) => {
       }
     }
   }, []);
-
-  const go_back = () => {
-    navigation.goBack(null);
-  };
 
   const getOther = (conv) => {
     const _other = conv.users.filter(u => u.user_id !== loggedUser.id);
@@ -78,53 +71,34 @@ const Chat = ({ navigation, route }) => {
   );
 
   return (
-    <>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.row_header}>
-          <View
-            style={{
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-
-            <GoBackButton navigation={navigation} />
-
-          </View>
-
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={styles.text_title}>@{other.display_name}</Text>
-          </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.row_header}>
+        <GoBackButton navigation={navigation} />
+        <View
+          style={styles.otherNameContainer}>
+          <Text style={styles.otherName}>@{other.display_name}</Text>
         </View>
-        <FlatList
-          data={conversation.messages}
-          inverted={true}
-          style={styles.chat}
-          renderItem={MessageItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </SafeAreaView>
-
+        <GoBackButtonPlaceholder />
+      </View>
+      <FlatList
+        data={conversation.messages}
+        inverted={true}
+        style={styles.chat}
+        renderItem={MessageItem}
+        keyExtractor={(item, index) => index.toString()}
+      />
       <View style={styles.bottomBar}>
         <Image
           source={require('../../assets/camara.png')}
-          style={{ marginLeft: 10, marginRight: 10, width: 36, height: 36 }}
+          style={styles.cameraImage}
+          fadeDuration={0}
         />
-
         <FormInputChat
-          textStyle={{ color: 'white' }}
           placeholderText="Escriba un mensaje..."
           value={newMessage}
           onChangeText={setNewMessage}
           onEndEditing={sendNewMessage}
         />
-
         <FormButton_small
           buttonTitle="ENVIAR"
           style={{
@@ -139,7 +113,7 @@ const Chat = ({ navigation, route }) => {
           onPress={sendNewMessage}
         />
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
@@ -147,8 +121,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
   },
-
   bottomBar: {
     flexDirection: 'row',
     backgroundColor: '#242424',
@@ -164,18 +140,25 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginBottom: 10,
   },
-
-  text_title: {
+  otherNameContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  otherName: {
     color: StylesConfiguration.color,
     // fontFamily: 'GothamBlack-Normal',
     fontSize: 18,
   },
-  boton_back: {
-    marginHorizontal: 5,
-    marginVertical: 5,
-  },
   chat: {
     marginBottom: 15,
+  },
+  cameraImage: { 
+    marginLeft: 10,
+    marginRight: 10,
+    width: 36,
+    height: 36,
   },
 });
 
