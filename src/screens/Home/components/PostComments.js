@@ -13,6 +13,7 @@ import Icon from '../../../components/Icon';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import PublicationContent from './PublicationContent';
 import PublicationComment from './PublicationComment';
+import { useSelector } from 'react-redux';
 
 const PostLikes = ({navigation, route}) => {
   const {comments, files_with_urls, commentsCount} = route.params;
@@ -20,9 +21,12 @@ const PostLikes = ({navigation, route}) => {
     comments,
     searchTerms: '',
   });
+  const followers = useSelector(
+    (state) => state.session.user.followers_with_details,
+  );
 
   const showPublication = () => {
-    navigation.navigate('Home');
+    navigation.goBack();
   };
 
   const CommentCard = ({item, index}) => {
@@ -36,6 +40,44 @@ const PostLikes = ({navigation, route}) => {
     );
   };
 
+
+  const filterUsers = (searchTerms) => {
+    if (searchTerms !== '') {
+      if(search.comments.length > 0){
+        const filtered = search.comments.filter((comment) =>
+        comment?.user_owner?.display_name.toLowerCase().includes(searchTerms.toLowerCase()),
+      );
+      return filtered;
+      } else{
+        const filtered = comments.filter((comment) =>
+        comment.user_owner.display_name.toLowerCase().includes(searchTerms.toLowerCase()),
+      );
+      return filtered;
+      }
+
+    } else return comments;
+  };
+
+  const getFollowCommentRatio = () => {
+    let follower = 0;
+    let other = 0;
+
+    comments.map((comment) => {
+      const followerCommented = followers.some((follower) => {
+        return follower.user_id === comment.user_owner.user_id;
+      });
+      if (followerCommented) {
+        follower++;
+      } else {
+        other++;
+      }
+    });
+    return {follower, other};
+  };
+
+  const commentsBy = getFollowCommentRatio();
+
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.column_back}>
@@ -47,40 +89,80 @@ const PostLikes = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.column}>
+            <View style={styles.column}>
         <View style={styles.row}>
+          <View
+            style={{
+              ...styles.sub_colummn,
+              paddingLeft: 20,
+              alignContent: 'flex-start',
+              alignItems: 'flex-start',
+            }}>
+            <Text
+              style={{
+                color: 'white',
+                margin: 4,
+              }}>
+              Seguidores
+            </Text>
+            <Text
+              style={{
+                top: 3,
+                margin: 4,
+                color: 'white',
+              }}>
+              Otros
+            </Text>
+          </View>
+
+          <View style={styles.sub_colummn}>
+            <View style={styles.reactionByFollowerContainer}>
+              <Text style={styles.reactionByFollower_text}>
+                {commentsBy.follower}{' '}
+              </Text>
+            </View>
+            <View style={styles.reactionByOtherContainer}>
+              <Text style={styles.reactionByOther_text}>
+                {commentsBy.other}
+              </Text>
+            </View>
+          </View>
+
           <View style={styles.sub_colummn}>
             <Icon source={'comentario'} color="#E8FC64" size={32} />
             <Text
               style={{
                 color: 'white',
+                // fontFamily: 'GothamBlack-normal'
               }}>
               {commentsCount}
             </Text>
           </View>
 
           <View style={styles.sub_colummn}>
+            {/* <ProgressiveImage  thumbnailSource={require('../../../assets/pride-dog_1.png')} source={{uri: files_with_urls[0].url}} /> */}
             <PublicationContent
               files={files_with_urls}
               showFullContent={true}
-              style={{width: 50, height: 80}}
+              style={{width: 40, height: 80, flex: 1}}
               navigation={navigation}
             />
           </View>
         </View>
 
-        {/* <View style={styles.row}>
+        <View style={styles.row}>
           <FormSearchInput
             value={search.searchTerms}
-            placeholderText={'Buscar usuarios...'}
+            placeholderText={'Buscar comentarios por usuario...'}
             onChange={(e) =>
-              setSearch({reactions: filterUsers(e), searchTerms: e})
+              setSearch({comments: filterUsers(e), searchTerms: e})
             }
           />
-        </View> */}
-
+        </View>
         <FlatList style={{padding: 24}} data={search.comments} renderItem={CommentCard} />
+
       </View>
+ 
     </SafeAreaView>
   );
 };
