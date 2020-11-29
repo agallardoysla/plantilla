@@ -29,7 +29,8 @@ const genericMethodWithData = (method) => async (url, data, forceJWT) => {
   try {
     res = await axios_v1[method.toLowerCase()](url, data, config);
   } catch (e) {
-    //console.log(`Error ${method} ${url}: ${e}`);
+    console.log(`Error ${method} ${url}: ${e.message}`);
+    return e;
   }
   return res;
 };
@@ -41,7 +42,8 @@ const genericMethodNoData = (method) => async (url, forceJWT) => {
   try {
     res = await axios_v1[method.toLowerCase()](url, config);
   } catch (e) {
-    return e
+    console.log(`Error ${method} ${url}: ${e.message}`);
+    return e;
   }
   return res;
 };
