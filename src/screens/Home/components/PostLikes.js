@@ -11,7 +11,6 @@ import FormButton_small from '../../../components/FormButton_small';
 import FormSearchInput from '../../../components/FormSearchInput';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import Icon from '../../../components/Icon';
-import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ProgressiveImage from '../../../components/ProgressiveImage';
 import PublicationContent from './PublicationContent';
@@ -67,15 +66,18 @@ const PostLikes = ({navigation, route}) => {
             style={styles.image}
           />
           <View style={styles.contentView}>
-            <Text
-              style={{
-                color: 'white',
-                fontWeight: StylesConfiguration.fontWeight,
-                fontFamily: StylesConfiguration.fontFamily,
-                left: 5,
-              }}>
-              {username}
-            </Text>
+            <TouchableOpacity>
+              <Text
+                style={{
+                  color: 'white',
+                  fontWeight: StylesConfiguration.fontWeight,
+                  fontFamily: StylesConfiguration.fontFamily,
+                  left: 5,
+                }}>
+                {username}
+              </Text>
+            </TouchableOpacity>
+
             <Text
               style={{
                 color: 'white',
@@ -94,12 +96,14 @@ const PostLikes = ({navigation, route}) => {
             style={styles.image_icon}
           /> */}
           <View style={styles.contentView}>
-            <Icon
-              source={'email'}
-              color={StylesConfiguration.color}
-              size={32}
-              style={{margin: 4}}
-            />
+            <TouchableOpacity>
+              <Icon
+                source={'email'}
+                color={StylesConfiguration.color}
+                size={32}
+                style={{margin: 4}}
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -108,12 +112,21 @@ const PostLikes = ({navigation, route}) => {
 
   const filterUsers = (searchTerms) => {
     if (searchTerms !== '') {
-      const filtered = search.reactions.filter((user) =>
+      if(search.reactions.length > 0){
+        const filtered = search.reactions.filter((user) =>
         user.username.toLowerCase().includes(searchTerms.toLowerCase()),
       );
       return filtered;
+      } else{
+        const filtered = reactions_details.filter((user) =>
+        user.username.toLowerCase().includes(searchTerms.toLowerCase()),
+      );
+      return filtered;
+      }
+
     } else return reactions_details;
   };
+  console.log('files_with_url', files_with_urls)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -128,19 +141,25 @@ const PostLikes = ({navigation, route}) => {
 
       <View style={styles.column}>
         <View style={styles.row}>
-          <View style={styles.sub_colummn}>
+          <View
+            style={{
+              ...styles.sub_colummn,
+              paddingLeft: 20,
+              alignContent: 'flex-start',
+              alignItems: 'flex-start',
+            }}>
             <Text
               style={{
                 color: 'white',
-                // fontFamily: 'GothamBlack-normal'
+                margin: 4,
               }}>
               Seguidores
             </Text>
             <Text
               style={{
+                top: 3,
+                margin: 4,
                 color: 'white',
-                // fontFamily: 'GothamBlack-normal',
-                top: 20,
               }}>
               Otros
             </Text>
@@ -171,11 +190,11 @@ const PostLikes = ({navigation, route}) => {
           </View>
 
           <View style={styles.sub_colummn}>
-            {/* <Image source={require('../../../assets/dog.png')} /> */}
+            {/* <ProgressiveImage  thumbnailSource={require('../../../assets/pride-dog_1.png')} source={{uri: files_with_urls[0].url}} /> */}
             <PublicationContent
               files={files_with_urls}
               showFullContent={true}
-              style={styles.image_post}
+              style={{width: 40, height: 80, flex: 1}}
               navigation={navigation}
             />
           </View>
@@ -212,9 +231,8 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-
     justifyContent: 'space-between',
-    marginBottom: 5,
+    margin: 5,
     top: 5,
   },
   row_comment: {
@@ -237,8 +255,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: 'center',
     alignContent: 'center',
+    margin: 4,
   },
   reactionByOtherContainer: {
+    margin: 4,
     width: 100,
     borderWidth: 1,
     borderRadius: 50,
