@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -11,68 +11,122 @@ import FormButton_small from '../../../components/FormButton_small';
 import FormSearchInput from '../../../components/FormSearchInput';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import Icon from '../../../components/Icon';
-import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import ProgressiveImage from '../../../components/ProgressiveImage';
+import PublicationContent from './PublicationContent';
+import {useSelector} from 'react-redux';
 
 const PostLikes = ({navigation, route}) => {
-  //trae el nombre del usuario
-  //console.log(route.params);
+  const {reactions_details, files_with_urls, reactionscount} = route.params;
+  const [search, setSearch] = useState({
+    reactions: reactions_details,
+    searchTerms: '',
+  });
+  const followers = useSelector(
+    (state) => state.session.user.followers_with_details,
+  );
 
-  const data = [
-    {
-      id: 0,
-      photo: 'url',
-    },
-    {
-      id: 1,
-      photo: 'url',
-    },
-    {
-      id: 2,
-      photo: 'url',
-    },
-    {
-      id: 3,
-      photo: 'url',
-    },
-    {
-      id: 4,
-      photo: 'url',
-    },
-    {
-      id: 5,
-      photo: 'url',
-    },
-    {
-      id: 6,
-      photo: 'url',
-      name_user: 'name',
-    },
-    {
-      id: 8,
-      photo: 'url',
-    },
-    {
-      id: 9,
-      photo: 'url',
-    },
-    {
-      id: 10,
-      photo: 'url',
-    },
-    {
-      id: 11,
-      photo: 'url',
-    },
-    {
-      id: 12,
-      photo: 'url',
-    },
-  ];
+  const getFollowLikeRatio = () => {
+    let follower = 0;
+    let other = 0;
+
+    reactions_details.map((reaction) => {
+      const followerReacted = followers.some((follower) => {
+        return follower.user_id === reaction.user_id;
+      });
+      if (followerReacted) {
+        follower++;
+      } else {
+        other++;
+      }
+    });
+    return {follower, other};
+  };
+
+  const reactionsBy = getFollowLikeRatio();
 
   const showPublication = () => {
     navigation.navigate('Home');
   };
+
+  const UserCard = ({item}) => {
+    const {photo, username} = item;
+
+    return (
+      <View style={styles.row}>
+        <View style={styles.contentViewIcon}>
+          <ProgressiveImage
+            thumbnailSource={require('../../../assets/pride-dog_1.png')}
+            source={
+              photo !== null
+                ? {uri: photo}
+                : require('../../../assets/pride-dog_1.png')
+            }
+            resizeMode="cover"
+            style={styles.image}
+          />
+          <View style={styles.contentView}>
+            <TouchableOpacity>
+              <Text
+                style={{
+                  color: 'white',
+                  fontWeight: StylesConfiguration.fontWeight,
+                  fontFamily: StylesConfiguration.fontFamily,
+                  left: 5,
+                }}>
+                {username}
+              </Text>
+            </TouchableOpacity>
+
+            <Text
+              style={{
+                color: 'white',
+                // fontFamily: 'GothamBlack-Normal',
+                left: 5,
+              }}>
+              #QuedateEnCasa
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.contentViewAction}>
+          {/* <Image
+            source={require('../../../assets/icono_home.png')}
+            resizeMode="contain"
+            style={styles.image_icon}
+          /> */}
+          <View style={styles.contentView}>
+            <TouchableOpacity>
+              <Icon
+                source={'email'}
+                color={StylesConfiguration.color}
+                size={32}
+                style={{margin: 4}}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const filterUsers = (searchTerms) => {
+    if (searchTerms !== '') {
+      if(search.reactions.length > 0){
+        const filtered = search.reactions.filter((user) =>
+        user.username.toLowerCase().includes(searchTerms.toLowerCase()),
+      );
+      return filtered;
+      } else{
+        const filtered = reactions_details.filter((user) =>
+        user.username.toLowerCase().includes(searchTerms.toLowerCase()),
+      );
+      return filtered;
+      }
+
+    } else return reactions_details;
+  };
+  console.log('files_with_url', files_with_urls)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -87,27 +141,41 @@ const PostLikes = ({navigation, route}) => {
 
       <View style={styles.column}>
         <View style={styles.row}>
-          <View style={styles.sub_colummn}>
+          <View
+            style={{
+              ...styles.sub_colummn,
+              paddingLeft: 20,
+              alignContent: 'flex-start',
+              alignItems: 'flex-start',
+            }}>
             <Text
               style={{
                 color: 'white',
-                // fontFamily: 'GothamBlack-normal'
+                margin: 4,
               }}>
               Seguidores
             </Text>
             <Text
               style={{
+                top: 3,
+                margin: 4,
                 color: 'white',
-                // fontFamily: 'GothamBlack-normal',
-                top: 20,
               }}>
               Otros
             </Text>
           </View>
 
           <View style={styles.sub_colummn}>
-            <FormButton_small buttonTitle="4001" />
-            <FormButton_small buttonTitle="5645" />
+            <View style={styles.reactionByFollowerContainer}>
+              <Text style={styles.reactionByFollower_text}>
+                {reactionsBy.follower}{' '}
+              </Text>
+            </View>
+            <View style={styles.reactionByOtherContainer}>
+              <Text style={styles.reactionByOther_text}>
+                {reactionsBy.other}
+              </Text>
+            </View>
           </View>
 
           <View style={styles.sub_colummn}>
@@ -117,71 +185,32 @@ const PostLikes = ({navigation, route}) => {
                 color: 'white',
                 // fontFamily: 'GothamBlack-normal'
               }}>
-              9646
+              {reactionscount}
             </Text>
           </View>
 
           <View style={styles.sub_colummn}>
-            <Image source={require('../../../assets/dog.png')} />
+            {/* <ProgressiveImage  thumbnailSource={require('../../../assets/pride-dog_1.png')} source={{uri: files_with_urls[0].url}} /> */}
+            <PublicationContent
+              files={files_with_urls}
+              showFullContent={true}
+              style={{width: 40, height: 80, flex: 1}}
+              navigation={navigation}
+            />
           </View>
         </View>
 
         <View style={styles.row}>
-          <FormSearchInput />
+          <FormSearchInput
+            value={search.searchTerms}
+            placeholderText={'Buscar usuarios...'}
+            onChange={(e) =>
+              setSearch({reactions: filterUsers(e), searchTerms: e})
+            }
+          />
         </View>
 
-        <FlatList
-          data={data}
-          renderItem={({item}) => {
-            return (
-              <ScrollView>
-                <View style={styles.row}>
-                  <View style={styles.contentViewIcon}>
-                    <Image
-                      source={require('../../../assets/pride-dog_1.png')}
-                      resizeMode="contain"
-                      style={styles.image}
-                    />
-                    <View style={styles.contentView}>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontWeight: StylesConfiguration.fontWeight,
-                          fontFamily: StylesConfiguration.fontFamily,
-                          left: 5,
-                        }}>
-                        @Gruñon
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'white',
-                          // fontFamily: 'GothamBlack-Normal',
-                          left: 5,
-                        }}>
-                        #QuedateEnCasa
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.contentViewAction}>
-                    <Image
-                      source={require('../../../assets/icono_home.png')}
-                      resizeMode="contain"
-                      style={styles.image_icon}
-                    />
-                    <View style={styles.contentView}>
-                      <Icon
-                        source={'email'}
-                        color={StylesConfiguration.color}
-                        size={32}
-                      />
-                    </View>
-                  </View>
-                </View>
-              </ScrollView>
-            );
-          }}
-        />
+        <FlatList data={search.reactions} renderItem={UserCard} />
       </View>
     </SafeAreaView>
   );
@@ -202,9 +231,8 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-
     justifyContent: 'space-between',
-    marginBottom: 5,
+    margin: 5,
     top: 5,
   },
   row_comment: {
@@ -219,6 +247,27 @@ const styles = StyleSheet.create({
   sub_colummn: {
     flex: 1,
     alignItems: 'center',
+  },
+  reactionByFollowerContainer: {
+    width: 100,
+    backgroundColor: '#E8FC64',
+    borderWidth: 1,
+    borderRadius: 50,
+    alignItems: 'center',
+    alignContent: 'center',
+    margin: 4,
+  },
+  reactionByOtherContainer: {
+    margin: 4,
+    width: 100,
+    borderWidth: 1,
+    borderRadius: 50,
+    borderColor: '#E8FC64',
+    alignItems: 'center',
+    alignContent: 'center',
+  },
+  reactionByOther_text: {
+    color: 'white',
   },
   image: {
     width: 50,

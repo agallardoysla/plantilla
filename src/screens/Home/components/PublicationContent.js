@@ -9,9 +9,9 @@ import PublicationActions from './PublicationActions';
 export default function PublicationContent({files, style, navigation, post, isFeed}) {
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) => availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
-
  
   if (files?.length > 0) {
+
     return isImage(files[0].url_original) ? (
       <ScrollView horizontal={true} indicatorStyle="white">
         {files.map((file, i) => (
@@ -21,7 +21,7 @@ export default function PublicationContent({files, style, navigation, post, isFe
             resizeMode="cover"
             thumbnailSource={{uri:file.url_small}}
             key={i}
-            onPress={()=>isFeed && PublicationActions.goToPost(post, navigation)}
+            onPress={()=>isFeed && post && PublicationActions.goToPost(post, navigation)}
           />
         ))}
       </ScrollView>
