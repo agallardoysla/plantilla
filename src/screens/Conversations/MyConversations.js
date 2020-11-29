@@ -21,7 +21,6 @@ const MyConversations = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    console.log(conversations.conversations.map(c => c.messages));
     setFilteredConversations(conversations.conversations);
   }, [conversations]);
 

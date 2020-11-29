@@ -7,10 +7,10 @@ import chats_services from '../../services/chats_services';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addConversation,
-  pushMessage,
   setNewConversation,
 } from '../../reducers/conversations';
 import { getConversationByParams } from '../../redux/reducers/conversations';
+import {pushMessage} from '../../redux/actions/conversations';
 import Message from './components/Message';
 import {getLoggedUser} from '../../redux/reducers/session';
 import GoBackButton, { GoBackButtonPlaceholder } from '../../components/GoBackButton'
@@ -18,7 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Chat = ({ navigation, route }) => {
   const loggedUser = useSelector(getLoggedUser);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessageText, setNewMessageText] = useState('');
   const [other, setOther] = useState({});
   const dispatch = useDispatch();
   const receiver = route.params.receiver
@@ -27,7 +27,6 @@ const Chat = ({ navigation, route }) => {
   const conversation = useSelector(getConversationByParams(route.params.conversationId, receiver));
 
   useEffect(() => {
-    //console.log('conversation', conversation);
     if (route.params.conversationId) {
       setOther(getOther(conversation));
     } else {
@@ -51,19 +50,14 @@ const Chat = ({ navigation, route }) => {
     return _other[0] ? _other[0] : conv.users[0];
   };
 
-  const sendNewMessage = () => {
-    setNewMessage('');
-    chats_services
-      .sendMessage(other.user_id, { text: newMessage })
-      .then((res) => {
-        //console.log(res.data);
-        dispatch(pushMessage(res.data));
-        if (!conversation.messages.length > 0) {
-          chats_services.list().then((_res) => {
-            dispatch(setNewConversation(_res.data[0]));
-          });
-        }
-      });
+  const sendNewMessage = async() => {
+    const newMessage = await chats_services.sendMessage(other.user_id, { text: newMessageText });
+    setNewMessageText('');
+    dispatch(pushMessage(newMessage.data));
+    if (!conversation.messages.length > 0) {
+      const conversations = await chats_services.list()
+      dispatch(setNewConversation(conversations.data[0]));
+    }
   };
 
   const MessageItem = ({ item }) => (
@@ -95,21 +89,14 @@ const Chat = ({ navigation, route }) => {
         />
         <FormInputChat
           placeholderText="Escriba un mensaje..."
-          value={newMessage}
-          onChangeText={setNewMessage}
+          value={newMessageText}
+          onChangeText={setNewMessageText}
           onEndEditing={sendNewMessage}
         />
         <FormButton_small
           buttonTitle="ENVIAR"
-          style={{
-            width: 68,
-            height: 40,
-            backgroundColor: '#E9FC64',
-            borderColor: '#E9FC64',
-            marginLeft: 10,
-            marginRight: 10,
-          }}
-          textStyle={{ color: 'black' }}
+          style={styles.sendButton}
+          textStyle={styles.sendButtonText}
           onPress={sendNewMessage}
         />
       </View>
@@ -159,6 +146,17 @@ const styles = StyleSheet.create({
     marginRight: 10,
     width: 36,
     height: 36,
+  },
+  sendButton: {
+    width: 68,
+    height: 40,
+    backgroundColor: '#E9FC64',
+    borderColor: '#E9FC64',
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  sendButtonText: {
+    color: 'black',
   },
 });
 
