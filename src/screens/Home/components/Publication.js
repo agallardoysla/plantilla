@@ -7,6 +7,8 @@ import {
   Dimensions,
   ActivityIndicator,
   Pressable,
+  KeyboardAvoidingViewComponent,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {
   TouchableOpacity,
@@ -46,7 +48,7 @@ export default function Publication({
   sharePost,
   newCommentCallback,
   navigation,
-  openMenu
+  openMenu,
 }) {
   const {
     id,
@@ -56,6 +58,7 @@ export default function Publication({
     views_count,
     reacted,
     reactionscount,
+    reactions_details,
     text,
   } = post;
 
@@ -137,21 +140,22 @@ export default function Publication({
 
         <TouchableOpacity onPress={() => {navigateProfile(user_owner.user_id)}}>
           <View style={styles.ownerData}>
-            {user_owner.account_verified ? (
+            {/* {user_owner.account_verified ? (
               <Image
                 source={require('../../../assets/tilde.png')}
                 style={styles.ownerVerified}
               />
-            ) : null}
+            ) : null} */}
             <View
               style={[
                 styles.ownerDisplayNameContainer,
-                user_owner.account_verified
-                  ? styles.ownerDisplayNameVerified
-                  : styles.ownerDisplayNameNotVerified,
+                styles.ownerDisplayNameNotVerified
+                // user_owner.account_verified
+                  // ? styles.ownerDisplayNameVerified
+                  // : styles.ownerDisplayNameNotVerified,
               ]}>
               <Text style={styles.ownerDisplayName}>
-                @{user_owner.display_name}{' '}
+                {user_owner.display_name}{' '}
               </Text>
             </View>
             <ProgressiveImage
@@ -188,14 +192,21 @@ export default function Publication({
           </View>
           <View style={styles.icon_container}>
             <TouchableOpacity
-              onPress={() =>
+              onPress={() => {
                 toggleReaction({
                   reacted: !reaction.reacted,
                   reactionscount: reaction.reacted
                     ? reaction.reactionscount - 1
                     : reaction.reactionscount + 1,
-                })
-              }>
+                });
+              }}
+              onLongPress={() => {
+                navigation.navigate('PostLikes', {
+                  reactions_details,
+                  files_with_urls,
+                  reactionscount: reaction.reactionscount,
+                });
+              }}>
               <Image
                 style={[styles.icon_post, styles.icon_corazon]}
                 source={
@@ -212,7 +223,14 @@ export default function Publication({
             />
           </View>
           <View style={styles.icon_container}>
-            <TouchableOpacity onPress={getAndSetShowComments}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('PostComments', {
+                  comments,
+                  files_with_urls,
+                  commentsCount,
+                })
+              }>
               <Image
                 source={require('../../../assets/comentario.png')}
                 style={[styles.icon_post, styles.icon_comentario]}
@@ -228,7 +246,7 @@ export default function Publication({
               />
             </TouchableOpacity>
           </View>
-          <View style={{...styles.icon_container, justifyContent:'flex-end'}}>
+          <View style={{...styles.icon_container, justifyContent: 'flex-end'}}>
             <TouchableOpacity onPress={openMenu}>
               <Image
                 source={require('../../../assets/menu_desbordamiento.png')}
@@ -252,7 +270,6 @@ export default function Publication({
             return index < commentsShown ? (
               <PublicationComment
                 style={styles.publicationComments}
-                post={post}
                 comment={comment}
                 key={index}
                 navigation={navigation}
@@ -274,6 +291,16 @@ export default function Publication({
             </Text>
           </TouchableOpacity>
         ) : null}
+
+          <CommentInput
+            placeholder={'Escribir un nuevo comentario...'}
+            callback={newCommentCallback}
+            post={post}
+            comments={comments}
+            setSavingComment={() => {}}
+            style={styles.newComment}
+            initialText={''}
+          />
         {/*Finaliza Nombre de usuario como encabezado*/}
 
         {/*Inicia Foto de la publicaciòn */}
@@ -468,7 +495,7 @@ const styles = StyleSheet.create({
   },
   ownerDisplayName: {
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   postImagesContainer: {
     height: 360,
@@ -529,7 +556,7 @@ const styles = StyleSheet.create({
   },
   icon_mostrarMas: {
     margin: 6,
-        justifyContent: 'flex-start',
+    justifyContent: 'flex-start',
     // height: 15,
   },
   icon_numbers_view_container: {
@@ -571,8 +598,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   description_container: {
-    borderTopWidth: 1,
-    borderTopColor: '#E8FC64',
     padding: 8,
     paddingLeft: 0,
   },

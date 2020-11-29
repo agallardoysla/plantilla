@@ -57,7 +57,9 @@ export const {
   deleteCommentPost,
 } = postsSlice.actions;
 
-export const getPosts = (state) => state.posts.allIds;
+export const getPosts = (state) => {
+  console.log(state);
+};
 export const getPost = (id) => (state) => state.posts.byId[id.toString()];
 export const getReactionsByPost = (id) => (state) => {
   const post = state.posts.byId[id.toString()];

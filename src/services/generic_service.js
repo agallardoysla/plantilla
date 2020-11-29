@@ -22,8 +22,31 @@ const getConfig = async (forceJWT) => {
   };
 };
 
+const getConfigFile = async (forceJWT) => {
+  return {
+    headers: {
+      'Content-Type': 'multipart/mixed',
+      // 'Access-Control-Allow-Origin': '*',
+      'Authorization': await getToken(forceJWT),
+    },
+  };
+};
+
 const genericMethodWithData = (method) => async (url, data, forceJWT) => {
   const config = await getConfig(forceJWT);
+  console.log(method, api_config.baseURL, url, data, config);
+  let res;
+  try {
+    res = await axios_v1[method.toLowerCase()](url, data, config);
+  } catch (e) {
+    console.log(`Error ${method} ${url}: ${e.message}`);
+    return e;
+  }
+  return res;
+};
+
+const genericMethodWithFile = (method) => async (url, data, forceJWT) => {
+  const config = await getConfigFile(forceJWT);
   //console.log(method, api_config.baseURL, url, data, config);
   let res;
   try {
@@ -36,11 +59,13 @@ const genericMethodWithData = (method) => async (url, data, forceJWT) => {
 
 const genericMethodNoData = (method) => async (url, forceJWT) => {
   const config = await getConfig(forceJWT);
+  console.log(method, api_config.baseURL, url, config);
   let res;
   try {
     res = await axios_v1[method.toLowerCase()](url, config);
   } catch (e) {
-    return e
+    console.log(`Error ${method} ${url}: ${e.message}`);
+    return e;
   }
   return res;
 };
@@ -48,6 +73,7 @@ const genericMethodNoData = (method) => async (url, forceJWT) => {
 export default {
   doGet: genericMethodNoData('GET'),
   doPost: genericMethodWithData('POST'),
+  doPostFile: genericMethodWithFile('POST'),
   doPut: genericMethodWithData('PUT'),
   doDelete: genericMethodNoData('DELETE'),
 };

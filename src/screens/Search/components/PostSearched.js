@@ -1,18 +1,39 @@
 import React, { useState } from 'react';
-import {View, StyleSheet, Image, Dimensions, ActivityIndicator} from 'react-native';
-import Video from 'react-native-video-player';
+import {View, StyleSheet, Image, Dimensions, ActivityIndicator, TouchableOpacity} from 'react-native';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 let window = Dimensions.get('window');
 
-export default function ImagePostSearch({post}) {
+export default function PostSearched({post, navigation}) {
   const [loading, setLoading] = useState(true);
 
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
 
+  const goToPost = () => {
+    navigation.navigate('PostGroup', {
+      screen: 'PublicationDetails',
+      params: {
+        post,
+      },
+    });
+  };
+
   const toView = (file) => {
+    // esto es mock
+    return (
+      <TouchableOpacity onPress={goToPost}>
+        <Image
+          source={require('../../../assets/photo_1.png')}
+          resizeMode="cover"
+          style={styles.itemImage}
+          onLoad={() => setLoading(false)}
+        />
+      </TouchableOpacity>
+    );
+
+    // esto es lo que realmente se deberia mostrar
     return isImage(file.url) ? (
       <Image
         source={{uri: file.url_half}}
@@ -55,17 +76,19 @@ export default function ImagePostSearch({post}) {
   );
 }
 
+const heightWidth = window.width / 3 - 6;
+
 const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 120,
-    width: window.width / 3,
+    height: heightWidth,
+    width: heightWidth,
   },
   itemImage: {
-    width: window.width / 3,
-    height: 120,
+    width: heightWidth,
+    height: heightWidth,
   },
   itemVideo: {
     width: 50,

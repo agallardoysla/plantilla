@@ -8,9 +8,9 @@ import {getLoggedUser, followUser, unfollowUser} from '../../../reducers/loggedU
 
 const ProfileSearched = ({profile, navigation}) => {
   const dispatch = useDispatch();
-  const user = useSelector(getLoggedUser);
+  const loggedUser = useSelector((state) => state.session.user);
   const [userFollowProfile, setUserFollowProfile] = useState(
-    user.following_with_details.filter((u) => u.user_id === profile.id).length > 0,
+    loggedUser.following_with_details.filter((u) => u.user_id === profile.id).length > 0,
   );
 
   const goToProfile = () => {
