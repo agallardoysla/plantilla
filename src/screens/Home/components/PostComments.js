@@ -13,7 +13,7 @@ import Icon from '../../../components/Icon';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import PublicationContent from './PublicationContent';
 import PublicationComment from './PublicationComment';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const PostLikes = ({navigation, route}) => {
   const {comments, files_with_urls, commentsCount} = route.params;
@@ -40,21 +40,23 @@ const PostLikes = ({navigation, route}) => {
     );
   };
 
-
   const filterUsers = (searchTerms) => {
     if (searchTerms !== '') {
-      if(search.comments.length > 0){
+      if (search.comments.length > 0) {
         const filtered = search.comments.filter((comment) =>
-        comment?.user_owner?.display_name.toLowerCase().includes(searchTerms.toLowerCase()),
-      );
-      return filtered;
-      } else{
+          comment?.user_owner?.display_name
+            .toLowerCase()
+            .includes(searchTerms.toLowerCase()),
+        );
+        return filtered;
+      } else {
         const filtered = comments.filter((comment) =>
-        comment.user_owner.display_name.toLowerCase().includes(searchTerms.toLowerCase()),
-      );
-      return filtered;
+          comment.user_owner.display_name
+            .toLowerCase()
+            .includes(searchTerms.toLowerCase()),
+        );
+        return filtered;
       }
-
     } else return comments;
   };
 
@@ -77,7 +79,6 @@ const PostLikes = ({navigation, route}) => {
 
   const commentsBy = getFollowCommentRatio();
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.column_back}>
@@ -89,7 +90,7 @@ const PostLikes = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
 
-            <View style={styles.column}>
+      <View style={styles.column}>
         <View style={styles.row}>
           <View
             style={{
@@ -133,14 +134,12 @@ const PostLikes = ({navigation, route}) => {
             <Text
               style={{
                 color: 'white',
-                // fontFamily: 'GothamBlack-normal'
               }}>
               {commentsCount}
             </Text>
           </View>
 
           <View style={styles.sub_colummn}>
-            {/* <ProgressiveImage  thumbnailSource={require('../../../assets/pride-dog_1.png')} source={{uri: files_with_urls[0].url}} /> */}
             <PublicationContent
               files={files_with_urls}
               showFullContent={true}
@@ -159,10 +158,12 @@ const PostLikes = ({navigation, route}) => {
             }
           />
         </View>
-        <FlatList style={{padding: 24}} data={search.comments} renderItem={CommentCard} />
-
+        <FlatList
+          style={{padding: 24}}
+          data={search.comments}
+          renderItem={CommentCard}
+        />
       </View>
- 
     </SafeAreaView>
   );
 };
