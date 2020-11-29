@@ -114,7 +114,7 @@ export default function HomeScreen({navigation}) {
               // refreshing={reloading}
               renderItem={({item, index}) => (
                 <Publication
-                  key={`${item.id}-${index}`}
+                  key={`${item.id}_${index}`}
                   post={item}
                   isFeed
                   navigation={navigation}
