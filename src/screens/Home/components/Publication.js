@@ -7,6 +7,8 @@ import {
   Dimensions,
   ActivityIndicator,
   Pressable,
+  KeyboardAvoidingViewComponent,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {
   TouchableOpacity,
@@ -212,12 +214,13 @@ export default function Publication({
           </View>
           <View style={styles.icon_container}>
             <TouchableOpacity
-              onPress={getAndSetShowComments}
-              onLongPress={() => navigation.navigate('PostComments', {
-                comments,
-                files_with_urls,
-                commentsCount
-              })}>
+              onPress={() =>
+                navigation.navigate('PostComments', {
+                  comments,
+                  files_with_urls,
+                  commentsCount,
+                })
+              }>
               <Image
                 source={require('../../../assets/comentario.png')}
                 style={[styles.icon_post, styles.icon_comentario]}
@@ -278,6 +281,16 @@ export default function Publication({
             </Text>
           </TouchableOpacity>
         ) : null}
+
+          <CommentInput
+            placeholder={'Escribir un nuevo comentario...'}
+            callback={newCommentCallback}
+            post={post}
+            comments={comments}
+            setSavingComment={() => {}}
+            style={styles.newComment}
+            initialText={''}
+          />
         {/*Finaliza Nombre de usuario como encabezado*/}
 
         {/*Inicia Foto de la publicaciòn */}

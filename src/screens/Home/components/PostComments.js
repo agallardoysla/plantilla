@@ -50,7 +50,7 @@ const PostLikes = ({navigation, route}) => {
       <View style={styles.column}>
         <View style={styles.row}>
           <View style={styles.sub_colummn}>
-            <Icon source={'comentario'} color="red" size={32} />
+            <Icon source={'comentario'} color="#E8FC64" size={32} />
             <Text
               style={{
                 color: 'white',
@@ -63,13 +63,13 @@ const PostLikes = ({navigation, route}) => {
             <PublicationContent
               files={files_with_urls}
               showFullContent={true}
-              style={{width: 40, height: 80, flex: 1}}
+              style={{width: 50, height: 80}}
               navigation={navigation}
             />
           </View>
         </View>
 
-        <View style={styles.row}>
+        {/* <View style={styles.row}>
           <FormSearchInput
             value={search.searchTerms}
             placeholderText={'Buscar usuarios...'}
@@ -77,9 +77,9 @@ const PostLikes = ({navigation, route}) => {
               setSearch({reactions: filterUsers(e), searchTerms: e})
             }
           />
-        </View>
+        </View> */}
 
-        <FlatList data={search.comments} renderItem={CommentCard} />
+        <FlatList style={{padding: 24}} data={search.comments} renderItem={CommentCard} />
       </View>
     </SafeAreaView>
   );
