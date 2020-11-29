@@ -69,3 +69,5 @@ export default function (state = defaultState, action) {
       return state;
   }
 }
+
+export const getLoggedUser = (state) => state.session.user;

@@ -2,12 +2,12 @@ import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
-import {getConversationByParams} from '../../../reducers/conversations';
-import {getLoggedUser} from '../../../reducers/loggedUser';
+import { getConversationByParams } from '../../../redux/reducers/conversations';
+import {getLoggedUser} from '../../../redux/reducers/session';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
 const ListConversation = ({conversationId, navigation}) => {
-  const user = useSelector(getLoggedUser);
+  const loggedUser = useSelector(getLoggedUser);
   const conversation = useSelector(getConversationByParams(conversationId));
   //MyConversations > ListConversation(FlatList) > Chat
   const goChat = () => {
@@ -15,7 +15,7 @@ const ListConversation = ({conversationId, navigation}) => {
   };
 
   const getOther = () => {
-    const other = conversation.users.filter(u => u.user_id !== user.id);
+    const other = conversation.users.filter(u => u.user_id !== loggedUser.id);
     return other[0] ? other[0] : conversation.users[0];
   };
 
@@ -31,7 +31,7 @@ const ListConversation = ({conversationId, navigation}) => {
 
   const getLastMessageSender = () => {
     return getLastMessage()
-      ? getLastMessage().from === user.id
+      ? getLastMessage().from === loggedUser.id
         ? 'Yo'
         : `@${getProfileName()}`
       : '';

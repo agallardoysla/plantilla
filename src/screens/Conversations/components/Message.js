@@ -1,43 +1,32 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
-import {getLoggedUser} from '../../../reducers/loggedUser';
+import ProgressiveImage from '../../../components/ProgressiveImage';
+import {getLoggedUser} from '../../../redux/reducers/session';
 import MessageFormatter from './MessageFormatter';
 
 export default function Message({message, navigation}) {
-  const user = useSelector(getLoggedUser);
+  const loggedUser = useSelector(getLoggedUser);
 
   const iSendIt = (_message) =>
-    _message.from === user.id ||
-    (_message.from.user_id && _message.from.user_id === user.id); // hablar con Alberto por este problema
+    _message.from === loggedUser.id ||
+    (_message.from.user_id && _message.from.user_id === loggedUser.id); // hablar con Alberto por este problema
 
-  return iSendIt(message) ? (
-    <View style={styles.row_chat_me}>
-      <MessageFormatter
-        style={styles.text_chat}
-        message={message.text}
-        navigation={navigation}
-      />
+  return  (
+    <View style={iSendIt(message) ? styles.row_chat_me : styles.row_chat_third}>
       <Image
         source={require('../../../assets/pride-dog_1.png')}
         resizeMode="contain"
         style={styles.image}
-      />
-    </View>
-  ) : (
-    <View style={styles.row_chat_third}>
-      <Image
-        source={require('../../../assets/pride-dog_1.png')}
-        resizeMode="contain"
-        style={styles.image}
-      />
+        fadeDuration={0}
+     />
       <MessageFormatter
         style={styles.text_chat}
         message={message.text}
         navigation={navigation}
       />
     </View>
-  );
+  )
 };
 
 const styles = StyleSheet.create({
@@ -50,8 +39,8 @@ const styles = StyleSheet.create({
   },
   //yo
   row_chat_me: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-start',
     alignItems: 'flex-start',
     paddingVertical: 8,
   },
@@ -64,7 +53,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginBottom: 10,
-    borderRadius: 400 / 2,
+    borderRadius: 50 / 2,
     top: 20,
     marginRight: 10,
     marginLeft: 10,

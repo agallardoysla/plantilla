@@ -34,12 +34,13 @@ const getConfigFile = async (forceJWT) => {
 
 const genericMethodWithData = (method) => async (url, data, forceJWT) => {
   const config = await getConfig(forceJWT);
-  //console.log(method, api_config.baseURL, url, data, config);
+  console.log(method, api_config.baseURL, url, data, config);
   let res;
   try {
     res = await axios_v1[method.toLowerCase()](url, data, config);
   } catch (e) {
-    //console.log(`Error ${method} ${url}: ${e}`);
+    console.log(`Error ${method} ${url}: ${e.message}`);
+    return e;
   }
   return res;
 };
@@ -58,11 +59,13 @@ const genericMethodWithFile = (method) => async (url, data, forceJWT) => {
 
 const genericMethodNoData = (method) => async (url, forceJWT) => {
   const config = await getConfig(forceJWT);
+  console.log(method, api_config.baseURL, url, config);
   let res;
   try {
     res = await axios_v1[method.toLowerCase()](url, config);
   } catch (e) {
-    return e
+    console.log(`Error ${method} ${url}: ${e.message}`);
+    return e;
   }
   return res;
 };
