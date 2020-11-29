@@ -1,5 +1,5 @@
 import {
-  FETCH_CONVERSATIONS_FULFILLED, FETCH_CONVERSATIONS_PENDING,
+  FETCH_CONVERSATIONS_FULFILLED, FETCH_CONVERSATIONS_PENDING, PUSH_MESSAGE,
 } from '../actions/conversations';
 
 const defaultState = {
@@ -10,7 +10,6 @@ const defaultState = {
 export default function (state = defaultState, action) {
   switch (action.type) {
     case FETCH_CONVERSATIONS_FULFILLED:
-      console.log('nuevas conversaciones:', action.payload.data);
       return {
         ...state,
         conversations: action.payload.data,
@@ -21,6 +20,23 @@ export default function (state = defaultState, action) {
         ...state,
         fetching: true,
       };
+    case PUSH_MESSAGE:
+      return {
+        ...state,
+        conversations: state.conversations.map((conversation) => {
+          if (
+            conversation.active_users[0] === action.payload.from.user_id ||
+            conversation.active_users[1] === action.payload.from.user_id
+          ) {
+            const newMessage = {
+              ...action.payload,
+              from: action.payload.from.user_id,
+            };
+            conversation.messages.unshift(newMessage);
+          }
+          return conversation;
+        })
+      };
     default:
       return state;
   }
@@ -29,7 +45,7 @@ export default function (state = defaultState, action) {
 export const getConversations = (state) => state.conversations;
 
 export const getConversationByParams = (conversationId, userId) => {
-  console.log(conversationId, userId);
+  // console.log(conversationId, userId);
   if (conversationId) {
     return (state) => {
       const query = state.conversations.conversations.filter((c) => c.id === conversationId);
