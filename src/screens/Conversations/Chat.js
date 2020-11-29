@@ -72,7 +72,7 @@ const Chat = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.row_header}>
+      <View style={styles.row}>
         <GoBackButton navigation={navigation} />
         <View
           style={styles.otherNameContainer}>
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
-  row_header: {
+  row: {
     flexDirection: 'row',
     justifyContent: 'center',
     backgroundColor: '#242424',

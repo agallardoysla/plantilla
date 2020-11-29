@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {Alert, Image, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, Image, StyleSheet, Text, View} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ParsedText from 'react-native-parsed-text';
+import ProgressiveImage from '../../../components/ProgressiveImage';
 import posts_services from '../../../services/posts_services';
 import CommentFormatter from '../../../utils/CommentFormatter';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
@@ -27,11 +28,12 @@ export default function MessageFormatter({message, navigation, style}) {
   const toView = (file) => {
     // //console.log(file, i);
     return isImage(file.url) ? (
-      <Image
+      <ProgressiveImage
         source={{uri: file.url_half}}
         resizeMode="cover"
         style={styles.postImage}
         fadeDuration={0}
+        thumbnailSource={{uri: file.url_small}}
       />
     ) : null;
   };
@@ -46,27 +48,31 @@ export default function MessageFormatter({message, navigation, style}) {
   };
 
   const renderPost = (matchingString, matches) => {
-    return post ? (
+    return (
       <TouchableOpacity style={styles.postContainer} onPress={goToPost}>
         <View style={styles.postOwner}>
           <CommentFormatter
             style={styles.postOwner}
-            comment={`(${post.user_owner.display_name}:${post.user_owner.user_id})`}
+            comment={ post
+              ? `(${post?.user_owner.display_name}:${post?.user_owner.user_id})`
+              : ''}
             navigation={navigation}
           />
         </View>
-        <View style={styles.postImage}>{toView(post.files_with_urls[0])}</View>
+        <View style={styles.postImageContainer}>{ post
+          ? toView(post.files_with_urls[0])
+          : <ActivityIndicator size="large" color={StylesConfiguration.color} />
+        }</View>
         <View style={styles.postContent}>
           <CommentFormatter
             style={styles.postContent}
-            comment={post.text === '__post_text__' ? '' : post.text}
+            comment={post 
+              ? (post.text === '__post_text__' ? '' : post.text)
+              : ''}
             navigation={navigation}
           />
         </View>
       </TouchableOpacity>
-    ) : (
-      null
-      // <View style={styles.postContainer} />
     );
   };
 
@@ -110,6 +116,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     textAlign: 'left',
+  },
+  postImageContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   postImage: {
     height: 160,
