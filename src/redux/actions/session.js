@@ -61,7 +61,7 @@ export function loginGoogle() {
 export function loginFacebook() {
   return {
     type: LOGIN,
-    payload: session.loginEmail(),
+    payload: session.loginFacebook(),
   };
 }
 
