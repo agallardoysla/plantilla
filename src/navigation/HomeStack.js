@@ -14,7 +14,6 @@ import {setConversations} from '../reducers/conversations';
 import chats_services from '../services/chats_services';
 import Loading from '../components/Loading';
 import {useSelector} from 'react-redux';
-import {getLoggedUser, login, setReactions} from '../reducers/loggedUser';
 import profiles_services from '../services/profiles_services';
 import HomeGroup from './HomeGroups/HomeGroup';
 import MyProfileGroup from './HomeGroups/MyProfileGroup';
@@ -29,12 +28,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLoadingOtherProfile} from '../reducers/loadingOtherProfile';
 import {doSetPosts} from '../utils/reduxLoader';
 import {MenuProvider} from 'react-native-popup-menu';
+import { getLoggedUser } from '../redux/reducers/session';
 
 const Tab = createBottomTabNavigator();
 
 const HomeStack = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.session.user);
+  const loggedUser = useSelector(getLoggedUser);
   const [loading, setLoading] = useState(true);
   const loadingProfile = useSelector(getLoadingProfile);
   const loadingOtherProfile = useSelector(getLoadingOtherProfile);
@@ -48,7 +48,7 @@ const HomeStack = () => {
   // const init = async () => {
   //   if (loadingProfile) {
   //     setLoading(true);
-  //     let userId = user.id;
+  //     let userId = loggedUser.id;
   //     if (loadingOtherProfile) {
   //       const backendUser = await users_services.me();
   //       await AsyncStorage.setItem('local_token', backendUser.data.local_token);
@@ -97,8 +97,8 @@ const HomeStack = () => {
   // }, [loadingProfile]);
 
   const icons = {
-    icon_profile: user.photoURL
-      ? {uri: user.photoURL}
+    icon_profile: loggedUser.photoURL
+      ? {uri: loggedUser.photoURL}
       : require('../assets/foto_perfil.png'),
 
     icon_notification: require('../assets/icono_notificacion.png'),
@@ -182,14 +182,9 @@ const HomeStack = () => {
         lazy={false}
         tabBarOptions={tabBarOptions}
         screenOptions={screenOptions}>
-        {/* <Tab.Screen
+        <Tab.Screen
           name="ProfileGroup"
           component={MyProfileGroup}
-          options={{title: '', unmountOnBlur}}
-        /> */}
-        <Tab.Screen
-          name="SearchGroup"
-          component={SearchGroup}
           options={{title: '', unmountOnBlur}}
         />
         <Tab.Screen
@@ -198,8 +193,8 @@ const HomeStack = () => {
           options={{title: '', unmountOnBlur}}
         />
         <Tab.Screen
-          name="ProfileGroup"
-          component={MyProfileGroup}
+          name="SearchGroup"
+          component={SearchGroup}
           options={{title: '', unmountOnBlur}}
         />
       {/* <Tab.Screen
@@ -207,7 +202,7 @@ const HomeStack = () => {
         component={NotificationsGroup}
         options={{
           title: '',
-          tabBarBadge: user.unread_notifications,
+          tabBarBadge: loggedUser.unread_notifications,
           unmountOnBlur,
         }}
       />
