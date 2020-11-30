@@ -3,6 +3,9 @@ import {
   LOGIN_FULFILLED,
   LOGIN_PENDING,
   LOGIN_REJECTED,
+  LOGOUT_FULFILLED,
+  LOGOUT_PENDING,
+  LOGOUT_REJECTED,
   RECOVER_SESSION_FULFILLED,
   RECOVER_SESSION_PENDING,
   RECOVER_SESSION_REJECTED,
@@ -59,6 +62,21 @@ export default function (state = defaultState, action) {
         ...state,
       };
 
+    case LOGOUT_PENDING:
+      return {
+        ...state,
+      };
+
+    case LOGOUT_FULFILLED:
+      return {
+        ...defaultState,
+      };
+
+    case LOGOUT_REJECTED:
+      return {
+        ...state,
+      };
+
     case GET_SESSION_ACTIVE:
       //console.log('action.payload GET_SESSION_ACTIVE', action.payload);
       return {
@@ -69,5 +87,7 @@ export default function (state = defaultState, action) {
       return state;
   }
 }
+
+export const getSessionIsActive = (state) => state.session.isSessionActive;
 
 export const getLoggedUser = (state) => state.session.user;

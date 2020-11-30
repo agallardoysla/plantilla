@@ -2,16 +2,14 @@ import React, {useState, useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import FormButton from '../../components/FormButton';
 import {FacebookButton, GoogleButton} from '../../components/SocialButton';
-import {AuthContext} from '../../navigation/AuthProvider';
 import MatInput from '../../components/MatInput';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
-import { login } from '../../redux/actions/session';
-import session from '../../utils/session';
+import { loginEmail, loginFacebook, loginGoogle } from '../../redux/actions/session';
 
 export default function LoginScreen({navigation}) {
-  const {loginEmail, loginFacebook, loginGoogle} = useContext(AuthContext);
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({
@@ -45,32 +43,35 @@ export default function LoginScreen({navigation}) {
 
   const doLogin = (loginFunction) => () => {
     // console.log("dologin")
-    loginFunction().then(
-      () => navigation.navigate('CreateProfile'),
-      (error) => {
-        //console.log(error.message);
-        const newErrors = {...errors};
-        if (error.message.includes('wrong-password')) {
-          newErrors.password = 'Contraseña incorrecta';
-        }
-        if (error.message.includes('invalid-email')) {
-          newErrors.email = 'Email mal formado';
-        }
-        if (error.message.includes('user-not-found')) {
-          newErrors.email = 'No existe una cuenta con este email';
-        }
-        setErrors(newErrors);
-      },
-    );
+    dispatch(loginFunction());
+    /* IMPORTANTE */
+    // Todo esto carece de sentido por la nueva forma de login con Redux.
+    // Hay que cambiar la forma de obtener las respuestas de error de login
+
+    // .then(
+    // () => navigation.navigate('CreateProfile'),
+    // (error) => {
+    //   //console.log(error.message);
+    //   const newErrors = {...errors};
+    //   if (error.message.includes('wrong-password')) {
+    //     newErrors.password = 'Contraseña incorrecta';
+    //   }
+    //   if (error.message.includes('invalid-email')) {
+    //     newErrors.email = 'Email mal formado';
+    //   }
+    //   if (error.message.includes('user-not-found')) {
+    //     newErrors.email = 'No existe una cuenta con este email';
+    //   }
+    //   setErrors(newErrors);
+    // },
+    // );
   };
 
   const loginMail = () => {
     if (canSubmit) {
-      doLogin(() => session.loginEmail(email, password))();
+      doLogin(() => loginEmail(email, password))();
     }
   };
-
-  const dispatch = useDispatch();
 
   return (
     <SafeAreaView style={styles.container || {}}>
@@ -111,7 +112,7 @@ export default function LoginScreen({navigation}) {
       />
       <FormButton
         buttonTitle="INGRESAR"
-        onPress={() => dispatch(login(email, password))}
+        onPress={() => doLogin(loginMail)}
         style={canSubmit ? styles.canSubmit : styles.notCanSubmit}
         disabled={!canSubmit}
       />

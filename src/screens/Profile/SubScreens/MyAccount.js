@@ -6,18 +6,17 @@ import { StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 import users_services from '../../../services/users_services';
 import { setAccounts } from '../../../reducers/accounts';
-import { AuthContext } from '../../../navigation/AuthProvider';
+import { logout } from '../../../redux/actions/session';
 
 export default function MyAccount({navigation}) {
-  const {logout} = useContext(AuthContext);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    users_services.getAccounts().then((res) => {
-      //console.log('my account', res.data);
-      dispatch(setAccounts(res.data));
-    });
-  }, []);
+  // useEffect(() => {
+  //   users_services.getAccounts().then((res) => {
+  //     //console.log('my account', res.data);
+  //     dispatch(setAccounts(res.data));
+  //   });
+  // }, []);
 
   const options = [
     {
@@ -30,11 +29,11 @@ export default function MyAccount({navigation}) {
     },
     {
       label: 'Verificar',
-      action: () => {},
+      action: () => navigation.navigate('VerifyAccountText'),
     },
     {
       label: 'Cerrar sesión',
-      action: logout,
+      action: () => dispatch(logout()),
     },
   ];
 

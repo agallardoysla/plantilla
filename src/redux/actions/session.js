@@ -12,6 +12,11 @@ export const LOGIN_PENDING = 'LOGIN_PENDING';
 export const LOGIN_FULFILLED = 'LOGIN_FULFILLED';
 export const LOGIN_REJECTED = 'LOGIN_REJECTED';
 
+export const LOGOUT = 'LOGOUT';
+export const LOGOUT_PENDING = 'LOGOUT_PENDING';
+export const LOGOUT_FULFILLED = 'LOGOUT_FULFILLED';
+export const LOGOUT_REJECTED = 'LOGOUT_REJECTED';
+
 export const GET_TOKEN = 'GET_TOKEN';
 export const GET_TOKEN_PENDING = 'GET_TOKEN_PENDING';
 export const GET_TOKEN_FULFILLED = 'GET_TOKEN_FULFILLED';
@@ -35,17 +40,34 @@ export function recoverSession() {
 export function checkSessionActive() {
   return {
     type: GET_SESSION_ACTIVE,
-    payload: auth()?.currentUser !== null
-  }
+    payload: auth()?.currentUser !== null,
+  };
 }
 
-
-export function login(email, password) {
+export function loginEmail(email, password) {
   return {
     type: LOGIN,
-    payload: session.loginEmail(email, password)
-  }
+    payload: session.loginEmail(email, password),
+  };
 }
 
+export function loginGoogle() {
+  return {
+    type: LOGIN,
+    payload: session.loginGoogle(),
+  };
+}
 
+export function loginFacebook() {
+  return {
+    type: LOGIN,
+    payload: session.loginFacebook(),
+  };
+}
 
+export function logout() {
+  return {
+    type: LOGOUT,
+    payload: session.logout(),
+  };
+}
