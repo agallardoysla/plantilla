@@ -7,7 +7,6 @@ import StylesConfiguration from '../../utils/StylesConfiguration';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import { loginEmail, loginFacebook, loginGoogle } from '../../redux/actions/session';
-import session from '../../utils/session';
 
 export default function LoginScreen({navigation}) {
   const dispatch = useDispatch();
@@ -70,7 +69,7 @@ export default function LoginScreen({navigation}) {
 
   const loginMail = () => {
     if (canSubmit) {
-      doLogin(() => session.loginEmail(email, password))();
+      doLogin(() => loginEmail(email, password))();
     }
   };
 
