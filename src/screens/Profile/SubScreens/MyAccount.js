@@ -30,7 +30,7 @@ export default function MyAccount({navigation}) {
     },
     {
       label: 'Verificar',
-      action: () => {},
+      action: () => navigation.navigate('VerifyAccountText'),
     },
     {
       label: 'Cerrar sesión',

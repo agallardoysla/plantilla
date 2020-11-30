@@ -63,10 +63,6 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
       : require('../../../assets/foto_perfil_superior.png');
   };
 
-  const goToVerify = () => {
-    navigation.navigate('VerifyAccountText');
-  };
-
   return (
     <View style={style}>
       <View style={styles.profleFoto}>
@@ -104,13 +100,6 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
       </TouchableOpacity>
 
       <TouchableOpacity onPress={goConversations}>
-        <Image
-          source={require('../../../assets/sobre_amarillo.png')}
-          style={styles.sobre_amarillo}
-          resizeMode={'contain'}
-        />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={goToVerify}>
         <Image
           source={require('../../../assets/sobre_amarillo.png')}
           style={styles.sobre_amarillo}
