@@ -89,10 +89,7 @@ export default function HomeScreen({navigation}) {
         feed.length > 0 && (
           <>
             <View style={styles.row_header}>
-              <Button title="Logout" onPress={() => auth().signOut()} />
-
-              <TouchableOpacity
-                onPress={gotToMyConversations}>
+              <TouchableOpacity onPress={gotToMyConversations}>
                 <Image
                   source={require('../../assets/sobre_amarillo.png')}
                   style={styles.sobre_amarillo}

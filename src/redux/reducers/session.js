@@ -3,6 +3,9 @@ import {
   LOGIN_FULFILLED,
   LOGIN_PENDING,
   LOGIN_REJECTED,
+  LOGOUT_FULFILLED,
+  LOGOUT_PENDING,
+  LOGOUT_REJECTED,
   RECOVER_SESSION_FULFILLED,
   RECOVER_SESSION_PENDING,
   RECOVER_SESSION_REJECTED,
@@ -55,6 +58,21 @@ export default function (state = defaultState, action) {
     case LOGIN_REJECTED:
       //console.log('action.payload LOGIN_REJECTED', action.payload);
 
+      return {
+        ...state,
+      };
+
+    case LOGOUT_PENDING:
+      return {
+        ...state,
+      };
+
+    case LOGOUT_FULFILLED:
+      return {
+        ...defaultState,
+      };
+
+    case LOGOUT_REJECTED:
       return {
         ...state,
       };

@@ -65,7 +65,7 @@ export default {
   },
   logout: async () => {
     try {
-      await auth().signOut();
+      return auth().signOut();
     } catch (e) {
       console.error(e);
     }
