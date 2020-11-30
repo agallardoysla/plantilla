@@ -97,8 +97,8 @@ const HomeStack = () => {
   // }, [loadingProfile]);
 
   const icons = {
-    icon_profile: loggedUser.photoURL
-      ? {uri: loggedUser.photoURL}
+    icon_profile: loggedUser.profile.photo
+      ? {uri: loggedUser.profile.photo.url_small}
       : require('../assets/foto_perfil.png'),
 
     icon_notification: require('../assets/icono_notificacion.png'),
