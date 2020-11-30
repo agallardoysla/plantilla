@@ -15,7 +15,7 @@ export default function Routes() {
   const sessionIsActive = useSelector(getSessionIsActive);
 
   useEffect(() => {
-    // dispatch(checkSessionActive());
+    dispatch(checkSessionActive());
     if (sessionIsActive) {
       dispatch(recoverSession());
     }
