@@ -1,23 +1,25 @@
+import { GoogleSignin } from '@react-native-community/google-signin';
 import auth from '@react-native-firebase/auth';
+import { AccessToken, LoginManager } from 'react-native-fbsdk';
+import profiles_services from '../services/profiles_services';
+import users_services from '../services/users_services';
 
 export default {
-  loginEmail: async (email, password, callback) => {
+  loginEmail: async (email, password) => {
     try {
-     const al = await auth().signInWithEmailAndPassword(email, password);
-    //  console.log('al', al)
+      return auth().signInWithEmailAndPassword(email, password);
     } catch (e) {
-    //   console.log(e);
+      console.log(e);
     }
   },
-  register: async (email, password, callback) => {
+  register: async (email, password) => {
     try {
       return auth().createUserWithEmailAndPassword(email, password);
     } catch (e) {
-      //console.log(e);
-      callback(e.message);
+      console.log(e);
     }
   },
-  loginFacebook: async (callback) => {
+  loginFacebook: async () => {
     try {
       // Attempt login with permissions
       const result = await LoginManager.logInWithPermissions([
@@ -45,10 +47,9 @@ export default {
       return auth().signInWithCredential(facebookCredential);
     } catch (e) {
       console.error(e);
-      callback(e.message);
     }
   },
-  loginGoogle: async (callback) => {
+  loginGoogle: async () => {
     try {
       // Get the users ID token
       const {idToken} = await GoogleSignin.signIn();
@@ -60,7 +61,6 @@ export default {
       return auth().signInWithCredential(googleCredential);
     } catch (e) {
       console.error(e);
-      callback(e.message);
     }
   },
   logout: async () => {
@@ -68,7 +68,6 @@ export default {
       await auth().signOut();
     } catch (e) {
       console.error(e);
-      Alert.alert(e.message);
     }
   },
   createNewAccount: async (newUser, newProfile, nickname, navigation) => {

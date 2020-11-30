@@ -35,16 +35,29 @@ export function recoverSession() {
 export function checkSessionActive() {
   return {
     type: GET_SESSION_ACTIVE,
-    payload: auth()?.currentUser !== null
-  }
+    payload: auth()?.currentUser !== null,
+  };
 }
 
-
-export function login(email, password) {
+export function loginEmail(email, password) {
   return {
     type: LOGIN,
-    payload: session.loginEmail(email, password)
-  }
+    payload: session.loginEmail(email, password),
+  };
+}
+
+export function loginGoogle() {
+  return {
+    type: LOGIN,
+    payload: session.loginGoogle(),
+  };
+}
+
+export function loginFacebook() {
+  return {
+    type: LOGIN,
+    payload: session.loginEmail(),
+  };
 }
 
 

@@ -70,4 +70,6 @@ export default function (state = defaultState, action) {
   }
 }
 
+export const getSessionIsActive = (state) => state.session.isSessionActive;
+
 export const getLoggedUser = (state) => state.session.user;
