@@ -99,14 +99,6 @@ export default function HomeScreen({navigation}) {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('VerifyAccount')}>
-                <Image
-                  source={require('../../assets/yellow-check-1.png')}
-                  style={{width: 24, height: 24, margin: 8}}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
             </View>
             <FlatList
               data={feed}
