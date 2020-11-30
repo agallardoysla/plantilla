@@ -65,14 +65,15 @@ export default function HomeScreen({navigation}) {
   React.useEffect(() => {
     loadPosts();
   }, []);
-  // const PublicationItem = ({ item, index }) => {
-  //   return (
-  //     <View style={styles.publication}>
-  //       <Publication postId={item} navigation={navigation} />
-  //       {index % 2 === 1 ? <Admob /> : null}
-  //     </View>
-  //   );
-  // };
+
+  const PublicationItem = ({ item, index }) => {
+    return (
+      <View style={styles.publication}>
+        <Publication post={item} navigation={navigation} isFeed={true} />
+        {index % 2 === 1 ? <Admob /> : null}
+      </View>
+    );
+  };
 
   const gotToMyConversations = () => {
     navigation.navigate('MyConversationsGroup', {
@@ -101,14 +102,7 @@ export default function HomeScreen({navigation}) {
               data={feed}
               //  onRefresh={() => loadPosts()}
               // refreshing={reloading}
-              renderItem={({item, index}) => (
-                <Publication
-                  key={`${item.id}_${index}`}
-                  post={item}
-                  isFeed
-                  navigation={navigation}
-                />
-              )}
+              renderItem={PublicationItem}
               onEndReachedThreshold={0.7}
               onEndReached={() => addPosts()}
               bouncesZoom={true}
