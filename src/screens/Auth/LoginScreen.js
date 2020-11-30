@@ -112,7 +112,7 @@ export default function LoginScreen({navigation}) {
       />
       <FormButton
         buttonTitle="INGRESAR"
-        onPress={() => doLogin(loginMail)}
+        onPress={loginMail}
         style={canSubmit ? styles.canSubmit : styles.notCanSubmit}
         disabled={!canSubmit}
       />
