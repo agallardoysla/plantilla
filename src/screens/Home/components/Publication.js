@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -66,7 +67,7 @@ export default function Publication({
     reacted,
     reactionscount: reactionscount?.REACTION_TYPE_PRUEBA || 0,
   });
-  const commentsCount = comments.length;
+  const commentsCount = comments?.length || 0;
   const [commentsShown, toggleshowMoreComments] = useState(5);
   const toggleshowMoreCommentsIncrement = 3;
   /**
@@ -127,7 +128,7 @@ export default function Publication({
         user_id: user,
       },
     });
-  }
+  };
 
   return (
     <>
@@ -138,7 +139,10 @@ export default function Publication({
           </View>
         )}
 
-        <TouchableOpacity onPress={() => {navigateProfile(user_owner.user_id)}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigateProfile(user_owner.user_id);
+          }}>
           <View style={styles.ownerData}>
             {/* {user_owner.account_verified ? (
               <Image
@@ -149,19 +153,19 @@ export default function Publication({
             <View
               style={[
                 styles.ownerDisplayNameContainer,
-                styles.ownerDisplayNameNotVerified
+                styles.ownerDisplayNameNotVerified,
                 // user_owner.account_verified
-                  // ? styles.ownerDisplayNameVerified
-                  // : styles.ownerDisplayNameNotVerified,
+                // ? styles.ownerDisplayNameVerified
+                // : styles.ownerDisplayNameNotVerified,
               ]}>
               <Text style={styles.ownerDisplayName}>
-                {user_owner.display_name}{' '}
+                {user_owner?.display_name}{' '}
               </Text>
             </View>
             <ProgressiveImage
               source={
-                user_owner.photo !== null
-                  ? {uri: user_owner.photo}
+                user_owner?.photo !== null
+                  ? {uri: user_owner?.photo}
                   : require('../../../assets/pride-dog_1.png')
               }
               resizeMode="cover"
@@ -292,15 +296,15 @@ export default function Publication({
           </TouchableOpacity>
         ) : null}
 
-          <CommentInput
-            placeholder={'Escribir un nuevo comentario...'}
-            callback={newCommentCallback}
-            post={post}
-            comments={comments}
-            setSavingComment={() => {}}
-            style={styles.newComment}
-            initialText={''}
-          />
+        <CommentInput
+          placeholder={'Escribir un nuevo comentario...'}
+          callback={newCommentCallback}
+          post={post}
+          comments={comments}
+          setSavingComment={() => {}}
+          style={styles.newComment}
+          initialText={''}
+        />
         {/*Finaliza Nombre de usuario como encabezado*/}
 
         {/*Inicia Foto de la publicaciòn */}
@@ -310,7 +314,7 @@ export default function Publication({
             showFullContent={showFullContent}
             style={styles.image_post}
           />
-        ) :  
+        ) :
         // <View style={styles.postImagesContainer}>
         //   <Pressable
         //     style={styles.postImagesContainerPresable}
@@ -327,7 +331,7 @@ export default function Publication({
 
         {/*Inicio de iconos de la publicaciòn*/}
 
-        {/*        
+        {/*
           <View style={styles.icon_container}>
             <Image
               source={require('../../../assets/ojo_vista.png')}
@@ -357,8 +361,8 @@ export default function Publication({
                 navigation.navigate('PostLikes', owner.display_name)
               }>
             <Counter style={styles.icon_numbers_view} value={reactions} />
-             </TouchableOpacity> 
-          </View> 
+             </TouchableOpacity>
+          </View>
 
           <View style={styles.icon_container}>
             <TouchableOpacity onPress={getAndSetShowComments}>
