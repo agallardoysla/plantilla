@@ -13,38 +13,12 @@ import {
 import Loading from '../../components/Loading';
 
 export default function HomeScreen({navigation}) {
-  const [page, setPage] = useState(1);
-  const pages = [0, 10];
-
   const dispatch = useDispatch();
   const feed = useSelector((state) => state.feed.feed);
   const fetchingFeed = useSelector((state) => state.feed.fetching);
   const fetchingFromGesture = useSelector(
     (state) => state.feed.fetchingFromFeed,
   );
-
-  // console.log('fetchingFromGesture', fetchingFromGesture);
-  // const [reloading, setReloading] = useState(false);
-  // const posts = useSelector(getPosts);
-  // const dispatch = useDispatch();
-  // // const [reloading, setReloading] = useState(false);
-
-  // const reloadPosts = () => {
-  //   // setReloading(true);
-  //   // setPage(1);
-  //   // posts_services.list(pages[0], 0).then((res) => {
-  //   //   dispatch(addPosts(res.data));
-  //   //   // setReloading(false);
-  //   // });
-  // };
-
-  // const getPageOffset = (_page) => {
-  //   let res = 0;
-  //   for (var i = 0; i < _page; i++) {
-  //     res += pages[i];
-  //   }
-  //   return res;
-  // };
 
   const loadPosts = () => {
     dispatch(fetchFeed(15, 0));
@@ -55,7 +29,6 @@ export default function HomeScreen({navigation}) {
   };
 
   const refreshFromGesture = () => {
-    console.log('refresh from gesture', `page: ${page} pages: ${pages}`);
     dispatch(fetchFeedFromGesture(15, 0));
   };
 
@@ -67,7 +40,6 @@ export default function HomeScreen({navigation}) {
     return (
       <View style={styles.publication} key={`${item.id}-${index}`}>
         <Publication post={item} navigation={navigation} isFeed={true} />
-        {/* {index % 2 === 1 ? <Admob /> : null} */}
       </View>
     );
   };
@@ -87,13 +59,6 @@ export default function HomeScreen({navigation}) {
         feed.length > 0 && (
           <>
             <View style={styles.row_header}>
-              <TouchableOpacity onPress={gotToMyConversations}>
-                <Image
-                  source={require('../../assets/sobre_amarillo.png')}
-                  style={styles.sobre_amarillo}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
               <TouchableOpacity onPress={gotToMyConversations}>
                 <Image
                   source={require('../../assets/sobre_amarillo.png')}

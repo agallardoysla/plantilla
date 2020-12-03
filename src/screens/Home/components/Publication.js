@@ -1,20 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  ActivityIndicator,
-  Pressable,
-  KeyboardAvoidingViewComponent,
-  KeyboardAvoidingView,
-} from 'react-native';
-import {
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import posts_services from '../../../services/posts_services';
 import CommentInput from '../../../utils/CommentInput';
@@ -31,21 +18,14 @@ import {getFiles} from '../../../reducers/files';
 import {isDate} from 'moment';
 import PublicationComment from './PublicationComment';
 import ProgressiveImage from '../../../components/ProgressiveImage';
+import {useDispatch} from 'react-redux';
+import {reactToPublication} from '../../../redux/actions/feed';
 
 let window = Dimensions.get('window');
 
 export default function Publication({
-  // data
   post,
   isFeed,
-  postReactions,
-  ownerProfile,
-  ownerPhoto,
-  loggedUser,
-  // actions
-  goToOwnerProfile,
-  addLike,
-  getAndSetShowComments,
   sharePost,
   newCommentCallback,
   navigation,
@@ -70,57 +50,7 @@ export default function Publication({
   const commentsCount = comments?.length || 0;
   const [commentsShown, toggleshowMoreComments] = useState(5);
   const toggleshowMoreCommentsIncrement = 3;
-  /**
-   * Estados agregados para actualzar internamente los contadores de reaciones y comentarios
-   */
-  // const [reactions, setReactions] = useState(0);
-  // const [commentsCount, setcommentsCount] = useState(0);
-  // let reactionId = 0;
-
-  /**
-   * Esta función permite hacer las soliciutdes al servidor de los cambios y actualizar los estados
-   */
-  // const updateData = () => {
-  //   posts_services.get(post.id).then((res) => {
-  //     console.log(res.data);
-  //     setcommentsCount(res.data.comments.length ? res.data.comments.length : 0);
-  //     setReactions(
-  //       res.data.posts_reactions.length ? res.data.posts_reactions.length : 0,
-  //     );
-  //   });
-  // };
-
-  /**
-   * Usamos el clico de vida con hooks para disparar el evento de actualización de cada contador
-   */
-
-  // useEffect(() => {
-  //   updateData();
-  // }, [postReactions]);
-
-  // useEffect(() => {
-  //   updateData();
-  // }, [comments]);
-
-  // useEffect(() => {
-  //   updateData();
-  // }, []);
-
-  // const getILiked = () => {
-  //   const reaction = postReactions.filter(
-  //     (reaction) => reaction.user_id === loggedUser.id,
-  //   );
-  //   reactionId = reaction.length > 0 ? reaction[0].id : 0;
-  //   return reaction.length > 0;
-  // };
-
-  // const [showComments, setShowComments] = useState(true);
-  // const [loadingComments, setLoadingComments] = useState(false);
-  // const [firstTimeLoadingComments, setFirstTimeLoadingComments] = useState(
-  //   true,
-  // );
-  // const [savingComment, setSavingComment] = useState(false);
-
+  const dispatch = useDispatch();
   const navigateProfile = (user) => {
     navigation.navigate('OtherProfileGroup', {
       screen: 'OtherProfile',
@@ -144,22 +74,13 @@ export default function Publication({
             navigateProfile(user_owner.user_id);
           }}>
           <View style={styles.ownerData}>
-            {/* {user_owner.account_verified ? (
-              <Image
-                source={require('../../../assets/tilde.png')}
-                style={styles.ownerVerified}
-              />
-            ) : null} */}
             <View
               style={[
                 styles.ownerDisplayNameContainer,
                 styles.ownerDisplayNameNotVerified,
-                // user_owner.account_verified
-                // ? styles.ownerDisplayNameVerified
-                // : styles.ownerDisplayNameNotVerified,
               ]}>
               <Text style={styles.ownerDisplayName}>
-                {user_owner?.display_name}{' '}
+                {user_owner?.display_name}
               </Text>
             </View>
             <ProgressiveImage
@@ -195,6 +116,7 @@ export default function Publication({
           <View style={styles.icon_container}>
             <TouchableOpacity
               onPress={() => {
+                dispatch(reactToPublication(id, !reaction.reacted));
                 toggleReaction({
                   reacted: !reaction.reacted,
                   reactionscount: reaction.reacted
