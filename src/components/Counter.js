@@ -11,10 +11,8 @@ export default function Counter({value, style}) {
       return `${toDigit(v, million)} M`;
     }
     if (v >= thousand) {
-      console.log('v', v);
       return `${toDigit(v, thousand)} K`;
     }
-    // Menos de mil
     return v;
   };
   return <Text style={[styles.counter, style]}>{formatValue(value)}</Text>;
