@@ -1,17 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 
 export default function Counter({value, style}) {
-  const toDigit = (n, b) => Math.floor(n / b);
+  const toDigit = (n, b) => (n / b).toFixed(1);
 
   const formatValue = (v) => {
-    // Mas de 1 millon
-    if (v >= 10 ** 6) {
-      return `${toDigit(v, 10 ** 6)} M`;
+    const million = 1000000;
+    const thousand = 1000;
+    if (v >= million) {
+      return `${toDigit(v, million)} M`;
     }
-    // Mas de mil
-    if (v >= 10 ** 3) {
-      return `${toDigit(v, 10 ** 3)} K`;
+    if (v >= thousand) {
+      console.log('v', v);
+      return `${toDigit(v, thousand)} K`;
     }
     // Menos de mil
     return v;
