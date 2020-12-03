@@ -47,16 +47,16 @@ export default function HomeScreen({navigation}) {
   // };
 
   const loadPosts = () => {
-    dispatch(fetchFeed(page, pages));
+    dispatch(fetchFeed(15, 0));
   };
 
   const addPosts = () => {
-    dispatch(addToFeed(page, pages));
+    dispatch(addToFeed(15, feed.length));
   };
 
   const refreshFromGesture = () => {
-    console.log('refresh from gesture');
-    dispatch(fetchFeedFromGesture(20, 10));
+    console.log('refresh from gesture', `page: ${page} pages: ${pages}`);
+    dispatch(fetchFeedFromGesture(15, 0));
   };
 
   React.useEffect(() => {
@@ -65,7 +65,7 @@ export default function HomeScreen({navigation}) {
 
   const PublicationItem = ({item, index}) => {
     return (
-      <View style={styles.publication}>
+      <View style={styles.publication} key={`${item.id}-${index}`}>
         <Publication post={item} navigation={navigation} isFeed={true} />
         {/* {index % 2 === 1 ? <Admob /> : null} */}
       </View>
@@ -103,6 +103,8 @@ export default function HomeScreen({navigation}) {
               </TouchableOpacity>
             </View>
             <FlatList
+              maxToRenderPerBatch={3}
+              updateCellsBatchingPeriod={120}
               data={feed}
               refreshControl={
                 <RefreshControl

@@ -29,20 +29,17 @@ export default function (state = defaultState, action) {
         fetching: true,
       };
     case FETCH_FEED_FROM_GESTURE_FULFILLED:
-      console.log('fulfilled', action.payload.data);
       return {
         ...state,
-        feed: [action.payload.data, ...state.feed],
+        feed: [...action.payload.data, ...state.feed],
         fetchingFromFeed: false,
       };
     case FETCH_FEED_FROM_GESTURE_PENDING:
-      console.log('pending');
       return {
         ...state,
         fetchingFromFeed: true,
       };
     case FETCH_FEED_FROM_GESTURE_REJECTED:
-      console.log('pending');
       return {
         ...state,
         fetchingFromFeed: false,
