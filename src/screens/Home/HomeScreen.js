@@ -11,6 +11,7 @@ import {
   fetchFeedFromGesture,
 } from '../../redux/actions/feed';
 import Loading from '../../components/Loading';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export default function HomeScreen({navigation}) {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ export default function HomeScreen({navigation}) {
   const fetchingFromGesture = useSelector(
     (state) => state.feed.fetchingFromFeed,
   );
-
+  const [minHeight, toggleMinHeight] = useState(false);
   const loadPosts = () => {
     dispatch(fetchFeed(15, 0));
   };
@@ -51,7 +52,7 @@ export default function HomeScreen({navigation}) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{...styles.container}}>
       {fetchingFeed ? (
         <Loading />
       ) : (
@@ -67,26 +68,36 @@ export default function HomeScreen({navigation}) {
                 />
               </TouchableOpacity>
             </View>
-            <FlatList
-              maxToRenderPerBatch={3}
-              updateCellsBatchingPeriod={120}
-              data={feed}
-              refreshControl={
-                <RefreshControl
-                  enabled={true}
-                  colors={['#00ff00', '#00ff00']}
-                  tintColor={'#E9FC64'}
-                  refreshing={fetchingFromGesture}
-                  onRefresh={() => refreshFromGesture()}
-                />
-              }
-              renderItem={PublicationItem}
-              onEndReachedThreshold={0.7}
-              onEndReached={() => addPosts()}
-              bouncesZoom={true}
-              keyExtractor={(item, index) => index.toString()}
-              style={styles.publications}
-            />
+            <View style={{flex: 1}}>
+              <FlatList
+                maxToRenderPerBatch={3}
+                updateCellsBatchingPeriod={120}
+                data={feed}
+                refreshControl={
+                  <RefreshControl
+                    enabled={true}
+                    colors={['#00ff00', '#00ff00']}
+                    tintColor={'#E9FC64'}
+                    refreshing={fetchingFromGesture}
+                    onRefresh={() => refreshFromGesture()}
+                  />
+                }
+                renderItem={PublicationItem}
+                onEndReachedThreshold={0.7}
+                onEndReached={() => addPosts()}
+                bouncesZoom={true}
+                keyExtractor={(item, index) => index.toString()}
+                style={
+                  minHeight
+                    ? styles.publications
+                    : styles.publicationsWithHeight
+                }
+              />
+              <KeyboardSpacer
+                topSpacing={-30}
+                onToggle={(keyboardState) => toggleMinHeight(keyboardState)}
+              />
+            </View>
           </>
         )
       )}
@@ -96,23 +107,24 @@ export default function HomeScreen({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'column',
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'stretch',
     backgroundColor: 'black',
   },
   row_header: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     backgroundColor: '#242424',
-    marginBottom: 10,
-    marginRight: 5,
   },
   sobre_amarillo: {
     width: 42,
     height: 42,
   },
   publications: {
-    height: 2600,
+    flex: 1,
+  },
+  publicationsWithHeight: {
+    flex: 1,
+    minHeight: 731,
   },
 });

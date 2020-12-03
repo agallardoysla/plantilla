@@ -29,7 +29,8 @@ export default function PublicationContent({
         activeDotColor={'#E9FC64'}>
         {files.map((file, i) => {
           return isImage(file.url_original) ? (
-            <TouchableWithoutFeedback onPress={() => navigation.navigate('PublicationDetails', {post})}>
+            <TouchableWithoutFeedback
+              onPress={() => navigation.navigate('PublicationDetails', {post})}>
               <ProgressiveImage
                 source={{uri: file.url_original}}
                 style={[style, i >= 1 ? {marginLeft: 10} : {}]}

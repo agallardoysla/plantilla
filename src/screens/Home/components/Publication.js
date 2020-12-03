@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import posts_services from '../../../services/posts_services';
 import CommentInput from '../../../utils/CommentInput';
@@ -20,6 +20,7 @@ import PublicationComment from './PublicationComment';
 import ProgressiveImage from '../../../components/ProgressiveImage';
 import {useDispatch} from 'react-redux';
 import {reactToPublication} from '../../../redux/actions/feed';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 let window = Dimensions.get('window');
 
@@ -61,7 +62,7 @@ export default function Publication({
   };
 
   return (
-    <>
+    <View style={{flex: 1}}>
       <View style={styles.container}>
         {!isFeed && (
           <View style={styles.upperBar}>
@@ -69,20 +70,20 @@ export default function Publication({
           </View>
         )}
 
-        <TouchableOpacity
-          onPress={() => {
-            navigateProfile(user_owner.user_id);
-          }}>
-          <View style={styles.ownerData}>
-            <View
-              style={[
-                styles.ownerDisplayNameContainer,
-                styles.ownerDisplayNameNotVerified,
-              ]}>
-              <Text style={styles.ownerDisplayName}>
-                {user_owner?.display_name}
-              </Text>
-            </View>
+        <View style={styles.ownerData}>
+          <View
+            style={[
+              styles.ownerDisplayNameContainer,
+              styles.ownerDisplayNameNotVerified,
+            ]}>
+            <Text style={styles.ownerDisplayName}>
+              {user_owner?.display_name}
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              navigateProfile(user_owner.user_id);
+            }}>
             <ProgressiveImage
               source={
                 user_owner?.photo !== null
@@ -94,8 +95,8 @@ export default function Publication({
               fadeDuration={0}
               thumbnailSource={require('../../../assets/FC_Logo.png')}
             />
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
         <PublicationContent
           id={id}
           files={files_with_urls}
@@ -105,6 +106,7 @@ export default function Publication({
           isFeed={isFeed}
           post={post}
         />
+
         <View style={styles.icons_container}>
           <View style={styles.icon_numbers_view_container}>
             <Image
@@ -113,6 +115,7 @@ export default function Publication({
             />
             <Counter style={styles.icon_numbers_view} value={views_count} />
           </View>
+
           <View style={styles.icon_container}>
             <TouchableOpacity
               onPress={() => {
@@ -188,33 +191,34 @@ export default function Publication({
             />
           )}
         </View>
-
-        {comments &&
-          comments.map((comment, index) => {
-            return index < commentsShown ? (
-              <PublicationComment
-                style={styles.publicationComments}
-                comment={comment}
-                key={index}
-                navigation={navigation}
-              />
-            ) : (
-              <></>
-            );
-          })}
-        {commentsCount > commentsShown ? (
-          <TouchableOpacity
-            onPress={() =>
-              toggleshowMoreComments(
-                commentsShown + toggleshowMoreCommentsIncrement,
-              )
-            }>
-            <Text style={styles.showMoreComments}>
-              {commentsCount - commentsShown} comentario
-              {commentsCount - commentsShown === 1 ? '' : 's'} mas...
-            </Text>
-          </TouchableOpacity>
-        ) : null}
+        <ScrollView>
+          {comments &&
+            comments.map((comment, index) => {
+              return index < commentsShown ? (
+                <PublicationComment
+                  style={styles.publicationComments}
+                  comment={comment}
+                  key={index}
+                  navigation={navigation}
+                />
+              ) : (
+                <></>
+              );
+            })}
+          {commentsCount > commentsShown ? (
+            <TouchableOpacity
+              onPress={() =>
+                toggleshowMoreComments(
+                  commentsShown + toggleshowMoreCommentsIncrement,
+                )
+              }>
+              <Text style={styles.showMoreComments}>
+                {commentsCount - commentsShown} comentario
+                {commentsCount - commentsShown === 1 ? '' : 's'} mas...
+              </Text>
+            </TouchableOpacity>
+          ) : null}
+        </ScrollView>
 
         <CommentInput
           placeholder={'Escribir un nuevo comentario...'}
@@ -225,8 +229,9 @@ export default function Publication({
           style={styles.newComment}
           initialText={''}
         />
+        {!isFeed && <KeyboardSpacer />}
       </View>
-    </>
+    </View>
   );
 }
 
@@ -237,19 +242,20 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'stretch',
     backgroundColor: 'black',
-    marginBottom: 20,
   },
   upperBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 5,
-    margin: 25,
+    marginVertical: 35,
   },
   ownerData: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingRight: 0,
+    paddingTop: 20,
   },
   ownerVerified: {
     flex: 1,
