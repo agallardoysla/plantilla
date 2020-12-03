@@ -12,7 +12,7 @@ export default function App() {
 
   const storeWithMiddleWare = applyMiddleware(
     promise,
-    // createLogger({collapsed: false}),
+    createLogger({collapsed: false}),
   )(createStore);
 
   return (

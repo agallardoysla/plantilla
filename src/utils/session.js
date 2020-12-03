@@ -1,15 +1,20 @@
-import { GoogleSignin } from '@react-native-community/google-signin';
+import {GoogleSignin} from '@react-native-community/google-signin';
 import auth from '@react-native-firebase/auth';
-import { AccessToken, LoginManager } from 'react-native-fbsdk';
+import {AccessToken, LoginManager} from 'react-native-fbsdk';
 import profiles_services from '../services/profiles_services';
 import users_services from '../services/users_services';
 
 export default {
-  loginEmail: async (email, password) => {
+  loginEmail: async (email, password, navigation) => {
+    console.log('email', email);
+    console.log('password', password);
+
     try {
-      return auth().signInWithEmailAndPassword(email, password);
+      const loginResolve = auth().signInWithEmailAndPassword(email, password);
+      navigation.navigate('HomeGroup');
+      return loginResolve;
     } catch (e) {
-      console.log(e);
+      console.log('error', e);
     }
   },
   register: async (email, password) => {
@@ -72,12 +77,6 @@ export default {
   },
   createNewAccount: async (newUser, newProfile, nickname, navigation) => {
     await profiles_services.edit(newProfile.id, newProfile);
-    const newUserModified = await users_services.edit(newUser.id, {
-      display_name: nickname,
-    });
-
-    dispatch(setLoadingProfile(true));
-    dispatch(login(newUserModified.data));
     navigation.navigate('HomeGroup');
   },
 };

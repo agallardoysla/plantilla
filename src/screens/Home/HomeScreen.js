@@ -23,8 +23,8 @@ export default function HomeScreen({navigation}) {
     (state) => state.feed.fetchingFromFeed,
   );
 
-  console.log('fetchingFromGesture', fetchingFromGesture);
-  const [reloading, setReloading] = useState(false);
+  // console.log('fetchingFromGesture', fetchingFromGesture);
+  // const [reloading, setReloading] = useState(false);
   // const posts = useSelector(getPosts);
   // const dispatch = useDispatch();
   // // const [reloading, setReloading] = useState(false);
@@ -87,6 +87,13 @@ export default function HomeScreen({navigation}) {
         feed.length > 0 && (
           <>
             <View style={styles.row_header}>
+              <TouchableOpacity onPress={gotToMyConversations}>
+                <Image
+                  source={require('../../assets/sobre_amarillo.png')}
+                  style={styles.sobre_amarillo}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
               <TouchableOpacity onPress={gotToMyConversations}>
                 <Image
                   source={require('../../assets/sobre_amarillo.png')}
