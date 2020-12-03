@@ -175,17 +175,15 @@ export default function Publication({
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <PublicationContent
-            id={id}
-            files={files_with_urls}
-            showFullContent={true}
-            style={styles.image_post}
-            navigation={navigation}
-            isFeed={isFeed}
-            post={post}
-          />
-        </TouchableOpacity>
+        <PublicationContent
+          id={id}
+          files={files_with_urls}
+          showFullContent={true}
+          style={styles.image_post}
+          navigation={navigation}
+          isFeed={isFeed}
+          post={post}
+        />
         <View style={styles.icons_container}>
           <View style={styles.icon_numbers_view_container}>
             <Image

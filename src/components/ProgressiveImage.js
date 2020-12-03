@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import {View, StyleSheet, Animated} from 'react-native';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   imageOverlay: {
@@ -25,41 +25,35 @@ class ProgressiveImage extends React.Component {
       toValue: 1,
       useNativeDriver: true,
     }).start();
-  }
+  };
 
   onImageLoad = () => {
     Animated.timing(this.imageAnimated, {
       toValue: 1,
-      useNativeDriver: true
+      useNativeDriver: true,
     }).start();
-  }
+  };
 
   render() {
-    const {
-      thumbnailSource,
-      source,
-      style,
-      onPress,
-      ...props
-    } = this.props;
+    const {thumbnailSource, source, style, onPress, ...props} = this.props;
 
     return (
       <TouchableWithoutFeedback onPress={onPress} on>
-      <View style={{...styles.container}} useNativeDriver={true}>
-        <Animated.Image
-          {...props}
-          source={thumbnailSource}
-          style={[style, { opacity: this.thumbnailAnimated }]}
-          onLoad={this.handleThumbnailLoad}
-          blurRadius={1}
-        />
-        <Animated.Image
-          {...props}
-          source={source}
-          style={[styles.imageOverlay, { opacity: this.imageAnimated }, style]}
-          onLoad={this.onImageLoad}
-        />
-      </View>
+        <View style={{...styles.container}} useNativeDriver={true}>
+          <Animated.Image
+            {...props}
+            source={thumbnailSource}
+            style={[style, {opacity: this.thumbnailAnimated}]}
+            onLoad={this.handleThumbnailLoad}
+            blurRadius={1}
+          />
+          <Animated.Image
+            {...props}
+            source={source}
+            style={[styles.imageOverlay, {opacity: this.imageAnimated}, style]}
+            onLoad={this.onImageLoad}
+          />
+        </View>
       </TouchableWithoutFeedback>
     );
   }
