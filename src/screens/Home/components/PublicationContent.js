@@ -41,8 +41,18 @@ export default function PublicationContent({
               video={{uri: file.url_original}}
               style={style}
               autoplay={true}
-              defaultMuted={true}
-              loop={true}
+              defaultMuted={false}
+              loop={false}
+              pauseOnPress
+              fullScreenOnLongPress
+              customStyles={{
+                seekBarKnob: {
+                  backgroundColor: 'yellow',
+                },
+                seekBarProgress: {
+                  backgroundColor: 'yellow',
+                },
+              }}
             />
           );
         })}

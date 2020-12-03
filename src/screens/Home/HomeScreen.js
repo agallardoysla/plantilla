@@ -65,7 +65,7 @@ export default function HomeScreen({navigation}) {
 
   const PublicationItem = ({item, index}) => {
     return (
-      <View style={styles.publication}>
+      <View style={styles.publication} key={`${item.id}-${index}`}>
         <Publication post={item} navigation={navigation} isFeed={true} />
         {/* {index % 2 === 1 ? <Admob /> : null} */}
       </View>
