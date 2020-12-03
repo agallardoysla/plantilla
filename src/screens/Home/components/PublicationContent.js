@@ -1,5 +1,8 @@
 import React from 'react';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
 import Video from 'react-native-video-player';
 import ProgressiveImage from '../../../components/ProgressiveImage';
 import PublicationActions from './PublicationActions';
@@ -26,16 +29,21 @@ export default function PublicationContent({
         activeDotColor={'#E9FC64'}>
         {files.map((file, i) => {
           return isImage(file.url_original) ? (
-            <ProgressiveImage
-              source={{uri: file.url_original}}
-              style={[style, i >= 1 ? {marginLeft: 10} : {}]}
-              resizeMode="cover"
-              thumbnailSource={{uri: file.url_small}}
-              key={i}
-              onPress={() =>
-                isFeed && post && PublicationActions.goToPost(post, navigation)
-              }
-            />
+            <TouchableWithoutFeedback
+              onPress={() => navigation.navigate('PublicationDetails', {post})}>
+              <ProgressiveImage
+                source={{uri: file.url_original}}
+                style={[style, i >= 1 ? {marginLeft: 10} : {}]}
+                resizeMode="cover"
+                thumbnailSource={{uri: file.url_small}}
+                key={i}
+                onPress={() =>
+                  isFeed &&
+                  post &&
+                  PublicationActions.goToPost(post, navigation)
+                }
+              />
+            </TouchableWithoutFeedback>
           ) : (
             <Video
               video={{uri: file.url_original}}

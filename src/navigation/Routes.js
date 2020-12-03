@@ -5,7 +5,7 @@ import HomeStack from './HomeStack';
 import Loading from '../components/Loading';
 import {useSelector, useDispatch} from 'react-redux';
 import {checkSessionActive, recoverSession} from '../redux/actions/session';
-import { getSessionIsActive } from '../redux/reducers/session';
+import {getSessionIsActive} from '../redux/reducers/session';
 
 export default function Routes() {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ export default function Routes() {
     if (sessionIsActive) {
       dispatch(recoverSession());
     }
-  }, [sessionIsActive]);
+  }, [dispatch, sessionIsActive]);
 
   return (
     <NavigationContainer>

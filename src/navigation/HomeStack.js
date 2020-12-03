@@ -28,7 +28,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLoadingOtherProfile} from '../reducers/loadingOtherProfile';
 import {doSetPosts} from '../utils/reduxLoader';
 import {MenuProvider} from 'react-native-popup-menu';
-import { getLoggedUser } from '../redux/reducers/session';
+import {getLoggedUser} from '../redux/reducers/session';
 
 const Tab = createBottomTabNavigator();
 
@@ -120,7 +120,8 @@ const HomeStack = () => {
     activeTintColor: 'yellow',
     inactiveTintColor: 'white',
     style: {
-      borderTopWidth: 0,
+      borderTopWidth: 1,
+      borderTopColor: '#ccc'
     },
   };
 
@@ -179,9 +180,10 @@ const HomeStack = () => {
 
       <Tab.Navigator
         initialRouteName="HomeGroup"
-        lazy={false}
+        lazy={true}
         tabBarOptions={tabBarOptions}
-        screenOptions={screenOptions}>
+        screenOptions={screenOptions}
+        >
         <Tab.Screen
           name="ProfileGroup"
           component={MyProfileGroup}
@@ -192,12 +194,12 @@ const HomeStack = () => {
           component={HomeGroup}
           options={{title: '', unmountOnBlur}}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="SearchGroup"
           component={SearchGroup}
           options={{title: '', unmountOnBlur}}
-        />
-      {/* <Tab.Screen
+        /> */}
+        {/* <Tab.Screen
         name="NotificationGroup"
         component={NotificationsGroup}
         options={{

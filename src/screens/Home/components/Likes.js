@@ -1,22 +1,29 @@
 import React from 'react';
 import {Image} from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { batch, useDispatch, useSelector } from 'react-redux';
-import { getLoggedUser } from '../../../reducers/loggedUser';
-import { addPostReactions, createPostReaction, getPostReactions, removePostReaction } from '../../../reducers/postReactions';
-import { likePost, unlikePost } from '../../../reducers/posts';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {batch, useDispatch, useSelector} from 'react-redux';
+import {getLoggedUser} from '../../../reducers/loggedUser';
+import {
+  addPostReactions,
+  createPostReaction,
+  getPostReactions,
+  removePostReaction,
+} from '../../../reducers/postReactions';
+import {likePost, unlikePost} from '../../../reducers/posts';
 import posts_services from '../../../services/posts_services';
 const corazon_gris = require('../../../assets/corazon_gris.png');
 const corazon_limon = require('../../../assets/corazon_limon.png');
 
-export default function Likes({ postId }) {
+export default function Likes({postId}) {
   const postReactions = useSelector(getPostReactions(postId));
   const loggedUser = useSelector(getLoggedUser);
   let myReactionId = 0;
   const dispatch = useDispatch();
 
   const getILiked = () => {
-    const reaction = postReactions.filter((reaction) => reaction.user_id === loggedUser.id);
+    const reaction = postReactions.filter(
+      (reaction) => reaction.user_id === loggedUser.id,
+    );
     myReactionId = reaction.length > 0 ? reaction[0].id : 0;
     return reaction.length > 0;
   };
@@ -49,4 +56,4 @@ export default function Likes({ postId }) {
       />
     </TouchableOpacity>
   );
-};
+}
