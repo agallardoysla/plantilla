@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -66,7 +67,7 @@ export default function Publication({
     reacted,
     reactionscount: reactionscount?.REACTION_TYPE_PRUEBA || 0,
   });
-  const commentsCount = comments.length;
+  const commentsCount = comments?.length || 0;
   const [commentsShown, toggleshowMoreComments] = useState(5);
   const toggleshowMoreCommentsIncrement = 3;
   /**
@@ -127,7 +128,7 @@ export default function Publication({
         user_id: user,
       },
     });
-  }
+  };
 
   return (
     <>
@@ -138,7 +139,10 @@ export default function Publication({
           </View>
         )}
 
-        <TouchableOpacity onPress={() => {navigateProfile(user_owner.user_id)}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigateProfile(user_owner.user_id);
+          }}>
           <View style={styles.ownerData}>
             {/* {user_owner.account_verified ? (
               <Image
@@ -149,19 +153,19 @@ export default function Publication({
             <View
               style={[
                 styles.ownerDisplayNameContainer,
-                styles.ownerDisplayNameNotVerified
+                styles.ownerDisplayNameNotVerified,
                 // user_owner.account_verified
-                  // ? styles.ownerDisplayNameVerified
-                  // : styles.ownerDisplayNameNotVerified,
+                // ? styles.ownerDisplayNameVerified
+                // : styles.ownerDisplayNameNotVerified,
               ]}>
               <Text style={styles.ownerDisplayName}>
-                {user_owner.display_name}{' '}
+                {user_owner?.display_name}{' '}
               </Text>
             </View>
             <ProgressiveImage
               source={
-                user_owner.photo !== null
-                  ? {uri: user_owner.photo}
+                user_owner?.photo !== null
+                  ? {uri: user_owner?.photo}
                   : require('../../../assets/pride-dog_1.png')
               }
               resizeMode="cover"
@@ -292,162 +296,16 @@ export default function Publication({
           </TouchableOpacity>
         ) : null}
 
-          <CommentInput
-            placeholder={'Escribir un nuevo comentario...'}
-            callback={newCommentCallback}
-            post={post}
-            comments={comments}
-            setSavingComment={() => {}}
-            style={styles.newComment}
-            initialText={''}
-          />
-        {/*Finaliza Nombre de usuario como encabezado*/}
-
-        {/*Inicia Foto de la publicaciòn */}
-        {/* {files && files.length > 0 ? (
-          <PublicationContent
-            files={files}
-            showFullContent={showFullContent}
-            style={styles.image_post}
-          />
-        ) :  
-        // <View style={styles.postImagesContainer}>
-        //   <Pressable
-        //     style={styles.postImagesContainerPresable}
-        //     onPress={goToPost}>
-        //     <PublicationContent
-        //       files={files}
-        //       showFullContent={showFullContent}
-        //       style={styles.image_post}
-        //     />
-        //   </TouchableWithoutFeedback>
-        // </View>
-        null}*/}
-        {/*Finaliza Foto de la publicaciòn*/}
-
-        {/*Inicio de iconos de la publicaciòn*/}
-
-        {/*        
-          <View style={styles.icon_container}>
-            <Image
-              source={require('../../../assets/ojo_vista.png')}
-              style={[styles.icon_post, styles.icon_ojo]}
-            />
-            <Counter
-              style={styles.icon_numbers_view}
-              value={post.views_count}
-            />
-          </View>
-
-          <View style={styles.icon_container}>
-            <TouchableOpacity onPress={addLike}>
-              <Image
-                source={
-                  getILiked()
-                    ? require('../../../assets/corazon_limon.png')
-                    : require('../../../assets/corazon_gris.png')
-                }
-                fadeDuration={0}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.icon_numbers_view_container}
-              onPress={() =>
-                navigation.navigate('PostLikes', owner.display_name)
-              }>
-            <Counter style={styles.icon_numbers_view} value={reactions} />
-             </TouchableOpacity> 
-          </View> 
-
-          <View style={styles.icon_container}>
-            <TouchableOpacity onPress={getAndSetShowComments}>
-              <Image
-                source={require('../../../assets/comentario.png')}
-                style={[styles.icon_post, styles.icon_comentario]}
-              />
-            </TouchableOpacity>
-            <Counter style={styles.icon_numbers_view} value={commentsCount} />
-          </View>
-
-          <TouchableOpacity onPress={sharePost} style={styles.icon_container}>
-            <Image
-              source={require('../../../assets/compartir.png')}
-              style={[styles.icon_post, styles.icon_compartir]}
-            />
-          </TouchableOpacity>
-
-          <View style={styles.icon_container}>
-            <Image
-              source={require('../../../assets/menu_desbordamiento.png')}
-              style={[styles.icon_post, styles.icon_mostrarMas]}
-            />
-          </View>
-       */}
+        <CommentInput
+          placeholder={'Escribir un nuevo comentario...'}
+          callback={newCommentCallback}
+          post={post}
+          comments={comments}
+          setSavingComment={() => {}}
+          style={styles.newComment}
+          initialText={''}
+        />
       </View>
-
-      {/*Fin de iconos de una publicaciòn*/}
-
-      {/*Inicio de nombre de usuario y la descripciòn de la publicaciòn*/}
-      {/* <CommentFormatter
-          style={styles.description}
-          comment={
-            '(' +
-            owner.display_name +
-            ':' +
-            post.user_id +
-            ') ' +
-            (post.text === '__post_text__' ? '' : post.text)
-          }
-          navigation={navigation}
-        /> */}
-      {/*Fin de nombre de usuario y la descripciòn de la publicaciòn*/}
-
-      {/*Inicia comentarios hacia la publicaciòn */}
-      {/* {comments &&
-          comments.map((comment, i) => {
-            return (
-              <PublicationComment
-                style={styles.publicationComments}
-                post={post}
-                commentId={comment}
-                key={i}
-                navigation={navigation}
-              />
-            );
-          })} */}
-
-      {/* {firstTimeLoadingComments && commentsCount > 3 ? (
-          <TouchableOpacity onPress={getAndSetShowComments}>
-            <Text style={styles.showMoreComments}>
-              {commentsCount - 3} comentario
-              {commentsCount === 4 ? '' : 's'} mas...
-            </Text>
-          </TouchableOpacity>
-        ) : null} */}
-
-      {/*Inicia nuevo comentario hacia la publicaciòn */}
-      {/* {savingComment ? (
-          <ActivityIndicator color={StylesConfiguration.color} />
-        ) : (
-          <CommentInput
-            placeholder={'Escribir un nuevo comentario...'}
-            callback={newCommentCallback}
-            post={post}
-            comments={comments}
-            setSavingComment={setSavingComment}
-            style={styles.newComment}
-            initialText={''}
-          />
-        )} */}
-      {/*Fin de nuevo comentario hacia la publicaciòn */}
-
-      {/*Inicia fecha*/}
-      {/* <View style={styles.publicationDate}>
-          <DateFormatter date={post.created_at} />
-        </View> */}
-      {/*Finaliza fecha */}
-      {/* </View> */}
     </>
   );
 }

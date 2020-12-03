@@ -1,12 +1,19 @@
-import React, {useState, useContext} from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import FormButton from '../../components/FormButton';
-import {FacebookButton, GoogleButton} from '../../components/SocialButton';
+import {
+  // FacebookButton,
+  GoogleButton,
+} from '../../components/SocialButton';
 import MatInput from '../../components/MatInput';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import { useDispatch } from 'react-redux';
-import { loginEmail, loginFacebook, loginGoogle } from '../../redux/actions/session';
+import {useDispatch} from 'react-redux';
+import {
+  loginEmail,
+  // loginFacebook,
+  loginGoogle,
+} from '../../redux/actions/session';
 
 export default function LoginScreen({navigation}) {
   const dispatch = useDispatch();
@@ -42,34 +49,12 @@ export default function LoginScreen({navigation}) {
   };
 
   const doLogin = (loginFunction) => () => {
-    // console.log("dologin")
     dispatch(loginFunction());
-    /* IMPORTANTE */
-    // Todo esto carece de sentido por la nueva forma de login con Redux.
-    // Hay que cambiar la forma de obtener las respuestas de error de login
-
-    // .then(
-    // () => navigation.navigate('CreateProfile'),
-    // (error) => {
-    //   //console.log(error.message);
-    //   const newErrors = {...errors};
-    //   if (error.message.includes('wrong-password')) {
-    //     newErrors.password = 'Contraseña incorrecta';
-    //   }
-    //   if (error.message.includes('invalid-email')) {
-    //     newErrors.email = 'Email mal formado';
-    //   }
-    //   if (error.message.includes('user-not-found')) {
-    //     newErrors.email = 'No existe una cuenta con este email';
-    //   }
-    //   setErrors(newErrors);
-    // },
-    // );
   };
 
   const loginMail = () => {
     if (canSubmit) {
-      doLogin(() => loginEmail(email, password))();
+      dispatch(loginEmail(email, password));
     }
   };
 
@@ -80,6 +65,7 @@ export default function LoginScreen({navigation}) {
         source={require('../../assets/logo-home.png')}
       />
       <MatInput
+        useAnimatedDriver={false}
         value={email}
         label="Email"
         onChangeText={doSetField(
@@ -107,7 +93,6 @@ export default function LoginScreen({navigation}) {
         secureEntry={true}
         textContentType="password"
         containerStyle={styles.input}
-        // onSubmitEditing={loginOrCreateProfile}
         error={errors.password}
       />
       <FormButton
@@ -120,7 +105,7 @@ export default function LoginScreen({navigation}) {
       <Text style={styles.text}>inicia con:</Text>
       <View style={styles.socialLoginContainer}>
         <GoogleButton onPress={doLogin(loginGoogle)} />
-        <FacebookButton onPress={doLogin(loginFacebook)} />
+        {/* <FacebookButton onPress={doLogin(loginFacebook)} /> */}
       </View>
       <TouchableOpacity
         style={styles.navButton}

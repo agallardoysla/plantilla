@@ -1,18 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState} from 'react';
-import {View, StyleSheet, FlatList, Image, Text, Button} from 'react-native';
-import posts_services from '../../services/posts_services';
+import {View, StyleSheet, FlatList, Image, RefreshControl} from 'react-native';
 import Publication from './components/Publication';
-import Admob from './components/Admob';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {getPosts} from '../../reducers/posts';
 import {useDispatch, useSelector} from 'react-redux';
-import SharePost from './components/SharePost';
-import {doAddPosts} from '../../utils/reduxLoader';
-import {getShowSharePost} from '../../reducers/showSharePost';
-import {addToFeed, fetchFeed} from '../../redux/actions/feed';
+import {
+  addToFeed,
+  fetchFeed,
+  fetchFeedFromGesture,
+} from '../../redux/actions/feed';
 import Loading from '../../components/Loading';
-import auth from '@react-native-firebase/auth';
 
 export default function HomeScreen({navigation}) {
   const [page, setPage] = useState(1);
@@ -21,6 +19,12 @@ export default function HomeScreen({navigation}) {
   const dispatch = useDispatch();
   const feed = useSelector((state) => state.feed.feed);
   const fetchingFeed = useSelector((state) => state.feed.fetching);
+  const fetchingFromGesture = useSelector(
+    (state) => state.feed.fetchingFromFeed,
+  );
+
+  // console.log('fetchingFromGesture', fetchingFromGesture);
+  // const [reloading, setReloading] = useState(false);
   // const posts = useSelector(getPosts);
   // const dispatch = useDispatch();
   // // const [reloading, setReloading] = useState(false);
@@ -43,34 +47,27 @@ export default function HomeScreen({navigation}) {
   // };
 
   const loadPosts = () => {
-    // setReloading(true);
     dispatch(fetchFeed(page, pages));
-    // posts_services
-    //   .list(
-    //     pages[Math.min(page, pages.length - 1)],
-    //     getPageOffset(Math.min(page, pages.length - 1)),
-    //   )
-    //   .then((res) => {
-    //     console.log('nuevos posts', res.data.posts);
-    //     //  dispatch(doAddPosts(res.data, dispatch));
-    //     setPage(page + 1);
-    //     // setReloading(false);
-    //   });
   };
 
   const addPosts = () => {
     dispatch(addToFeed(page, pages));
   };
 
+  const refreshFromGesture = () => {
+    console.log('refresh from gesture');
+    dispatch(fetchFeedFromGesture(20, 10));
+  };
+
   React.useEffect(() => {
     loadPosts();
   }, []);
 
-  const PublicationItem = ({ item, index }) => {
+  const PublicationItem = ({item, index}) => {
     return (
       <View style={styles.publication}>
         <Publication post={item} navigation={navigation} isFeed={true} />
-        {index % 2 === 1 ? <Admob /> : null}
+        {/* {index % 2 === 1 ? <Admob /> : null} */}
       </View>
     );
   };
@@ -97,11 +94,25 @@ export default function HomeScreen({navigation}) {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
+              <TouchableOpacity onPress={gotToMyConversations}>
+                <Image
+                  source={require('../../assets/sobre_amarillo.png')}
+                  style={styles.sobre_amarillo}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
             </View>
             <FlatList
               data={feed}
-              //  onRefresh={() => loadPosts()}
-              // refreshing={reloading}
+              refreshControl={
+                <RefreshControl
+                  enabled={true}
+                  colors={['#00ff00', '#00ff00']}
+                  tintColor={'#E9FC64'}
+                  refreshing={fetchingFromGesture}
+                  onRefresh={() => refreshFromGesture()}
+                />
+              }
               renderItem={PublicationItem}
               onEndReachedThreshold={0.7}
               onEndReached={() => addPosts()}
@@ -113,30 +124,6 @@ export default function HomeScreen({navigation}) {
         )
       )}
     </SafeAreaView>
-
-    // <SafeAreaView style={styles.container}>
-    //   <View style={styles.row_header}>
-    //     <TouchableOpacity onPress={gotToMyConversations}>
-    //       <Image
-    //         source={require('../../assets/sobre_amarillo.png')}
-    //         style={styles.sobre_amarillo}
-    //         resizeMode={'contain'}
-    //       />
-    //     </TouchableOpacity>
-    //   </View>
-    //   <FlatList
-    //     data={posts}
-    //     onRefresh={() => reloadPosts()}
-    //     refreshing={reloading}
-    //     renderItem={PublicationItem}
-    //     onEndReachedThreshold={0.7}
-    //     onEndReached={loadPosts}
-    //     bouncesZoom={true}
-    //     keyExtractor={(item, index) => index.toString()}
-    //     style={styles.publications}
-    //   />
-    /* <SharePost /> */
-    // </SafeAreaView>
   );
 }
 

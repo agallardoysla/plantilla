@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
-import { getConversationByParams } from '../../../redux/reducers/conversations';
+import {getConversationByParams} from '../../../redux/reducers/conversations';
 import {getLoggedUser} from '../../../redux/reducers/session';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 
@@ -15,7 +15,7 @@ const ListConversation = ({conversationId, navigation}) => {
   };
 
   const getOther = () => {
-    const other = conversation.users.filter(u => u.user_id !== loggedUser.id);
+    const other = conversation.users.filter((u) => u.user_id !== loggedUser.id);
     return other[0] ? other[0] : conversation.users[0];
   };
 

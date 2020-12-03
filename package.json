@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "xcode": "cd ios && open FriendsChallenge.xcworkspace",
     "pods": "cd ios && pod install --repo-update",
-    "postinstall": "patch -p1 -i patches/react-native-material-textfield+0.16.1.patch"
+    "postinstall": "patch -p1 -i patches/react-native-material-textfield+0.16.1.patch",
+    "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=8081'"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.13.2",
@@ -53,6 +54,7 @@
     "react-native-video-player": "^0.10.1",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
     "redux-logger": "^3.0.6",
     "redux-promise": "^0.6.0",
     "redux-promise-middleware": "^6.1.2",
@@ -67,6 +69,7 @@
     "babel-jest": "^25.1.0",
     "eslint": "^6.5.1",
     "jest": "^25.1.0",
+    "jetifier": "^1.6.6",
     "metro-react-native-babel-preset": "^0.59.0",
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.1.0",
