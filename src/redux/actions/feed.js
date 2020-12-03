@@ -22,32 +22,35 @@ const url = 'users/';
 
 //action creators
 
-export function fetchFeed(page, pages) {
+export function fetchFeed(pageSize, offset) {
   return {
     type: FETCH_FEED,
-    payload: posts_services.list(
-      pages[Math.min(page, pages.length - 1)],
-      utils.getPageOffset(Math.min(page, pages.length - 1), pages),
-    ),
+    payload: posts_services.list(pageSize, offset),
+    // payload: posts_services.list(
+    //   pages[Math.min(page, pages.length - 1)],
+    //   utils.getPageOffset(Math.min(page, pages.length - 1), pages),
+    // ),
   };
 }
 
-export function fetchFeedFromGesture(page, pages) {
+export function fetchFeedFromGesture(pageSize, offset) {
   return {
     type: FETCH_FEED_FROM_GESTURE,
-    payload: posts_services.list(
-      pages[Math.min(page, pages.length - 1)],
-      utils.getPageOffset(Math.min(page, pages.length - 1), pages),
-    ),
+    payload: posts_services.list(pageSize, offset),
+    // payload: posts_services.list(
+    //   pages[Math.min(page, pages.length - 1)],
+    //   utils.getPageOffset(Math.min(page, pages.length - 1), pages),
+    // ),
   };
 }
 
-export function addToFeed(page, pages) {
+export function addToFeed(pageSize, offset) {
   return {
     type: ADD_TO_FEED,
-    payload: posts_services.list(
-      pages[Math.min(page, pages.length - 1)],
-      utils.getPageOffset(Math.min(page, pages.length - 1), pages),
-    ),
+    payload: posts_services.list(pageSize, offset),
+    // payload: posts_services.list(
+    //   pages[Math.min(page, pages.length - 1)],
+    //   utils.getPageOffset(Math.min(page, pages.length - 1), pages),
+    // ),
   };
 }

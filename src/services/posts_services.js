@@ -4,7 +4,16 @@ import generic_service_normalized from './generic_service_normalized';
 const url = 'posts/';
 
 export default {
-  list: (pageSize, offset) => generic_service.doGet(`${url}?limit=${pageSize}&offset=${offset}`),
+  list: (pageSize, offset) => {
+    console.log('pageSize', pageSize);
+    console.log('offset', offset);
+    const results = generic_service.doGet(
+      `${url}?limit=${pageSize}&offset=${offset}`,
+    );
+    console.log('refresh result', results);
+
+    return results;
+  },
   get: (id) => generic_service.doGet(`posts/${id}`),
   edit: (id, newPost) => generic_service.doPut(`${url}${id}/`, newPost),
   create: (newPost) => generic_service.doPost(url, newPost),
@@ -14,6 +23,9 @@ export default {
   //traer las reactions
   getReactions: (id) => generic_service.doGet(`${url}${id}/reactions/`),
   //agregar like
-  addReaction: (id, like_value) => generic_service.doPost(`${url}${id}/reactions/`, {reaction_type: like_value}),
-  deleteReaction:(id) => generic_service.doDelete(`${url}${id}/reactions/`),
+  addReaction: (id, like_value) =>
+    generic_service.doPost(`${url}${id}/reactions/`, {
+      reaction_type: like_value,
+    }),
+  deleteReaction: (id) => generic_service.doDelete(`${url}${id}/reactions/`),
 };

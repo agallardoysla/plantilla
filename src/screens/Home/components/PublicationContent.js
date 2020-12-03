@@ -17,34 +17,36 @@ export default function PublicationContent({
     availableImageExtensions.reduce((r, ext) => r || uri.includes(ext), false);
 
   if (files?.length > 0) {
-    return isImage(files[0].url_original) ? (
+    return (
       <Slick
         // showsButtons
         style={{height: 400}}
         loop={false}
         dotColor={'#50555C'}
         activeDotColor={'#E9FC64'}>
-        {files.map((file, i) => (
-          <ProgressiveImage
-            source={{uri: file.url_original}}
-            style={[style, i >= 1 ? {marginLeft: 10} : {}]}
-            resizeMode="cover"
-            thumbnailSource={{uri: file.url_small}}
-            key={i}
-            onPress={() =>
-              isFeed && post && PublicationActions.goToPost(post, navigation)
-            }
-          />
-        ))}
+        {files.map((file, i) => {
+          return isImage(file.url_original) ? (
+            <ProgressiveImage
+              source={{uri: file.url_original}}
+              style={[style, i >= 1 ? {marginLeft: 10} : {}]}
+              resizeMode="cover"
+              thumbnailSource={{uri: file.url_small}}
+              key={i}
+              onPress={() =>
+                isFeed && post && PublicationActions.goToPost(post, navigation)
+              }
+            />
+          ) : (
+            <Video
+              video={{uri: file.url_original}}
+              style={style}
+              autoplay={true}
+              defaultMuted={true}
+              loop={true}
+            />
+          );
+        })}
       </Slick>
-    ) : (
-      <Video
-        video={{uri: files[0].url_original}}
-        style={style}
-        autoplay={true}
-        defaultMuted={true}
-        loop={true}
-      />
     );
   } else {
     return null;
