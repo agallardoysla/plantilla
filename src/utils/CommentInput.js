@@ -2,10 +2,16 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {useDispatch, useSelector} from 'react-redux';
-import { addComments, createComment, getPostComments, updateComment, answerComment } from '../reducers/comments';
-import { commentPost } from  '../reducers/posts';
+import {
+  addComments,
+  createComment,
+  getPostComments,
+  updateComment,
+  answerComment,
+} from '../reducers/comments';
+import {commentPost} from '../reducers/posts';
 import {getLoggedUser} from '../reducers/loggedUser';
-import { getFullUsers } from '../reducers/users';
+import {getFullUsers} from '../reducers/users';
 import comments_services from '../services/comments_services';
 import users_services from '../services/users_services';
 import CommentFormatter from './CommentFormatter';
@@ -177,13 +183,12 @@ export default function CommentInput({
 
       <TextInput
         style={[styles.newText, style]}
-        onChangeText={()=>{}}
+        onChangeText={() => {}}
         // onSubmitEditing={saveComment}
         placeholder={placeholder}
         placeholderTextColor={'white'}>
-
         <CommentFormatter
-          comment={""}
+          comment={''}
           isInput={true}
           post={post}
           // comments={comments}
@@ -240,6 +245,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#50555C',
     borderRadius: 10,
     height: 40,
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
+    marginBottom: 12,
   },
 });

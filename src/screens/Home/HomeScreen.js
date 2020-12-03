@@ -20,7 +20,10 @@ export default function HomeScreen({navigation}) {
   const fetchingFromGesture = useSelector(
     (state) => state.feed.fetchingFromFeed,
   );
-  const [minHeight, toggleMinHeight] = useState(false);
+  const [minHeight, toggleMinHeight] = useState({
+    keyboardState: false,
+    keyboardSpace: 0,
+  });
   const loadPosts = () => {
     dispatch(fetchFeed(15, 0));
   };
@@ -88,14 +91,16 @@ export default function HomeScreen({navigation}) {
                 bouncesZoom={true}
                 keyExtractor={(item, index) => index.toString()}
                 style={
-                  minHeight
+                  minHeight.keyboardState
                     ? styles.publications
                     : styles.publicationsWithHeight
                 }
               />
               <KeyboardSpacer
-                topSpacing={-30}
-                onToggle={(keyboardState) => toggleMinHeight(keyboardState)}
+                topSpacing={15}
+                onToggle={(keyboardState, keyboardSpace) =>
+                  toggleMinHeight({keyboardState, keyboardSpace})
+                }
               />
             </View>
           </>
