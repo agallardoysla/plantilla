@@ -7,7 +7,7 @@ import profiles_services from '../../../services/profiles_services';
 import users_services from '../../../services/users_services';
 import MatInput from '../../../components/MatInput';
 import Icon from '../../../components/Icon';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import NewPostInput from '../../NewPublication/components/NewPostInput';
 import {batch, useDispatch, useSelector} from 'react-redux';
 import {
@@ -15,18 +15,27 @@ import {
   setNewDisplayName,
   setNewProfileBio,
 } from '../../../reducers/loggedUser';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 export default function Preferences({navigation}) {
   const dispatch = useDispatch();
-  const user = useSelector(getLoggedUser);
+  const user = useSelector((state) => state.session.user);
+  const {id, display_name, profile} = user;
+  const {bio} = profile;
+  const hasBio = bio !== '__profile__bio__';
   const [editingNickname, setEditingNickname] = useState(false);
   const [editingDescription, setEditingDescription] = useState(false);
-  const [newNickname, setNewNickname] = useState(user.display_name);
-  const [newBio, setNewBio] = useState(user.profile.bio);
+  const [newNickname, setNewNickname] = useState(display_name);
+
+  const [newBio, setNewBio] = useState(
+    hasBio
+      ? bio
+      : 'Aun no tenés una descripción. hazle saber al mundo quien eres',
+  );
 
   const submitProfile = () => {
     profiles_services.edit(user.profile.id, user.profile);
-    users_services.edit(user.id, {display_name: newNickname});
+    users_services.edit(id, {display_name: newNickname});
     setEditingNickname(false);
     setEditingDescription(false);
     batch(() => {
@@ -43,11 +52,14 @@ export default function Preferences({navigation}) {
     navigation.navigate('NewProfilePhoto');
   };
 
+  const handleEditProfileFocus = () => {
+    if (!hasBio) {
+      setNewBio('');
+    }
+  };
+
   return (
-    <GenericPreferenceView
-      style={styles.container}
-      navigation={navigation}
-      title={'EDITAR PERFIL'}>
+    <View style={styles.container}>
       <Image
         source={
           user.profile.photo
@@ -56,11 +68,12 @@ export default function Preferences({navigation}) {
         }
         style={styles.circle_image}
       />
-      <FormButton
+      {/* <FormButton
         buttonTitle="Cambiar foto de perfil"
         style={styles.action}
         onPress={takeNewProfilePhoto}
-      />
+      /> */}
+
       {editingNickname ? (
         <View style={styles.row}>
           <MatInput
@@ -68,7 +81,6 @@ export default function Preferences({navigation}) {
             label="Nombre de usuario"
             onChangeText={setNewNickname}
             containerStyle={styles.input}
-            renderLeftAccessory={() => <Text style={styles.at}>@</Text>}
             fontSize={18}
             labelFontSize={18}
           />
@@ -86,7 +98,7 @@ export default function Preferences({navigation}) {
         </View>
       ) : (
         <>
-          <Text style={styles.userName}>@{newNickname}</Text>
+          <Text style={styles.userName}>{newNickname}</Text>
           <FormButton
             buttonTitle="Cambiar nombre de usuario"
             style={styles.action}
@@ -94,36 +106,17 @@ export default function Preferences({navigation}) {
           />
         </>
       )}
-      {editingDescription ? (
-        <View style={styles.row}>
-          <NewPostInput
-            newComment={newBio}
-            setNewComment={setNewBio}
-            style={styles.inputBio}
-          />
-          <TouchableOpacity
-            onPress={submitProfile}
-            style={styles.editPicture}
-            disabled={!canPublish()}>
-            <Icon
-              source={'done'}
-              color={canPublish() ? StylesConfiguration.color : 'grey'}
-              size={32}
-              style={styles.action}
-            />
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <>
-          <Text style={styles.userDescription}>{newBio}</Text>
-          <FormButton
-            buttonTitle="Modificar descripción del perfil"
-            style={styles.action}
-            onPress={() => setEditingDescription(true)}
-          />
-        </>
-      )}
-    </GenericPreferenceView>
+
+      <>
+        <Text style={styles.userDescription}>{newBio}</Text>
+        <FormButton
+          buttonTitle="Modificar descripción del perfil"
+          style={styles.action}
+          onPress={() => setEditingDescription(true)}
+        />
+      </>
+      <KeyboardSpacer />
+    </View>
   );
 }
 
@@ -131,8 +124,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
-    justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 24,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: 'yellow',
+    borderRadius: 4,
+    width: 250,
+    padding: 8,
+    paddingHorizontal: 16,
+    color: 'white',
   },
   row: {
     flexDirection: 'row',

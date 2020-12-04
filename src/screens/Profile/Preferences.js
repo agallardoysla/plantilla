@@ -9,26 +9,26 @@ export default function Preferences({navigation}) {
       label: 'Editar perfil',
       action: () => navigation.navigate('ProfileEdition'),
     },
-    {
-      label: 'Mi cuenta',
-      action: () => navigation.navigate('MyAccount'),
-    },
-    {
-      label: 'Privacidad',
-      action: () => Alert.alert("Privacidad"),
-    },
-    {
-      label: 'Seguridad',
-      action: () => Alert.alert("Seguridad"),
-    },
-    {
-      label: 'Condiciones y política de uso',
-      action: () => Alert.alert("CyP"),
-    },
-    {
-      label: 'Eliminar cuenta',
-      action: () => Alert.alert("Eliminar cuenta"),
-    },
+    // {
+    //   label: 'Mi cuenta',
+    //   action: () => navigation.navigate('MyAccount'),
+    // },
+    // {
+    //   label: 'Privacidad',
+    //   action: () => Alert.alert("Privacidad"),
+    // },
+    // {
+    //   label: 'Seguridad',
+    //   action: () => Alert.alert("Seguridad"),
+    // },
+    // {
+    //   label: 'Condiciones y política de uso',
+    //   action: () => Alert.alert("CyP"),
+    // },
+    // {
+    //   label: 'Eliminar cuenta',
+    //   action: () => Alert.alert("Eliminar cuenta"),
+    // },
   ];
 
   return (

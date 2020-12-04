@@ -1,11 +1,9 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {getLoggedUser} from '../../reducers/loggedUser';
 import GenericProfile from './components/GenericProfile';
 
-//Una vez en el home, puedo acceder a los datos del usuario por medio del state user
 export default function Profile({navigation}) {
-  const user = useSelector(state => state.session.user);
+  const user = useSelector((state) => state.session.user);
 
   return (
     <GenericProfile
@@ -14,4 +12,4 @@ export default function Profile({navigation}) {
       navigation={navigation}
     />
   );
-};
+}

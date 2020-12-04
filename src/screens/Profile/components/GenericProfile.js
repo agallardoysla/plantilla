@@ -1,41 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, Dimensions, TouchableOpacity } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import users_services from '../../../services/users_services';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileLeftColumn from './ProfileLeftColumn';
 import ProfileRightColumn from './ProfileRightColumn';
 import ProfileCenterColumn from './ProfileCenterColumn';
-import { useSelector } from 'react-redux';
-import { getLoggedUser } from '../../../reducers/loggedUser';
-import { getOtherUser } from '../../../reducers/otherUser';
+import {useSelector} from 'react-redux';
+import {getLoggedUser} from '../../../reducers/loggedUser';
+import {getOtherUser} from '../../../reducers/otherUser';
 
 const numColumns = 3; //para el flatList
 
-export default function GenericProfile({ localUser, navigation, isLoggedUser }) {
+export default function GenericProfile({localUser, navigation, isLoggedUser}) {
   const [usersPosts, setUsersPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadPost();
-  }, []);
+  // useEffect(() => {
+  //   loadPost();
+  // }, []);
 
-  const loadPost = () => {
-    setLoading(true)
-    users_services.listPosts(localUser.id).then((res) => {
-      let postsPaginated = [];
-      // Se paginan los post de acuerdo a la cantidad de columnas
-      res.data.forEach((p, i) => {
-        // si se llega a (i % numColumns === 0) se agrega una nueva pagina
-        if (i % numColumns === 0) {
-          postsPaginated.push([]);
-        }
-        // siempre se agregan los posts en la ultima fila que se agrego
-        postsPaginated[postsPaginated.length - 1].push(p);
-        setLoading(false)
-      });
-      setUsersPosts(postsPaginated);
-    });
-  };
+  // const loadPost = () => {
+  //   setLoading(true);
+  //   users_services.listPosts(localUser.id).then((res) => {
+  //     let postsPaginated = [];
+  //     // Se paginan los post de acuerdo a la cantidad de columnas
+  //     res.data.forEach((p, i) => {
+  //       // si se llega a (i % numColumns === 0) se agrega una nueva pagina
+  //       if (i % numColumns === 0) {
+  //         postsPaginated.push([]);
+  //       }
+  //       // siempre se agregan los posts en la ultima fila que se agrego
+  //       postsPaginated[postsPaginated.length - 1].push(p);
+  //       setLoading(false);
+  //     });
+  //     setUsersPosts(postsPaginated);
+  //   });
+  // };
 
   const goToPost = (post) => () => {
     navigation.navigate('PostGroup', {
@@ -46,7 +54,7 @@ export default function GenericProfile({ localUser, navigation, isLoggedUser }) 
     });
   };
 
-  const UserPostItem = ({ item }) => (
+  const UserPostItem = ({item}) => (
     <View style={styles.itemContainer}>
       {item.map((post, i) => (
         <View style={styles.item} key={i}>
@@ -55,7 +63,9 @@ export default function GenericProfile({ localUser, navigation, isLoggedUser }) 
             style={styles.itemImageContainer}>
             <Image
               source={{
-                uri: post.files_with_urls[0].url_half ? post.files_with_urls[0].url_half : post.files_with_urls[0].url,
+                uri: post.files_with_urls[0].url_half
+                  ? post.files_with_urls[0].url_half
+                  : post.files_with_urls[0].url,
               }}
               style={styles.itemImage}
               fadeDuration={0}
@@ -95,15 +105,15 @@ export default function GenericProfile({ localUser, navigation, isLoggedUser }) 
           : localUser.profile.bio}
       </Text>
 
-      <View style={styles.profilePublications}>
+      {/* <View style={styles.profilePublications}>
         <FlatList
-          onRefresh={loadPost}
+          // onRefresh={loadPost}
           refreshing={loading}
           data={usersPosts}
           renderItem={UserPostItem}
           keyExtractor={(item, index) => index.toString()}
         />
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 }
@@ -159,7 +169,7 @@ const styles = StyleSheet.create({
   columnLeft: {
     flex: columns[0],
     alignItems: 'center',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
     // // backgroundColor: 'red',
   },
   columnCenter: {
@@ -170,7 +180,7 @@ const styles = StyleSheet.create({
   columnRight: {
     flex: columns[0],
     alignItems: 'center',
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
     // backgroundColor: 'blue',
   },
   itemContainer: {
