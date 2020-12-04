@@ -20,7 +20,7 @@ interface DateProps {
 const DateFormatter = ({ date, format, style }: DateProps) => {
 
   return (
-    <Text style={[styles.container, style]}>{moment(date).fromNow()}</Text>
+    <Text style={[styles.container, style]}>{`${moment(date).fromNow()}.`}</Text>
   )
 }
 
@@ -30,7 +30,8 @@ export default DateFormatter;
 /** Estilos del componente */
 const styles = StyleSheet.create({
   container: {
-    fontSize: 14,
-    color: '#979797'
+    fontSize: 10,
+    color: '#979797',
+    textTransform: 'capitalize',
   }
 })

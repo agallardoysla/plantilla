@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -35,7 +35,6 @@ export default function Publication({
   post,
   isFeed,
   sharePost,
-  newCommentCallback,
   navigation,
   openMenu,
 }) {
@@ -49,9 +48,12 @@ export default function Publication({
     reactionscount,
     reactions_details,
     text,
+    created_at,
   } = post;
 
-  const updatedPost = useSelector((state) => state.postDetails.post);
+  const loadingNewComment = useSelector((state) => state.feed.addingComment);
+  // const updatedPost = useSelector((state) => state.postDetails.post);
+  const dispatch = useDispatch();
 
   const [reaction, toggleReaction] = useState({
     reacted,
@@ -59,22 +61,28 @@ export default function Publication({
   });
   const commentsCount = comments?.length || 0;
   const [commentsShown, toggleshowMoreComments] = useState(5);
+  const [commentInputVal, setCommentInputVal] = useState('');
+  const [isResponse, toggleIsResponse] = useState({
+    state: false,
+    to: undefined,
+    id: undefined,
+  });
+
+  const commentInputRef = useRef(null);
   const toggleshowMoreCommentsIncrement = 3;
 
-  const dispatch = useDispatch();
-
-  const [commentInputVal, setCommentInputVal] = useState('');
   const onSendComment = () => {
-    dispatch(addComment({post: id, text: commentInputVal}));
+    console.log('isResponse', isResponse);
+    const commentData = {
+      post: id,
+      text: commentInputVal,
+      original_comment: isResponse.id,
+    };
+    console.log('commentData', commentData);
+    dispatch(addComment(commentData));
     setCommentInputVal('');
+    commentInputRef.current.value = '';
   };
-  const loadingNewComment = useSelector((state) => state.feed.addingComment);
-
-  useEffect(() => {
-    if (!loadingNewComment && !isFeed) {
-      console.log('logic here');
-    }
-  }, [loadingNewComment, isFeed]);
 
   const navigateProfile = (user) => {
     navigation.navigate('OtherProfileGroup', {
@@ -84,6 +92,25 @@ export default function Publication({
       },
     });
   };
+
+  const handleCommentPress = (comment) => {
+    let commenter = comment.user_owner;
+    let commentId = comment.id;
+    console.log('commenter', commenter);
+    toggleIsResponse({state: true, to: commenter, id: commentId});
+    commentInputRef.current.focus();
+    commentInputRef.current.value = commentInputVal;
+  };
+
+  const handleCommentBlur = () => {
+    toggleIsResponse({state: false, to: undefined, id: undefined});
+  };
+
+  useEffect(() => {
+    if (!loadingNewComment && !isFeed) {
+      console.log('logic here');
+    }
+  }, [loadingNewComment, isFeed]);
 
   return (
     <View style={{flex: 1}}>
@@ -225,8 +252,10 @@ export default function Publication({
                   <PublicationComment
                     style={styles.publicationComments}
                     comment={comment}
+                    onPress={handleCommentPress}
                     key={index}
                     navigation={navigation}
+                    commentInputRef={commentInputRef}
                   />
                 ) : (
                   <></>
@@ -257,15 +286,31 @@ export default function Publication({
           )}
         </ScrollView>
       </View>
-      <View style={{backgroundColor: 'black'}}>
+      <View style={{backgroundColor: 'black', padding: 8}}>
+        {isResponse.state && (
+          <CommentFormatter
+            style={{
+              color: 'white',
+            }}
+            comment={`En respuesta a (${isResponse.to.display_name}:${isResponse.to.user_id})`}
+            navigation={navigation}
+          />
+        )}
+        <View style={{alignItems: 'flex-end'}}>
+          <DateFormatter date={created_at} />
+        </View>
         <CommentInput
-          placeholder={'Nuevo comentario...'}
+          placeholder={
+            isResponse.state ? 'Responder' : 'Escribir un nuevo comentario...'
+          }
           onChangeText={setCommentInputVal}
           value={commentInputVal}
           post={post}
           comments={comments}
           onSendComment={onSendComment}
           style={styles.newComment}
+          commentInputRef={commentInputRef}
+          onBlur={handleCommentBlur}
         />
       </View>
 

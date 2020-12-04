@@ -30,9 +30,15 @@ import CommentAnswer from './CommentAnswer';
 import {getProfile} from '../../../reducers/profiles';
 import {getFile} from '../../../reducers/files';
 import {deleteCommentPost} from '../../../reducers/posts';
+import DateFormatter from '../../../components/DateFormatter';
 
-export default function PublicationComment({post, comment, navigation}) {
-  const {text, user_owner: commenter} = comment;
+export default function PublicationComment({
+  post,
+  onPress,
+  comment,
+  navigation,
+}) {
+  const {text, user_owner: commenter, created_at} = comment;
   const {
     account_verified,
     display_name,
@@ -79,36 +85,50 @@ export default function PublicationComment({post, comment, navigation}) {
     <View style={styles.container}>
       <TouchableHighlight
         style={styles.commentContainer}
-        onLongPress={() => setShowMenu(true)}
+        onPress={() => onPress(comment)}
         underlayColor={StylesConfiguration.colorSelection}>
-        <View style={styles.comment}>
-          <TouchableOpacity
-            style={styles.senderContainer}
-            onPress={() =>
-              navigation.navigate('OtherProfileGroup', {
-                screen: 'OtherProfile',
-                params: {
-                  user_id,
-                },
-              })
-            }>
-            <Image
-              source={
-                photo ? {uri: photo} : require('../../../assets/foto.png')
-              }
-              style={styles.icon_profile}
+        <View style={{flexDirection: 'column'}}>
+          <View style={styles.comment}>
+            <TouchableOpacity
+              style={styles.senderContainer}
+              onPress={() =>
+                navigation.navigate('OtherProfileGroup', {
+                  screen: 'OtherProfile',
+                  params: {
+                    user_id,
+                  },
+                })
+              }>
+              <Image
+                source={
+                  photo ? {uri: photo} : require('../../../assets/foto.png')
+                }
+                style={styles.icon_profile}
+              />
+            </TouchableOpacity>
+            <CommentFormatter
+              style={styles.content}
+              comment={`(${display_name}:${user_id}): ${
+                text === '__post_text__' ? '' : text
+              }`}
+              navigation={navigation}
             />
-          </TouchableOpacity>
-          <CommentFormatter
-                 style={styles.content}
-                 comment={`(${display_name}:${user_id}): ${
-                  text === '__post_text__' ? '' : text
-                }`}
-                 navigation={navigation}
-               />
+          </View>
+          <DateFormatter date={created_at} />
         </View>
       </TouchableHighlight>
-
+      {/* <Menu opened={showMenu} onBackdropPress={() => setShowMenu(false)}>
+        <MenuTrigger />
+        <MenuOptions customStyles={menuOptions}>
+          {/* <MenuOption
+            onSelect={() => setEditingComment(true)}
+            text="Editar comentario"
+          /> *
+          <MenuOption>
+            <Text style={{color: 'red'}}>Eliminar</Text>
+          </MenuOption>
+        </MenuOptions>
+      </Menu> */}
     </View>
   );
   //         {editingComment ? (
@@ -136,21 +156,8 @@ export default function PublicationComment({post, comment, navigation}) {
   //               }
   //               navigation={navigation}
   //             />
-  //             <Menu
-  //               opened={showMenu && commentOwner.id === loggedUser.id}
-  //               onBackdropPress={() => setShowMenu(false)}>
-  //               <MenuTrigger />
-  //               <MenuOptions customStyles={menuOptions}>
-  //                 <MenuOption
-  //                   onSelect={() => setEditingComment(true)}
-  //                   text="Editar comentario"
-  //                 />
-  //                 <MenuOption onSelect={doDeleteComment}>
-  //                   <Text style={{color: 'red'}}>Eliminar</Text>
-  //                 </MenuOption>
-  //               </MenuOptions>
-  //             </Menu>
-  //           </>
+
+  //    </>
   //         )}
   //       </View>
   //     </TouchableHighlight>
