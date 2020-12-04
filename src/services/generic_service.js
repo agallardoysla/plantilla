@@ -34,7 +34,6 @@ const getConfigFile = async (forceJWT) => {
 
 const genericMethodWithData = (method) => async (url, data, forceJWT) => {
   const config = await getConfig(forceJWT);
-  console.log(method, api_config.baseURL, url, data, config);
   let res;
   try {
     res = await axios_v1[method.toLowerCase()](url, data, config);

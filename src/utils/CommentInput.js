@@ -25,6 +25,9 @@ export default function CommentInput({
   style,
   initialText,
   isEdition,
+  onSendComment,
+  value,
+  onChangeText,
 }) {
   // const comments = useSelector(getPostComments(post.id));
   // const [newText, setNewText] = useState(initialText);
@@ -183,18 +186,20 @@ export default function CommentInput({
 
       <TextInput
         style={[styles.newText, style]}
-        onChangeText={() => {}}
-        // onSubmitEditing={saveComment}
+        onChangeText={(text) => onChangeText(text)}
+        onSubmitEditing={() => onSendComment()}
         placeholder={placeholder}
-        placeholderTextColor={'white'}>
-        <CommentFormatter
+        placeholderTextColor={'white'}
+        value={value}
+        >
+        {/* <CommentFormatter
           comment={''}
           isInput={true}
           post={post}
           // comments={comments}
           // setShowSugestions={setShowSugestions}
           // setSugestionsInput={setSugestionsInput}
-        />
+        /> */}
       </TextInput>
     </>
   );

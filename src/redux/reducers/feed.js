@@ -6,12 +6,16 @@ import {
   FETCH_FEED_FROM_GESTURE_REJECTED,
   ADD_TO_FEED_PENDING,
   ADD_TO_FEED_FULFILLED,
+  ADD_COMMENT_PENDING,
+  ADD_COMMENT_FULFILLED,
+  ADD_COMMENT_REJECTED,
 } from '../actions/feed';
 
 const defaultState = {
   fetching: false,
   fetchingFromFeed: false,
   addingToFeed: false,
+  addingComment: false,
   feed: [],
 };
 
@@ -53,6 +57,21 @@ export default function (state = defaultState, action) {
       return {
         ...state,
         addingToFeed: true,
+      };
+    case ADD_COMMENT_PENDING:
+      return {
+        ...state,
+        addingComment: true,
+      };
+    case ADD_COMMENT_FULFILLED:
+      return {
+        ...state,
+        addingComment: false,
+      };
+    case ADD_COMMENT_REJECTED:
+      return {
+        ...state,
+        addingComment: false,
       };
     default:
       return state;

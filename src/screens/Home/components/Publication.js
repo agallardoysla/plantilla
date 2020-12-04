@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import posts_services from '../../../services/posts_services';
@@ -18,8 +25,8 @@ import {getFiles} from '../../../reducers/files';
 import {isDate} from 'moment';
 import PublicationComment from './PublicationComment';
 import ProgressiveImage from '../../../components/ProgressiveImage';
-import {useDispatch} from 'react-redux';
-import {reactToPublication} from '../../../redux/actions/feed';
+import {useDispatch, useSelector} from 'react-redux';
+import {addComment, reactToPublication} from '../../../redux/actions/feed';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 let window = Dimensions.get('window');
@@ -51,7 +58,18 @@ export default function Publication({
   const commentsCount = comments?.length || 0;
   const [commentsShown, toggleshowMoreComments] = useState(5);
   const toggleshowMoreCommentsIncrement = 3;
+
   const dispatch = useDispatch();
+
+  const [commentInputVal, setCommentInputVal] = useState('');
+
+  const onSendComment = () => {
+    dispatch(addComment({post: id, text: commentInputVal}));
+    setCommentInputVal('');
+  };
+
+  const loadingNewComment = useSelector((state) => state.feed.addingComment);
+
   const navigateProfile = (user) => {
     navigation.navigate('OtherProfileGroup', {
       screen: 'OtherProfile',
@@ -219,15 +237,27 @@ export default function Publication({
             </TouchableOpacity>
           ) : null}
         </ScrollView>
-
+        {loadingNewComment && (
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingHorizontal: 24,
+              alignContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'green',
+            }}>
+            <Text style={{color: 'white'}}>Añadiendo comentario</Text>
+            <ActivityIndicator size="small" />
+          </View>
+        )}
         <CommentInput
-          placeholder={'Escribir un nuevo comentario...'}
-          callback={newCommentCallback}
+          placeholder={'Nuevo comentario...'}
+          onChangeText={setCommentInputVal}
+          value={commentInputVal}
           post={post}
           comments={comments}
-          setSavingComment={() => {}}
+          onSendComment={onSendComment}
           style={styles.newComment}
-          initialText={''}
         />
         {!isFeed && <KeyboardSpacer />}
       </View>

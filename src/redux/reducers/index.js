@@ -5,5 +5,10 @@ import postDetails from './postDetails';
 import otherProfile from './otherProfile';
 import conversations from './conversations';
 
-export default combineReducers({session, feed, postDetails, otherProfile, conversations});
-
+export default combineReducers({
+  session,
+  feed,
+  postDetails,
+  otherProfile,
+  conversations,
+});
