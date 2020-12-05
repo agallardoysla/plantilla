@@ -4,7 +4,7 @@ export default {
   fontWeight: '900',
   fontSize: 14,
   color: 'rgb(233, 252, 100)',
-  colorSelection: 'rgba(232, 252, 100, 0.37)',
+  colorSelection: 'rgba(232, 252, 100, 0.1)',
 };
 
 export const baseToast = (params) => ({

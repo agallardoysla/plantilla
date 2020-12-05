@@ -19,18 +19,18 @@ export default function MyAccount({navigation}) {
   // }, []);
 
   const options = [
-    {
-      label: 'Iniciar con una cuenta diferente',
-      action: () => navigation.navigate('SelectAccount'),
-    },
-    {
-      label: 'Multicuenta',
-      action: () => {},
-    },
-    {
-      label: 'Verificar',
-      action: () => navigation.navigate('VerifyAccountText'),
-    },
+    // {
+    //   label: 'Iniciar con una cuenta diferente',
+    //   action: () => navigation.navigate('SelectAccount'),
+    // },
+    // {
+    //   label: 'Multicuenta',
+    //   action: () => {},
+    // },
+    // {
+    //   label: 'Verificar',
+    //   action: () => navigation.navigate('VerifyAccountText'),
+    // },
     {
       label: 'Cerrar sesión',
       action: () => dispatch(logout()),

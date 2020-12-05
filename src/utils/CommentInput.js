@@ -18,13 +18,12 @@ import CommentFormatter from './CommentFormatter';
 
 export default function CommentInput({
   placeholder,
-  post,
-  comment,
-  setSavingComment,
-  callback,
   style,
-  initialText,
-  isEdition,
+  onSendComment,
+  value,
+  onChangeText,
+  onBlur,
+  commentInputRef,
 }) {
   // const comments = useSelector(getPostComments(post.id));
   // const [newText, setNewText] = useState(initialText);
@@ -183,18 +182,21 @@ export default function CommentInput({
 
       <TextInput
         style={[styles.newText, style]}
-        onChangeText={() => {}}
-        // onSubmitEditing={saveComment}
+        onChangeText={(text) => onChangeText(text)}
+        onSubmitEditing={() => onSendComment()}
         placeholder={placeholder}
-        placeholderTextColor={'white'}>
-        <CommentFormatter
+        placeholderTextColor={'white'}
+        value={value}
+        onBlur={() => onBlur()}
+        ref={commentInputRef}>
+        {/* <CommentFormatter
           comment={''}
           isInput={true}
           post={post}
           // comments={comments}
           // setShowSugestions={setShowSugestions}
           // setSugestionsInput={setSugestionsInput}
-        />
+        /> */}
       </TextInput>
     </>
   );

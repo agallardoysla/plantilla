@@ -25,7 +25,7 @@ export default function HomeScreen({navigation}) {
     keyboardSpace: 0,
   });
   const loadPosts = () => {
-    dispatch(fetchFeed(15, 0));
+    dispatch(fetchFeed(1, 2));
   };
 
   const addPosts = () => {

@@ -1,3 +1,4 @@
+import comments_services from '../../services/comments_services';
 import posts_services from '../../services/posts_services';
 import utils from '../../utils/utils';
 
@@ -21,6 +22,10 @@ export const LOADING = 'LOADING';
 export const ADD_REACTION = 'ADD_REACTION';
 export const ADD_REACTION_PENDING = 'ADD_REACTION_PENDING';
 export const ADD_REACTION_FULFILLED = 'ADD_REACTION_FULFILLED';
+
+export const ADD_COMMENT = 'ADD_COMMENT';
+export const ADD_COMMENT_PENDING = 'ADD_COMMENT_PENDING';
+export const ADD_COMMENT_FULFILLED = 'ADD_COMMENT_FULFILLED';
 
 export const REMOVE_REACTION = 'REMOVE_REACTION';
 export const REMOVE_REACTION_PENDING = 'REMOVE_REACTION_PENDING';
@@ -56,5 +61,12 @@ export function reactToPublication(publicationId, reacted) {
   return {
     type: REMOVE_REACTION,
     payload: posts_services.deleteReaction(publicationId),
+  };
+}
+
+export function addComment(data) {
+  return {
+    type: ADD_COMMENT,
+    payload: comments_services.create(data),
   };
 }

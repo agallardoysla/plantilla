@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, Image, StyleSheet, Alert} from 'react-native';
 import StylesConfiguration from '../../utils/StylesConfiguration';
 import FormButton from '../../components/FormButton';
+import GoBackButton from '../../components/GoBackButton';
 
 export default function Preferences({navigation}) {
   const options = [
@@ -13,40 +14,53 @@ export default function Preferences({navigation}) {
       label: 'Mi cuenta',
       action: () => navigation.navigate('MyAccount'),
     },
-    {
-      label: 'Privacidad',
-      action: () => Alert.alert("Privacidad"),
-    },
-    {
-      label: 'Seguridad',
-      action: () => Alert.alert("Seguridad"),
-    },
-    {
-      label: 'Condiciones y política de uso',
-      action: () => Alert.alert("CyP"),
-    },
-    {
-      label: 'Eliminar cuenta',
-      action: () => Alert.alert("Eliminar cuenta"),
-    },
+    // {
+    //   label: 'Privacidad',
+    //   action: () => Alert.alert("Privacidad"),
+    // },
+    // {
+    //   label: 'Seguridad',
+    //   action: () => Alert.alert("Seguridad"),
+    // },
+    // {
+    //   label: 'Condiciones y política de uso',
+    //   action: () => Alert.alert("CyP"),
+    // },
+    // {
+    //   label: 'Eliminar cuenta',
+    //   action: () => Alert.alert("Eliminar cuenta"),
+    // },
   ];
 
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.tuercaBlanca}
-        source={require('../../assets/tuerca_blanca_grande.png')}
-      />
-      <Text style={styles.text}>PREFERENCIAS</Text>
-      {options.map((option, i) => (
-        <FormButton
-          buttonTitle={option.label}
-          style={styles.action}
-          onPress={option.action}
-          key={i}
+    <>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingHorizontal: 5,
+          paddingTop: 35,
+          backgroundColor: 'black',
+        }}>
+        <GoBackButton navigation={navigation} />
+      </View>
+      <View style={styles.container}>
+        <Image
+          style={styles.tuercaBlanca}
+          source={require('../../assets/tuerca_blanca_grande.png')}
         />
-      ))}
-    </View>
+        <Text style={styles.text}>PREFERENCIAS</Text>
+        {options.map((option, i) => (
+          <FormButton
+            buttonTitle={option.label}
+            style={styles.action}
+            onPress={option.action}
+            key={i}
+          />
+        ))}
+      </View>
+    </>
   );
 }
 
@@ -54,7 +68,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
-    justifyContent: 'center',
     alignItems: 'center',
   },
   tuercaBlanca: {

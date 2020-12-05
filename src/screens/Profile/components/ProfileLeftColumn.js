@@ -30,30 +30,6 @@ export default function ProfileLeftColumn({
     isLoggedUser ? loggedFollowers : otherFollowers,
   );
 
-  useEffect(() => {
-    if (isLoggedUser) {
-      setLocalFolloweds(loggedFolloweds);
-    }
-  }, [loggedFollowers]);
-
-  useEffect(() => {
-    if (!isLoggedUser) {
-      setLocalFolloweds(otherFolloweds);
-    }
-  }, [otherFollowers]);
-
-  useEffect(() => {
-    if (isLoggedUser) {
-      setLocalFollowers(loggedFollowers);
-    }
-  }, [loggedFollowers]);
-
-  useEffect(() => {
-    if (!isLoggedUser) {
-      setLocalFollowers(otherFollowers);
-    }
-  }, [otherFollowers]);
-
   const goToFollowed = () => {
     navigation.navigate('Followeds', {isLoggedUser});
   };

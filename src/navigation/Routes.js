@@ -6,6 +6,7 @@ import Loading from '../components/Loading';
 import {useSelector, useDispatch} from 'react-redux';
 import {checkSessionActive, recoverSession} from '../redux/actions/session';
 import {getSessionIsActive} from '../redux/reducers/session';
+import Toast from 'react-native-toast-message';
 
 export default function Routes() {
   const dispatch = useDispatch();
@@ -23,6 +24,8 @@ export default function Routes() {
 
   return (
     <NavigationContainer>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
+
       {checkingForUser ? (
         <Loading message="Verificando datos de sesion" />
       ) : sessionIsActive && userExists ? (

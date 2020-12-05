@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import posts_services from '../../../services/posts_services';
@@ -18,8 +25,8 @@ import {getFiles} from '../../../reducers/files';
 import {isDate} from 'moment';
 import PublicationComment from './PublicationComment';
 import ProgressiveImage from '../../../components/ProgressiveImage';
-import {useDispatch} from 'react-redux';
-import {reactToPublication} from '../../../redux/actions/feed';
+import {useDispatch, useSelector} from 'react-redux';
+import {addComment, reactToPublication} from '../../../redux/actions/feed';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 let window = Dimensions.get('window');
@@ -28,7 +35,6 @@ export default function Publication({
   post,
   isFeed,
   sharePost,
-  newCommentCallback,
   navigation,
   openMenu,
 }) {
@@ -42,7 +48,12 @@ export default function Publication({
     reactionscount,
     reactions_details,
     text,
+    created_at,
   } = post;
+
+  const loadingNewComment = useSelector((state) => state.feed.addingComment);
+  // const updatedPost = useSelector((state) => state.postDetails.post);
+  const dispatch = useDispatch();
 
   const [reaction, toggleReaction] = useState({
     reacted,
@@ -50,8 +61,29 @@ export default function Publication({
   });
   const commentsCount = comments?.length || 0;
   const [commentsShown, toggleshowMoreComments] = useState(5);
+  const [commentInputVal, setCommentInputVal] = useState('');
+  const [isResponse, toggleIsResponse] = useState({
+    state: false,
+    to: undefined,
+    id: undefined,
+  });
+
+  const commentInputRef = useRef(null);
   const toggleshowMoreCommentsIncrement = 3;
-  const dispatch = useDispatch();
+
+  const onSendComment = () => {
+    console.log('isResponse', isResponse);
+    const commentData = {
+      post: id,
+      text: commentInputVal,
+      original_comment: isResponse.id,
+    };
+    console.log('commentData', commentData);
+    dispatch(addComment(commentData));
+    setCommentInputVal('');
+    commentInputRef.current.value = '';
+  };
+
   const navigateProfile = (user) => {
     navigation.navigate('OtherProfileGroup', {
       screen: 'OtherProfile',
@@ -61,6 +93,25 @@ export default function Publication({
     });
   };
 
+  const handleCommentPress = (comment) => {
+    let commenter = comment.user_owner;
+    let commentId = comment.id;
+    console.log('commenter', commenter);
+    toggleIsResponse({state: true, to: commenter, id: commentId});
+    commentInputRef.current.focus();
+    commentInputRef.current.value = commentInputVal;
+  };
+
+  const handleCommentBlur = () => {
+    toggleIsResponse({state: false, to: undefined, id: undefined});
+  };
+
+  useEffect(() => {
+    if (!loadingNewComment && !isFeed) {
+      console.log('logic here');
+    }
+  }, [loadingNewComment, isFeed]);
+
   return (
     <View style={{flex: 1}}>
       <View style={styles.container}>
@@ -69,168 +120,201 @@ export default function Publication({
             <GoBackButton navigation={navigation} />
           </View>
         )}
-
-        <View style={styles.ownerData}>
-          <View
-            style={[
-              styles.ownerDisplayNameContainer,
-              styles.ownerDisplayNameNotVerified,
-            ]}>
-            <Text style={styles.ownerDisplayName}>
-              {user_owner?.display_name}
-            </Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => {
-              navigateProfile(user_owner.user_id);
-            }}>
-            <ProgressiveImage
-              source={
-                user_owner?.photo !== null
-                  ? {uri: user_owner?.photo}
-                  : require('../../../assets/pride-dog_1.png')
-              }
-              resizeMode="cover"
-              style={styles.image_profile}
-              fadeDuration={0}
-              thumbnailSource={require('../../../assets/FC_Logo.png')}
-            />
-          </TouchableOpacity>
-        </View>
-        <PublicationContent
-          id={id}
-          files={files_with_urls}
-          showFullContent={true}
-          style={styles.image_post}
-          navigation={navigation}
-          isFeed={isFeed}
-          post={post}
-        />
-
-        <View style={styles.icons_container}>
-          <View style={styles.icon_numbers_view_container}>
-            <Image
-              source={require('../../../assets/ojo_vista.png')}
-              style={[styles.icon_post, styles.icon_ojo]}
-            />
-            <Counter style={styles.icon_numbers_view} value={views_count} />
-          </View>
-
-          <View style={styles.icon_container}>
+        <ScrollView>
+          <View style={styles.ownerData}>
+            <View
+              style={[
+                styles.ownerDisplayNameContainer,
+                styles.ownerDisplayNameNotVerified,
+              ]}>
+              <Text style={styles.ownerDisplayName}>
+                {user_owner?.display_name}
+              </Text>
+            </View>
             <TouchableOpacity
               onPress={() => {
-                dispatch(reactToPublication(id, !reaction.reacted));
-                toggleReaction({
-                  reacted: !reaction.reacted,
-                  reactionscount: reaction.reacted
-                    ? reaction.reactionscount - 1
-                    : reaction.reactionscount + 1,
-                });
-              }}
-              onLongPress={() => {
-                navigation.navigate('PostLikes', {
-                  reactions_details,
-                  files_with_urls,
-                  reactionscount: reaction.reactionscount,
-                });
+                navigateProfile(user_owner.user_id);
               }}>
-              <Image
-                style={[styles.icon_post, styles.icon_corazon]}
+              <ProgressiveImage
                 source={
-                  reaction.reacted
-                    ? require('../../../assets/corazon_limon.png')
-                    : require('../../../assets/corazon_gris.png')
+                  user_owner?.photo !== null
+                    ? {uri: user_owner?.photo}
+                    : require('../../../assets/pride-dog_1.png')
                 }
+                resizeMode="cover"
+                style={styles.image_profile}
                 fadeDuration={0}
-              />
-            </TouchableOpacity>
-            <Counter
-              style={styles.icon_numbers_like}
-              value={reaction.reactionscount}
-            />
-          </View>
-          <View style={styles.icon_container}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('PostComments', {
-                  comments,
-                  files_with_urls,
-                  commentsCount,
-                })
-              }>
-              <Image
-                source={require('../../../assets/comentario.png')}
-                style={[styles.icon_post, styles.icon_comentario]}
-              />
-            </TouchableOpacity>
-            <Counter style={styles.icon_numbers_view} value={commentsCount} />
-          </View>
-          <View style={styles.icon_container}>
-            <TouchableOpacity onPress={sharePost}>
-              <Image
-                source={require('../../../assets/compartir.png')}
-                style={[styles.icon_post, styles.icon_compartir]}
+                thumbnailSource={require('../../../assets/FC_Logo.png')}
               />
             </TouchableOpacity>
           </View>
-          <View style={{...styles.icon_container, justifyContent: 'flex-end'}}>
-            <TouchableOpacity onPress={openMenu}>
-              <Image
-                source={require('../../../assets/menu_desbordamiento.png')}
-                style={[styles.icon_post, styles.icon_mostrarMas]}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.description_container}>
-          {text && text !== '__post_text__' && (
-            <CommentFormatter
-              style={styles.description}
-              comment={`(${user_owner.display_name}:${id}): ${text}`}
+          <View style={{height: 400}}>
+            <PublicationContent
+              id={id}
+              files={files_with_urls}
+              showFullContent={true}
+              style={styles.image_post}
               navigation={navigation}
+              isFeed={isFeed}
+              post={post}
             />
-          )}
-        </View>
-        <ScrollView>
-          {comments &&
-            comments.map((comment, index) => {
-              return index < commentsShown ? (
-                <PublicationComment
-                  style={styles.publicationComments}
-                  comment={comment}
-                  key={index}
-                  navigation={navigation}
-                />
-              ) : (
-                <></>
-              );
-            })}
-          {commentsCount > commentsShown ? (
-            <TouchableOpacity
-              onPress={() =>
-                toggleshowMoreComments(
-                  commentsShown + toggleshowMoreCommentsIncrement,
-                )
-              }>
-              <Text style={styles.showMoreComments}>
-                {commentsCount - commentsShown} comentario
-                {commentsCount - commentsShown === 1 ? '' : 's'} mas...
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-        </ScrollView>
+          </View>
 
+          <View style={styles.icons_container}>
+            <View style={styles.icon_numbers_view_container}>
+              <Image
+                source={require('../../../assets/ojo_vista.png')}
+                style={[styles.icon_post, styles.icon_ojo]}
+              />
+              <Counter style={styles.icon_numbers_view} value={views_count} />
+            </View>
+
+            <View style={styles.icon_container}>
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(reactToPublication(id, !reaction.reacted));
+                  toggleReaction({
+                    reacted: !reaction.reacted,
+                    reactionscount: reaction.reacted
+                      ? reaction.reactionscount - 1
+                      : reaction.reactionscount + 1,
+                  });
+                }}
+                onLongPress={() => {
+                  navigation.navigate('PostLikes', {
+                    reactions_details,
+                    files_with_urls,
+                    reactionscount: reaction.reactionscount,
+                  });
+                }}>
+                <Image
+                  style={[styles.icon_post, styles.icon_corazon]}
+                  source={
+                    reaction.reacted
+                      ? require('../../../assets/corazon_limon.png')
+                      : require('../../../assets/corazon_gris.png')
+                  }
+                  fadeDuration={0}
+                />
+              </TouchableOpacity>
+              <Counter
+                style={styles.icon_numbers_like}
+                value={reaction.reactionscount}
+              />
+            </View>
+            <View style={styles.icon_container}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('PostComments', {
+                    comments,
+                    files_with_urls,
+                    commentsCount,
+                  })
+                }>
+                <Image
+                  source={require('../../../assets/comentario.png')}
+                  style={[styles.icon_post, styles.icon_comentario]}
+                />
+              </TouchableOpacity>
+              <Counter style={styles.icon_numbers_view} value={commentsCount} />
+            </View>
+            <View style={styles.icon_container}>
+              <TouchableOpacity onPress={sharePost}>
+                <Image
+                  source={require('../../../assets/compartir.png')}
+                  style={[styles.icon_post, styles.icon_compartir]}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{...styles.icon_container, justifyContent: 'flex-end'}}>
+              <TouchableOpacity onPress={openMenu}>
+                <Image
+                  source={require('../../../assets/menu_desbordamiento.png')}
+                  style={[styles.icon_post, styles.icon_mostrarMas]}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.description_container}>
+            {text && text !== '__post_text__' && (
+              <CommentFormatter
+                style={styles.description}
+                comment={`(${user_owner.display_name}:${id}): ${text}`}
+                navigation={navigation}
+              />
+            )}
+          </View>
+          <ScrollView>
+            {comments &&
+              comments.map((comment, index) => {
+                return index < commentsShown ? (
+                  <PublicationComment
+                    style={styles.publicationComments}
+                    comment={comment}
+                    onPress={handleCommentPress}
+                    key={index}
+                    navigation={navigation}
+                    commentInputRef={commentInputRef}
+                  />
+                ) : (
+                  <></>
+                );
+              })}
+            {commentsCount > commentsShown ? (
+              <TouchableOpacity
+                onPress={() =>
+                  toggleshowMoreComments(
+                    commentsShown + toggleshowMoreCommentsIncrement,
+                  )
+                }>
+                <Text style={styles.showMoreComments}>
+                  {commentsCount - commentsShown} comentario
+                  {commentsCount - commentsShown === 1 ? '' : 's'} mas...
+                </Text>
+              </TouchableOpacity>
+            ) : null}
+          </ScrollView>
+          {loadingNewComment && (
+            <View
+              style={{
+                alignContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="small" color="#E8FC64" />
+            </View>
+          )}
+        </ScrollView>
+      </View>
+      <View style={{backgroundColor: 'black', padding: 8}}>
+        {isResponse.state && (
+          <CommentFormatter
+            style={{
+              color: 'white',
+            }}
+            comment={`En respuesta a (${isResponse.to.display_name}:${isResponse.to.user_id})`}
+            navigation={navigation}
+          />
+        )}
+        <View style={{alignItems: 'flex-end'}}>
+          <DateFormatter date={created_at} />
+        </View>
         <CommentInput
-          placeholder={'Escribir un nuevo comentario...'}
-          callback={newCommentCallback}
+          placeholder={
+            isResponse.state ? 'Responder' : 'Escribir un nuevo comentario...'
+          }
+          onChangeText={setCommentInputVal}
+          value={commentInputVal}
           post={post}
           comments={comments}
-          setSavingComment={() => {}}
+          onSendComment={onSendComment}
           style={styles.newComment}
-          initialText={''}
+          commentInputRef={commentInputRef}
+          onBlur={handleCommentBlur}
         />
-        {!isFeed && <KeyboardSpacer />}
       </View>
+
+      {!isFeed && <KeyboardSpacer />}
     </View>
   );
 }
@@ -248,7 +332,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 5,
-    marginVertical: 35,
+    marginTop: 35,
   },
   ownerData: {
     flexDirection: 'row',

@@ -2,10 +2,13 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-export default function GoBackButton({navigation, style}) {
+export default function GoBackButton({navigation, onGoBack = () => {}, style}) {
   return (
     <TouchableOpacity
-      onPress={() => navigation.goBack()}
+      onPress={() => {
+        onGoBack();
+        navigation.goBack();
+      }}
       style={[styles.container, style]}>
       <Image
         style={styles.boton_back}
@@ -13,12 +16,10 @@ export default function GoBackButton({navigation, style}) {
       />
     </TouchableOpacity>
   );
-};
+}
 
 export function GoBackButtonPlaceholder({style}) {
-  return (
-    <View style={[styles.container, style]} />
-  );
+  return <View style={[styles.container, style]} />;
 }
 
 const styles = StyleSheet.create({
