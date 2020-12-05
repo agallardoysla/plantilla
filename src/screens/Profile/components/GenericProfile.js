@@ -98,13 +98,13 @@ export default function GenericProfile({localUser, navigation, isLoggedUser}) {
           navigation={navigation}
         />
       </View>
-
       <Text style={styles.container_description}>
         {localUser.profile.bio === '__profile__bio__'
-          ? 'BullDog frances que vive en burzaco me gusta dormir y comer'
+          ? isLoggedUser
+            ? 'Aun no tienes una descripción'
+            : ''
           : localUser.profile.bio}
       </Text>
-
       {/* <View style={styles.profilePublications}>
         <FlatList
           // onRefresh={loadPost}
@@ -126,15 +126,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'stretch',
+    // justifyContent: 'space-between',
+    // alignItems: 'stretch',
     paddingHorizontal: 3,
   },
   //filas division de cada secciòn
   profileData: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'stretch',
+    // justifyContent: 'space-between',
+    // alignItems: 'stretch',
     marginBottom: 5,
   },
   profileDescription: {
@@ -149,7 +149,6 @@ const styles = StyleSheet.create({
     top: 5,
     marginBottom: 10,
     color: 'white',
-    // fontFamily: 'GothamBlack-normal',
     textAlign: 'center',
     paddingVertical: 10,
     marginHorizontal: 20,

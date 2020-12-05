@@ -68,7 +68,7 @@ export default function HomeScreen({navigation}) {
         feed &&
         feed.length > 0 && (
           <>
-            <View style={styles.row_header}>
+            {/* <View style={styles.row_header}>
               <TouchableOpacity onPress={gotToMyConversations}>
                 <Image
                   source={require('../../assets/sobre_amarillo.png')}
@@ -76,7 +76,7 @@ export default function HomeScreen({navigation}) {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
             <View style={{flex: 1}}>
               <FlatList
                 maxToRenderPerBatch={3}

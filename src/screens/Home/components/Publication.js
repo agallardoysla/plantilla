@@ -211,15 +211,15 @@ const Publication = ({feed, post, isFeed, sharePost, navigation, openMenu}) => {
               </TouchableOpacity>
               <Counter style={styles.icon_numbers_view} value={commentsCount} />
             </View>
-            <View style={styles.icon_container}>
+            {/* <View style={styles.icon_container}>
               <TouchableOpacity onPress={sharePost}>
                 <Image
                   source={require('../../../assets/compartir.png')}
                   style={[styles.icon_post, styles.icon_compartir]}
                 />
               </TouchableOpacity>
-            </View>
-            <View
+            </View> */}
+            {/* <View
               style={{...styles.icon_container, justifyContent: 'flex-end'}}>
               <TouchableOpacity onPress={openMenu}>
                 <Image
@@ -227,7 +227,7 @@ const Publication = ({feed, post, isFeed, sharePost, navigation, openMenu}) => {
                   style={[styles.icon_post, styles.icon_mostrarMas]}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
           <View style={styles.description_container}>
             {text && text !== '__post_text__' && (

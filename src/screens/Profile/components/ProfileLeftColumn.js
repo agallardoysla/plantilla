@@ -55,11 +55,11 @@ export default function ProfileLeftColumn({
         onPress={goToFollowers}
       />
 
-      <FormButton
+      {/* <FormButton
         buttonTitle="CHALLENGE"
         style={styles.challengeButton}
         textStyle={styles.challengeContent}
-      />
+      /> */}
     </View>
   );
 }

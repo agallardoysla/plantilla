@@ -2,15 +2,15 @@ import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import GoBackButton from '../../../components/GoBackButton';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
-import { useSelector } from 'react-redux';
-import { getLoggedUserVips } from '../../../reducers/loggedUser';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { FlatList } from 'react-native-gesture-handler';
+import {useSelector} from 'react-redux';
+import {getLoggedUserVips} from '../../../reducers/loggedUser';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {FlatList} from 'react-native-gesture-handler';
 import Vip from '../components/Vip';
 
 export default ({navigation}) => {
   const loggedFollowers = useSelector(getLoggedUserVips);
-
+  const hasVip = loggedFollowers.length > 0;
   const VipItem = ({item}) => <Vip vip={item} navigation={navigation} />;
 
   return (
@@ -20,12 +20,25 @@ export default ({navigation}) => {
         <Text style={styles.titulo}>V.I.P.</Text>
         <View style={styles.placeholder} />
       </View>
-      <FlatList
-        style={styles.list}
-        data={loggedFollowers}
-        renderItem={VipItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {hasVip ? (
+        <FlatList
+          style={styles.list}
+          data={loggedFollowers}
+          renderItem={VipItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      ) : (
+        <Text
+          style={{
+            color: 'yellow',
+            textAlign: 'center',
+            alignContent: 'center',
+            margin: 24,
+            fontSize: 18
+          }}>
+          Sin usuarios V.I.P
+        </Text>
+      )}
     </SafeAreaView>
   );
 };
