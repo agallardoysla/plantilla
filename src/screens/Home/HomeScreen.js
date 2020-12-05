@@ -24,9 +24,9 @@ export default function HomeScreen({navigation}) {
     keyboardState: false,
     keyboardSpace: 0,
   });
-  const offset = 0;
+  const offset = 4;
   const loadPosts = () => {
-    dispatch(fetchFeed(15, offset));
+    dispatch(fetchFeed(1, offset));
   };
 
   const addPosts = () => {
@@ -34,7 +34,7 @@ export default function HomeScreen({navigation}) {
   };
 
   const refreshFromGesture = () => {
-    dispatch(fetchFeedFromGesture(15, 0));
+    dispatch(fetchFeedFromGesture(15, offset));
   };
 
   React.useEffect(() => {
@@ -92,9 +92,10 @@ export default function HomeScreen({navigation}) {
                   />
                 }
                 renderItem={PublicationItem}
-                onEndReachedThreshold={0.9}
+                onEndReachedThreshold={0.6}
                 onEndReached={() => addPosts()}
-                bouncesZoom={true}
+                bouncesZoom={false}
+                onEnd
                 keyExtractor={(item, index) => index.toString()}
                 style={
                   minHeight.keyboardState

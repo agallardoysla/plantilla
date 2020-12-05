@@ -35,14 +35,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 let window = Dimensions.get('window');
 
-export default function Publication({
-  feed,
-  post,
-  isFeed,
-  sharePost,
-  navigation,
-  openMenu,
-}) {
+const Publication = ({feed, post, isFeed, sharePost, navigation, openMenu}) => {
   const {
     id,
     files_with_urls,
@@ -317,7 +310,8 @@ export default function Publication({
       {!isFeed && <KeyboardSpacer />}
     </View>
   );
-}
+};
+ export default Publication;
 
 const styles = StyleSheet.create({
   container: {
