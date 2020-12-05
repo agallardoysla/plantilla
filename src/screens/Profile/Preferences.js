@@ -10,10 +10,10 @@ export default function Preferences({navigation}) {
       label: 'Editar perfil',
       action: () => navigation.navigate('ProfileEdition'),
     },
-    // {
-    //   label: 'Mi cuenta',
-    //   action: () => navigation.navigate('MyAccount'),
-    // },
+    {
+      label: 'Mi cuenta',
+      action: () => navigation.navigate('MyAccount'),
+    },
     // {
     //   label: 'Privacidad',
     //   action: () => Alert.alert("Privacidad"),
@@ -41,7 +41,7 @@ export default function Preferences({navigation}) {
           alignItems: 'center',
           paddingHorizontal: 5,
           paddingTop: 35,
-          backgroundColor: 'black'
+          backgroundColor: 'black',
         }}>
         <GoBackButton navigation={navigation} />
       </View>

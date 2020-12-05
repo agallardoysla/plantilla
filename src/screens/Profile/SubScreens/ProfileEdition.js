@@ -17,10 +17,8 @@ import {
 } from '../../../reducers/loggedUser';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import GoBackButton from '../../../components/GoBackButton';
-import Toast from 'react-native-toast-message';
 
 export default function Preferences({navigation}) {
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.session.user);
   const {id, display_name, profile} = user;
   const {id: profileId, bio} = profile;
@@ -32,7 +30,7 @@ export default function Preferences({navigation}) {
       ? bio
       : 'Aun no tenés una descripción. hazle saber al mundo quien eres',
   );
-  const [editDescription, setEditingDescription] = useState(hasBio);
+  const [editDescription, setEditingDescription] = useState(false);
 
   // const submitProfile = () => {
   //   profiles_services.edit(user.profile.id, user.profile);
@@ -47,16 +45,29 @@ export default function Preferences({navigation}) {
 
   // const canPublish = () => {
   //   return newNickname.length > 3;
-  // };
+  // }
 
   // const takeNewProfilePhoto = () => {
+
   //   navigation.navigate('NewProfilePhoto');
-  // };
+
+  //   };
 
   // const handleEditProfileFocus = () => {
   //   if (!hasBio) {
   //     setNewBio('');
   //   }
+  // };
+
+  // const onGoBack = () => {
+  //   toggleEditUsername(false);
+  //   setEditingDescription(false);
+  //   setUsername(display_name);
+  //   setDescription(
+  //     hasBio
+  //       ? bio
+  //       : 'Aun no tenés una descripción. hazle saber al mundo quien eres',
+  //   );
   // };
 
   const Options = ({handleCancelar, handleAceptar}) => {
@@ -79,7 +90,7 @@ export default function Preferences({navigation}) {
   return (
     <>
       <View style={styles.upperBar}>
-        <GoBackButton navigation={navigation} />
+        <GoBackButton navigation={navigation}  />
       </View>
       <View style={styles.container}>
         {/* <Image
@@ -89,11 +100,6 @@ export default function Preferences({navigation}) {
             : require('../../../assets/foto_perfil_superior.png')
         }
         style={styles.circle_image}
-      /> */}
-        {/* <FormButton
-        buttonTitle="Cambiar foto de perfil"
-        style={styles.action}
-        onPress={takeNewProfilePhoto}
       /> */}
 
         <View>
