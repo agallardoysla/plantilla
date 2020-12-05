@@ -80,14 +80,13 @@ export default function (state = defaultState, action) {
     case UPDATE_PUBLICATION_PENDING:
       return {
         ...state,
-        refreshData: false,
+        refreshData: true,
       };
     case UPDATE_PUBLICATION_FULFILLED:
-      console.log('UPDATE_PUBLsICATION_FULFILLED', action.payload);
       return {
         ...state,
         refreshData: false,
-        feed: action.payload,
+        feed: action.payload || [...state.feed],
       };
     default:
       return state;

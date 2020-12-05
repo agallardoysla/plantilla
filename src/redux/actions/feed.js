@@ -56,23 +56,29 @@ export function addToFeed(pageSize, offset) {
     payload: posts_services.list(pageSize, offset),
   };
 }
-export function reactToPublication(publicationId, reacted) {
-  if (reacted) {
-    return {
-      type: ADD_REACTION,
-      payload: posts_services.addReaction(publicationId, 2),
-    };
-  }
-  return {
-    type: REMOVE_REACTION,
-    payload: posts_services.deleteReaction(publicationId),
+export function reactToPublication(publicationId, reacted, feed) {
+  return (dispatch) => {
+    const response = reacted
+      ? dispatch({
+          type: ADD_REACTION,
+          payload: posts_services.addReaction(publicationId, 2),
+        })
+      : dispatch({
+          type: REMOVE_REACTION,
+          payload: posts_services.deleteReaction(publicationId),
+        });
+    response.then(() => dispatch(updatePublication(feed, publicationId)));
+    return;
   };
 }
 
-export function addComment(data) {
-  return {
-    type: ADD_COMMENT,
-    payload: comments_services.create(data),
+export function addComment(data, feed, id) {
+  return (dispatch) => {
+    const response = dispatch({
+      type: ADD_COMMENT,
+      payload: comments_services.create(data),
+    });
+    response.then(() => dispatch(updatePublication(feed, id)));
   };
 }
 
@@ -81,13 +87,14 @@ export function updatePublication(feed, id) {
     type: UPDATE_PUBLICATION,
     payload: posts_services.get(id).then((resp) => {
       try {
-        console.log('feed', feed);
-        const updatedData = _.merge(feed, resp.data);
-        console.log('updatedData', updatedData);
-        return updatedData;
+        const feedCopy = JSON.parse(JSON.stringify(feed));
+        var i = feedCopy.findIndex((o) => o.id === id);
+        if (feedCopy[i]) {
+          feedCopy[i] = resp.data;
+        }
+        return feedCopy;
       } catch (e) {
-        console.log('e', e);
-        return feed;
+        throw Promise.reject();
       }
     }),
   };

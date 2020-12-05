@@ -24,12 +24,13 @@ export default function HomeScreen({navigation}) {
     keyboardState: false,
     keyboardSpace: 0,
   });
+  const offset = 0;
   const loadPosts = () => {
-    dispatch(fetchFeed(2, 3));
+    dispatch(fetchFeed(15, offset));
   };
 
   const addPosts = () => {
-    // dispatch(addToFeed(15, feed.length));
+    dispatch(addToFeed(15, feed.length + offset));
   };
 
   const refreshFromGesture = () => {

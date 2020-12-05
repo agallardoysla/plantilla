@@ -57,6 +57,7 @@ export default function Publication({
   } = post;
 
   const loadingNewComment = useSelector((state) => state.feed.addingComment);
+  const updatingPublication = useSelector((state) => state.feed.refreshData);
   // const updatedPost = useSelector((state) => state.postDetails.post);
   const dispatch = useDispatch();
   const newDataAvailable = useSelector((state) => state.feed.refreshData);
@@ -77,14 +78,16 @@ export default function Publication({
   const toggleshowMoreCommentsIncrement = 3;
 
   const onSendComment = () => {
-    const commentData = {
-      post: id,
-      text: commentInputVal,
-      original_comment: isResponse.id,
-    };
-    dispatch(addComment(commentData));
-    setCommentInputVal('');
-    commentInputRef.current.value = '';
+    if (commentInputVal.length > 0) {
+      const commentData = {
+        post: id,
+        text: commentInputVal,
+        original_comment: isResponse.id,
+      };
+      dispatch(addComment(commentData, feed, id));
+      setCommentInputVal('');
+      commentInputRef.current.value = '';
+    }
   };
 
   const navigateProfile = (user) => {
@@ -107,12 +110,6 @@ export default function Publication({
   const handleCommentBlur = () => {
     toggleIsResponse({state: false, to: undefined, id: undefined});
   };
-
-  useEffect(() => {
-    if (newDataAvailable) {
-      dispatch(updatePublication(feed, id));
-    }
-  }, [newDataAvailable, dispatch, id]);
 
   return (
     <View style={{flex: 1}}>
@@ -159,6 +156,7 @@ export default function Publication({
               navigation={navigation}
               isFeed={isFeed}
               post={post}
+              feed={feed}
             />
           </View>
 
@@ -174,7 +172,7 @@ export default function Publication({
             <View style={styles.icon_container}>
               <TouchableOpacity
                 onPress={() => {
-                  dispatch(reactToPublication(id, !reaction.reacted));
+                  dispatch(reactToPublication(id, !reaction.reacted, feed));
                   toggleReaction({
                     reacted: !reaction.reacted,
                     reactionscount: reaction.reacted
@@ -277,7 +275,7 @@ export default function Publication({
               </TouchableOpacity>
             ) : null}
           </ScrollView>
-          {loadingNewComment && (
+          {(loadingNewComment || updatingPublication) && (
             <View
               style={{
                 alignContent: 'center',

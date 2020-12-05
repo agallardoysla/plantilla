@@ -5,8 +5,6 @@ const url = 'posts/';
 
 export default {
   list: (pageSize, offset) => {
-    console.log('pageSize', pageSize);
-    console.log('offset', offset);
     const results = generic_service.doGet(
       `${url}?limit=${pageSize}&offset=${offset}`,
     );

@@ -14,6 +14,7 @@ export default function PublicationContent({
   navigation,
   post,
   isFeed,
+  feed,
 }) {
   const availableImageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'gif'];
   const isImage = (uri) =>
@@ -40,7 +41,7 @@ export default function PublicationContent({
                 onPress={() =>
                   isFeed &&
                   post &&
-                  PublicationActions.goToPost(post, navigation)
+                  PublicationActions.goToPost(post, feed, navigation)
                 }
               />
             </TouchableWithoutFeedback>
