@@ -25,11 +25,11 @@ export default function HomeScreen({navigation}) {
     keyboardSpace: 0,
   });
   const loadPosts = () => {
-    dispatch(fetchFeed(1, 2));
+    dispatch(fetchFeed(2, 3));
   };
 
   const addPosts = () => {
-    dispatch(addToFeed(15, feed.length));
+    // dispatch(addToFeed(15, feed.length));
   };
 
   const refreshFromGesture = () => {
@@ -43,7 +43,12 @@ export default function HomeScreen({navigation}) {
   const PublicationItem = ({item, index}) => {
     return (
       <View style={styles.publication} key={`${item.id}-${index}`}>
-        <Publication post={item} navigation={navigation} isFeed={true} />
+        <Publication
+          post={item}
+          navigation={navigation}
+          isFeed={true}
+          feed={feed}
+        />
       </View>
     );
   };
@@ -86,7 +91,7 @@ export default function HomeScreen({navigation}) {
                   />
                 }
                 renderItem={PublicationItem}
-                onEndReachedThreshold={0.7}
+                onEndReachedThreshold={0.9}
                 onEndReached={() => addPosts()}
                 bouncesZoom={true}
                 keyExtractor={(item, index) => index.toString()}
@@ -114,7 +119,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#242424',
   },
   row_header: {
     flexDirection: 'row',

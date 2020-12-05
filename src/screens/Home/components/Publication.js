@@ -26,12 +26,17 @@ import {isDate} from 'moment';
 import PublicationComment from './PublicationComment';
 import ProgressiveImage from '../../../components/ProgressiveImage';
 import {useDispatch, useSelector} from 'react-redux';
-import {addComment, reactToPublication} from '../../../redux/actions/feed';
+import {
+  addComment,
+  reactToPublication,
+  updatePublication,
+} from '../../../redux/actions/feed';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 let window = Dimensions.get('window');
 
 export default function Publication({
+  feed,
   post,
   isFeed,
   sharePost,
@@ -54,7 +59,7 @@ export default function Publication({
   const loadingNewComment = useSelector((state) => state.feed.addingComment);
   // const updatedPost = useSelector((state) => state.postDetails.post);
   const dispatch = useDispatch();
-
+  const newDataAvailable = useSelector((state) => state.feed.refreshData);
   const [reaction, toggleReaction] = useState({
     reacted,
     reactionscount: reactionscount?.REACTION_TYPE_PRUEBA || 0,
@@ -72,13 +77,11 @@ export default function Publication({
   const toggleshowMoreCommentsIncrement = 3;
 
   const onSendComment = () => {
-    console.log('isResponse', isResponse);
     const commentData = {
       post: id,
       text: commentInputVal,
       original_comment: isResponse.id,
     };
-    console.log('commentData', commentData);
     dispatch(addComment(commentData));
     setCommentInputVal('');
     commentInputRef.current.value = '';
@@ -96,7 +99,6 @@ export default function Publication({
   const handleCommentPress = (comment) => {
     let commenter = comment.user_owner;
     let commentId = comment.id;
-    console.log('commenter', commenter);
     toggleIsResponse({state: true, to: commenter, id: commentId});
     commentInputRef.current.focus();
     commentInputRef.current.value = commentInputVal;
@@ -107,10 +109,10 @@ export default function Publication({
   };
 
   useEffect(() => {
-    if (!loadingNewComment && !isFeed) {
-      console.log('logic here');
+    if (newDataAvailable) {
+      dispatch(updatePublication(feed, id));
     }
-  }, [loadingNewComment, isFeed]);
+  }, [newDataAvailable, dispatch, id]);
 
   return (
     <View style={{flex: 1}}>

@@ -10,11 +10,9 @@ export default {
     const results = generic_service.doGet(
       `${url}?limit=${pageSize}&offset=${offset}`,
     );
-    console.log('refresh result', results);
-
     return results;
   },
-  get: (id) => generic_service.doGet(`posts/${id}`),
+  get: (id) => generic_service.doGet(`posts/${id}/`),
   edit: (id, newPost) => generic_service.doPut(`${url}${id}/`, newPost),
   create: (newPost) => generic_service.doPost(url, newPost),
   delete: (id) => generic_service.doDelete(`${url}${id}/`),

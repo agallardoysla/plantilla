@@ -7,7 +7,7 @@ import Cache from '../utils/Cache';
 /* Todo este modulo se usa solo cuando el usuario ya esta logueado con Firebase */
 
 export const getToken = async () => {
-  const   token = await auth().currentUser.getIdToken(true);
+  const token = await auth().currentUser.getIdToken(true);
   return `JWT ${token}`;
 };
 
@@ -15,9 +15,9 @@ const getConfig = async (forceJWT) => {
   return {
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      Accept: 'application/json',
       // 'Access-Control-Allow-Origin': '*',
-      'Authorization': await getToken(forceJWT),
+      Authorization: await getToken(forceJWT),
     },
   };
 };
@@ -27,7 +27,7 @@ const getConfigFile = async (forceJWT) => {
     headers: {
       'Content-Type': 'multipart/mixed',
       // 'Access-Control-Allow-Origin': '*',
-      'Authorization': await getToken(forceJWT),
+      Authorization: await getToken(forceJWT),
     },
   };
 };
@@ -58,7 +58,7 @@ const genericMethodWithFile = (method) => async (url, data, forceJWT) => {
 
 const genericMethodNoData = (method) => async (url, forceJWT) => {
   const config = await getConfig(forceJWT);
-  console.log(method, api_config.baseURL, url, config);
+  // console.log(method, api_config.baseURL, url, config);
   let res;
   try {
     res = await axios_v1[method.toLowerCase()](url, config);

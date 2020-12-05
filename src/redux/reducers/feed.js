@@ -9,6 +9,8 @@ import {
   ADD_COMMENT_PENDING,
   ADD_COMMENT_FULFILLED,
   ADD_COMMENT_REJECTED,
+  UPDATE_PUBLICATION_PENDING,
+  UPDATE_PUBLICATION_FULFILLED,
 } from '../actions/feed';
 
 const defaultState = {
@@ -16,6 +18,7 @@ const defaultState = {
   fetchingFromFeed: false,
   addingToFeed: false,
   addingComment: false,
+  refreshData: false,
   feed: [],
 };
 
@@ -67,11 +70,24 @@ export default function (state = defaultState, action) {
       return {
         ...state,
         addingComment: false,
+        refreshData: true,
       };
     case ADD_COMMENT_REJECTED:
       return {
         ...state,
         addingComment: false,
+      };
+    case UPDATE_PUBLICATION_PENDING:
+      return {
+        ...state,
+        refreshData: false,
+      };
+    case UPDATE_PUBLICATION_FULFILLED:
+      console.log('UPDATE_PUBLsICATION_FULFILLED', action.payload);
+      return {
+        ...state,
+        refreshData: false,
+        feed: action.payload,
       };
     default:
       return state;

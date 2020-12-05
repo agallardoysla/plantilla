@@ -17,9 +17,12 @@ import {
 } from '../../../reducers/loggedUser';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import GoBackButton from '../../../components/GoBackButton';
+import {recoverSession} from '../../../redux/actions/session';
 
 export default function Preferences({navigation}) {
   const user = useSelector((state) => state.session.user);
+  const dispatch = useDispatch();
+
   const {id, display_name, profile} = user;
   const {id: profileId, bio} = profile;
   const hasBio = bio !== '__profile__bio__';
@@ -90,7 +93,7 @@ export default function Preferences({navigation}) {
   return (
     <>
       <View style={styles.upperBar}>
-        <GoBackButton navigation={navigation}  />
+        <GoBackButton navigation={navigation} />
       </View>
       <View style={styles.container}>
         {/* <Image
@@ -108,6 +111,7 @@ export default function Preferences({navigation}) {
               color: 'yellow',
               fontSize: 32,
               textDecorationLine: 'underline',
+              marginTop: -10,
             }}>
             Editar perfil
           </Text>
@@ -127,6 +131,7 @@ export default function Preferences({navigation}) {
                 //   text1: 'Hello',
                 //   text2: 'This is some something 👋',
                 // });
+                dispatch(recoverSession());
               }}
               handleCancelar={() => {
                 setUsername(display_name);
@@ -159,6 +164,7 @@ export default function Preferences({navigation}) {
                 Keyboard.dismiss();
                 setEditingDescription(false);
                 profiles_services.edit(profileId, {bio: description});
+                dispatch(recoverSession());
               }}
               handleCancelar={() => {
                 Keyboard.dismiss();
