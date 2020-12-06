@@ -1,10 +1,13 @@
-export const UPDATE_OTHER_USER = 'UPDATE_OTHER_USER';
+import users_services from '../../services/users_services';
 
-export function updateOterUser(user) {
+export const GET_OTHER_USER = 'GET_OTHER_USER';
+export const GET_OTHER_USER_PENDING = 'GET_OTHER_USER_PENDING';
+export const GET_OTHER_USER_FULFILLED = 'GET_OTHER_USER_FULFILLED';
+export const GET_OTHER_USER_REJECTED = 'GET_OTHER_USER_REJECTED';
+
+export function getOtherUser(id) {
   return {
-    type: UPDATE_OTHER_USER,
-    payload: user
+    type: GET_OTHER_USER,
+    payload: users_services.get(id),
   };
 }
-
-

@@ -88,7 +88,7 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
           <View style={styles.tuerca_blanca_container} />
         )}
         <Text style={styles.name_user} numberOfLines={1}>
-          @{user.display_name}
+          {user.display_name}
         </Text>
       </View>
 
@@ -99,13 +99,13 @@ export default function ProfileCenterColumn({user, navigation, style, isLoggedUs
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={goConversations}>
+      {/* <TouchableOpacity onPress={goConversations}>
         <Image
           source={require('../../../assets/sobre_amarillo.png')}
           style={styles.sobre_amarillo}
           resizeMode={'contain'}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

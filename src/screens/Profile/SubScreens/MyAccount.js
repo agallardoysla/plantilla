@@ -1,12 +1,13 @@
-import React, { useContext, useEffect } from 'react';
+import React, {useContext, useEffect} from 'react';
 import StylesConfiguration from '../../../utils/StylesConfiguration';
 import FormButton from '../../../components/FormButton';
 import GenericPreferenceView from '../components/GenericPreferenceView';
-import { StyleSheet } from 'react-native';
-import { useDispatch } from 'react-redux';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {useDispatch} from 'react-redux';
 import users_services from '../../../services/users_services';
-import { setAccounts } from '../../../reducers/accounts';
-import { logout } from '../../../redux/actions/session';
+import {setAccounts} from '../../../reducers/accounts';
+import {logout} from '../../../redux/actions/session';
+import GoBackButton from '../../../components/GoBackButton';
 
 export default function MyAccount({navigation}) {
   const dispatch = useDispatch();
@@ -38,19 +39,36 @@ export default function MyAccount({navigation}) {
   ];
 
   return (
-    <GenericPreferenceView
-      style={styles.container}
-      navigation={navigation}
-      title={'MI CUENTA'}>
-      {options.map((option, i) => (
-        <FormButton
-          buttonTitle={option.label}
-          style={styles.action}
-          onPress={option.action}
-          key={i}
+    <>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingHorizontal: 5,
+          paddingTop: 35,
+          backgroundColor: 'black',
+        }}>
+        <GoBackButton navigation={navigation} />
+      </View>
+      <View style={styles.container}>
+        <Image
+          style={styles.tuercaBlanca}
+          source={require('../../../assets/tuerca_blanca_grande.png')}
         />
-      ))}
-    </GenericPreferenceView>
+        <Text style={styles.text}>PREFERENCIAS</Text>
+        <View>
+          {options.map((option, i) => (
+            <FormButton
+              buttonTitle={option.label}
+              style={styles.action}
+              onPress={option.action}
+              key={i}
+            />
+          ))}
+        </View>
+      </View>
+    </>
   );
 }
 

@@ -26,18 +26,16 @@ import {isDate} from 'moment';
 import PublicationComment from './PublicationComment';
 import ProgressiveImage from '../../../components/ProgressiveImage';
 import {useDispatch, useSelector} from 'react-redux';
-import {addComment, reactToPublication} from '../../../redux/actions/feed';
+import {
+  addComment,
+  reactToPublication,
+  updatePublication,
+} from '../../../redux/actions/feed';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 let window = Dimensions.get('window');
 
-export default function Publication({
-  post,
-  isFeed,
-  sharePost,
-  navigation,
-  openMenu,
-}) {
+const Publication = ({feed, post, isFeed, sharePost, navigation, openMenu}) => {
   const {
     id,
     files_with_urls,
@@ -52,9 +50,10 @@ export default function Publication({
   } = post;
 
   const loadingNewComment = useSelector((state) => state.feed.addingComment);
+  const updatingPublication = useSelector((state) => state.feed.refreshData);
   // const updatedPost = useSelector((state) => state.postDetails.post);
   const dispatch = useDispatch();
-
+  const newDataAvailable = useSelector((state) => state.feed.refreshData);
   const [reaction, toggleReaction] = useState({
     reacted,
     reactionscount: reactionscount?.REACTION_TYPE_PRUEBA || 0,
@@ -72,16 +71,16 @@ export default function Publication({
   const toggleshowMoreCommentsIncrement = 3;
 
   const onSendComment = () => {
-    console.log('isResponse', isResponse);
-    const commentData = {
-      post: id,
-      text: commentInputVal,
-      original_comment: isResponse.id,
-    };
-    console.log('commentData', commentData);
-    dispatch(addComment(commentData));
-    setCommentInputVal('');
-    commentInputRef.current.value = '';
+    if (commentInputVal.length > 0) {
+      const commentData = {
+        post: id,
+        text: commentInputVal,
+        original_comment: isResponse.id,
+      };
+      dispatch(addComment(commentData, feed, id));
+      setCommentInputVal('');
+      commentInputRef.current.value = '';
+    }
   };
 
   const navigateProfile = (user) => {
@@ -96,7 +95,6 @@ export default function Publication({
   const handleCommentPress = (comment) => {
     let commenter = comment.user_owner;
     let commentId = comment.id;
-    console.log('commenter', commenter);
     toggleIsResponse({state: true, to: commenter, id: commentId});
     commentInputRef.current.focus();
     commentInputRef.current.value = commentInputVal;
@@ -105,12 +103,6 @@ export default function Publication({
   const handleCommentBlur = () => {
     toggleIsResponse({state: false, to: undefined, id: undefined});
   };
-
-  useEffect(() => {
-    if (!loadingNewComment && !isFeed) {
-      console.log('logic here');
-    }
-  }, [loadingNewComment, isFeed]);
 
   return (
     <View style={{flex: 1}}>
@@ -127,9 +119,14 @@ export default function Publication({
                 styles.ownerDisplayNameContainer,
                 styles.ownerDisplayNameNotVerified,
               ]}>
-              <Text style={styles.ownerDisplayName}>
-                {user_owner?.display_name}
-              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigateProfile(user_owner.user_id);
+                }}>
+                <Text style={styles.ownerDisplayName}>
+                  {user_owner?.display_name}
+                </Text>
+              </TouchableOpacity>
             </View>
             <TouchableOpacity
               onPress={() => {
@@ -157,6 +154,7 @@ export default function Publication({
               navigation={navigation}
               isFeed={isFeed}
               post={post}
+              feed={feed}
             />
           </View>
 
@@ -172,7 +170,7 @@ export default function Publication({
             <View style={styles.icon_container}>
               <TouchableOpacity
                 onPress={() => {
-                  dispatch(reactToPublication(id, !reaction.reacted));
+                  dispatch(reactToPublication(id, !reaction.reacted, feed));
                   toggleReaction({
                     reacted: !reaction.reacted,
                     reactionscount: reaction.reacted
@@ -218,15 +216,15 @@ export default function Publication({
               </TouchableOpacity>
               <Counter style={styles.icon_numbers_view} value={commentsCount} />
             </View>
-            <View style={styles.icon_container}>
+            {/* <View style={styles.icon_container}>
               <TouchableOpacity onPress={sharePost}>
                 <Image
                   source={require('../../../assets/compartir.png')}
                   style={[styles.icon_post, styles.icon_compartir]}
                 />
               </TouchableOpacity>
-            </View>
-            <View
+            </View> */}
+            {/* <View
               style={{...styles.icon_container, justifyContent: 'flex-end'}}>
               <TouchableOpacity onPress={openMenu}>
                 <Image
@@ -234,7 +232,7 @@ export default function Publication({
                   style={[styles.icon_post, styles.icon_mostrarMas]}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
           <View style={styles.description_container}>
             {text && text !== '__post_text__' && (
@@ -275,7 +273,7 @@ export default function Publication({
               </TouchableOpacity>
             ) : null}
           </ScrollView>
-          {loadingNewComment && (
+          {(loadingNewComment || updatingPublication) && (
             <View
               style={{
                 alignContent: 'center',
@@ -317,7 +315,8 @@ export default function Publication({
       {!isFeed && <KeyboardSpacer />}
     </View>
   );
-}
+};
+export default Publication;
 
 const styles = StyleSheet.create({
   container: {

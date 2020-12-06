@@ -38,7 +38,7 @@ export default function PublicationComment({
   comment,
   navigation,
 }) {
-  const {text, user_owner: commenter, created_at} = comment;
+  const {text, user_owner: commenter, created_at, comments} = comment;
   const {
     account_verified,
     display_name,
@@ -47,6 +47,8 @@ export default function PublicationComment({
     photo,
     user_id,
   } = commenter;
+
+  const hasComments = comments.length > 0;
 
   // const comment = useSelector(getComment(commentId.id));
   // const [showAnswerToComments, setShowAnswerToComments] = useState(false);
@@ -115,6 +117,18 @@ export default function PublicationComment({
             />
           </View>
           <DateFormatter date={created_at} />
+          {hasComments &&
+            comments.map((comment, index) => {
+              return (
+                <PublicationComment
+                  style={styles.publicationComments}
+                  comment={comment}
+                  onPress={onPress}
+                  key={`${comment.id}-${index}`}
+                  navigation={navigation}
+                />
+              );
+            })}
         </View>
       </TouchableHighlight>
       {/* <Menu opened={showMenu} onBackdropPress={() => setShowMenu(false)}>

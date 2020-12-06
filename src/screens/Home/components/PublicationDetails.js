@@ -12,7 +12,8 @@ import {getPost} from '../../../reducers/posts';
 
 export default function PublicationDetails({navigation, route}) {
   const post = route.params.post;
-  return <Publication post={post} navigation={navigation} />;
+  const feed = route.params.feed;
+  return <Publication post={post} navigation={navigation} feed={feed} />;
 
   // const post = useSelector(getPost(route.params.postId));
   //   const [loading, setLoading] = useState(true);

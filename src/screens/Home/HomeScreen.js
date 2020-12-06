@@ -24,16 +24,17 @@ export default function HomeScreen({navigation}) {
     keyboardState: false,
     keyboardSpace: 0,
   });
+  const offset = 4;
   const loadPosts = () => {
-    dispatch(fetchFeed(1, 2));
+    dispatch(fetchFeed(1, offset));
   };
 
   const addPosts = () => {
-    dispatch(addToFeed(15, feed.length));
+    dispatch(addToFeed(15, feed.length + offset));
   };
 
   const refreshFromGesture = () => {
-    dispatch(fetchFeedFromGesture(15, 0));
+    dispatch(fetchFeedFromGesture(15, offset));
   };
 
   React.useEffect(() => {
@@ -43,7 +44,12 @@ export default function HomeScreen({navigation}) {
   const PublicationItem = ({item, index}) => {
     return (
       <View style={styles.publication} key={`${item.id}-${index}`}>
-        <Publication post={item} navigation={navigation} isFeed={true} />
+        <Publication
+          post={item}
+          navigation={navigation}
+          isFeed={true}
+          feed={feed}
+        />
       </View>
     );
   };
@@ -62,7 +68,7 @@ export default function HomeScreen({navigation}) {
         feed &&
         feed.length > 0 && (
           <>
-            <View style={styles.row_header}>
+            {/* <View style={styles.row_header}>
               <TouchableOpacity onPress={gotToMyConversations}>
                 <Image
                   source={require('../../assets/sobre_amarillo.png')}
@@ -70,7 +76,7 @@ export default function HomeScreen({navigation}) {
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
             <View style={{flex: 1}}>
               <FlatList
                 maxToRenderPerBatch={3}
@@ -86,9 +92,10 @@ export default function HomeScreen({navigation}) {
                   />
                 }
                 renderItem={PublicationItem}
-                onEndReachedThreshold={0.7}
+                onEndReachedThreshold={0.6}
                 onEndReached={() => addPosts()}
-                bouncesZoom={true}
+                bouncesZoom={false}
+                onEnd
                 keyExtractor={(item, index) => index.toString()}
                 style={
                   minHeight.keyboardState
@@ -114,7 +121,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#242424',
   },
   row_header: {
     flexDirection: 'row',
