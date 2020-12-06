@@ -119,9 +119,14 @@ const Publication = ({feed, post, isFeed, sharePost, navigation, openMenu}) => {
                 styles.ownerDisplayNameContainer,
                 styles.ownerDisplayNameNotVerified,
               ]}>
-              <Text style={styles.ownerDisplayName}>
-                {user_owner?.display_name}
-              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigateProfile(user_owner.user_id);
+                }}>
+                <Text style={styles.ownerDisplayName}>
+                  {user_owner?.display_name}
+                </Text>
+              </TouchableOpacity>
             </View>
             <TouchableOpacity
               onPress={() => {
@@ -311,7 +316,7 @@ const Publication = ({feed, post, isFeed, sharePost, navigation, openMenu}) => {
     </View>
   );
 };
- export default Publication;
+export default Publication;
 
 const styles = StyleSheet.create({
   container: {

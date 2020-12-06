@@ -16,6 +16,7 @@ import ProfileCenterColumn from './ProfileCenterColumn';
 import {useSelector} from 'react-redux';
 import {getLoggedUser} from '../../../reducers/loggedUser';
 import {getOtherUser} from '../../../reducers/otherUser';
+import GoBackButton from '../../../components/GoBackButton';
 
 const numColumns = 3; //para el flatList
 
@@ -78,6 +79,7 @@ export default function GenericProfile({localUser, navigation, isLoggedUser}) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <GoBackButton navigation={navigation} />
       <View style={styles.profileData}>
         <ProfileLeftColumn
           style={[styles.profileDataColumn, styles.columnLeft]}
