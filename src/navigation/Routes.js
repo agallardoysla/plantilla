@@ -12,7 +12,8 @@ import {
 import {getSessionIsActive} from '../redux/reducers/session';
 import Toast from 'react-native-toast-message';
 import feed from '../redux/reducers/feed';
-import {setPrueba} from '../redux/reducers/prueba';
+
+import {actions} from '../redux/reducers';
 
 export default function Routes() {
   const dispatch = useDispatch();
@@ -35,7 +36,9 @@ export default function Routes() {
   useEffect(() => {
     //Cerrar sesión
     // dispatch(logout());
-    // dispatch(setPrueba('adfa'));
+
+    //Setear el reducer de prueba
+    dispatch(actions.setPrueba('adfa'));
   }, []);
 
   return (

@@ -6,6 +6,10 @@ import otherProfile from './otherProfile';
 import conversations from './conversations';
 import prueba from './prueba';
 
+export const actions = {
+  setPrueba,
+};
+
 export default combineReducers({
   session,
   feed,
