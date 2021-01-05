@@ -11,7 +11,7 @@ export default {
 
     try {
       const loginResolve = auth().signInWithEmailAndPassword(email, password);
-      navigation.navigate('HomeGroup');
+      // navigation.navigate('HomeGroup');
       return loginResolve;
     } catch (e) {
       console.log('error', e);

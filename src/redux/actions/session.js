@@ -1,6 +1,6 @@
-import generic_service from "../../services/generic_service";
+import generic_service from '../../services/generic_service';
 import auth from '@react-native-firebase/auth';
-import session from "../../utils/session";
+import session from '../../utils/session';
 
 export const RECOVER_SESSION = 'RECOVER_SESSION';
 export const RECOVER_SESSION_PENDING = 'RECOVER_SESSION_PENDING';

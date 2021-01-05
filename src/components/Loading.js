@@ -11,7 +11,7 @@ export default function LoadingScreen({message}) {
         source={require('../assets/logo-home.png')}
         fadeDuration={0}
       />
-      <Text style={styles.publishing}>{message || "Ingresando..."}</Text>
+      <Text style={styles.publishing}>{message || 'Ingresando...'}</Text>
       <ActivityIndicator size="large" color={StylesConfiguration.color} />
     </View>
   );

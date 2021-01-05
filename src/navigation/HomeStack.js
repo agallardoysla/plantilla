@@ -121,7 +121,7 @@ const HomeStack = () => {
     inactiveTintColor: 'white',
     style: {
       borderTopWidth: 1,
-      borderTopColor: '#ccc'
+      borderTopColor: '#ccc',
     },
   };
 
@@ -182,8 +182,7 @@ const HomeStack = () => {
         initialRouteName="HomeGroup"
         lazy={true}
         tabBarOptions={tabBarOptions}
-        screenOptions={screenOptions}
-        >
+        screenOptions={screenOptions}>
         <Tab.Screen
           name="ProfileGroup"
           component={MyProfileGroup}

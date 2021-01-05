@@ -1,6 +1,10 @@
-import { anySatisfy } from '../../utils/utils';
+import {anySatisfy} from '../../utils/utils';
 import {
-  FETCH_CONVERSATIONS_FULFILLED, FETCH_CONVERSATIONS_PENDING, PUSH_CONVERSATION, PUSH_MESSAGE, REPLACE_CONVERSATION,
+  FETCH_CONVERSATIONS_FULFILLED,
+  FETCH_CONVERSATIONS_PENDING,
+  PUSH_CONVERSATION,
+  PUSH_MESSAGE,
+  REPLACE_CONVERSATION,
 } from '../actions/conversations';
 
 const defaultState = {
@@ -25,7 +29,7 @@ export default function (state = defaultState, action) {
       return {
         ...state,
         conversations: state.conversations.map((conversation) => {
-          if ( conversation.id === action.payload.conversation.id) {
+          if (conversation.id === action.payload.conversation.id) {
             const newMessage = {
               ...action.payload.newMessage,
               from: action.payload.newMessage.from.user_id,
@@ -33,7 +37,7 @@ export default function (state = defaultState, action) {
             conversation.messages.unshift(newMessage);
           }
           return conversation;
-        })
+        }),
       };
     case PUSH_CONVERSATION:
       return {
@@ -44,15 +48,16 @@ export default function (state = defaultState, action) {
       return {
         ...state,
         conversations: state.conversations.map((c) => {
-          if (c.id === -1 
-            && anySatisfy(c.active_users, action.payload.from.user_id)
-            && anySatisfy(c.active_users, action.payload.to.user_id)
+          if (
+            c.id === -1 &&
+            anySatisfy(c.active_users, action.payload.from.user_id) &&
+            anySatisfy(c.active_users, action.payload.to.user_id)
           ) {
             return action.payload;
           } else {
             return c;
           }
-        })
+        }),
       };
     default:
       return state;
@@ -65,7 +70,9 @@ export const getConversationByParams = (conversationId, userId) => {
   // console.log(conversationId, userId);
   if (conversationId) {
     return (state) => {
-      const query = state.conversations.conversations.filter((c) => c.id === conversationId);
+      const query = state.conversations.conversations.filter(
+        (c) => c.id === conversationId,
+      );
       return query.length > 0 ? query[0] : {messages: []};
     };
   } else if (userId) {

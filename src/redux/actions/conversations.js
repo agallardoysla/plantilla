@@ -15,7 +15,7 @@ export const REPLACE_CONVERSATION = 'REPLACE_CONVERSATION';
 export function fetchConversations() {
   return {
     type: FETCH_CONVERSATIONS,
-    payload: chats_services.list()
+    payload: chats_services.list(),
   };
 }
 
@@ -24,7 +24,7 @@ export function pushMessage(conversation, newMessage) {
     type: PUSH_MESSAGE,
     payload: {
       conversation,
-      newMessage
+      newMessage,
     },
   };
 }

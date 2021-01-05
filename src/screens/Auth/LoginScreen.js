@@ -14,6 +14,7 @@ import {
   // loginFacebook,
   loginGoogle,
 } from '../../redux/actions/session';
+import Container from '../../components/generales/Container';
 
 export default function LoginScreen({navigation}) {
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ export default function LoginScreen({navigation}) {
   };
 
   return (
-    <SafeAreaView style={styles.container || {}}>
+    <Container isloading={false} style={styles.container}>
       <Image
         style={styles.logo}
         source={require('../../assets/logo-home.png')}
@@ -68,18 +69,13 @@ export default function LoginScreen({navigation}) {
         useAnimatedDriver={false}
         value={email}
         label="Email"
-        onChangeText={doSetField(
-          setEmail,
-          emailIsOk,
-          'email',
-          errorLabels.email,
-        )}
+        onChangeText={setEmail}
+        // error={email.length > 0 ? '' : 'Se debe elegir un email válido'}
         autoCapitalize="none"
         textContentType="emailAddress"
         keyboardType="email-address"
         autoCorrect={false}
         containerStyle={styles.input}
-        error={errors.email}
       />
       <MatInput
         value={password}
@@ -113,7 +109,7 @@ export default function LoginScreen({navigation}) {
         <Text style={styles.navButtonText}>¿No tenes cuenta? </Text>
         <Text style={styles.navButtonText2}>Registrate</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </Container>
   );
 }
 
